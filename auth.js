@@ -7,7 +7,7 @@
 // BACKEND CONFIGURATION
 // ========================================
 
-const BACKEND_URL = 'https://fourk-sharing.onrender.com';
+const BACKEND_URL = 'https://backend-c0r3-7xpq9zn2025.onrender.com';
 
 // ========================================
 // reCAPTCHA CONFIGURATION
