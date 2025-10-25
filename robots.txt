@@ -1,0 +1,19 @@
+# robots.txt for tiembanh4k.com
+
+# Allow all crawlers to index public pages
+User-agent: *
+Allow: /
+Allow: /index.html
+Allow: /auth.html
+Allow: /contact.html
+Allow: /privacy-policy.html
+Allow: /terms-of-service.html
+Allow: /install-guide.html
+
+# Block admin and sensitive pages
+Disallow: /admin.html
+Disallow: /test-extension.html
+
+# Sitemap location
+Sitemap: https://tiembanh4k.com/sitemap.xml
+

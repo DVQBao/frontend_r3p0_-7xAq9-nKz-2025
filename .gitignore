@@ -1,0 +1,42 @@
+# Logs
+*.log
+logs/
+debug_logs/
+
+# OS files
+.DS_Store
+Thumbs.db
+Desktop.ini
+
+# Editor
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Backup
+*_BACKUP_*/
+backup_*/
+
+# Sensitive (nếu có)
+.env.local
+*.key
+*.pem
+
+# Build
+dist/
+build/
+.cache/
+
+# Cookie files (KHÔNG đẩy lên)
+Cookie.txt
+cookie.txt
+*.cookie
+
+# Test
+coverage/
+.nyc_output/
+
+# Dependencies (nếu có)
+node_modules/
+

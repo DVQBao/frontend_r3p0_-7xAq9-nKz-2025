@@ -1,0 +1,306 @@
+﻿<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <!-- SEO Meta Tags -->
+    <meta name="description" content="Hướng dẫn chi tiết cách cài đặt Extension Tiệm Bánh Netflix cho Chrome. Đơn giản, dễ dàng, chỉ mất 2 phút để bắt đầu xem Netflix 4K.">
+    <meta name="keywords" content="cài đặt extension Netflix, hướng dẫn Netflix, Chrome extension, Netflix 4K, Tiệm Bánh Netflix">
+    <meta name="author" content="Tiệm Bánh Netflix">
+    <meta name="robots" content="index, follow">
+    <link rel="canonical" href="/https://tiembanh4k.com/install-guide/">
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="article">
+    <meta property="og:url" content="/https://tiembanh4k.com/install-guide/">
+    <meta property="og:title" content="Hướng dẫn cài Extension - Tiệm Bánh Netflix">
+    <meta property="og:description" content="Hướng dẫn chi tiết cách cài đặt Extension cho Chrome. Đơn giản, dễ dàng, chỉ mất 2 phút.">
+    <meta property="og:image" content="https://tiembanh4k.com/Background.png">
+    
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-GM4CGKGZBM"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-GM4CGKGZBM');
+    </script>
+    
+    <title>Hướng dẫn cài Extension - Tiệm Bánh Netflix</title>
+    <link rel="icon" type="image/svg+xml" href="../favicon.svg">
+    <link rel="alternate icon" href="../favicon.ico">
+    <link rel="apple-touch-icon" href="../favicon.svg">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, rgba(20, 20, 20, 0.95) 0%, rgba(26, 26, 26, 0.95) 100%), 
+                        url('../Background.png') center/cover fixed;
+            color: #fff;
+            min-height: 100vh;
+            padding: 40px 20px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: rgba(0, 0, 0, 0.9);
+            border-radius: 12px;
+            padding: 30px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        h1 {
+            font-size: 2rem;
+            margin-bottom: 8px;
+            background: linear-gradient(90deg, #ff101c);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .subtitle {
+            color: #aaa;
+            font-size: 1rem;
+        }
+
+        .step-section {
+            background: rgba(255, 255, 255, 0.05);
+            border-left: 4px solid #e50914;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+
+        .step-number {
+            display: inline-block;
+            background: #e50914;
+            color: #fff;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 32px;
+            font-weight: bold;
+            font-size: 1.1rem;
+            margin-right: 12px;
+        }
+
+        .step-title {
+            font-size: 1.3rem;
+            margin-bottom: 12px;
+            color: #fff;
+            display: flex;
+            align-items: center;
+        }
+
+        .step-content {
+            margin-left: 44px;
+        }
+
+        .step-content p {
+            color: #ddd;
+            line-height: 1.6;
+            margin-bottom: 12px;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 10px 20px;
+            background: #e50914;
+            color: #fff;
+            text-decoration: none;
+            text-align: center;
+            border-radius: 6px;
+            font-weight: 600;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 0.9rem;
+            margin-top: 8px;
+        }
+
+        .btn:hover {
+            background: #f40612;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(229, 9, 20, 0.4);
+        }
+
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.15);
+        }
+
+
+        .code-block {
+            background: #1a1a1a;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 4px;
+            padding: 12px;
+            margin: 12px 0;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            color: #4ade80;
+            overflow-x: auto;
+            font-size: 1rem;
+        }
+
+        .warning {
+            background: rgba(255, 193, 7, 0.15);
+            border: 2px solid #ffc107;
+            border-radius: 6px;
+            padding: 12px;
+            margin: 15px 0;
+            color: #fbbf24;
+            font-size: 0.9rem;
+        }
+
+        .success {
+            background: rgba(40, 167, 69, 0.15);
+            border: 2px solid #28a745;
+            border-radius: 6px;
+            padding: 12px;
+            margin: 15px 0;
+            color: #4ade80;
+            font-size: 0.9rem;
+        }
+
+        .back-link {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .back-link a {
+            color: #e50914;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 1.1rem;
+        }
+
+        .back-link a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>HƯỚNG DẪN CÀI ĐẶT<br>EXTENSION TIỆM BÁNH NETFLIX</h1>
+            <div class="subtitle" style="margin-top: 12px; padding: 12px; background: rgba(16, 185, 129, 0.1); border-radius: 8px; border: 1px solid rgba(16, 185, 129, 0.3); color: #4ade80; font-size: 0.9rem;">
+                Toàn bộ mã nguồn của extension này được công khai minh bạch, cho phép mọi cá nhân hoặc tổ chức kiểm chứng độc lập. Chúng tôi cam kết không thu thập bất kỳ dữ liệu cá nhân nào và không yêu cầu quyền truy cập trái phép vào hệ thống của người dùng.
+            </div>
+        </div>
+
+        <!-- Step 1: Watch Video -->
+        <div class="step-section">
+            <div class="step-title">
+                <span class="step-number">1</span>
+                <span>Xem video hướng dẫn</span>
+            </div>
+            <div class="step-content">
+                <button class="btn" onclick="window.open('https://youtu.be/vrVgwrjUbpo', '_blank')">
+                    Xem trên YouTube
+                </button>
+            </div>
+        </div>
+
+        <!-- Step 2: Download Extension -->
+        <div class="step-section">
+            <div class="step-title">
+                <span class="step-number">2</span>
+                <span>Tải Extension</span>
+            </div>
+            <div class="step-content">
+                <p>Click nút bên dưới để tải folder extension:</p>
+                
+                <button class="btn" onclick="downloadExtension()">
+                    Tải Extension
+                </button>
+            </div>
+        </div>
+
+        <!-- Step 3: Install Extension -->
+        <div class="step-section">
+            <div class="step-title">
+                <span class="step-number">3</span>
+                <span>Cài đặt Extension</span>
+            </div>
+            <div class="step-content">
+                <p><strong>A. Mở Chrome Extensions:</strong></p>
+                <div class="code-block">
+                    chrome://extensions/
+                </div>
+
+                <p style="margin-top: 15px;"><strong>B. Bật Developer Mode:</strong></p>
+                <p>Bật "Chế độ dành cho nhà phát triển" ở góc trên bên phải</p>
+
+                <p style="margin-top: 15px;"><strong>C. Load Extension:</strong></p>
+                <ol style="margin-left: 20px; color: #ddd; line-height: 1.8;">
+                    <li>Click nút <strong>"Tải tiện ích đã giải nén" ở góc bên trái</strong></li>
+                    <li>Chọn folder extension đã tải ở bước 2</li>
+                    <li>Extension sẽ xuất hiện</li>
+                </ol>
+
+                <div class="success" style="margin-top: 15px;">
+                    <strong>Kiểm tra:</strong> Sau khi cài xong, reload trang chủ. Banner sẽ hiện "Extension đã cài đặt" màu xanh!
+                </div>
+            </div>
+        </div>
+
+        <!-- Alternative for Edge Users -->
+        <div class="step-section" style="border-left-color: #0078d4;">
+            <div class="step-title">
+                <span class="step-number" style="background: #0078d4;"></span>
+                <span>Dành cho Microsoft Edge</span>
+            </div>
+            <div class="step-content">
+                <p>Nếu bạn dùng Edge, mở:</p>
+                <div class="code-block">
+                    edge://extensions/
+                </div>
+
+                <p style="margin-top: 12px;">Các bước tương tự như Chrome!</p>
+            </div>
+        </div>
+
+        <!-- Back to Home -->
+        <div class="back-link">
+            <a href="/">← Quay lại trang chủ</a>
+        </div>
+    </div>
+
+    <script>
+
+        /**
+         * Download extension
+         * Opens Google Drive link to download extension ZIP
+         */
+        function downloadExtension() {
+            const driveUrl = 'https://drive.google.com/drive/folders/1eozcbA4q54f8Ox46d2HlptSD92tDFHCl?usp=sharing';
+            
+            // Open Google Drive in new tab
+            window.open(driveUrl, '_blank');
+            
+            console.log('Opening Google Drive to download extension');
+        }
+
+        console.log('Install guide page loaded');
+    </script>
+</body>
+</html>
+

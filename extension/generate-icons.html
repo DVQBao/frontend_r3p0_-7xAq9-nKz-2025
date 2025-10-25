@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <title>Generate TiemBanhNetflix Icons</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+            text-align: center;
+            background: #f5f5f5;
+        }
+        h1 { color: #E50914; }
+        .preview {
+            display: flex;
+            justify-content: space-around;
+            margin: 30px 0;
+            gap: 20px;
+        }
+        .icon-box {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        canvas { border: 1px solid #ddd; margin: 10px 0; }
+        button {
+            background: #E50914;
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            font-size: 16px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 10px;
+        }
+        button:hover { background: #b20710; }
+        .success { color: green; font-weight: bold; margin-top: 20px; }
+    </style>
+</head>
+<body>
+    <h1>🍰 TiemBanhNetflix Icon Generator</h1>
+    <p>Click các nút bên dưới để tải icon cho extension!</p>
+    
+    <div class="preview">
+        <div class="icon-box">
+            <h3>16x16</h3>
+            <canvas id="canvas16" width="16" height="16"></canvas>
+            <br>
+            <button onclick="downloadIcon(16)">Download icon16.png</button>
+        </div>
+        
+        <div class="icon-box">
+            <h3>48x48</h3>
+            <canvas id="canvas48" width="48" height="48"></canvas>
+            <br>
+            <button onclick="downloadIcon(48)">Download icon48.png</button>
+        </div>
+        
+        <div class="icon-box">
+            <h3>128x128</h3>
+            <canvas id="canvas128" width="128" height="128"></canvas>
+            <br>
+            <button onclick="downloadIcon(128)">Download icon128.png</button>
+        </div>
+    </div>
+    
+    <button onclick="downloadAll()" style="background: #4CAF50; font-size: 18px;">
+        ⬇️ Download Tất Cả 3 Icons
+    </button>
+    
+    <div id="message"></div>
+
+    <script>
+        // Draw cake icon on canvas
+        function drawCake(canvas) {
+            const ctx = canvas.getContext('2d');
+            const size = canvas.width;
+            const scale = size / 100; // Base size 100x100
+            
+            // Clear canvas
+            ctx.clearRect(0, 0, size, size);
+            
+            // Background circle
+            ctx.fillStyle = '#FFE4E1';
+            ctx.beginPath();
+            ctx.arc(size/2, size/2, size/2, 0, Math.PI * 2);
+            ctx.fill();
+            
+            // Plate
+            ctx.fillStyle = '#D3D3D3';
+            ctx.beginPath();
+            ctx.ellipse(size/2, size*0.85, size*0.4, size*0.08, 0, 0, Math.PI * 2);
+            ctx.fill();
+            
+            // Bottom cake layer
+            ctx.fillStyle = '#FFB6C1';
+            ctx.fillRect(size*0.2, size*0.55, size*0.6, size*0.3);
+            ctx.fillStyle = '#F0E68C';
+            ctx.fillRect(size*0.2, size*0.53, size*0.6, size*0.04);
+            
+            // Top cake layer
+            ctx.fillStyle = '#FFB6C1';
+            ctx.fillRect(size*0.25, size*0.3, size*0.5, size*0.25);
+            ctx.fillStyle = '#F0E68C';
+            ctx.fillRect(size*0.25, size*0.28, size*0.5, size*0.04);
+            
+            // Cream decorations
+            ctx.fillStyle = '#FFFFFF';
+            const creamY = size*0.6;
+            const creamSize = size*0.03;
+            ctx.beginPath();
+            ctx.arc(size*0.35, creamY, creamSize, 0, Math.PI * 2);
+            ctx.arc(size*0.5, creamY, creamSize, 0, Math.PI * 2);
+            ctx.arc(size*0.65, creamY, creamSize, 0, Math.PI * 2);
+            ctx.fill();
+            
+            // Cherry on top
+            ctx.fillStyle = '#FF0000';
+            ctx.beginPath();
+            ctx.arc(size*0.5, size*0.25, size*0.05, 0, Math.PI * 2);
+            ctx.fill();
+            
+            // Cherry stem
+            ctx.strokeStyle = '#8B4513';
+            ctx.lineWidth = size*0.02;
+            ctx.beginPath();
+            ctx.moveTo(size*0.5, size*0.2);
+            ctx.lineTo(size*0.5, size*0.15);
+            ctx.stroke();
+        }
+        
+        // Generate all icons on page load
+        window.onload = function() {
+            drawCake(document.getElementById('canvas16'));
+            drawCake(document.getElementById('canvas48'));
+            drawCake(document.getElementById('canvas128'));
+        };
+        
+        // Download single icon
+        function downloadIcon(size) {
+            const canvas = document.getElementById('canvas' + size);
+            const link = document.createElement('a');
+            link.download = 'icon' + size + '.png';
+            link.href = canvas.toDataURL('image/png');
+            link.click();
+            
+            showMessage('✅ Downloaded icon' + size + '.png');
+        }
+        
+        // Download all icons
+        function downloadAll() {
+            downloadIcon(16);
+            setTimeout(() => downloadIcon(48), 300);
+            setTimeout(() => downloadIcon(128), 600);
+            
+            showMessage('✅ Downloaded tất cả 3 icons! Giờ copy vào folder extension!');
+        }
+        
+        // Show message
+        function showMessage(text) {
+            const msg = document.getElementById('message');
+            msg.className = 'success';
+            msg.textContent = text;
+            setTimeout(() => msg.textContent = '', 3000);
+        }
+    </script>
+</body>
+</html>
+

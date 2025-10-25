@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+  <style>
+    .cake { fill: #FFB6C1; }
+    .cream { fill: #FFFFFF; }
+    .cherry { fill: #FF0000; }
+    .plate { fill: #D3D3D3; }
+    .layer { fill: #F0E68C; }
+  </style>
+  
+  <!-- Plate -->
+  <ellipse class="plate" cx="50" cy="85" rx="40" ry="8"/>
+  
+  <!-- Bottom cake layer -->
+  <rect class="cake" x="20" y="55" width="60" height="30" rx="5"/>
+  <rect class="layer" x="20" y="53" width="60" height="4"/>
+  
+  <!-- Top cake layer -->
+  <rect class="cake" x="25" y="30" width="50" height="25" rx="5"/>
+  <rect class="layer" x="25" y="28" width="50" height="4"/>
+  
+  <!-- Cream decoration -->
+  <circle class="cream" cx="35" cy="60" r="3"/>
+  <circle class="cream" cx="50" cy="60" r="3"/>
+  <circle class="cream" cx="65" cy="60" r="3"/>
+  
+  <!-- Cherry on top -->
+  <circle class="cherry" cx="50" cy="25" r="5"/>
+  <line x1="50" y1="20" x2="50" y2="15" stroke="#8B4513" stroke-width="2"/>
+</svg>
+

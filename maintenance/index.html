@@ -1,0 +1,148 @@
+﻿<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Đang Bảo Trì - Tiệm Bánh Netflix</title>
+    <link rel="icon" type="image/svg+xml" href="../favicon.svg">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: #0f0f0f;
+            color: #fff;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .maintenance-container {
+            max-width: 650px;
+            text-align: center;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #e50914;
+            margin-bottom: 60px;
+            letter-spacing: 0.5px;
+        }
+
+        h1 {
+            font-size: 2rem;
+            font-weight: 600;
+            margin-bottom: 20px;
+            color: #fff;
+        }
+
+        .subtitle {
+            font-size: 1.1rem;
+            color: #999;
+            line-height: 1.6;
+            margin-bottom: 40px;
+            font-weight: 400;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 3px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            overflow: hidden;
+            margin-bottom: 40px;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #e50914, #b20710);
+            width: 0%;
+            animation: loading 2s ease-in-out infinite;
+        }
+
+        @keyframes loading {
+            0% { width: 0%; }
+            50% { width: 70%; }
+            100% { width: 100%; }
+        }
+
+        .info {
+            font-size: 0.95rem;
+            color: #666;
+            margin-bottom: 30px;
+        }
+
+        .contact {
+            padding-top: 40px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .contact-text {
+            font-size: 0.9rem;
+            color: #888;
+            margin-bottom: 15px;
+        }
+
+        .contact a {
+            display: inline-block;
+            color: #fff;
+            text-decoration: none;
+            font-weight: 500;
+            padding: 12px 30px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 6px;
+            transition: all 0.3s;
+        }
+
+        .contact a:hover {
+            background: rgba(255, 255, 255, 0.1);
+            border-color: rgba(255, 255, 255, 0.2);
+        }
+
+        .time {
+            font-size: 0.85rem;
+            color: #555;
+            margin-top: 40px;
+        }
+    </style>
+</head>
+<body>
+    <div class="maintenance-container">
+        <div class="logo">TIỆM BÁNH NETFLIX</div>
+        
+        <h1>Đang bảo trì hệ thống</h1>
+        
+        <p class="subtitle">
+            Chúng tôi đang nâng cấp hệ thống để mang lại trải nghiệm tốt&nbsp;hơn.
+        </p>
+
+        <div class="progress-bar">
+            <div class="progress-fill"></div>
+        </div>
+
+        <p class="info">Dự kiến hoàn thành trong vài giờ</p>
+
+        <div class="contact">
+            <p class="contact-text">Cần hỗ trợ khẩn cấp?</p>
+            <a href="https://www.facebook.com/tiembanh4k/" target="_blank">
+                Liên hệ hỗ trợ
+            </a>
+        </div>
+
+        <div class="time">
+            <script>
+                document.write(new Date().toLocaleString('vi-VN'));
+            </script>
+        </div>
+    </div>
+</body>
+</html>
+

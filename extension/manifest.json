@@ -1,0 +1,70 @@
+{
+  "manifest_version": 3,
+  "name": "Tiệm Bánh Netflix",
+  "version": "1.2.0",
+  "description": "Extension chính thức của Tiệm Bánh Netflix - Trải nghiệm Netflix 4K mượt mà",
+  "icons": {
+    "16": "icon16.png",
+    "48": "icon48.png",
+    "128": "icon128.png"
+  },
+  
+  "permissions": [
+    "cookies",
+    "tabs",
+    "storage"
+  ],
+  
+  "host_permissions": [
+    "*://*.netflix.com/*"
+  ],
+  
+  "background": {
+    "service_worker": "background.js",
+    "type": "module"
+  },
+  
+  "content_scripts": [
+    {
+      "matches": ["*://*.netflix.com/*"],
+      "js": ["content.js"],
+      "run_at": "document_end"
+    },
+    {
+      "matches": [
+        "http://localhost:*/*",
+        "http://127.0.0.1:*/*",
+        "http://[::1]:*/*",
+        "https://dvqbao.github.io/*",
+        "http://tiembanh4k.com/*",
+        "https://tiembanh4k.com/*",
+        "http://www.tiembanh4k.com/*",
+        "https://www.tiembanh4k.com/*"
+      ],
+      "js": ["web-content.js"],
+      "run_at": "document_end"
+    }
+  ],
+  
+  "action": {
+    "default_popup": "popup.html",
+    "default_icon": {
+      "16": "icon16.png",
+      "48": "icon48.png",
+      "128": "icon128.png"
+    }
+  },
+  
+  "externally_connectable": {
+    "matches": [
+      "http://localhost:*/*",
+      "http://127.0.0.1:*/*",
+      "http://[::1]:*/*",
+      "https://dvqbao.github.io/*",
+      "http://tiembanh4k.com/*",
+      "https://tiembanh4k.com/*",
+      "http://www.tiembanh4k.com/*",
+      "https://www.tiembanh4k.com/*"
+    ]
+  }
+}

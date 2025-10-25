@@ -1,0 +1,13 @@
+# Jekyll configuration for clean URLs
+permalink: pretty
+
+# Exclude files from processing
+exclude:
+  - backup_html_files/
+  - README.md
+  - .gitignore
+  - scripts/
+
+# GitHub Pages defaults
+plugins:
+  - jekyll-relative-links
