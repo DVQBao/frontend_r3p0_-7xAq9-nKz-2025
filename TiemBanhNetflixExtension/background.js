@@ -69,23 +69,28 @@ chrome.runtime.onMessageExternal.addListener(
                 }
                 
                 console.log(`✅ Found Netflix tab: ${netflixTab.id}`, netflixTab);
+                console.log(`📍 Current URL: ${netflixTab.url}`);
                 
                 // Bước 1: Xóa toàn bộ cookies Netflix cũ
                 await clearNetflixCookies();
                 console.log('🗑️ Cleared existing Netflix cookies');
                 
-                // Bước 2: Inject cookie mới (IMPROVED)
-                await injectCookiesImproved(request.cookieData, netflixTab.url);
+                // Bước 2: Inject cookie mới NGAY (không navigate trước)
+                await injectCookiesImproved(request.cookieData, 'https://www.netflix.com/');
                 console.log('✅ Injected new cookies');
                 
                 // Bước 3: Đợi một chút để cookies được set
                 await sleep(500);
                 
-                // Bước 4: Reload tab Netflix
-                await chrome.tabs.reload(netflixTab.id);
-                console.log('🔄 Reloaded Netflix tab');
+                // Bước 4: CRITICAL FIX - Navigate về homepage SAU KHI inject
+                // Điều này đảm bảo mọi URL (account, settings...) đều reset về homepage
+                // NHƯNG cookies đã được inject sẵn rồi
+                await chrome.tabs.update(netflixTab.id, { 
+                    url: 'https://www.netflix.com/' 
+                });
+                console.log('🏠 Navigated to Netflix homepage with new cookies');
                 
-                // Bước 5: Monitor tab để phát hiện /browse
+                // Bước 7: Monitor tab để phát hiện /browse
                 monitorNetflixTab(netflixTab.id);
                 
                 sendResponse({ success: true });
@@ -493,6 +498,34 @@ function notifyWebApp(data) {
  */
 function sleep(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
+}
+
+/**
+ * Helper: Wait for tab to finish loading
+ */
+function waitForTabLoad(tabId, timeout = 10000) {
+    return new Promise((resolve, reject) => {
+        const startTime = Date.now();
+        
+        const checkStatus = () => {
+            chrome.tabs.get(tabId, (tab) => {
+                if (chrome.runtime.lastError) {
+                    reject(new Error(chrome.runtime.lastError.message));
+                    return;
+                }
+                
+                if (tab.status === 'complete') {
+                    resolve(tab);
+                } else if (Date.now() - startTime > timeout) {
+                    reject(new Error('Tab load timeout'));
+                } else {
+                    setTimeout(checkStatus, 100);
+                }
+            });
+        };
+        
+        checkStatus();
+    });
 }
 
 // ========================================
