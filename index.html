@@ -1439,30 +1439,42 @@
                 if (adSection) adSection.style.display = 'block';
                 if (watchingSection) watchingSection.style.display = 'none';
 
+                // ========================================
+                // REMOVE ALL OLD EVENT LISTENERS
+                // ========================================
+                // Clone and replace button để xóa tất cả event listeners cũ
+                const newStartBtn = startBtn.cloneNode(true);
+                const newCancelBtn = cancelBtn.cloneNode(true);
+                startBtn.parentNode.replaceChild(newStartBtn, startBtn);
+                cancelBtn.parentNode.replaceChild(newCancelBtn, cancelBtn);
+                
+                // Update references
+                const startBtnRef = newStartBtn;
+                const cancelBtnRef = newCancelBtn;
+                // ========================================
+
                 // Show modal
                 adModal.classList.add('active');
-                startBtn.disabled = true;
-                startBtn.textContent = `Bắt đầu xem sau ${countdown}s`;
+                startBtnRef.disabled = true;
+                startBtnRef.textContent = `Bắt đầu xem sau ${countdown}s`;
 
                 // Countdown timer
                 const timer = setInterval(() => {
                     countdown--;
                     if (countdown > 0) {
-                        startBtn.textContent = `Bắt đầu xem sau ${countdown}s`;
+                        startBtnRef.textContent = `Bắt đầu xem sau ${countdown}s`;
                     } else {
                         clearInterval(timer);
-                        startBtn.disabled = false;
-                        startBtn.textContent = 'Bắt đầu xem';
+                        startBtnRef.disabled = false;
+                        startBtnRef.textContent = 'Bắt đầu xem';
                     }
                 }, 1000);
 
                 // Handle start button click
                 const handleStart = () => {
-                    if (!startBtn.disabled) {
+                    if (!startBtnRef.disabled) {
                         clearInterval(timer);
                         adModal.classList.remove('active');
-                        startBtn.removeEventListener('click', handleStart);
-                        cancelBtn.removeEventListener('click', handleCancel);
                         resolve(true); // User watched ad - continue
                     }
                 };
@@ -1471,13 +1483,11 @@
                 const handleCancel = () => {
                     clearInterval(timer);
                     adModal.classList.remove('active');
-                    startBtn.removeEventListener('click', handleStart);
-                    cancelBtn.removeEventListener('click', handleCancel);
                     resolve(false); // User cancelled - stop
                 };
 
-                startBtn.addEventListener('click', handleStart);
-                cancelBtn.addEventListener('click', handleCancel);
+                startBtnRef.addEventListener('click', handleStart);
+                cancelBtnRef.addEventListener('click', handleCancel);
             });
         }
 
