@@ -1431,7 +1431,13 @@
                 const adModal = document.getElementById('adModal');
                 const startBtn = document.getElementById('startWatchingBtn');
                 const cancelBtn = document.getElementById('cancelBtn');
+                const adSection = document.getElementById('adSection');
+                const watchingSection = document.getElementById('watchingSection');
                 let countdown = 15; // 15 seconds ad duration
+
+                // RESET MODAL STATE - Show ad section, hide watching section
+                if (adSection) adSection.style.display = 'block';
+                if (watchingSection) watchingSection.style.display = 'none';
 
                 // Show modal
                 adModal.classList.add('active');
