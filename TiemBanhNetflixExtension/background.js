@@ -14,7 +14,7 @@ chrome.runtime.onMessageExternal.addListener(
         console.log('📨 Received external message:', request);
         
         if (request.action === 'ping') {
-            sendResponse({ status: 'ok', version: '1.2.0' });
+            sendResponse({ status: 'ok', version: '1.3.0' });
             return true;
         }
         
@@ -342,35 +342,58 @@ async function injectCookiesImproved(cookieData, tabUrl = 'https://www.netflix.c
                 ? parseSingleCookie(cookie) 
                 : cookie;
             
-            // IMPORTANT: Tính toán URL chính xác
-            const cookieUrl = getCookieUrl(
-                parsedCookie.domain || '.netflix.com',
-                parsedCookie.path || '/',
-                parsedCookie.secure !== false
-            );
-            
-            // Chuẩn bị cookie details
+            // Generic approach: Chuẩn bị cookie details giống Cookie-Editor
             const details = {
-                url: cookieUrl,
-                name: parsedCookie.name,
-                value: parsedCookie.value,
-                domain: parsedCookie.domain || '.netflix.com',
-                path: parsedCookie.path || '/',
-                secure: parsedCookie.secure !== false,
-                httpOnly: parsedCookie.httpOnly || false,
-                sameSite: parsedCookie.sameSite || 'no_restriction'
+                url: tabUrl,  // Dùng URL của Netflix tab hiện tại
+                name: parsedCookie.name || '',
+                value: parsedCookie.value || ''
             };
             
-            // IMPORTANT: Chỉ set expirationDate nếu có
-            // Không set thì browser tự quản lý session cookie
+            // Chỉ set các field nếu có trong parsed cookie
+            // Nếu không có, để null hoặc undefined để browser tự động điền
+            if (parsedCookie.domain !== undefined) {
+                details.domain = parsedCookie.domain;
+            } else {
+                details.domain = null;  // Browser tự lấy từ URL
+            }
+            
+            if (parsedCookie.path !== undefined) {
+                details.path = parsedCookie.path;
+            } else {
+                details.path = null;  // Browser tự set = '/'
+            }
+            
+            if (parsedCookie.secure !== undefined) {
+                details.secure = parsedCookie.secure;
+            } else {
+                details.secure = null;  // Browser tự set based on protocol
+            }
+            
+            if (parsedCookie.httpOnly !== undefined) {
+                details.httpOnly = parsedCookie.httpOnly;
+            } else {
+                details.httpOnly = null;  // Browser tự set = false
+            }
+            
+            if (parsedCookie.sameSite !== undefined) {
+                details.sameSite = parsedCookie.sameSite;
+            } else {
+                details.sameSite = undefined;  // Browser tự set = 'lax'
+            }
+            
+            // Chỉ set expirationDate nếu có
             if (parsedCookie.expirationDate) {
                 details.expirationDate = parsedCookie.expirationDate;
             }
             
-            console.log('🔧 Setting cookie:', {
+            console.log('🔧 Setting cookie (generic approach):', {
                 name: details.name,
-                domain: details.domain,
-                url: cookieUrl
+                value: details.value.substring(0, 20) + '...',
+                domain: details.domain || 'auto',
+                path: details.path || 'auto',
+                secure: details.secure === null ? 'auto' : details.secure,
+                httpOnly: details.httpOnly === null ? 'auto' : details.httpOnly,
+                sameSite: details.sameSite === undefined ? 'auto' : details.sameSite
             });
             
             await chrome.cookies.set(details);
@@ -417,7 +440,8 @@ function parseCookieString(cookieStr) {
 }
 
 /**
- * IMPROVED: Parse single cookie với đầy đủ attributes
+ * Parse single cookie - Generic approach (giống Cookie-Editor)
+ * Chỉ parse name và value, để browser tự động điền các field còn lại
  */
 function parseSingleCookie(cookieStr) {
     // Split bằng dấu = đầu tiên
@@ -443,14 +467,12 @@ function parseSingleCookie(cookieStr) {
         decodedValue = value;
     }
     
+    // CHỈ trả về name và value - để browser tự động điền các field khác
     return {
         name: name,
-        value: decodedValue,
-        domain: '.netflix.com',
-        path: '/',
-        secure: true,
-        httpOnly: false
-        // Không set expirationDate - để browser tự quản lý
+        value: decodedValue
+        // KHÔNG set domain, path, secure, httpOnly, sameSite
+        // Browser sẽ tự động điền dựa trên URL và context
     };
 }
 
@@ -623,7 +645,7 @@ chrome.runtime.onInstalled.addListener((details) => {
     if (details.reason === 'install') {
         console.log('🎉 Netflix Guest Helper installed!');
     } else if (details.reason === 'update') {
-        console.log('🔄 Netflix Guest Helper updated to version', chrome.runtime.getManifest().version);
+        console.log('🔄 Netflix Guest Helper updated to version 1.3.0 (Generic Cookie Parsing)');
     }
 });
 
@@ -637,7 +659,7 @@ function broadcastPresence() {
             if (tab.url && (tab.url.includes('localhost') || tab.url.includes('127.0.0.1'))) {
                 chrome.tabs.sendMessage(tab.id, {
                     action: 'extensionReady',
-                    version: '1.2.0'
+                    version: '1.3.0'
                 }).catch(() => {});
             }
         });
@@ -646,4 +668,4 @@ function broadcastPresence() {
 
 broadcastPresence();
 
-console.log('✅ Background script ready (v1.2.0 - Improved with Auto Cleanup)');
+console.log('✅ Background script ready (v1.3.0 - Generic Cookie Parsing like Cookie-Editor)');
