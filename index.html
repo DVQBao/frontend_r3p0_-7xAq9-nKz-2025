@@ -1502,16 +1502,88 @@
             // Confirm action with new message
             const confirmed = await showConfirmCustomModal({
                 icon: '⚠️',
-                title: 'XÁC NHẬN ĐỔI TÀI KHOẢN',
-                message: `Bạn chắc chắn muốn đổi tài khoản?
-
-Việc này sẽ trừ 1 lần đổi tài khoản của tháng.
-
-Nếu hệ thống kiểm tra lại thấy tài khoản Netflix hiện tại vẫn dùng được, tài khoản của bạn có thể bị hạn chế.
-
-Vui lòng xem quảng cáo để hoàn tất.`,
-                confirmText: 'Đồng ý',
-                cancelText: 'Hủy'
+                title: 'TRƯỚC KHI ĐỔI TÀI KHOẢN',
+                message: `
+                    <div style="text-align: left; line-height: 1.8; font-size: 15px;">
+                        <div style="background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%); 
+                                    padding: 16px; 
+                                    border-radius: 12px; 
+                                    border: 2px solid #f59e0b; 
+                                    margin-bottom: 20px;
+                                    box-shadow: 0 4px 12px rgba(245, 158, 11, 0.2);">
+                            <div style="font-weight: 800; 
+                                        font-size: 16px; 
+                                        color: #92400e; 
+                                        margin-bottom: 12px;
+                                        text-transform: uppercase;
+                                        letter-spacing: 0.5px;">
+                                QUAN TRỌNG: TRƯỚC KHI ĐỔI TÀI KHOẢN - HÃY THỬ CÁC CÁCH SAU TRƯỚC!
+                            </div>
+                            <div style="color: #78350f; 
+                                        font-size: 14px; 
+                                        margin-bottom: 14px;
+                                        font-weight: 500;">
+                                Do cơ chế <strong>ANTIBOT của Netflix</strong>, đôi khi bạn cần:
+                            </div>
+                            <div style="background: white; 
+                                        padding: 14px; 
+                                        border-radius: 8px;
+                                        border-left: 4px solid #10b981;">
+                                <div style="color: #065f46; 
+                                            font-weight: 700; 
+                                            font-size: 15px; 
+                                            margin-bottom: 8px;">
+                                    1. TẮT VÀ MỞ LẠI TAB NETFLIX
+                                </div>
+                                <div style="color: #065f46; 
+                                            font-weight: 700; 
+                                            font-size: 15px; 
+                                            margin-bottom: 8px;">
+                                    2. THỬ CHUYỂN SANG PROFILE KHÁC
+                                </div>
+                                <div style="color: #065f46; 
+                                            font-weight: 700; 
+                                            font-size: 15px;">
+                                    3. TẮT VÀ MỞ LẠI TRÌNH DUYỆT
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div style="border-top: 2px dashed #d1d5db; 
+                                    margin: 20px 0; 
+                                    padding-top: 20px;">
+                            <div style="color: #374151; 
+                                        font-size: 14px; 
+                                        margin-bottom: 12px;
+                                        font-weight: 600;">
+                                Nếu vẫn không được, bạn mới cần phải đổi tài khoản với một số lưu ý sau:
+                            </div>
+                            <div style="background: #fef2f2; 
+                                        padding: 12px; 
+                                        border-radius: 8px; 
+                                        border-left: 4px solid #ef4444;
+                                        color: #991b1b;
+                                        font-size: 13px;
+                                        line-height: 1.6;">
+                                • Sẽ trừ <strong>1 lượt đổi</strong> của tháng<br>
+                                • Phải xem quảng cáo <strong>15 giây</strong><br>
+                                • Nếu hệ thống phát hiện tài khoản Netflix cũ vẫn hoạt động, tài khoản của bạn có thể <strong style="color: #dc2626;">bị hạn chế vì lạm dụng</strong>
+                            </div>
+                        </div>
+                        
+                        <div style="text-align: center; 
+                                    margin-top: 20px; 
+                                    padding-top: 16px; 
+                                    border-top: 1px solid #e5e7eb;
+                                    color: #1f2937;
+                                    font-weight: 600;
+                                    font-size: 15px;">
+                            Bạn đã thử 3 cách trên và vẫn không được?
+                        </div>
+                    </div>
+                `,
+                confirmText: 'Đã thử, vẫn lỗi - Đồng ý đổi',
+                cancelText: 'Để tôi thử lại'
             });
             
             if (!confirmed) return;
