@@ -862,18 +862,14 @@
                                 <span style="color: #ddd; font-size: 0.9rem;">Loại tài khoản:</span>
                                 <span id="userType" style="color: #4ade80; font-weight: 600; font-size: 0.95rem;">Free</span>
                             </div>
-                            <div style="display: flex; justify-content: space-between; align-items: center;">
-                                <span style="color: #ddd; font-size: 0.9rem;">Ngày đăng ký:</span>
-                                <span id="userJoinDate" style="color: #fbbf24; font-weight: 600; font-size: 0.95rem;">Hôm nay</span>
-                            </div>
                             <div id="proExpiresContainer" style="display: none; border-top: 1px solid rgba(229, 9, 20, 0.3); padding-top: 12px; margin-top: 12px;">
                                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
                                     <span style="color: #ddd; font-size: 0.9rem;">Ngày nâng Pro:</span>
-                                    <span id="proUpgradedDate" style="color: #a78bfa; font-weight: 600; font-size: 0.95rem;">-</span>
+                                    <span id="proUpgradedDate" style="color: #fff; font-weight: 600; font-size: 0.95rem;">-</span>
                                 </div>
                                 <div style="display: flex; justify-content: space-between; align-items: center;">
                                     <span style="color: #ddd; font-size: 0.9rem;">Hết hạn Pro:</span>
-                                    <span id="proExpiresDate" style="color: #10b981; font-weight: 600; font-size: 0.95rem;">-</span>
+                                    <span id="proExpiresDate" style="color: #fff; font-weight: 600; font-size: 0.95rem;">-</span>
                                 </div>
                             </div>
                             <div style="border-top: 1px solid rgba(229, 9, 20, 0.3); padding-top: 12px; margin-top: 12px;">
@@ -888,7 +884,7 @@
                             </div>
                         </div>
 
-                        <button onclick="openUpgradeToProModal()" class="btn" style="background: rgba(245, 158, 11, 0.1); color: #fbbf24; margin-bottom: 10px; border: 1px solid rgba(245, 158, 11, 0.3); border-radius: 8px; transition: all 0.3s;">
+                        <button id="upgradeToProBtn" onclick="openUpgradeToProModal()" class="btn" style="background: rgba(245, 158, 11, 0.1); color: #fbbf24; margin-bottom: 10px; border: 1px solid rgba(245, 158, 11, 0.3); border-radius: 8px; transition: all 0.3s;">
                             Nâng cấp lên Pro Plan
                         </button>
 
@@ -1718,19 +1714,10 @@ Vui lòng liên hệ Support (Facebook) để chúng tôi kiểm tra và reset l
                 document.getElementById('userEmail').textContent = user.email;
                 
                 // Update account type based on plan
-                const accountType = user.plan === 'pro' ? 'Pro' : 'Free';
-                const accountTypeColor = user.plan === 'pro' ? '#f5cd05' : '#e50914';
+                const accountType = user.plan === 'pro' ? 'Pro Plan' : 'Free Plan';
+                const accountTypeColor = user.plan === 'pro' ? '#f5cd05' : '#4ade80';
                 document.getElementById('userType').textContent = accountType;
                 document.getElementById('userType').style.color = accountTypeColor;
-                
-                // Format join date as DD/MM/YYYY
-                if (user.createdAt) {
-                    const date = new Date(user.createdAt);
-                    const day = String(date.getDate()).padStart(2, '0');
-                    const month = String(date.getMonth() + 1).padStart(2, '0');
-                    const year = date.getFullYear();
-                    document.getElementById('userJoinDate').textContent = `${day}/${month}/${year}`;
-                }
                 
                 // Show Pro info if Pro plan
                 if (user.plan === 'pro') {
@@ -1757,8 +1744,14 @@ Vui lòng liên hệ Support (Facebook) để chúng tôi kiểm tra và reset l
                     }
                     
                     document.getElementById('proExpiresContainer').style.display = 'block';
+                    // Ẩn nút nâng cấp Pro cho user Pro
+                    const upgradeBtn = document.getElementById('upgradeToProBtn');
+                    if (upgradeBtn) upgradeBtn.style.display = 'none';
                 } else {
                     document.getElementById('proExpiresContainer').style.display = 'none';
+                    // Hiện nút nâng cấp Pro cho user Free
+                    const upgradeBtn = document.getElementById('upgradeToProBtn');
+                    if (upgradeBtn) upgradeBtn.style.display = 'block';
                 }
                 
                 // Avatar emoji based on provider

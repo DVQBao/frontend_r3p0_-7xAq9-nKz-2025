@@ -925,17 +925,7 @@ window.showStepStatus = showStepStatus;
 window.hideStepStatus = hideStepStatus;
 
 console.log(`
-╔════════════════════════════════════════════════════╗
-║     🎬 Netflix Guest Sharing - Initialized        ║
-╠════════════════════════════════════════════════════╣
-║  Luồng 2 bước:                                     ║
-║  ① Mở Netflix Tab  → window.open()                ║
-║  ② Watch as Guest  → Ad → Cookie Injection        ║
-╠════════════════════════════════════════════════════╣
-║  Extension Required: Netflix Guest Helper          ║
-║  Auto-retry: ✅ (NEW!)                             ║
-║  Error Detection: ✅ (NEW!)                        ║
-╚════════════════════════════════════════════════════╝
+Welcome to TiemBanhNetFlix
 `);
 
 // Expose for debugging
