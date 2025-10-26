@@ -74,25 +74,18 @@ chrome.runtime.onMessageExternal.addListener(
                 await clearNetflixCookies();
                 console.log('🗑️ Cleared existing Netflix cookies');
                 
-                // Bước 2: Redirect về Netflix.com (trang login vì đã xóa cookie)
-                await chrome.tabs.update(netflixTab.id, { url: 'https://www.netflix.com' });
-                console.log('🔄 Redirected to Netflix.com (login page)');
-                
-                // Bước 3: Đợi trang login load xong
-                await sleep(2000); // 2 giây để đảm bảo trang đã load
-                
-                // Bước 4: Inject cookie mới (IMPROVED)
-                await injectCookiesImproved(request.cookieData, 'https://www.netflix.com');
+                // Bước 2: Inject cookie mới (IMPROVED)
+                await injectCookiesImproved(request.cookieData, netflixTab.url);
                 console.log('✅ Injected new cookies');
                 
-                // Bước 5: Đợi một chút để cookies được set
+                // Bước 3: Đợi một chút để cookies được set
                 await sleep(500);
                 
-                // Bước 6: Reload tab Netflix để áp dụng cookie mới
+                // Bước 4: Reload tab Netflix
                 await chrome.tabs.reload(netflixTab.id);
-                console.log('🔄 Reloaded Netflix tab to apply new cookie');
+                console.log('🔄 Reloaded Netflix tab');
                 
-                // Bước 7: Monitor tab để phát hiện /browse
+                // Bước 5: Monitor tab để phát hiện /browse
                 monitorNetflixTab(netflixTab.id);
                 
                 sendResponse({ success: true });
