@@ -867,9 +867,13 @@
                                 <span id="userJoinDate" style="color: #fbbf24; font-weight: 600; font-size: 0.95rem;">Hôm nay</span>
                             </div>
                             <div id="proExpiresContainer" style="display: none; border-top: 1px solid rgba(229, 9, 20, 0.3); padding-top: 12px; margin-top: 12px;">
+                                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                                    <span style="color: #ddd; font-size: 0.9rem;">Ngày nâng Pro:</span>
+                                    <span id="proUpgradedDate" style="color: #a78bfa; font-weight: 600; font-size: 0.95rem;">-</span>
+                                </div>
                                 <div style="display: flex; justify-content: space-between; align-items: center;">
                                     <span style="color: #ddd; font-size: 0.9rem;">Hết hạn Pro:</span>
-                                    <span id="proExpiresDate" style="color: #05f83a; font-weight: 600; font-size: 0.95rem;">-</span>
+                                    <span id="proExpiresDate" style="color: #10b981; font-weight: 600; font-size: 0.95rem;">-</span>
                                 </div>
                             </div>
                             <div style="border-top: 1px solid rgba(229, 9, 20, 0.3); padding-top: 12px; margin-top: 12px;">
@@ -1728,13 +1732,30 @@ Vui lòng liên hệ Support (Facebook) để chúng tôi kiểm tra và reset l
                     document.getElementById('userJoinDate').textContent = `${day}/${month}/${year}`;
                 }
                 
-                // Show Pro expiration date if Pro plan
-                if (user.plan === 'pro' && user.proExpiresAt) {
-                    const expiresDate = new Date(user.proExpiresAt);
-                    const day = String(expiresDate.getDate()).padStart(2, '0');
-                    const month = String(expiresDate.getMonth() + 1).padStart(2, '0');
-                    const year = expiresDate.getFullYear();
-                    document.getElementById('proExpiresDate').textContent = `${day}/${month}/${year}`;
+                // Show Pro info if Pro plan
+                if (user.plan === 'pro') {
+                    // Show Pro upgrade date
+                    if (user.proUpgradedAt) {
+                        const upgradedDate = new Date(user.proUpgradedAt);
+                        const dayU = String(upgradedDate.getDate()).padStart(2, '0');
+                        const monthU = String(upgradedDate.getMonth() + 1).padStart(2, '0');
+                        const yearU = upgradedDate.getFullYear();
+                        document.getElementById('proUpgradedDate').textContent = `${dayU}/${monthU}/${yearU}`;
+                    } else {
+                        document.getElementById('proUpgradedDate').textContent = '-';
+                    }
+                    
+                    // Show Pro expiration date
+                    if (user.proExpiresAt) {
+                        const expiresDate = new Date(user.proExpiresAt);
+                        const dayE = String(expiresDate.getDate()).padStart(2, '0');
+                        const monthE = String(expiresDate.getMonth() + 1).padStart(2, '0');
+                        const yearE = expiresDate.getFullYear();
+                        document.getElementById('proExpiresDate').textContent = `${dayE}/${monthE}/${yearE}`;
+                    } else {
+                        document.getElementById('proExpiresDate').textContent = '-';
+                    }
+                    
                     document.getElementById('proExpiresContainer').style.display = 'block';
                 } else {
                     document.getElementById('proExpiresContainer').style.display = 'none';

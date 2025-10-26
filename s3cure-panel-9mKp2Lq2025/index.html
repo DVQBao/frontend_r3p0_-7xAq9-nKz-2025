@@ -1193,6 +1193,7 @@
                                 <th style="width: 150px;">Location</th>
                                 <th style="width: 200px;">Device Fingerprint</th>
                                 <th style="width: 100px;">Reg.date</th>
+                                <th style="width: 100px;">Pro Since</th>
                                 <th style="width: 100px;">Pro Exp.</th>
                                 <th style="width: 100px;">Last login</th>
                                 <th style="width: 150px;">Monthly Limit</th>
@@ -1203,6 +1204,7 @@
 
             users.forEach((user, index) => {
                 const createdAt = new Date(user.createdAt).toLocaleDateString('vi-VN');
+                const proUpgraded = user.proUpgradedAt ? new Date(user.proUpgradedAt).toLocaleDateString('vi-VN') : '-';
                 const proExpires = user.proExpiresAt ? new Date(user.proExpiresAt).toISOString().split('T')[0] : '';
                 const lastLogin = user.lastLogin ? new Date(user.lastLogin).toLocaleDateString('vi-VN') : 'No login';
                 
@@ -1277,6 +1279,7 @@
                         <td style="font-size: 0.85rem; color: var(--text-primary);">${location}</td>
                         <td style="font-size: 0.75rem; color: ${user.deviceFingerprint ? '#10b981' : '#6b7280'}; font-family: monospace;" title="${user.deviceFingerprint || 'No fingerprint'}">${fingerprint}</td>
                         <td>${createdAt}</td>
+                        <td style="color: ${user.proUpgradedAt ? '#8b5cf6' : '#6b7280'};">${proUpgraded}</td>
                         <td>
                             <span class="view-mode">${proExpires ? new Date(proExpires).toLocaleDateString('vi-VN') : '-'}</span>
                             <input type="date" class="edit-mode" value="${proExpires}" style="display: none; width: 100%; padding: 4px; border: 1px solid #ddd; border-radius: 4px;">
