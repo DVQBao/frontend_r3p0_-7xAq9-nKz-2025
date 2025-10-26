@@ -1540,6 +1540,34 @@ Bạn đã thử 3 cách trên và vẫn không được?`,
                 return;
             }
             
+            // ========================================
+            // BƯỚC 2.5: CHECK QUOTA TRƯỚC KHI CALL API
+            // ========================================
+            const currentUser = JSON.parse(
+                localStorage.getItem('currentUser') || 
+                localStorage.getItem('current_user') || 
+                '{}'
+            );
+            
+            console.log('🔍 Checking quota before API call:', currentUser.monthlyReportLimit);
+            
+            // Nếu quota < 1 → DỪNG NGAY, show modal nâng cấp
+            if (currentUser.monthlyReportLimit !== undefined && currentUser.monthlyReportLimit < 1) {
+                console.log('⛔ Quota < 1, showing upgrade modal - User saved from wasting API call!');
+                closeReportIssueModal();
+                
+                if (currentUser.plan === 'free') {
+                    showLimitExceededFreeModal();
+                } else {
+                    showLimitExceededProModal();
+                }
+                
+                return; // ❌ DỪNG - Không call API
+            }
+            
+            console.log('✅ Quota >= 1, proceeding to API call');
+            // ========================================
+            
             try {
                 // Call API to report issue
                 const response = await fetch('https://backend-c0r3-7xpq9zn2025.onrender.com/api/cookies/report-issue', {
