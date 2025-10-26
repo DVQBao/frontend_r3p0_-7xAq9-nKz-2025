@@ -1457,7 +1457,7 @@
                         adModal.classList.remove('active');
                         startBtn.removeEventListener('click', handleStart);
                         cancelBtn.removeEventListener('click', handleCancel);
-                        resolve();
+                        resolve(true); // User watched ad - continue
                     }
                 };
 
@@ -1467,7 +1467,7 @@
                     adModal.classList.remove('active');
                     startBtn.removeEventListener('click', handleStart);
                     cancelBtn.removeEventListener('click', handleCancel);
-                    resolve(); // Still resolve to allow closing
+                    resolve(false); // User cancelled - stop
                 };
 
                 startBtn.addEventListener('click', handleStart);
@@ -1526,7 +1526,13 @@ Bạn đã thử 3 cách trên và vẫn không được?`,
             if (!confirmed) return;
             
             // Show ad before processing
-            await showAdBeforeReport();
+            const watchedAd = await showAdBeforeReport();
+            
+            // If user cancelled ad, stop here
+            if (!watchedAd) {
+                console.log('❌ User cancelled ad - Report issue aborted');
+                return;
+            }
             
             try {
                 // Call API to report issue
