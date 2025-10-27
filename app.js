@@ -864,12 +864,11 @@ function showStepStatus(stepNumber, type, message) {
 }
 
 /**
- * Ẩn status cho step
+ * Ẩn status cho step (no longer needed, kept for compatibility)
  */
 function hideStepStatus(stepNumber) {
-    const statusElement = stepNumber === 1 ? elements.step1Status : elements.step2Status;
-    statusElement.className = 'step-status';
-    statusElement.textContent = '';
+    // Elements are now removed, function kept for compatibility
+    // Status updates are now handled via showStepStatus() only
 }
 
 /**
