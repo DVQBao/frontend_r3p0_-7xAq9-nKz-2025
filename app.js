@@ -39,8 +39,6 @@ const elements = {
     watchAsGuestBtn: document.getElementById('watchAsGuestBtn'),
     
     // Step status
-    step1Status: document.getElementById('step1Status'),
-    step2Status: document.getElementById('step2Status'),
     statusMessage: document.getElementById('statusMessage'),
     
     // Plan modal
