@@ -808,8 +808,6 @@
                                 <span style="font-size: 0.9rem; color: #facc00; font-weight: 600; margin-right: 6px; line-height: 1;">Trạng thái:</span>
                                 <span id="statusMessage" style="color: #4ade80; font-size: 0.9rem; line-height: 1;">Sẵn sàng để Netflix and Chill - Let's go!!!</span>
                             </div>
-                            <div class="step-status" id="step1Status" style="margin-top: 8px;"></div>
-                            <div class="step-status" id="step2Status"></div>
                         </div>
 
                         <!-- Responsive: Stack on mobile -->
@@ -854,27 +852,27 @@
                             <p id="userEmail" style="font-size: 0.95rem; color: #aaa; margin-bottom: 20px;">email@example.com</p>
                         </div>
 
-                        <div style="background: rgba(99, 102, 241, 0.08); border: 1px solid rgba(99, 102, 241, 0.25); padding: 15px; border-radius: 10px; margin-bottom: 15px;">
+                        <div id="userInfoCard" style="background: rgba(99, 102, 241, 0.08); border: 1px solid rgba(99, 102, 241, 0.25); padding: 15px; border-radius: 10px; margin-bottom: 15px;">
                             <div style="text-align: center; margin-bottom: 12px;">
                                 <span id="userType" style="color: #4649f7; font-weight: 600; font-size: 1.1rem;">FREE PLAN</span>
                             </div>
                             <div id="proExpiresContainer" style="display: none; border-top: 1px solid rgba(99, 102, 241, 0.25); padding-top: 12px; margin-top: 12px;">
                                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
-                                    <span style="color: #fff; font-weight: 600; font-size: 0.9rem;">Hiệu lực từ:</span>
+                                    <span style="color: #fff; font-weight: 600; font-size: 0.9rem;">Valid date:</span>
                                     <span id="proUpgradedDate" style="color: #fff; font-size: 0.95rem;">-</span>
                                 </div>
                                 <div style="display: flex; justify-content: space-between; align-items: center;">
-                                    <span style="color: #fff; font-weight: 600; font-size: 0.9rem;">Hết hạn vào:</span>
+                                    <span style="color: #fff; font-weight: 600; font-size: 0.9rem;">Expires date:</span>
                                     <span id="proExpiresDate" style="color: #fff; font-size: 0.95rem;">-</span>
                                 </div>
                             </div>
-                            <div style="border-top: 1px solid rgba(99, 102, 241, 0.25); padding-top: 12px; margin-top: 12px;">
+                            <div id="netflixInfoBorder" style="border-top: 1px solid rgba(99, 102, 241, 0.25); padding-top: 12px; margin-top: 12px;">
                                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
-                                    <span style="color: #fff; font-weight: 600; font-size: 0.9rem;">Tài khoản Netflix số:</span>
+                                    <span style="color: #fff; font-weight: 600; font-size: 0.9rem;">Assigned Netflix account:</span>
                                     <span id="assignedCookie" style="color: #10b981; font-size: 0.95rem;">-</span>
                                 </div>
                                 <div style="display: flex; justify-content: space-between; align-items: center;">
-                                    <span style="color: #fff; font-weight: 600; font-size: 0.9rem;">Lượt đổi tài khoản Netflix còn lại:</span>
+                                    <span style="color: #fff; font-weight: 600; font-size: 0.9rem;">Account change remaining:</span>
                                     <span id="reportLimit" style="color: #fbbf24; font-size: 0.95rem;">2/2</span>
                                 </div>
                             </div>
@@ -1364,7 +1362,7 @@
                         cookieElement.textContent = `#${cookieNumber}`;
                         cookieElement.style.color = '#10b981';
                     } else if (cookieElement) {
-                        cookieElement.textContent = 'Chưa cấp';
+                        cookieElement.textContent = 'Not assigned';
                         cookieElement.style.color = '#ef4444';
                     }
                     
@@ -1714,6 +1712,25 @@ Vui lòng liên hệ Support (Facebook) để chúng tôi kiểm tra và reset l
                 const accountTypeColor = user.plan === 'pro' ? '#f5cd05' : '#4ade80';
                 document.getElementById('userType').textContent = accountType;
                 document.getElementById('userType').style.color = accountTypeColor;
+                
+                // Update user info card theme based on plan
+                const userInfoCard = document.getElementById('userInfoCard');
+                const netflixInfoBorder = document.getElementById('netflixInfoBorder');
+                const proExpiresBorder = document.getElementById('proExpiresContainer');
+                
+                if (user.plan === 'pro') {
+                    // Pro Plan - Gold theme
+                    userInfoCard.style.background = 'rgba(245, 205, 5, 0.08)';
+                    userInfoCard.style.border = '1px solid rgba(245, 205, 5, 0.25)';
+                    if (netflixInfoBorder) netflixInfoBorder.style.borderTop = '1px solid rgba(245, 205, 5, 0.25)';
+                    if (proExpiresBorder) proExpiresBorder.style.borderTop = '1px solid rgba(245, 205, 5, 0.25)';
+                } else {
+                    // Free Plan - Indigo theme
+                    userInfoCard.style.background = 'rgba(99, 102, 241, 0.08)';
+                    userInfoCard.style.border = '1px solid rgba(99, 102, 241, 0.25)';
+                    if (netflixInfoBorder) netflixInfoBorder.style.borderTop = '1px solid rgba(99, 102, 241, 0.25)';
+                    if (proExpiresBorder) proExpiresBorder.style.borderTop = '1px solid rgba(99, 102, 241, 0.25)';
+                }
                 
                 // Show Pro info if Pro plan
                 if (user.plan === 'pro') {

@@ -41,6 +41,7 @@ const elements = {
     // Step status
     step1Status: document.getElementById('step1Status'),
     step2Status: document.getElementById('step2Status'),
+    statusMessage: document.getElementById('statusMessage'),
     
     // Plan modal
     planModal: document.getElementById('planModal'),
@@ -854,9 +855,14 @@ async function injectCookieViaExtension(cookieData) {
  * Hiển thị status cho step
  */
 function showStepStatus(stepNumber, type, message) {
-    const statusElement = stepNumber === 1 ? elements.step1Status : elements.step2Status;
-    statusElement.className = `step-status show ${type}`;
-    statusElement.textContent = message;
+    // Remove all emojis and icons from message
+    const cleanMessage = message.replace(/[\u{1F300}-\u{1F9FF}]|[\u{2600}-\u{26FF}]|[\u{2700}-\u{27BF}]|❌|✅|🔄|⚠️|📊/gu, '').trim();
+    
+    // Update main status message
+    if (elements.statusMessage) {
+        elements.statusMessage.textContent = cleanMessage;
+        elements.statusMessage.style.color = type === 'error' ? '#ef4444' : type === 'success' ? '#4ade80' : '#facc00';
+    }
 }
 
 /**
