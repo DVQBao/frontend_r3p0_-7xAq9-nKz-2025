@@ -189,7 +189,6 @@
             padding: 8px 12px;
             background: rgba(0, 0, 0, 0.3);
             border-radius: 6px;
-            font-family: 'Courier New', monospace;
             font-size: 0.85rem;
             word-break: break-all;
         }
@@ -750,67 +749,57 @@
                                     Hoặc nâng cấp lên Pro plan để xem không quảng cáo.
                                 </p>
 
-                                <div class="step-flow">
-                                    <!-- Combined Steps -->
-                                    <div class="step">
-                                        <div style="display: flex; flex-direction: column; gap: 10px;">
-                                            <button class="btn" id="openNetflixBtn" style="font-size: 0.85rem; padding: 8px 16px;">
-                                                Bước 1: Mở Netflix.com
-                                            </button>
-                                            <button class="btn" id="watchAsGuestBtn" style="font-size: 0.85rem; padding: 8px 16px;">
-                                                Bước 2: Watch as Guest
-                                            </button>
-                                            <button onclick="window.open('https://www.facebook.com/tiembanh4k/', '_blank')" class="btn" style="font-size: 0.85rem; padding: 8px 16px;">
-                                                Contact Support
-                                            </button>
-                                        </div>
-                                        <div class="step-status" id="step1Status"></div>
-                                        <div class="step-status" id="step2Status"></div>
-                                    </div>
+                                <div style="display: flex; flex-direction: column; gap: 10px;">
+                                    <button class="btn" id="openNetflixBtn" style="font-size: 0.85rem; padding: 8px 16px;">
+                                        Bước 1: Mở Netflix.com
+                                    </button>
+                                    <button class="btn" id="watchAsGuestBtn" style="font-size: 0.85rem; padding: 8px 16px;">
+                                        Bước 2: Watch as Guest
+                                    </button>
+                                    <button onclick="window.open('https://www.facebook.com/tiembanh4k/', '_blank')" class="btn" style="font-size: 0.85rem; padding: 8px 16px;">
+                                        Contact Support
+                                    </button>
                                 </div>
+                                <div class="step-status" id="step1Status"></div>
+                                <div class="step-status" id="step2Status"></div>
                             </div>
 
                             <!-- CỘT B: HƯỚNG DẪN KÍCH HOẠT TV -->
                             <div style="background: rgba(139, 92, 246, 0.1); border: 1px solid rgba(139, 92, 246, 0.3); border-radius: 12px; padding: 20px;">
                                 <h3 style="font-size: 1.2rem; margin-bottom: 15px; color: #a78bfa;">Hướng dẫn xem trên TV</h3>
 
-                                <!-- Compact Steps -->
-                                <div style="background: rgba(0, 0, 0, 0.3); padding: 15px; border-radius: 8px; margin-bottom: 10px;">
-                                    <div style="display: flex; align-items: flex-start; gap: 12px; margin-bottom: 12px;">
-                                        <span style="background: #a78bfa; color: #000; min-width: 24px; height: 24px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 0.85rem; margin-top: 2px;">1</span>
-                                        <p style="margin: 0; font-size: 0.85rem; color: #ddd; line-height: 1.5;">
-                                            Nhấn <strong>"Watch as Guest"</strong> để kích hoạt tài khoản.
-                                        </p>
-                                    </div>
-                                    
-                                    <div style="display: flex; align-items: flex-start; gap: 12px; margin-bottom: 12px;">
-                                        <span style="background: #a78bfa; color: #000; min-width: 24px; height: 24px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 0.85rem; margin-top: 2px;">2</span>
-                                        <p style="margin: 0; font-size: 0.85rem; color: #ddd; line-height: 1.5;">
-                                            Bật Smart TV → Netflix hiển thị link (vd: <code style="background: rgba(255,255,255,0.1); padding: 1px 4px; border-radius: 3px; font-size: 0.8rem;">netflix.com/tv2</code>) và mã 8 số.
-                                        </p>
-                                    </div>
-                                    
-                                    <div style="display: flex; align-items: flex-start; gap: 12px; margin-bottom: 12px;">
-                                        <span style="background: #a78bfa; color: #000; min-width: 24px; height: 24px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 0.85rem; margin-top: 2px;">3</span>
-                                        <p style="margin: 0; font-size: 0.85rem; color: #ddd; line-height: 1.5;">
-                                            Trên PC: Truy cập link ở bước 2 → Nhập mã → Nhấn Enter.
-                                        </p>
-                                    </div>
-                                    
-                                    <div style="display: flex; align-items: flex-start; gap: 12px; margin-bottom: 12px;">
-                                        <span style="background: #4ade80; color: #000; min-width: 24px; height: 24px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 0.85rem; margin-top: 2px;">✓</span>
-                                        <p style="margin: 0; font-size: 0.85rem; color: #4ade80; line-height: 1.5;">
-                                            URL → <code style="background: rgba(74,222,128,0.15); color: #4ade80; padding: 1px 4px; border-radius: 3px; font-size: 0.8rem;">/tv/out/success</code> → TV đã kích hoạt!
-                                        </p>
-                                    </div>
-                                    
-                                    <!-- Video Tutorial Button -->
-                                    <div style="margin-top: 15px;">
-                                        <button onclick="window.open('https://youtu.be/ZCgK92o_EyY', '_blank')" style="background: linear-gradient(135deg, #ff0000, #cc0000); color: white; border: none; padding: 8px 16px; border-radius: 6px; font-size: 0.8rem; font-weight: 600; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; transition: all 0.2s ease; width: 100%;">
-                                            <span>Xem video hướng dẫn</span>
-                                        </button>
-                                    </div>
+                                <div style="display: flex; align-items: flex-start; gap: 12px; margin-bottom: 12px;">
+                                    <span style="background: #a78bfa; color: #000; min-width: 24px; height: 24px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 0.85rem; margin-top: 2px;">1</span>
+                                    <p style="margin: 0; font-size: 0.85rem; color: #ddd; line-height: 1.5;">
+                                        Nhấn <strong>"Watch as Guest"</strong> để kích hoạt tài khoản.
+                                    </p>
                                 </div>
+                                
+                                <div style="display: flex; align-items: flex-start; gap: 12px; margin-bottom: 12px;">
+                                    <span style="background: #a78bfa; color: #000; min-width: 24px; height: 24px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 0.85rem; margin-top: 2px;">2</span>
+                                    <p style="margin: 0; font-size: 0.85rem; color: #ddd; line-height: 1.5;">
+                                        Bật Smart TV → Netflix hiển thị link (vd: <code style="background: rgba(255,255,255,0.1); padding: 1px 4px; border-radius: 3px; font-size: 0.8rem; font-family: inherit;">netflix.com/tv2</code>) và mã 8 số.
+                                    </p>
+                                </div>
+                                
+                                <div style="display: flex; align-items: flex-start; gap: 12px; margin-bottom: 12px;">
+                                    <span style="background: #a78bfa; color: #000; min-width: 24px; height: 24px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 0.85rem; margin-top: 2px;">3</span>
+                                    <p style="margin: 0; font-size: 0.85rem; color: #ddd; line-height: 1.5;">
+                                        Trên PC: Truy cập link ở bước 2 → Nhập mã → Nhấn Enter.
+                                    </p>
+                                </div>
+                                
+                                <div style="display: flex; align-items: flex-start; gap: 12px; margin-bottom: 15px;">
+                                    <span style="background: #4ade80; color: #000; min-width: 24px; height: 24px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 0.85rem; margin-top: 2px;">✓</span>
+                                    <p style="margin: 0; font-size: 0.85rem; color: #4ade80; line-height: 1.5;">
+                                        URL → <code style="background: rgba(74,222,128,0.15); color: #4ade80; padding: 1px 4px; border-radius: 3px; font-size: 0.8rem; font-family: inherit;">/tv/out/success</code> → TV đã kích hoạt!
+                                    </p>
+                                </div>
+                                
+                                <!-- Video Tutorial Button -->
+                                <button onclick="window.open('https://youtu.be/ZCgK92o_EyY', '_blank')" style="background: linear-gradient(135deg, #ff0000, #cc0000); color: white; border: none; padding: 8px 16px; border-radius: 6px; font-size: 0.8rem; font-weight: 600; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; transition: all 0.2s ease; width: 100%;">
+                                    <span>Xem video hướng dẫn</span>
+                                </button>
                             </div>
 
                         </div>
@@ -858,9 +847,8 @@
                         </div>
 
                         <div style="background: rgba(229, 9, 20, 0.1); border: 1px solid rgba(229, 9, 20, 0.3); padding: 15px; border-radius: 10px; margin-bottom: 15px;">
-                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
-                                <span style="color: #fff; font-weight: 600; font-size: 0.9rem;">Loại tài khoản:</span>
-                                <span id="userType" style="color: #4ade80; font-size: 0.95rem;">Free Plan</span>
+                            <div style="text-align: center; margin-bottom: 12px;">
+                                <span id="userType" style="color: #4649f7; font-weight: 600; font-size: 1.1rem;">FREE PLAN</span>
                             </div>
                             <div id="proExpiresContainer" style="display: none; border-top: 1px solid rgba(229, 9, 20, 0.3); padding-top: 12px; margin-top: 12px;">
                                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
@@ -875,7 +863,7 @@
                             <div style="border-top: 1px solid rgba(229, 9, 20, 0.3); padding-top: 12px; margin-top: 12px;">
                                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
                                     <span style="color: #fff; font-weight: 600; font-size: 0.9rem;">Tài khoản Netflix số:</span>
-                                    <span id="assignedCookie" style="color: #10b981; font-size: 0.95rem; font-family: monospace;">-</span>
+                                    <span id="assignedCookie" style="color: #10b981; font-size: 0.95rem;">-</span>
                                 </div>
                                 <div style="display: flex; justify-content: space-between; align-items: center;">
                                     <span style="color: #fff; font-weight: 600; font-size: 0.9rem;">Lượt đổi tài khoản Netflix còn lại:</span>
@@ -1150,7 +1138,7 @@
             
             <div id="customReasonContainer" style="display: none; margin-bottom: 20px;">
                 <label style="display: block; margin-bottom: 10px; font-weight: 600;">Nhập lý do:</label>
-                <textarea id="customReason" placeholder="Mô tả chi tiết lý do..." style="width: 100%; padding: 10px; border: 2px solid #ddd; border-radius: 8px; font-size: 1rem; min-height: 80px;"></textarea>
+                <textarea id="customReason" placeholder="Mô tả chi tiết lý do..." style="width: 100%; padding: 10px; border: 2px solid #ddd; border-radius: 8px; font-size: 1rem; min-height: 80px; font-family: inherit;"></textarea>
             </div>
 
             <div class="modal-actions">
@@ -1714,7 +1702,7 @@ Vui lòng liên hệ Support (Facebook) để chúng tôi kiểm tra và reset l
                 document.getElementById('userEmail').textContent = user.email;
                 
                 // Update account type based on plan
-                const accountType = user.plan === 'pro' ? 'Pro Plan' : 'Free Plan';
+                const accountType = user.plan === 'pro' ? 'PRO PLAN' : 'FREE PLAN';
                 const accountTypeColor = user.plan === 'pro' ? '#f5cd05' : '#4ade80';
                 document.getElementById('userType').textContent = accountType;
                 document.getElementById('userType').style.color = accountTypeColor;
