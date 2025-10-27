@@ -1713,25 +1713,6 @@ Vui lòng liên hệ Support (Facebook) để chúng tôi kiểm tra và reset l
                 document.getElementById('userType').textContent = accountType;
                 document.getElementById('userType').style.color = accountTypeColor;
                 
-                // Update user info card theme based on plan
-                const userInfoCard = document.getElementById('userInfoCard');
-                const netflixInfoBorder = document.getElementById('netflixInfoBorder');
-                const proExpiresBorder = document.getElementById('proExpiresContainer');
-                
-                if (user.plan === 'pro') {
-                    // Pro Plan - Gold theme
-                    userInfoCard.style.background = 'rgba(245, 205, 5, 0.08)';
-                    userInfoCard.style.border = '1px solid rgba(245, 205, 5, 0.25)';
-                    if (netflixInfoBorder) netflixInfoBorder.style.borderTop = '1px solid rgba(245, 205, 5, 0.25)';
-                    if (proExpiresBorder) proExpiresBorder.style.borderTop = '1px solid rgba(245, 205, 5, 0.25)';
-                } else {
-                    // Free Plan - Indigo theme
-                    userInfoCard.style.background = 'rgba(99, 102, 241, 0.08)';
-                    userInfoCard.style.border = '1px solid rgba(99, 102, 241, 0.25)';
-                    if (netflixInfoBorder) netflixInfoBorder.style.borderTop = '1px solid rgba(99, 102, 241, 0.25)';
-                    if (proExpiresBorder) proExpiresBorder.style.borderTop = '1px solid rgba(99, 102, 241, 0.25)';
-                }
-                
                 // Show Pro info if Pro plan
                 if (user.plan === 'pro') {
                     // Show Pro upgrade date
