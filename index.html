@@ -700,6 +700,19 @@
     </style>
 </head>
 <body>
+    <!-- Smart Loading Indicator -->
+    <div id="smartLoadingOverlay" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.85); backdrop-filter: blur(8px); display: none; align-items: center; justify-content: center; z-index: 99999;">
+        <div style="text-align: center;">
+            <div style="width: 50px; height: 50px; border: 4px solid rgba(229, 9, 20, 0.2); border-top-color: #e50914; border-radius: 50%; animation: spin 0.8s linear infinite; margin: 0 auto 15px;"></div>
+            <div id="smartLoadingText" style="color: #fff; font-size: 1rem; font-weight: 500;">Đang xử lý...</div>
+        </div>
+    </div>
+    <style>
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+    </style>
+    
     <div class="main-wrapper">
         <div class="main-content">
             <div class="container">
@@ -1236,6 +1249,41 @@
 
     <script>
         // ========================================
+        // SMART LOADING INDICATOR
+        // ========================================
+        
+        let loadingTimeout = null;
+        
+        /**
+         * Hiện loading sau 500ms (chỉ khi API thực sự chậm)
+         */
+        function showSmartLoading(text = 'Đang xử lý...', delayMs = 500) {
+            if (loadingTimeout) clearTimeout(loadingTimeout);
+            
+            loadingTimeout = setTimeout(() => {
+                const overlay = document.getElementById('smartLoadingOverlay');
+                const textEl = document.getElementById('smartLoadingText');
+                if (overlay && textEl) {
+                    textEl.textContent = text;
+                    overlay.style.display = 'flex';
+                }
+            }, delayMs);
+        }
+        
+        /**
+         * Ẩn loading ngay lập tức
+         */
+        function hideSmartLoading() {
+            if (loadingTimeout) {
+                clearTimeout(loadingTimeout);
+                loadingTimeout = null;
+            }
+            
+            const overlay = document.getElementById('smartLoadingOverlay');
+            if (overlay) overlay.style.display = 'none';
+        }
+        
+        // ========================================
         // CUSTOM MODAL DIALOG SYSTEM
         // ========================================
 
@@ -1545,6 +1593,8 @@ Bạn đã thử 3 cách trên và vẫn không được?`,
             }
             
             try {
+                showSmartLoading('Đang kiểm tra quota...', 500);
+                
                 // Call API to report issue
                 const response = await fetch('https://backend-c0r3-7xpq9zn2025.onrender.com/api/cookies/report-issue', {
                     method: 'POST',
@@ -1559,6 +1609,7 @@ Bạn đã thử 3 cách trên và vẫn không được?`,
                 });
                 
                 const data = await response.json();
+                hideSmartLoading();
                 
                 if (!response.ok) {
                     // Handle LIMIT_EXCEEDED error
@@ -1629,6 +1680,7 @@ Bạn đã thử 3 cách trên và vẫn không được?`,
                 });
                 
             } catch (error) {
+                hideSmartLoading();
                 console.error('❌ Report issue error:', error);
                 showCustomModal({
                     icon: '❌',

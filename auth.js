@@ -342,6 +342,8 @@ async function handleLogin(event) {
     console.log('🔐 Login attempt:', email);
     
     try {
+        showSmartLoading('Đang đăng nhập...', 500);
+        
         // Call backend API
         const response = await fetch(`${BACKEND_URL}/api/auth/login`, {
             method: 'POST',
@@ -352,6 +354,7 @@ async function handleLogin(event) {
         });
         
         const data = await response.json();
+        hideSmartLoading();
         
         if (response.ok) {
             // Login successful
@@ -371,6 +374,7 @@ async function handleLogin(event) {
             showError(`❌ ${data.error || 'Đăng nhập thất bại!'}`);
         }
     } catch (error) {
+        hideSmartLoading();
         console.error('❌ Login error:', error);
         showError('❌ Lỗi kết nối! Vui lòng thử lại sau.');
     }
@@ -460,6 +464,8 @@ async function handleRegister(event) {
         // Get reCAPTCHA token
         const recaptchaToken = await getRecaptchaToken('register');
         
+        showSmartLoading('Đang đăng ký...', 500);
+        
         // Call backend API
         const response = await fetch(`${BACKEND_URL}/api/auth/register`, {
             method: 'POST',
@@ -476,6 +482,7 @@ async function handleRegister(event) {
         });
         
         const data = await response.json();
+        hideSmartLoading();
         
         if (response.ok) {
             // Registration successful
@@ -539,6 +546,7 @@ Email: ${account.email}
             }
         }
     } catch (error) {
+        hideSmartLoading();
         console.error('❌ Registration error:', error);
         showError('❌ Lỗi kết nối! Vui lòng thử lại sau.');
     }
