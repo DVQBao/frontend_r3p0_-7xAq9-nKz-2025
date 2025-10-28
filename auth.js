@@ -412,12 +412,22 @@ async function handleLogin(event) {
                 window.location.href = '/';
             }, 1000);
         } else {
-            showError(`❌ ${data.error || 'Đăng nhập thất bại!'}`);
+            showCustomModal({
+                icon: '❌',
+                title: 'Đăng nhập thất bại',
+                message: data.error || 'Thông tin đăng nhập không chính xác.\n\nVui lòng kiểm tra lại email và mật khẩu.',
+                buttons: [{ text: 'Thử lại', type: 'primary' }]
+            });
         }
     } catch (error) {
         hideSmartLoading();
         console.error('❌ Login error:', error);
-        showError('❌ Lỗi kết nối! Vui lòng thử lại sau.');
+        showCustomModal({
+            icon: '⚠️',
+            title: 'Lỗi kết nối',
+            message: 'Không thể kết nối đến server.\n\nVui lòng kiểm tra kết nối internet và thử lại.',
+            buttons: [{ text: 'Đã hiểu', type: 'primary' }]
+        });
     }
 }
 
@@ -438,7 +448,12 @@ async function handleRegister(event) {
     
     // Anti-Spam Check 1: CAPTCHA
     if (!antiSpam.captchaVerified) {
-        showError('❌ Vui lòng xác nhận bạn không phải robot!');
+        showCustomModal({
+            icon: '🤖',
+            title: 'Xác minh CAPTCHA',
+            message: 'Vui lòng xác nhận bạn không phải robot trước khi đăng ký.',
+            buttons: [{ text: 'Đã hiểu', type: 'primary' }]
+        });
         document.getElementById('captchaBox').style.animation = 'shake 0.5s';
         setTimeout(() => {
             document.getElementById('captchaBox').style.animation = '';
@@ -452,7 +467,12 @@ async function handleRegister(event) {
     
     if (timeSinceLastRegister < antiSpam.COOLDOWN_MS) {
         const remainingSeconds = Math.ceil((antiSpam.COOLDOWN_MS - timeSinceLastRegister) / 1000);
-        showError(`⏳ Vui lòng đợi ${remainingSeconds} giây trước khi đăng ký lại!`);
+        showCustomModal({
+            icon: '⏳',
+            title: 'Vui lòng đợi',
+            message: `Bạn đang thao tác quá nhanh.\n\nVui lòng đợi ${remainingSeconds} giây trước khi đăng ký lại.`,
+            buttons: [{ text: 'Đã hiểu', type: 'primary' }]
+        });
         return;
     }
     
@@ -462,38 +482,68 @@ async function handleRegister(event) {
     const recentAttempts = registerHistory.filter(time => time > oneHourAgo);
     
     if (recentAttempts.length >= antiSpam.MAX_ATTEMPTS_PER_HOUR) {
-        showError('❌ Bạn đã đăng ký quá nhiều lần! Vui lòng thử lại sau 1 giờ.');
+        showCustomModal({
+            icon: '🚫',
+            title: 'Đã vượt quá giới hạn',
+            message: `Bạn đã đăng ký quá nhiều lần trong 1 giờ qua.\n\nVui lòng thử lại sau ít nhất 1 giờ để đảm bảo an toàn hệ thống.`,
+            buttons: [{ text: 'Đã hiểu', type: 'primary' }]
+        });
         return;
     }
     
     // Validate Name
     if (name.length < 3) {
-        showError('❌ Tên phải có ít nhất 3 ký tự!');
+        showCustomModal({
+            icon: '✏️',
+            title: 'Tên không hợp lệ',
+            message: 'Họ tên phải có ít nhất 3 ký tự.\n\nVui lòng nhập họ tên đầy đủ của bạn.',
+            buttons: [{ text: 'Đã hiểu', type: 'primary' }]
+        });
         return;
     }
     
     // Validate Password Match
     if (password !== confirmPassword) {
-        showError('❌ Mật khẩu xác nhận không khớp!');
+        showCustomModal({
+            icon: '🔐',
+            title: 'Mật khẩu không khớp',
+            message: 'Mật khẩu xác nhận không khớp với mật khẩu đã nhập.\n\nVui lòng kiểm tra lại.',
+            buttons: [{ text: 'Đã hiểu', type: 'primary' }]
+        });
         return;
     }
     
     // Validate Password Strength
     if (password.length < 8) {
-        showError('❌ Mật khẩu phải có ít nhất 8 ký tự!');
+        showCustomModal({
+            icon: '🔒',
+            title: 'Mật khẩu quá ngắn',
+            message: 'Mật khẩu phải có ít nhất 8 ký tự để đảm bảo an toàn.\n\nVui lòng chọn mật khẩu dài hơn.',
+            buttons: [{ text: 'Đã hiểu', type: 'primary' }]
+        });
         return;
     }
     
     const strength = calculatePasswordStrength(password);
     if (strength < 2) {
-        showError('❌ Mật khẩu quá yếu! Vui lòng dùng mật khẩu mạnh hơn.');
+        showCustomModal({
+            icon: '⚠️',
+            title: 'Mật khẩu quá yếu',
+            message: 'Mật khẩu của bạn quá đơn giản.\n\nVui lòng sử dụng mật khẩu mạnh hơn với:\n• Chữ hoa, chữ thường\n• Số và ký tự đặc biệt',
+            buttons: [{ text: 'Đã hiểu', type: 'primary' }]
+        });
         return;
     }
     
     // Validate Email Format
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(email)) {
-        showError('❌ Email không hợp lệ!');
+        showCustomModal({
+            icon: '📧',
+            title: 'Email không đúng định dạng',
+            message: 'Email bạn nhập không đúng định dạng.\n\nVí dụ: example@gmail.com',
+            buttons: [{ text: 'Đã hiểu', type: 'primary' }]
+        });
         return;
     }
     
@@ -548,14 +598,29 @@ async function handleRegister(event) {
         } else {
             // Handle invalid email domain
             if (data.error === 'INVALID_EMAIL_DOMAIN') {
-                // Always show short, user-friendly message
-                showError('Vui lòng sử dụng email hợp lệ (Gmail, Outlook, Yahoo...)');
+                showCustomModal({
+                    icon: '⚠️',
+                    title: 'Email không hợp lệ',
+                    message: 'Vui lòng sử dụng email từ các nhà cung cấp uy tín:\n\n• Gmail (gmail.com)\n• Outlook (outlook.com, hotmail.com)\n• Yahoo (yahoo.com)\n• iCloud (icloud.com, me.com)\n• Email trường học (.edu.vn)\n\nEmail của bạn không được hỗ trợ.',
+                    buttons: [{ 
+                        text: 'Đã hiểu', 
+                        type: 'primary'
+                    }]
+                });
                 return;
             }
             
             // Handle missing device fingerprint
             if (data.error === 'NO_DEVICE_FINGERPRINT') {
-                showError('Không thể xác định thiết bị của bạn.');
+                showCustomModal({
+                    icon: '🔒',
+                    title: 'Không thể xác định thiết bị',
+                    message: 'Hệ thống không thể xác định thiết bị của bạn vì lý do bảo mật.\n\nVui lòng thử lại, nếu vẫn gặp lỗi, vui lòng liên hệ support.',
+                    buttons: [{ 
+                        text: 'Đã hiểu', 
+                        type: 'primary'
+                    }]
+                });
                 return;
             }
             
@@ -596,13 +661,23 @@ Email: ${account.email}
                 });
                 return;
             } else {
-                showError(`${data.error || data.message || 'Đăng ký thất bại!'}`);
+                showCustomModal({
+                    icon: '❌',
+                    title: 'Đăng ký thất bại',
+                    message: data.message || data.error || 'Có lỗi xảy ra trong quá trình đăng ký.\n\nVui lòng thử lại hoặc liên hệ support nếu vấn đề vẫn tiếp diễn.',
+                    buttons: [{ text: 'Thử lại', type: 'primary' }]
+                });
             }
         }
     } catch (error) {
         hideSmartLoading();
         console.error('❌ Registration error:', error);
-        showError('❌ Lỗi kết nối! Vui lòng thử lại sau.');
+        showCustomModal({
+            icon: '⚠️',
+            title: 'Lỗi kết nối',
+            message: 'Không thể kết nối đến server.\n\nVui lòng kiểm tra kết nối internet và thử lại.',
+            buttons: [{ text: 'Đã hiểu', type: 'primary' }]
+        });
     }
 }
 

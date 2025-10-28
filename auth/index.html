@@ -625,19 +625,27 @@
     <script>
         (function() {
             // DISABLE CONSOLE NGAY LẬP TỨC trong production
-            const isProduction = window.location.hostname !== 'localhost' && 
-                               window.location.hostname !== '127.0.0.1';
+            const hostname = window.location.hostname;
+            const isProduction = hostname !== 'localhost' && 
+                               hostname !== '127.0.0.1' &&
+                               !hostname.includes('192.168') &&
+                               !hostname.includes('10.0');
             
             if (isProduction) {
+                // Clear existing logs first
+                try {
+                    console.clear();
+                } catch(e) {}
+                
+                // Disable all console methods
                 const noop = () => {};
-                window.console.log = noop;
-                window.console.warn = noop;
-                window.console.info = noop;
-                window.console.debug = noop;
-                window.console.error = noop; // Disable tất cả
+                Object.keys(console).forEach(key => {
+                    console[key] = noop;
+                });
             }
         })();
         
+        // Block DevTools shortcuts
         document.addEventListener('keydown', function(e) {
             if (e.key === 'F12' || (e.ctrlKey && e.shiftKey && e.key === 'I') || 
                 (e.ctrlKey && e.shiftKey && e.key === 'J') || (e.ctrlKey && e.key === 'U')) {
