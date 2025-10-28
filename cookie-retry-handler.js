@@ -90,7 +90,7 @@ class CookieRetryHandler {
                     if (onProgress) {
                         onProgress({
                             status: 'failed',
-                            message: 'Đăng nhập thất bại. Vui lòng thử lại sau.',
+                            message: 'Hiện tại không có tài khoản Netflix khả dụng. Vui lòng liên hệ support để được hỗ trợ!',
                             error: error.message
                         });
                     }
@@ -105,7 +105,7 @@ class CookieRetryHandler {
         
         return {
             success: false,
-            error: 'Đã thử tất cả cookie nhưng không thành công'
+            error: 'Hiện tại không có tài khoản Netflix khả dụng. Vui lòng liên hệ support để được hỗ trợ!'
         };
     }
     
