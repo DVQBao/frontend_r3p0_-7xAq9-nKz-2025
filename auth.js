@@ -406,7 +406,7 @@ async function handleLogin(event) {
             localStorage.setItem('current_user', JSON.stringify(data.user));
             sessionStorage.setItem('logged_in', 'true');
             
-            showSuccess('✅ Đăng nhập thành công! Đang chuyển hướng...');
+            showSuccess('Đăng nhập thành công! Đang chuyển hướng...');
             
             setTimeout(() => {
                 window.location.href = '/';
@@ -589,7 +589,7 @@ async function handleRegister(event) {
             registerHistory.push(now);
             localStorage.setItem('register_history', JSON.stringify(registerHistory));
             
-            showSuccess('✅ Đăng ký thành công! Đang đăng nhập...');
+            showSuccess('Đăng ký thành công! Đang đăng nhập...');
             
             // Auto login
             setTimeout(() => {
