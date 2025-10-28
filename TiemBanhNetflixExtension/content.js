@@ -3,7 +3,17 @@
 // Chạy trên tất cả trang Netflix
 // ========================================
 
-console.log('🎬 Netflix Guest Helper - Content Script Loaded');
+// DISABLE CONSOLE IN PRODUCTION
+(function() {
+    const noop = () => {};
+    console.log = noop;
+    console.warn = noop;
+    console.info = noop;
+    console.debug = noop;
+    console.error = noop;
+})();
+
+// console.log('🎬 Netflix Guest Helper - Content Script Loaded');
 
 // ========================================
 // EXTENSION PRESENCE DETECTION

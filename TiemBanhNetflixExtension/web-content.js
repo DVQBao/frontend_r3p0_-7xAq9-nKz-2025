@@ -3,7 +3,7 @@
 // Chạy trên localhost để broadcast extension presence
 // ========================================
 
-console.log('🎬 Netflix Guest Helper - Web Content Script Loaded');
+// console.log('🎬 Netflix Guest Helper - Web Content Script Loaded');
 
 // ========================================
 // BROADCAST EXTENSION PRESENCE
@@ -23,10 +23,10 @@ function broadcastExtensionPresence() {
     
     window.dispatchEvent(event);
     
-    console.log('📢 Extension presence broadcasted:', {
-        version: '1.0.0',
-        extensionId: chrome.runtime.id
-    });
+    // console.log('📢 Extension presence broadcasted:', {
+    //     version: '1.0.0',
+    //     extensionId: chrome.runtime.id
+    // });
 }
 
 // Broadcast ngay khi load
@@ -38,5 +38,5 @@ setTimeout(broadcastExtensionPresence, 500);
 // Broadcast lại sau 1s (fallback)
 setTimeout(broadcastExtensionPresence, 1000);
 
-console.log('✅ Web content script ready');
+// console.log('✅ Web content script ready');
 

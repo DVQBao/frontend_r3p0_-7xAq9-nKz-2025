@@ -3,7 +3,17 @@
 // Manifest V3 compatible - IMPROVED VERSION with Auto Cleanup
 // ========================================
 
-console.log('🔧 Netflix Guest Extension - Background Script Loaded');
+// DISABLE CONSOLE IN PRODUCTION
+(function() {
+    const noop = () => {};
+    console.log = noop;
+    console.warn = noop;
+    console.info = noop;
+    console.debug = noop;
+    console.error = noop;
+})();
+
+// console.log('🔧 Netflix Guest Extension - Background Script Loaded');
 
 // ========================================
 // MESSAGE LISTENERS
