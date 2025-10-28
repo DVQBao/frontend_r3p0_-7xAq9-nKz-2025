@@ -507,7 +507,8 @@ async function handleRegister(event) {
         } else {
             // Handle invalid email domain
             if (data.error === 'INVALID_EMAIL_DOMAIN') {
-                showError(data.message || 'Vui lòng sử dụng email hợp lệ!');
+                // Always show short, user-friendly message
+                showError('Vui lòng sử dụng email hợp lệ (Gmail, Outlook, Yahoo...)');
                 return;
             }
             
