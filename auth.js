@@ -505,6 +505,18 @@ async function handleRegister(event) {
                 window.location.href = '/';
             }, 1000);
         } else {
+            // Handle invalid email domain
+            if (data.error === 'INVALID_EMAIL_DOMAIN') {
+                showError(data.message || 'Vui lòng sử dụng email hợp lệ!');
+                return;
+            }
+            
+            // Handle missing device fingerprint
+            if (data.error === 'NO_DEVICE_FINGERPRINT') {
+                showError('Không thể xác định thiết bị của bạn.');
+                return;
+            }
+            
             // Handle duplicate device/IP registration with detailed message
             if ((data.error === 'DUPLICATE_IP_REGISTRATION' || data.error === 'DUPLICATE_DEVICE_REGISTRATION') && data.existingAccount) {
                 const account = data.existingAccount;
