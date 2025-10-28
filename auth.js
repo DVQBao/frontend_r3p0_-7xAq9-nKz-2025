@@ -15,6 +15,47 @@ const BACKEND_URL = 'https://backend-c0r3-7xpq9zn2025.onrender.com';
 
 const RECAPTCHA_SITE_KEY = '6Ldjte8rAAAAADMBTnxvQtLBAmQq6zH6H-DLl82z';
 
+// ========================================
+// SMART LOADING INDICATOR
+// ========================================
+
+let loadingTimeout = null;
+
+/**
+ * Show loading indicator after delay (only if API is slow)
+ */
+function showSmartLoading(text = 'Đang xử lý...', delayMs = 500) {
+    if (loadingTimeout) clearTimeout(loadingTimeout);
+    
+    loadingTimeout = setTimeout(() => {
+        const overlay = document.getElementById('smartLoadingOverlay');
+        const textEl = document.getElementById('smartLoadingText');
+        if (overlay && textEl) {
+            textEl.textContent = text;
+            overlay.style.display = 'flex';
+        }
+    }, delayMs);
+}
+
+/**
+ * Hide loading indicator immediately
+ */
+function hideSmartLoading() {
+    if (loadingTimeout) {
+        clearTimeout(loadingTimeout);
+        loadingTimeout = null;
+    }
+    
+    const overlay = document.getElementById('smartLoadingOverlay');
+    if (overlay) {
+        overlay.style.display = 'none';
+    }
+}
+
+// ========================================
+// reCAPTCHA
+// ========================================
+
 /**
  * Get reCAPTCHA token for action
  * @param {string} action - Action name (register, login, etc.)
