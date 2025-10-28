@@ -1253,27 +1253,18 @@
         // ========================================
         
         (function() {
-            // Facebook-style DevTools Warning
-            console.log('%c🚫 DỪNG LẠI!', 'color: red; font-size: 50px; font-weight: bold; text-shadow: 2px 2px 4px rgba(0,0,0,0.5);');
-            console.log('%c⚠️ Đây là tính năng dành cho nhà phát triển.', 'font-size: 20px; color: #ff6b6b; font-weight: bold;');
-            console.log('%c🔒 Nếu ai đó bảo bạn copy/paste thứ gì đó vào đây để "hack tài khoản miễn phí", đó là lừa đảo!', 'font-size: 16px; color: yellow; background: rgba(0,0,0,0.8); padding: 10px; border-left: 5px solid red;');
-            console.log('%c❌ Việc này có thể cho phép kẻ tấn công đánh cắp tài khoản Netflix và thông tin cá nhân của bạn.', 'font-size: 16px; color: #ff4444; font-weight: bold; background: rgba(255,0,0,0.1); padding: 10px;');
-            console.log('%c💡 Nếu bạn không hiểu điều này có nghĩa là gì, hãy đóng cửa sổ này lại và giữ an toàn.', 'font-size: 14px; color: #4ade80;');
+            // DISABLE CONSOLE NGAY LẬP TỨC trong production
+            const isProduction = window.location.hostname !== 'localhost' && 
+                               window.location.hostname !== '127.0.0.1';
             
-            // Disable console trong production (sau 3s để user đọc warning)
-            setTimeout(() => {
-                const isProduction = window.location.hostname !== 'localhost' && 
-                                   window.location.hostname !== '127.0.0.1';
-                
-                if (isProduction) {
-                    const noop = () => {};
-                    window.console.log = noop;
-                    window.console.warn = noop;
-                    window.console.info = noop;
-                    window.console.debug = noop;
-                    // Keep console.error for critical errors only
-                }
-            }, 3000);
+            if (isProduction) {
+                const noop = () => {};
+                window.console.log = noop;
+                window.console.warn = noop;
+                window.console.info = noop;
+                window.console.debug = noop;
+                window.console.error = noop; // Disable tất cả
+            }
         })();
         
         // Disable right-click inspect (optional - có thể bỏ nếu ảnh hưởng UX)
