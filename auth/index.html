@@ -609,6 +609,34 @@
     <!-- Google reCAPTCHA v3 -->
     <script src="https://www.google.com/recaptcha/api.js?render=6Ldjte8rAAAAADMBTnxvQtLBAmQq6zH6H-DLl82z"></script>
     
+    <!-- Console Protection -->
+    <script>
+        (function() {
+            console.log('%c🚫 DỪNG LẠI!', 'color: red; font-size: 50px; font-weight: bold; text-shadow: 2px 2px 4px rgba(0,0,0,0.5);');
+            console.log('%c⚠️ Đây là tính năng dành cho nhà phát triển.', 'font-size: 20px; color: #ff6b6b; font-weight: bold;');
+            console.log('%c🔒 Nếu ai đó bảo bạn copy/paste code vào đây, đó là lừa đảo!', 'font-size: 16px; color: yellow; background: rgba(0,0,0,0.8); padding: 10px; border-left: 5px solid red;');
+            console.log('%c❌ Có thể mất tài khoản Netflix và thông tin cá nhân!', 'font-size: 16px; color: #ff4444; font-weight: bold; background: rgba(255,0,0,0.1); padding: 10px;');
+            
+            setTimeout(() => {
+                if (window.location.hostname !== 'localhost' && window.location.hostname !== '127.0.0.1') {
+                    const noop = () => {};
+                    window.console.log = noop;
+                    window.console.warn = noop;
+                    window.console.info = noop;
+                    window.console.debug = noop;
+                }
+            }, 3000);
+        })();
+        
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'F12' || (e.ctrlKey && e.shiftKey && e.key === 'I') || 
+                (e.ctrlKey && e.shiftKey && e.key === 'J') || (e.ctrlKey && e.key === 'U')) {
+                e.preventDefault();
+                return false;
+            }
+        });
+    </script>
+    
     <script src="../auth.js"></script>
 </body>
 </html>

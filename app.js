@@ -334,7 +334,7 @@ async function _watchAsGuestInternal(skipQuotaCheck = false, skipAdAndPlanModal 
     // CHỈ KIỂM TRA QUOTA NẾU KHÔNG PHẢI SAU KHI BÁO HỎNG
     if (!skipQuotaCheck) {
         console.log('🔍 Checking quota from database...');
-        showSmartLoading('Đang kiểm tra quota...', 500);
+        showSmartLoading('Đang kiểm tra...', 500);
         freshUser = await refreshUserFromDatabase();
         hideSmartLoading();
         
