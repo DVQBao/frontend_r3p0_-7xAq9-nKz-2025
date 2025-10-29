@@ -1426,6 +1426,86 @@
             showMessage('Xuất file Excel thành công!', 'success');
         }
 
+        function exportCookies() {
+            if (allCookies.length === 0) {
+                showMessage('Không có dữ liệu cookies để xuất!', 'error');
+                return;
+            }
+
+            // Yêu cầu nhập mật khẩu trước khi export
+            const password = prompt('Nhập mật khẩu để xuất danh sách cookies:');
+            
+            // Kiểm tra mật khẩu
+            const EXPORT_PASSWORD = 'Moyeudau2803@2025';
+            if (password !== EXPORT_PASSWORD) {
+                showMessage('❌ Mật khẩu không đúng! Không thể xuất dữ liệu.', 'error');
+                return;
+            }
+
+            // Tạo CSV content với BOM để Excel nhận diện UTF-8
+            const BOM = '\uFEFF';
+            let csvContent = BOM + 'Cookie #,Value (Toàn bộ),Ngày thêm,Hết hạn,Trạng thái,Users,Ghi chú\n';
+            
+            // Sắp xếp theo Cookie # tăng dần
+            const sortedCookies = [...allCookies].sort((a, b) => (a.cookieNumber || 0) - (b.cookieNumber || 0));
+            
+            sortedCookies.forEach(cookie => {
+                const cookieNum = cookie.cookieNumber || '-';
+                
+                // Value: Xuất TOÀN BỘ cookie value
+                const fullValue = cookie.value || '-';
+                
+                // Ngày thêm
+                const createdAt = cookie.createdAt ? new Date(cookie.createdAt).toLocaleDateString('vi-VN') : '-';
+                
+                // Hết hạn
+                const expiresAt = cookie.expiresAt ? new Date(cookie.expiresAt).toLocaleDateString('vi-VN') : '-';
+                
+                // Trạng thái
+                const isExpired = cookie.expiresAt && new Date(cookie.expiresAt) < new Date();
+                const userCount = cookie.currentUsers?.length || 0;
+                const maxUsers = cookie.maxUsers || 4;
+                let status = '';
+                
+                if (!cookie.isActive) {
+                    status = 'Die - Recheck';
+                } else if (isExpired) {
+                    status = 'Hết hạn';
+                } else if (userCount >= maxUsers) {
+                    status = `Đã đầy (${userCount}/${maxUsers})`;
+                } else {
+                    status = `Còn slot (${userCount}/${maxUsers})`;
+                }
+                
+                // Users count
+                const usersInfo = `${userCount}/${maxUsers}`;
+                
+                // Ghi chú
+                const notes = cookie.notes || '-';
+                
+                // Escape quotes trong CSV
+                const escapeCsv = (str) => {
+                    if (typeof str !== 'string') return str;
+                    return str.replace(/"/g, '""'); // Escape double quotes
+                };
+                
+                csvContent += `"${cookieNum}","${escapeCsv(fullValue)}","${createdAt}","${expiresAt}","${escapeCsv(status)}","${usersInfo}","${escapeCsv(notes)}"\n`;
+            });
+
+            // Tạo và download file với UTF-8 BOM
+            const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+            const link = document.createElement('a');
+            const url = URL.createObjectURL(blob);
+            link.setAttribute('href', url);
+            link.setAttribute('download', `netflix_cookies_${new Date().toISOString().split('T')[0]}.csv`);
+            link.style.visibility = 'hidden';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+
+            showMessage(`Xuất ${allCookies.length} cookies ra Excel thành công!`, 'success');
+        }
+
         // ========================================
         // COOKIE MANAGEMENT
         // ========================================
@@ -1560,7 +1640,7 @@
                 </div>
                 
                 <div style="background: rgba(0,0,0,0.3); padding: 15px; border-radius: 10px; margin-bottom: 20px;">
-                    <div style="display: grid; grid-template-columns: 2fr 2fr 1fr 1fr 1fr 1fr; gap: 10px;">
+                    <div style="display: grid; grid-template-columns: 2fr 2fr 1fr 1fr 1fr 1fr 1fr; gap: 10px;">
                         <input type="text" id="cookieSearchBox" class="search-box" placeholder="Tìm Cookie #, value, ghi chú..." style="margin: 0;">
                         <select id="cookieStatusFilter" class="search-box" style="margin: 0;">
                             <option value="">Tất cả trạng thái</option>
@@ -1570,6 +1650,7 @@
                         </select>
                         <button class="btn btn-success" onclick="showAddCookieModal()">Thêm</button>
                         <button class="btn btn-warning" onclick="showImportCookiesModal()">Import</button>
+                        <button class="btn btn-secondary" onclick="exportCookies()">Xuất Excel</button>
                         <button class="btn btn-danger" onclick="deleteAllCookies()">Xóa hết</button>
                         <button class="btn btn-primary" onclick="backToUsers()">Quay lại Users</button>
                     </div>
