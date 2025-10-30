@@ -1909,15 +1909,11 @@ Vui lòng liên hệ Support (Facebook) để chúng tôi kiểm tra và reset l
                 // Avatar emoji based on provider
                 document.getElementById('userAvatar').textContent = user.provider === 'google' ? '🔵' : '🥧';
                 
-                // Load cookie info from backend (initial)
+                // Load cookie info from backend (initial - chỉ 1 lần khi login)
                 loadCookieInfo();
                 
-                // ✅ AUTO-REFRESH USER DATA MỖI 30 GIÂY ĐỂ SYNC VỚI DATABASE
-                // Nếu admin đổi plan/quota → User sẽ được cập nhật tự động
-                setInterval(() => {
-                    console.log('🔄 Auto-syncing user data from database...');
-                    loadCookieInfo();
-                }, 30000); // 30 seconds
+                // ❌ REMOVED: Auto-refresh mỗi 30s (quá lãng phí!)
+                // ✅ Thay vào đó: Sync khi cần thiết (trước khi watch as guest, sau khi báo hỏng)
                 
                 // Enable guest section
                 const loginRequired = document.getElementById('loginRequired');
