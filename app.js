@@ -701,8 +701,17 @@ async function handleStartWatching() {
         } else {
             // Thất bại sau khi đã retry
             const errorMsg = result.error || 'Không thể đăng nhập sau nhiều lần thử';
-            showStepStatus(2, 'error', `❌ ${errorMsg}`);
-            showToast(`❌ ${errorMsg}`, 'error');
+            
+            // 🚫 NẾU BỊ RATE LIMIT - Đóng modal ad/watching
+            if (result.isRateLimited) {
+                console.log('🚫 Rate limited - Closing modal');
+                closeAdModal();
+                showStepStatus(2, 'error', `⚠️ ${errorMsg}`);
+                // Modal cảnh báo đã được hiển thị trong CookieRetryHandler
+            } else {
+                showStepStatus(2, 'error', `❌ ${errorMsg}`);
+                showToast(`❌ ${errorMsg}`, 'error');
+            }
         }
         
     } catch (error) {

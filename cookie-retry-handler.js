@@ -82,6 +82,35 @@ class CookieRetryHandler {
             } catch (error) {
                 console.error(`❌ Attempt ${this.currentRetry} failed:`, error);
                 
+                // 🚫 RATE LIMIT ERROR - Dừng ngay, không retry, hiển thị modal cảnh báo
+                if (error.isRateLimited || error.code === 'RATE_LIMIT_EXCEEDED') {
+                    console.error('🚫 RATE LIMIT EXCEEDED - Stopping all retries');
+                    
+                    if (onProgress) {
+                        onProgress({
+                            status: 'rate_limited',
+                            message: error.message,
+                            error: error.message
+                        });
+                    }
+                    
+                    // Hiển thị modal cảnh báo (tương tự như đăng ký/đăng nhập)
+                    if (typeof showCustomModal === 'function') {
+                        showCustomModal({
+                            icon: '⚠️',
+                            title: 'Tạm khóa tài khoản',
+                            message: error.message,
+                            buttons: [{ text: 'Đã hiểu', type: 'primary' }]
+                        });
+                    }
+                    
+                    return { 
+                        success: false, 
+                        error: error.message,
+                        isRateLimited: true
+                    };
+                }
+                
                 if (this.currentRetry >= this.maxRetries) {
                     // Out of retries
                     console.log('❌ Reached max retries');
@@ -143,6 +172,16 @@ class CookieRetryHandler {
             
             if (!response.ok) {
                 const errorData = await response.json().catch(() => ({}));
+                
+                // ⚠️ CHECK RATE LIMIT ERROR - Dừng ngay, không retry
+                if (errorData.code === 'RATE_LIMIT_EXCEEDED') {
+                    const rateLimitError = new Error(errorData.error || 'Tài khoản của bạn đã bị tạm khóa do nghi ngờ hoạt động bất thường. Vui lòng thử lại sau.');
+                    rateLimitError.isRateLimited = true;
+                    rateLimitError.code = 'RATE_LIMIT_EXCEEDED';
+                    console.error('🚫 RATE LIMIT EXCEEDED - Stop retrying');
+                    throw rateLimitError;
+                }
+                
                 throw new Error(errorData.error || `HTTP ${response.status}`);
             }
             
