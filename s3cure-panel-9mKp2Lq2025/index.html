@@ -2065,9 +2065,11 @@
         let allBannedIPs = []; // Store all banned IPs for filtering
         
         async function showRateLimitManagement() {
-            // Hide users table, show rate limit management
+            // Hide users table and controls
             const usersTable = document.querySelector('.users-table');
+            const userControls = document.querySelector('.controls');
             if (usersTable) usersTable.style.display = 'none';
+            if (userControls) userControls.style.display = 'none';
             
             // Remove existing rate limit container if any
             const existingContainer = document.getElementById('rateLimitManagement');
@@ -2082,21 +2084,30 @@
                         Quản lý Rate Limit - Banned IPs
                     </div>
                     
-                    <!-- Controls -->
-                    <div class="controls" style="margin-bottom: 20px;">
-                        <input type="text" id="searchRateLimitBox" class="search-box" placeholder="Tìm kiếm theo IP hoặc Email..." oninput="filterBannedIPs()">
-                        <button class="btn btn-primary" onclick="loadBannedIPs()">Làm mới</button>
-                        <button class="btn btn-warning" onclick="unbanAllCategories()">Unban All</button>
-                        <button class="btn btn-danger" onclick="showUsersTable()">Quay lại User</button>
-                    </div>
-                    
-                    <!-- Stats -->
-                    <div id="rateLimitStats" style="padding: 15px 20px; background: var(--bg-elevated); border-radius: 8px; margin-bottom: 20px;">
+                    <!-- Stats - Di chuyển lên trên -->
+                    <div id="rateLimitStats" style="padding: 20px; background: linear-gradient(135deg, rgba(229, 9, 20, 0.1), rgba(139, 92, 246, 0.05)); border-radius: 12px; margin-bottom: 20px; border: 1px solid var(--border-color);">
                         <p style="color: var(--text-secondary); margin: 0;">Đang tải...</p>
                     </div>
                     
+                    <!-- Controls -->
+                    <div style="display: grid; grid-template-columns: 1fr auto auto auto; gap: 12px; margin-bottom: 20px; align-items: center;">
+                        <input type="text" id="searchRateLimitBox" class="search-box" placeholder="Tìm kiếm theo IP hoặc Email..." oninput="filterBannedIPs()">
+                        <select id="filterCategory" class="search-box" style="width: 200px;" onchange="filterBannedIPs()">
+                            <option value="">Tất cả Categories</option>
+                            <option value="auth">Auth (Login/Register)</option>
+                            <option value="cookieGet">Cookie Get</option>
+                            <option value="cookieReport">Cookie Report</option>
+                            <option value="general">General API</option>
+                        </select>
+                        <button class="btn btn-primary" onclick="loadBannedIPs()">Làm mới</button>
+                        <div style="display: flex; gap: 8px;">
+                            <button class="btn btn-warning" onclick="unbanAllCategories()">Unban All</button>
+                            <button class="btn btn-danger" onclick="showUsersTable()">Quay lại User</button>
+                        </div>
+                    </div>
+                    
                     <!-- Table -->
-                    <div id="bannedIPsTableContainer" style="max-height: 500px; overflow-y: auto; overflow-x: auto;">
+                    <div id="bannedIPsTableContainer" style="max-height: 550px; overflow-y: auto; overflow-x: auto;">
                         <div class="loading"><p>Đang tải dữ liệu...</p></div>
                     </div>
                 </div>
@@ -2152,7 +2163,7 @@
                 const statsDiv = document.getElementById('rateLimitStats');
                 if (allBannedIPs.length === 0) {
                     statsDiv.innerHTML = `
-                        <p style="color: var(--accent-green); margin: 0; font-weight: 600;">
+                        <p style="color: var(--accent-green); margin: 0; font-weight: 600; font-size: 1.1em; text-align: center;">
                             Không có IP nào bị ban
                         </p>
                     `;
@@ -2162,27 +2173,36 @@
                     const cookieReportCount = result.data.cookieReport?.length || 0;
                     const generalCount = result.data.general?.length || 0;
                     
+                    // Tính thời gian trung bình còn lại
+                    const avgTimeLeft = Math.floor(allBannedIPs.reduce((sum, ip) => sum + ip.remainingSeconds, 0) / allBannedIPs.length);
+                    const avgMinutes = Math.floor(avgTimeLeft / 60);
+                    const avgSeconds = avgTimeLeft % 60;
+                    
                     statsDiv.innerHTML = `
-                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px;">
-                            <div>
-                                <div style="color: var(--text-secondary); font-size: 0.85em;">Tổng IP bị ban</div>
-                                <div style="color: var(--accent-red); font-size: 1.5em; font-weight: 700;">${allBannedIPs.length}</div>
+                        <div style="display: grid; grid-template-columns: repeat(6, 1fr); gap: 20px;">
+                            <div style="text-align: center; padding: 12px; background: rgba(229, 9, 20, 0.1); border-radius: 8px; border: 1px solid rgba(229, 9, 20, 0.3);">
+                                <div style="color: var(--text-secondary); font-size: 0.9em; margin-bottom: 8px;">Tổng IP bị ban</div>
+                                <div style="color: var(--accent-red); font-size: 2em; font-weight: 700;">${allBannedIPs.length}</div>
                             </div>
-                            <div>
-                                <div style="color: var(--text-secondary); font-size: 0.85em;">Auth</div>
-                                <div style="color: #f59e0b; font-size: 1.3em; font-weight: 600;">${authCount}</div>
+                            <div style="text-align: center; padding: 12px; background: rgba(245, 158, 11, 0.1); border-radius: 8px; border: 1px solid rgba(245, 158, 11, 0.3);">
+                                <div style="color: var(--text-secondary); font-size: 0.9em; margin-bottom: 8px;">Auth</div>
+                                <div style="color: #f59e0b; font-size: 1.8em; font-weight: 600;">${authCount}</div>
                             </div>
-                            <div>
-                                <div style="color: var(--text-secondary); font-size: 0.85em;">Cookie Get</div>
-                                <div style="color: #3b82f6; font-size: 1.3em; font-weight: 600;">${cookieGetCount}</div>
+                            <div style="text-align: center; padding: 12px; background: rgba(59, 130, 246, 0.1); border-radius: 8px; border: 1px solid rgba(59, 130, 246, 0.3);">
+                                <div style="color: var(--text-secondary); font-size: 0.9em; margin-bottom: 8px;">Cookie Get</div>
+                                <div style="color: #3b82f6; font-size: 1.8em; font-weight: 600;">${cookieGetCount}</div>
                             </div>
-                            <div>
-                                <div style="color: var(--text-secondary); font-size: 0.85em;">Cookie Report</div>
-                                <div style="color: #8b5cf6; font-size: 1.3em; font-weight: 600;">${cookieReportCount}</div>
+                            <div style="text-align: center; padding: 12px; background: rgba(139, 92, 246, 0.1); border-radius: 8px; border: 1px solid rgba(139, 92, 246, 0.3);">
+                                <div style="color: var(--text-secondary); font-size: 0.9em; margin-bottom: 8px;">Cookie Report</div>
+                                <div style="color: #8b5cf6; font-size: 1.8em; font-weight: 600;">${cookieReportCount}</div>
                             </div>
-                            <div>
-                                <div style="color: var(--text-secondary); font-size: 0.85em;">General</div>
-                                <div style="color: #10b981; font-size: 1.3em; font-weight: 600;">${generalCount}</div>
+                            <div style="text-align: center; padding: 12px; background: rgba(16, 185, 129, 0.1); border-radius: 8px; border: 1px solid rgba(16, 185, 129, 0.3);">
+                                <div style="color: var(--text-secondary); font-size: 0.9em; margin-bottom: 8px;">General</div>
+                                <div style="color: #10b981; font-size: 1.8em; font-weight: 600;">${generalCount}</div>
+                            </div>
+                            <div style="text-align: center; padding: 12px; background: rgba(245, 158, 11, 0.1); border-radius: 8px; border: 1px solid rgba(245, 158, 11, 0.3);">
+                                <div style="color: var(--text-secondary); font-size: 0.9em; margin-bottom: 8px;">Avg Time Left</div>
+                                <div style="color: var(--accent-orange); font-size: 1.5em; font-weight: 700;">${avgMinutes}m ${avgSeconds}s</div>
                             </div>
                         </div>
                     `;
@@ -2211,16 +2231,17 @@
             }
             
             let html = `
-                <table style="width: 100%; border-collapse: collapse; background: var(--bg-elevated); border-radius: 8px; overflow: hidden;">
+                <table style="width: 100%; border-collapse: collapse; background: var(--bg-elevated); border-radius: 8px; overflow: hidden; font-size: 0.95em;">
                     <thead>
                         <tr style="background: var(--bg-tertiary); border-bottom: 2px solid var(--border-color);">
-                            <th style="padding: 12px; text-align: center; color: var(--text-secondary); font-weight: 600; width: 60px;">STT</th>
-                            <th style="padding: 12px; text-align: left; color: var(--text-secondary); font-weight: 600;">IP Address</th>
-                            <th style="padding: 12px; text-align: left; color: var(--text-secondary); font-weight: 600;">User Email</th>
-                            <th style="padding: 12px; text-align: left; color: var(--text-secondary); font-weight: 600;">Category</th>
-                            <th style="padding: 12px; text-align: center; color: var(--text-secondary); font-weight: 600;">Banned At</th>
-                            <th style="padding: 12px; text-align: center; color: var(--text-secondary); font-weight: 600;">Time Left</th>
-                            <th style="padding: 12px; text-align: center; color: var(--text-secondary); font-weight: 600; width: 100px;">Action</th>
+                            <th style="padding: 14px; text-align: center; color: var(--text-secondary); font-weight: 600; font-size: 0.95em; width: 60px;">STT</th>
+                            <th style="padding: 14px; text-align: left; color: var(--text-secondary); font-weight: 600; font-size: 0.95em;">IP Address</th>
+                            <th style="padding: 14px; text-align: left; color: var(--text-secondary); font-weight: 600; font-size: 0.95em;">User Email</th>
+                            <th style="padding: 14px; text-align: center; color: var(--text-secondary); font-weight: 600; font-size: 0.95em;">Category</th>
+                            <th style="padding: 14px; text-align: center; color: var(--text-secondary); font-weight: 600; font-size: 0.95em;">Banned At</th>
+                            <th style="padding: 14px; text-align: center; color: var(--text-secondary); font-weight: 600; font-size: 0.95em;">Auto Unban At</th>
+                            <th style="padding: 14px; text-align: center; color: var(--text-secondary); font-weight: 600; font-size: 0.95em;">Time Left</th>
+                            <th style="padding: 14px; text-align: center; color: var(--text-secondary); font-weight: 600; font-size: 0.95em; width: 100px;">Action</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -2231,25 +2252,32 @@
                 const seconds = data.remainingSeconds % 60;
                 const timeLeft = minutes > 0 ? `${minutes}m ${seconds}s` : `${seconds}s`;
                 
+                const resetDate = new Date(data.resetTime);
+                const resetTimeStr = resetDate.toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+                
                 html += `
-                    <tr style="border-bottom: 1px solid var(--border-color);">
-                        <td style="padding: 12px; text-align: center; color: var(--text-secondary);">${index + 1}</td>
-                        <td style="padding: 12px; color: var(--text-primary); font-weight: 600; font-family: monospace;">${data.ip}</td>
-                        <td style="padding: 12px; color: var(--text-secondary);">${data.userEmail}</td>
-                        <td style="padding: 12px;">
-                            <span style="display: inline-block; padding: 4px 10px; border-radius: 4px; font-size: 0.85em; font-weight: 600; background: ${data.typeColor}20; color: ${data.typeColor}; border: 1px solid ${data.typeColor}40;">
+                    <tr style="border-bottom: 1px solid var(--border-color); transition: background 0.2s;" onmouseover="this.style.background='var(--bg-tertiary)'" onmouseout="this.style.background='transparent'">
+                        <td style="padding: 14px; text-align: center; color: var(--text-secondary); font-size: 0.95em;">${index + 1}</td>
+                        <td style="padding: 14px; color: var(--text-primary); font-weight: 600; font-size: 0.95em;">${data.ip}</td>
+                        <td style="padding: 14px; color: var(--text-secondary); font-size: 0.95em;">${data.userEmail}</td>
+                        <td style="padding: 14px; text-align: center;">
+                            <span style="display: inline-block; padding: 6px 12px; border-radius: 6px; font-size: 0.9em; font-weight: 600; background: ${data.typeColor}20; color: ${data.typeColor}; border: 1px solid ${data.typeColor}40;">
                                 ${data.typeName}
                             </span>
                         </td>
-                        <td style="padding: 12px; text-align: center; color: var(--text-secondary); font-size: 0.9em;">
-                            ${new Date(data.bannedAt).toLocaleString('vi-VN')}
+                        <td style="padding: 14px; text-align: center; color: var(--text-secondary); font-size: 0.9em;">
+                            ${new Date(data.bannedAt).toLocaleString('vi-VN', { hour: '2-digit', minute: '2-digit', second: '2-digit', day: '2-digit', month: '2-digit' })}
                         </td>
-                        <td style="padding: 12px; text-align: center; color: var(--accent-orange); font-weight: 600; font-family: monospace;">
+                        <td style="padding: 14px; text-align: center; color: var(--accent-purple); font-weight: 600; font-size: 0.95em;">
+                            ${resetTimeStr}
+                        </td>
+                        <td style="padding: 14px; text-align: center; color: var(--accent-orange); font-weight: 700; font-size: 1em;">
                             ${timeLeft}
                         </td>
-                        <td style="padding: 12px; text-align: center;">
+                        <td style="padding: 14px; text-align: center;">
                             <a href="javascript:void(0)" onclick="unbanIP('${data.type}', '${data.ip}')" 
-                               style="color: var(--accent-green); text-decoration: underline; font-weight: 600; font-size: 0.9em; cursor: pointer;">
+                               style="color: var(--accent-green); text-decoration: underline; font-weight: 600; font-size: 0.95em; cursor: pointer; transition: color 0.2s;"
+                               onmouseover="this.style.color='#10b981'" onmouseout="this.style.color='var(--accent-green)'">
                                 Unban
                             </a>
                         </td>
@@ -2267,17 +2295,24 @@
         
         function filterBannedIPs() {
             const searchBox = document.getElementById('searchRateLimitBox');
-            const searchTerm = searchBox.value.toLowerCase().trim();
+            const categoryFilter = document.getElementById('filterCategory');
+            const searchTerm = searchBox ? searchBox.value.toLowerCase().trim() : '';
+            const categoryValue = categoryFilter ? categoryFilter.value : '';
             
-            if (!searchTerm) {
-                renderBannedIPsTable(allBannedIPs);
-                return;
+            let filtered = allBannedIPs;
+            
+            // Filter by search term (IP or Email)
+            if (searchTerm) {
+                filtered = filtered.filter(item => 
+                    item.ip.toLowerCase().includes(searchTerm) || 
+                    item.userEmail.toLowerCase().includes(searchTerm)
+                );
             }
             
-            const filtered = allBannedIPs.filter(item => 
-                item.ip.toLowerCase().includes(searchTerm) || 
-                item.userEmail.toLowerCase().includes(searchTerm)
-            );
+            // Filter by category
+            if (categoryValue) {
+                filtered = filtered.filter(item => item.type === categoryValue);
+            }
             
             renderBannedIPsTable(filtered);
         }
@@ -2354,14 +2389,16 @@
         }
         
         function showUsersTable() {
-            // Hide rate limit/cookie management, show users table
+            // Hide rate limit/cookie management, show users table and controls
             const usersTable = document.querySelector('.users-table');
+            const userControls = document.querySelector('.controls');
             const rateLimitContainer = document.getElementById('rateLimitManagement');
             const cookiesContainer = document.getElementById('cookiesManagement');
             
             if (rateLimitContainer) rateLimitContainer.remove();
             if (cookiesContainer) cookiesContainer.remove();
             if (usersTable) usersTable.style.display = 'block';
+            if (userControls) userControls.style.display = 'flex'; // controls dùng display: flex
         }
     </script>
 </body>
