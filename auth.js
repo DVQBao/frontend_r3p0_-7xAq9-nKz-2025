@@ -16,35 +16,95 @@ const BACKEND_URL = 'https://backend-c0r3-7xpq9zn2025.onrender.com';
 const RECAPTCHA_SITE_KEY = '6Ldjte8rAAAAADMBTnxvQtLBAmQq6zH6H-DLl82z';
 
 // ========================================
-// SMART LOADING INDICATOR
+// SMART LOADING INDICATOR WITH PROGRESSIVE MESSAGES
 // ========================================
 
 let loadingTimeout = null;
+let progressiveMessageTimeouts = [];
 
 /**
- * Show loading indicator after delay (only if API is slow)
+ * Show loading indicator after delay with progressive messages for server load
+ * Progressive messages inform users about wait times during high load
+ * @param {string} text - Initial loading text
+ * @param {number} delayMs - Delay before showing loading (default 500ms)
  */
 function showSmartLoading(text = 'Đang xử lý...', delayMs = 500) {
+    // Clear any existing timeouts
     if (loadingTimeout) clearTimeout(loadingTimeout);
+    clearProgressiveMessages();
     
+    // Show loading after initial delay
     loadingTimeout = setTimeout(() => {
         const overlay = document.getElementById('smartLoadingOverlay');
         const textEl = document.getElementById('smartLoadingText');
         if (overlay && textEl) {
             textEl.textContent = text;
             overlay.style.display = 'flex';
+            
+            // Setup progressive messages for long waits
+            setupProgressiveMessages(textEl);
         }
     }, delayMs);
 }
 
 /**
- * Hide loading indicator immediately
+ * Setup progressive loading messages that update based on wait time
+ * This helps manage user expectations during server overload (e.g., 1000 concurrent users)
+ * @param {HTMLElement} textEl - Text element to update
+ */
+function setupProgressiveMessages(textEl) {
+    if (!textEl) return;
+    
+    // Clear previous timeouts
+    clearProgressiveMessages();
+    
+    // 2 seconds: Gentle reassurance
+    progressiveMessageTimeouts.push(setTimeout(() => {
+        if (textEl && textEl.parentElement && textEl.parentElement.style.display === 'flex') {
+            textEl.textContent = 'Đang xử lý yêu cầu của bạn, chờ tí nhé...';
+        }
+    }, 2000));
+    
+    // 5 seconds: Inform about server load (Pool = 50 may be busy)
+    progressiveMessageTimeouts.push(setTimeout(() => {
+        if (textEl && textEl.parentElement && textEl.parentElement.style.display === 'flex') {
+            textEl.textContent = 'Tiệm Bánh nay hơi đông khách, bọn mình đang cố gắng xử lý, sắp đến lượt bạn rồi...';
+        }
+    }, 5000));
+    
+    // 10 seconds: Connection message (likely queued in connection pool)
+    progressiveMessageTimeouts.push(setTimeout(() => {
+        if (textEl && textEl.parentElement && textEl.parentElement.style.display === 'flex') {
+            textEl.textContent = 'Cảm ơn bạn đã kiên nhẫn, bọn mình đã order cho bạn rồi nè...';
+        }
+    }, 10000));
+    
+    // 15 seconds: Strong reassurance (definitely in queue)
+    progressiveMessageTimeouts.push(setTimeout(() => {
+        if (textEl && textEl.parentElement && textEl.parentElement.style.display === 'flex') {
+            textEl.textContent = 'Bánh sắp xong rồi nè...';
+        }
+    }, 15000));
+}
+
+/**
+ * Clear all progressive message timeouts
+ */
+function clearProgressiveMessages() {
+    progressiveMessageTimeouts.forEach(timeout => clearTimeout(timeout));
+    progressiveMessageTimeouts = [];
+}
+
+/**
+ * Hide loading indicator immediately and clear all timers
  */
 function hideSmartLoading() {
     if (loadingTimeout) {
         clearTimeout(loadingTimeout);
         loadingTimeout = null;
     }
+    
+    clearProgressiveMessages();
     
     const overlay = document.getElementById('smartLoadingOverlay');
     if (overlay) {
