@@ -95,13 +95,17 @@ class CookieRetryHandler {
                     }
                     
                     // Hiển thị modal cảnh báo (tương tự như đăng ký/đăng nhập)
-                    if (typeof showCustomModal === 'function') {
-                        showCustomModal({
+                    // Phải dùng window.showCustomModal vì hàm này được define trong index.html
+                    if (typeof window.showCustomModal === 'function') {
+                        window.showCustomModal({
                             icon: '⚠️',
                             title: 'Tạm khóa tài khoản',
                             message: error.message,
                             buttons: [{ text: 'Đã hiểu', type: 'primary' }]
                         });
+                    } else {
+                        console.error('❌ showCustomModal not available!');
+                        alert(error.message); // Fallback to alert
                     }
                     
                     return { 
