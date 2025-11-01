@@ -700,6 +700,113 @@
     </style>
 </head>
 <body>
+    <!-- Mobile Detection Script - Run immediately -->
+    <script>
+        (function() {
+            function isMobileDevice() {
+                // Check 1: User Agent
+                const userAgent = navigator.userAgent || navigator.vendor || window.opera;
+                const mobileRegex = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini|Mobile|mobile|CriOS/i;
+                
+                // Check 2: Touch capability + small screen
+                const isTouchDevice = ('ontouchstart' in window) || (navigator.maxTouchPoints > 0);
+                const isSmallScreen = window.innerWidth <= 1024; // Tablet/mobile usually < 1024px
+                
+                // Check 3: Specific platforms
+                const isIOS = /iPad|iPhone|iPod/.test(userAgent);
+                const isAndroid = /Android/.test(userAgent);
+                
+                // Return true if matches mobile pattern OR (touch + small screen)
+                return mobileRegex.test(userAgent) || (isTouchDevice && isSmallScreen) || isIOS || isAndroid;
+            }
+            
+            if (isMobileDevice()) {
+                console.log('🚫 Mobile device detected - Showing warning');
+                const warning = document.getElementById('mobileWarning');
+                if (warning) {
+                    warning.style.display = 'block';
+                }
+                
+                // Hide main content
+                const container = document.querySelector('.container');
+                if (container) {
+                    container.style.display = 'none';
+                }
+            } else {
+                console.log('✅ Desktop/Laptop detected - Normal flow');
+            }
+        })();
+    </script>
+    
+    <!-- Mobile Device Warning - Show only on mobile/tablet -->
+    <div id="mobileWarning" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(135deg, #0f0f0f 0%, #1a1a1a 100%); z-index: 999999; overflow-y: auto;">
+        <div style="min-height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 30px; text-align: center;">
+            <!-- Logo -->
+            <div style="margin-bottom: 40px;">
+                <h1 style="font-size: 2.5em; color: #e50914; font-weight: 800; letter-spacing: -1px; margin-bottom: 10px;">
+                    TIỆM BÁNH NETFLIX
+                </h1>
+                <p style="color: #aaa; font-size: 0.95em;">Share • Support • Enjoy</p>
+            </div>
+            
+            <!-- Warning Icon -->
+            <div style="width: 100px; height: 100px; background: rgba(229, 9, 20, 0.1); border: 3px solid rgba(229, 9, 20, 0.3); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-bottom: 30px;">
+                <svg style="width: 50px; height: 50px; color: #e50914;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
+                </svg>
+            </div>
+            
+            <!-- Main Message -->
+            <h2 style="color: #fff; font-size: 1.8em; font-weight: 700; margin-bottom: 20px; line-height: 1.3;">
+                Thiết bị không được hỗ trợ
+            </h2>
+            
+            <p style="color: #ccc; font-size: 1.1em; line-height: 1.6; max-width: 500px; margin-bottom: 30px;">
+                Dịch vụ <strong style="color: #e50914;">Xem với tư cách khách</strong> chỉ hỗ trợ trên <strong>PC</strong> và <strong>Laptop</strong> do yêu cầu cài đặt Chrome Extension.
+            </p>
+            
+            <!-- Device Info -->
+            <div style="background: rgba(229, 9, 20, 0.05); border: 1px solid rgba(229, 9, 20, 0.2); border-radius: 12px; padding: 25px; max-width: 500px; width: 100%; margin-bottom: 30px;">
+                <div style="display: grid; gap: 15px; text-align: left;">
+                    <div style="display: flex; align-items: start; gap: 12px;">
+                        <div style="color: #e50914; font-size: 1.5em; flex-shrink: 0;">💻</div>
+                        <div>
+                            <div style="color: #fff; font-weight: 600; margin-bottom: 5px;">Thiết bị được hỗ trợ</div>
+                            <div style="color: #aaa; font-size: 0.95em;">PC Windows, Mac, Linux, Laptop</div>
+                        </div>
+                    </div>
+                    <div style="display: flex; align-items: start; gap: 12px;">
+                        <div style="color: #666; font-size: 1.5em; flex-shrink: 0;">📱</div>
+                        <div>
+                            <div style="color: #888; font-weight: 600; margin-bottom: 5px;">Không hỗ trợ</div>
+                            <div style="color: #666; font-size: 0.95em;">Điện thoại, Tablet (iOS, Android)</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Alternative Option -->
+            <div style="background: rgba(59, 130, 246, 0.1); border: 1px solid rgba(59, 130, 246, 0.3); border-radius: 12px; padding: 25px; max-width: 500px; width: 100%; margin-bottom: 30px;">
+                <h3 style="color: #3b82f6; font-size: 1.2em; margin-bottom: 15px; font-weight: 600;">
+                    🎯 Muốn xem Netflix trên điện thoại?
+                </h3>
+                <p style="color: #ccc; font-size: 0.95em; line-height: 1.6; margin-bottom: 20px;">
+                    Vui lòng chọn gói <strong style="color: #fff;">Mua gói chính chủ</strong> để có tài khoản Netflix riêng với đầy đủ tính năng trên mọi thiết bị.
+                </p>
+                <a href="https://zalo.me/0393434851" target="_blank" style="display: inline-block; background: #3b82f6; color: #fff; padding: 12px 30px; border-radius: 8px; text-decoration: none; font-weight: 600; transition: all 0.3s;">
+                    📞 Liên hệ mua gói chính chủ
+                </a>
+            </div>
+            
+            <!-- Contact Support -->
+            <div style="margin-top: 20px;">
+                <a href="https://www.facebook.com/tiembanh4k/" target="_blank" style="color: #aaa; text-decoration: underline; font-size: 0.95em;">
+                    Liên hệ Support nếu có thắc mắc
+                </a>
+            </div>
+        </div>
+    </div>
+    
     <!-- Smart Loading Indicator -->
     <div id="smartLoadingOverlay" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.85); backdrop-filter: blur(8px); display: none; align-items: center; justify-content: center; z-index: 99999;">
         <div style="text-align: center;">
