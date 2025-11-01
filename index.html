@@ -1253,17 +1253,61 @@
         // ========================================
         
         (function() {
-            // DISABLE CONSOLE NGAY LẬP TỨC trong production
+            // DISABLE CONSOLE VÀ ERROR LOGGING trong production
             const isProduction = window.location.hostname !== 'localhost' && 
                                window.location.hostname !== '127.0.0.1';
             
             if (isProduction) {
                 const noop = () => {};
-                window.console.log = noop;
-                window.console.warn = noop;
-                window.console.info = noop;
-                window.console.debug = noop;
-                window.console.error = noop; // Disable tất cả
+                
+                // Disable tất cả console methods
+                const consoleMethods = ['log', 'warn', 'info', 'debug', 'error', 'exception', 'table', 'group', 'groupEnd', 'groupCollapsed', 'trace', 'dir', 'dirxml', 'assert', 'count', 'clear', 'time', 'timeEnd', 'profile', 'profileEnd'];
+                consoleMethods.forEach(method => {
+                    if (console[method]) {
+                        console[method] = noop;
+                    }
+                });
+                
+                // Override toàn bộ console object
+                try {
+                    Object.defineProperty(window, 'console', {
+                        value: {},
+                        writable: false,
+                        configurable: false
+                    });
+                    // Fill với noop để không crash
+                    consoleMethods.forEach(method => {
+                        window.console[method] = noop;
+                    });
+                } catch (e) {
+                    // Nếu không override được, chỉ disable methods
+                }
+                
+                // Catch tất cả uncaught errors và rejections - KHÔNG hiện trong console
+                window.onerror = function(msg, url, line, col, error) {
+                    // Suppress tất cả errors
+                    return true; // Prevent default error handling
+                };
+                
+                window.addEventListener('error', function(e) {
+                    e.preventDefault();
+                    return true;
+                }, true);
+                
+                // Catch unhandled promise rejections
+                window.addEventListener('unhandledrejection', function(e) {
+                    e.preventDefault();
+                    return true;
+                });
+                
+                // Suppress network errors logging
+                const originalFetch = window.fetch;
+                window.fetch = function(...args) {
+                    return originalFetch.apply(this, args).catch(err => {
+                        // Suppress error, chỉ return rejected promise
+                        return Promise.reject(err);
+                    });
+                };
             }
         })();
         
@@ -1671,8 +1715,8 @@
 
 Do cơ chế ANTIBOT của Netflix, đôi khi bạn cần:
 
-1️⃣ TẮT VÀ MỞ LẠI TAB NETFLIX
-2️⃣ THỬ CHUYỂN SANG PROFILE KHÁC  
+1️⃣ THỬ CHUYỂN SANG PROFILE KHÁC (NÊN LÀM)
+2️⃣ TẮT VÀ MỞ LẠI TAB NETFLIX
 3️⃣ TẮT VÀ MỞ LẠI TRÌNH DUYỆT
 
 ━━━━━━━━━━━━━━━━━━━━━━━

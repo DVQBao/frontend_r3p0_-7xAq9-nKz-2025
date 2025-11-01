@@ -106,11 +106,22 @@ document.addEventListener('DOMContentLoaded', () => {
 // ========================================
 
 function setupEventListeners() {
-    elements.openNetflixBtn.addEventListener('click', handleOpenNetflix);
-    elements.watchAsGuestBtn.addEventListener('click', handleWatchAsGuest);
-    elements.cancelBtn.addEventListener('click', closeAdModal);
-    elements.startWatchingBtn.addEventListener('click', handleStartWatching);
-    elements.setupLink.addEventListener('click', showSetupInstructions);
+    // Safe addEventListener với null check
+    if (elements.openNetflixBtn) {
+        elements.openNetflixBtn.addEventListener('click', handleOpenNetflix);
+    }
+    if (elements.watchAsGuestBtn) {
+        elements.watchAsGuestBtn.addEventListener('click', handleWatchAsGuest);
+    }
+    if (elements.cancelBtn) {
+        elements.cancelBtn.addEventListener('click', closeAdModal);
+    }
+    if (elements.startWatchingBtn) {
+        elements.startWatchingBtn.addEventListener('click', handleStartWatching);
+    }
+    if (elements.setupLink) {
+        elements.setupLink.addEventListener('click', showSetupInstructions);
+    }
 }
 
 // ========================================
