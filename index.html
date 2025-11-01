@@ -107,6 +107,59 @@
             .main-layout {
                 grid-template-columns: 1fr;
             }
+            
+            /* Modal responsive for mobile */
+            .modal-content {
+                width: 95%;
+                padding: 20px;
+                max-height: 90vh;
+                overflow-y: auto;
+            }
+            
+            /* Official Package Modal - Make grid 1 column on mobile */
+            #officialPackageModal .modal-content {
+                max-width: 95% !important;
+            }
+            
+            #officialPackageModal .modal-content h2 {
+                font-size: 1.5rem !important;
+            }
+            
+            #officialPackageModal .modal-content p {
+                font-size: 0.9rem !important;
+            }
+            
+            /* Change 4 column grid to 1 column on mobile */
+            #officialPackageModal div[style*="grid-template-columns: repeat(4, 1fr)"] {
+                grid-template-columns: 1fr !important;
+                gap: 15px !important;
+            }
+            
+            /* Package cards responsive */
+            #officialPackageModal div[style*="background: rgba(255, 255, 255, 0.03)"] {
+                padding: 20px !important;
+            }
+            
+            /* Package title */
+            #officialPackageModal div[style*="font-size: 1.5rem"] {
+                font-size: 1.2rem !important;
+            }
+            
+            /* Price */
+            #officialPackageModal div[style*="font-size: 2.2rem"] {
+                font-size: 1.8rem !important;
+            }
+            
+            /* Package features */
+            #officialPackageModal ul {
+                font-size: 0.85rem !important;
+            }
+            
+            /* Buttons */
+            #officialPackageModal button {
+                font-size: 0.95rem !important;
+                padding: 12px 20px !important;
+            }
         }
 
         h1 {
@@ -820,7 +873,7 @@
                     <p style="color: #888; font-size: 0.95em; line-height: 1.6; margin: 0 0 25px 0;">
                         Liên hệ bọn mình để mua gói chính chủ với đầy đủ tính năng nha!
                     </p>
-                    <a href="https://www.facebook.com/tiembanh4k/" target="_blank" style="display: block; background: transparent; border: 1px solid rgba(255, 255, 255, 0.2); color: #fff; padding: 16px 0; border-radius: 6px; text-decoration: none; font-weight: 600; font-size: 0.95em; text-align: center; transition: all 0.3s;">
+                    <a href="javascript:void(0)" onclick="showOfficialPackageModal(); return false;" style="display: block; background: transparent; border: 1px solid rgba(255, 255, 255, 0.2); color: #fff; padding: 16px 0; border-radius: 6px; text-decoration: none; font-weight: 600; font-size: 0.95em; text-align: center; transition: all 0.3s;">
                         Mua gói chính chủ
                     </a>
                 </div>
