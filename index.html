@@ -704,24 +704,48 @@
     <script>
         (function() {
             function isMobileDevice() {
-                // Check 1: User Agent
+                // Check 1: User Agent - Comprehensive check
                 const userAgent = navigator.userAgent || navigator.vendor || window.opera;
-                const mobileRegex = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini|Mobile|mobile|CriOS/i;
                 
-                // Check 2: Touch capability + small screen
-                const isTouchDevice = ('ontouchstart' in window) || (navigator.maxTouchPoints > 0);
-                const isSmallScreen = window.innerWidth <= 1024; // Tablet/mobile usually < 1024px
+                // Mobile/Tablet patterns
+                const mobileRegex = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini|Mobile|mobile|CriOS|FxiOS|EdgiOS/i;
                 
-                // Check 3: Specific platforms
-                const isIOS = /iPad|iPhone|iPod/.test(userAgent);
+                // Check 2: Specific platforms (higher priority)
+                const isIOS = /iPad|iPhone|iPod/.test(userAgent) && !window.MSStream;
                 const isAndroid = /Android/.test(userAgent);
+                const isWindowsPhone = /Windows Phone/.test(userAgent);
                 
-                // Return true if matches mobile pattern OR (touch + small screen)
-                return mobileRegex.test(userAgent) || (isTouchDevice && isSmallScreen) || isIOS || isAndroid;
+                // Check 3: Touch capability with small/medium screen
+                const isTouchDevice = ('ontouchstart' in window) || (navigator.maxTouchPoints > 0);
+                const screenWidth = window.innerWidth || screen.width;
+                const isSmallScreen = screenWidth <= 1024; // Mobile/Tablet usually ≤ 1024px
+                
+                // Check 4: Platform API (newer method)
+                const platform = navigator.platform || '';
+                const isMobilePlatform = /iPhone|iPad|iPod|Android|Linux armv/.test(platform);
+                
+                // DEBUG INFO (only in development)
+                const isLocalhost = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+                if (isLocalhost) {
+                    console.log('🔍 Mobile Detection Debug:', {
+                        userAgent,
+                        platform,
+                        screenWidth,
+                        isTouchDevice,
+                        isIOS,
+                        isAndroid,
+                        mobileRegexMatch: mobileRegex.test(userAgent)
+                    });
+                }
+                
+                // FINAL DECISION: Return true if ANY mobile indicator
+                return isIOS || isAndroid || isWindowsPhone || 
+                       mobileRegex.test(userAgent) || 
+                       isMobilePlatform ||
+                       (isTouchDevice && isSmallScreen);
             }
             
             if (isMobileDevice()) {
-                console.log('🚫 Mobile device detected - Showing warning');
                 const warning = document.getElementById('mobileWarning');
                 if (warning) {
                     warning.style.display = 'block';
@@ -732,8 +756,6 @@
                 if (container) {
                     container.style.display = 'none';
                 }
-            } else {
-                console.log('✅ Desktop/Laptop detected - Normal flow');
             }
         })();
     </script>
@@ -793,7 +815,7 @@
                 <p style="color: #ccc; font-size: 0.95em; line-height: 1.6; margin-bottom: 20px;">
                     Vui lòng chọn gói <strong style="color: #fff;">Mua gói chính chủ</strong> để có tài khoản Netflix riêng với đầy đủ tính năng trên mọi thiết bị.
                 </p>
-                <a href="https://zalo.me/0393434851" target="_blank" style="display: inline-block; background: #3b82f6; color: #fff; padding: 12px 30px; border-radius: 8px; text-decoration: none; font-weight: 600; transition: all 0.3s;">
+                <a href="https://www.facebook.com/tiembanh4k/" target="_blank" style="display: inline-block; background: #3b82f6; color: #fff; padding: 12px 30px; border-radius: 8px; text-decoration: none; font-weight: 600; transition: all 0.3s;">
                     📞 Liên hệ mua gói chính chủ
                 </a>
             </div>
