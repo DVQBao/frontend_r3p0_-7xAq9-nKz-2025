@@ -119,6 +119,7 @@
             /* Official Package Modal - Make grid 1 column on mobile */
             #officialPackageModal .modal-content {
                 max-width: 95% !important;
+                background: #000 !important; /* Remove gradient background on mobile */
             }
             
             #officialPackageModal .modal-content h2 {
@@ -159,6 +160,24 @@
             #officialPackageModal button {
                 font-size: 0.95rem !important;
                 padding: 12px 20px !important;
+            }
+            
+            /* Payment Modal - 2 columns to 1 column on mobile */
+            #paymentModal div[style*="grid-template-columns: 1fr 1fr"] {
+                grid-template-columns: 1fr !important;
+                gap: 20px !important;
+            }
+            
+            #paymentModal img {
+                max-width: 250px !important;
+            }
+            
+            #paymentModal h3 {
+                font-size: 1.1rem !important;
+            }
+            
+            #paymentModal p {
+                font-size: 0.9rem !important;
             }
         }
 
@@ -1194,9 +1213,8 @@
     <!-- Official Package Modal -->
     <div class="modal" id="officialPackageModal">
         <div class="modal-content" style="max-width: 1200px; background: linear-gradient(135deg, rgba(20, 20, 20, 0.98) 0%, rgba(26, 26, 26, 0.98) 100%), url('Background.webp') center/cover; backdrop-filter: blur(10px);">
-            <h2 style="margin-bottom: 10px; text-align: center; font-size: 2rem; color: #e50914;">Tài Khoản Netflix Premium 4K</h2>
-            <p style="text-align: center; color: #aaa; margin-bottom: 8px; font-size: 1rem;">Profile riêng • PIN riêng • Chất lượng 4K Ultra HD</p>
-            <p style="text-align: center; color: #4ade80; margin-bottom: 35px; font-size: 0.9rem; font-weight: 600;">Tài khoản chính chủ • Xem đa thiết bị • Giá tiền hợp lý</p>
+            <h2 style="margin-bottom: 10px; text-align: center; font-size: 2rem; color: #e50914;">ĐĂNG KÝ CHÍNH CHỦ</h2>
+            <p style="text-align: center; color: #4ade80; margin-bottom: 35px; font-size: 0.9rem; font-weight: 600;">Xem đa thiết bị • Giá tiền hợp lý</p>
             
             <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 25px; margin-bottom: 30px;">
                 <!-- 1 Month Plan -->
