@@ -1,19 +1,24 @@
 # robots.txt for tiembanh4k.com
+# Guide search engines what to crawl and what to block
 
 # Allow all crawlers to index public pages
 User-agent: *
 Allow: /
-Allow: /index.html
-Allow: /auth.html
-Allow: /contact.html
-Allow: /privacy-policy.html
-Allow: /terms-of-service.html
-Allow: /install-guide.html
+Allow: /auth/
+Allow: /contact/
+Allow: /privacy-policy/
+Allow: /terms-of-service/
+Allow: /install-guide/
 
-# Block admin and sensitive pages
-Disallow: /admin.html
+# Block admin panel and sensitive pages
+Disallow: /s3cure-panel-9mKp2Lq2025/
+Disallow: /admin/
 Disallow: /test-extension.html
+Disallow: /*.log$
+Disallow: /api/
 
-# Sitemap location
+# Crawl delay (optional - prevents server overload)
+Crawl-delay: 1
+
+# Sitemap location - helps Google find all pages faster
 Sitemap: https://tiembanh4k.com/sitemap.xml
-
