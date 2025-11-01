@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="vi">
 <head>
     <meta charset="UTF-8">
@@ -700,63 +700,67 @@
     </style>
 </head>
 <body>
-    <!-- Mobile Detection Script - Run immediately -->
+        <!-- Mobile Detection Script - Run immediately -->
     <script>
+        // Run mobile detection as soon as possible
         (function() {
             function isMobileDevice() {
                 // Check 1: User Agent - Comprehensive check
                 const userAgent = navigator.userAgent || navigator.vendor || window.opera;
-                
+
                 // Mobile/Tablet patterns
                 const mobileRegex = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini|Mobile|mobile|CriOS|FxiOS|EdgiOS/i;
-                
+
                 // Check 2: Specific platforms (higher priority)
                 const isIOS = /iPad|iPhone|iPod/.test(userAgent) && !window.MSStream;
                 const isAndroid = /Android/.test(userAgent);
                 const isWindowsPhone = /Windows Phone/.test(userAgent);
-                
+
                 // Check 3: Touch capability with small/medium screen
                 const isTouchDevice = ('ontouchstart' in window) || (navigator.maxTouchPoints > 0);
                 const screenWidth = window.innerWidth || screen.width;
-                const isSmallScreen = screenWidth <= 1024; // Mobile/Tablet usually ≤ 1024px
-                
+                const isSmallScreen = screenWidth <= 1024; // Mobile/Tablet usually â‰¤ 1024px
+
                 // Check 4: Platform API (newer method)
                 const platform = navigator.platform || '';
                 const isMobilePlatform = /iPhone|iPad|iPod|Android|Linux armv/.test(platform);
-                
-                // DEBUG INFO (only in development)
-                const isLocalhost = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
-                if (isLocalhost) {
-                    console.log('🔍 Mobile Detection Debug:', {
-                        userAgent,
-                        platform,
-                        screenWidth,
-                        isTouchDevice,
-                        isIOS,
-                        isAndroid,
-                        mobileRegexMatch: mobileRegex.test(userAgent)
-                    });
-                }
-                
+
                 // FINAL DECISION: Return true if ANY mobile indicator
-                return isIOS || isAndroid || isWindowsPhone || 
-                       mobileRegex.test(userAgent) || 
+                return isIOS || isAndroid || isWindowsPhone ||
+                       mobileRegex.test(userAgent) ||
                        isMobilePlatform ||
                        (isTouchDevice && isSmallScreen);
             }
-            
-            if (isMobileDevice()) {
-                const warning = document.getElementById('mobileWarning');
-                if (warning) {
-                    warning.style.display = 'block';
-                }
-                
-                // Hide main content
-                const container = document.querySelector('.container');
-                if (container) {
-                    container.style.display = 'none';
+
+            // Store result immediately
+            window.__isMobile = isMobileDevice();
+
+            // Apply mobile warning when DOM is ready
+            function applyMobileWarning() {
+                if (window.__isMobile) {
+                    const warning = document.getElementById('mobileWarning');
+                    const container = document.getElementById('mainContainer');
+
+                    if (warning) {
+                        warning.style.display = 'block';
+                    }
+
+                    if (container) {
+                        container.style.display = 'none';
+                    }
                 }
             }
+
+            // Try immediately (might work if script is at end of body)
+            applyMobileWarning();
+
+            // Also run on DOMContentLoaded as backup
+            if (document.readyState === 'loading') {
+                document.addEventListener('DOMContentLoaded', applyMobileWarning);
+            }
+
+            // Final fallback - run on window load
+            window.addEventListener('load', applyMobileWarning);
         })();
     </script>
     
