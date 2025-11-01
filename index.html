@@ -739,15 +739,24 @@
             function applyMobileWarning() {
                 if (window.__isMobile) {
                     const warning = document.getElementById('mobileWarning');
-                    const container = document.getElementById('mainContainer');
-
+                    const container = document.querySelector('.container');
+                    const mainWrapper = document.querySelector('.main-wrapper');
+                    
                     if (warning) {
                         warning.style.display = 'block';
                     }
-
+                    
+                    // Hide both container and wrapper
                     if (container) {
                         container.style.display = 'none';
                     }
+                    
+                    if (mainWrapper) {
+                        mainWrapper.style.display = 'none';
+                    }
+                    
+                    // Hide body scrollbar
+                    document.body.style.overflow = 'hidden';
                 }
             }
 
@@ -788,7 +797,7 @@
             </h2>
             
             <p style="color: #ccc; font-size: 1.1em; line-height: 1.6; max-width: 500px; margin-bottom: 30px;">
-                Dịch vụ <strong style="color: #e50914;">Xem với tư cách khách</strong> chỉ hỗ trợ trên <strong>PC</strong> và <strong>Laptop</strong> do yêu cầu cài đặt Chrome Extension.
+                Dịch vụ <strong style="color: #e50914;">Xem với tư cách khách</strong> của Tiệm Bánh Netflix hiện chỉ hỗ trợ trên <strong>PC</strong> và <strong>Laptop</strong> do yêu cầu cài đặt Extension.
             </p>
             
             <!-- Device Info -->
@@ -814,20 +823,13 @@
             <!-- Alternative Option -->
             <div style="background: rgba(59, 130, 246, 0.1); border: 1px solid rgba(59, 130, 246, 0.3); border-radius: 12px; padding: 25px; max-width: 500px; width: 100%; margin-bottom: 30px;">
                 <h3 style="color: #3b82f6; font-size: 1.2em; margin-bottom: 15px; font-weight: 600;">
-                    🎯 Muốn xem Netflix trên điện thoại?
+                    Muốn xem Netflix trên điện thoại?
                 </h3>
                 <p style="color: #ccc; font-size: 0.95em; line-height: 1.6; margin-bottom: 20px;">
-                    Vui lòng chọn gói <strong style="color: #fff;">Mua gói chính chủ</strong> để có tài khoản Netflix riêng với đầy đủ tính năng trên mọi thiết bị.
+                    Vui lòng liên hệ với bọn mình để <strong style="color: #fff;">Mua gói chính chủ</strong> với đầy đủ tính năng trên mọi thiết bị nhaaa.
                 </p>
                 <a href="https://www.facebook.com/tiembanh4k/" target="_blank" style="display: inline-block; background: #3b82f6; color: #fff; padding: 12px 30px; border-radius: 8px; text-decoration: none; font-weight: 600; transition: all 0.3s;">
-                    📞 Liên hệ mua gói chính chủ
-                </a>
-            </div>
-            
-            <!-- Contact Support -->
-            <div style="margin-top: 20px;">
-                <a href="https://www.facebook.com/tiembanh4k/" target="_blank" style="color: #aaa; text-decoration: underline; font-size: 0.95em;">
-                    Liên hệ Support nếu có thắc mắc
+                    Liên hệ mua gói chính chủ
                 </a>
             </div>
         </div>
