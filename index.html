@@ -136,8 +136,11 @@
                 gap: 15px !important;
             }
             
-            /* Package cards responsive */
-            #officialPackageModal div[style*="background: rgba(255, 255, 255, 0.03)"] {
+            /* Package cards - Remove background and border on mobile */
+            #officialPackageModal div[style*="background: rgba(255, 255, 255, 0.05)"],
+            #officialPackageModal div[style*="background: linear-gradient"] {
+                background: transparent !important;
+                border: none !important;
                 padding: 20px !important;
             }
             
@@ -168,8 +171,16 @@
                 gap: 20px !important;
             }
             
+            /* Payment Modal - Remove container backgrounds and borders on mobile */
+            #paymentModal div[style*="background: rgba(255, 255, 255, 0.05)"] {
+                background: transparent !important;
+                border-radius: 0 !important;
+                padding: 15px 0 !important;
+            }
+            
             #paymentModal img {
                 max-width: 250px !important;
+                border: none !important;
             }
             
             #paymentModal h3 {
@@ -178,6 +189,15 @@
             
             #paymentModal p {
                 font-size: 0.9rem !important;
+            }
+            
+            /* Remove border from payment info boxes on mobile */
+            #paymentModal div[style*="background: rgba(255, 193, 7, 0.1)"],
+            #paymentModal div[style*="background: rgba(59, 130, 246, 0.1)"] {
+                background: transparent !important;
+                border: none !important;
+                border-radius: 0 !important;
+                padding: 15px 0 !important;
             }
         }
 
