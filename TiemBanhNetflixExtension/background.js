@@ -573,7 +573,6 @@ async function isTiembanhWebOpen() {
         '*://127.0.0.1:*/*',
         '*://tiembanh4k.com/*',
         '*://*.tiembanh4k.com/*',
-        '*://dvqbao.github.io/*'
     ];
     
     for (const domain of tiembanhDomains) {

@@ -47,7 +47,7 @@ function setupEventListeners() {
     // Open web app button
     document.getElementById('openWebApp').addEventListener('click', () => {
         chrome.tabs.create({
-            url: 'http://localhost:8000'
+            url: 'https://www.tiembanh4k.com'
         });
         window.close();
     });
