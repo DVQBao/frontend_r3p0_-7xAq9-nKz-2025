@@ -775,100 +775,79 @@
     
     <!-- Mobile Device Warning - Show only on mobile/tablet -->
     <div id="mobileWarning" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(135deg, #0f0f0f 0%, #1a1a1a 100%); z-index: 999999; overflow-y: auto;">
-        <div style="min-height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 30px; text-align: center;">
+        <div style="min-height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 40px 20px;">
+            
             <!-- Logo -->
-            <div style="margin-bottom: 40px;">
-                <h1 style="font-size: 2.5em; color: #e50914; font-weight: 800; letter-spacing: -1px; margin-bottom: 10px;">
+            <div style="margin-bottom: 60px;">
+                <h1 style="font-size: 2.5em; color: #e50914; font-weight: 800; letter-spacing: -1px; margin: 0 0 10px 0; text-align: center;">
                     TIỆM BÁNH NETFLIX
                 </h1>
-                <p style="color: #aaa; font-size: 0.95em;">Share • Support • Enjoy</p>
+                <p style="color: #888; font-size: 0.95em; margin: 0; text-align: center;">Share • Support • Enjoy</p>
             </div>
             
-            <!-- Warning Icon -->
-            <div style="width: 100px; height: 100px; background: rgba(229, 9, 20, 0.1); border: 3px solid rgba(229, 9, 20, 0.3); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-bottom: 30px;">
-                <svg style="width: 50px; height: 50px; color: #e50914;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
-                </svg>
-            </div>
-            
-            <!-- Main Message -->
-            <h2 style="color: #fff; font-size: 1.8em; font-weight: 700; margin-bottom: 20px; line-height: 1.3;">
-                Thiết bị không được hỗ trợ
-            </h2>
-            
-            <p style="color: #ccc; font-size: 1.1em; line-height: 1.6; max-width: 500px; margin-bottom: 20px;">
-                Dịch vụ <strong style="color: #e50914;">Xem với tư cách khách</strong> của Tiệm Bánh Netflix hiện chỉ hỗ trợ trên <strong>PC</strong> và <strong>Laptop</strong> do yêu cầu cài đặt Extension.
-            </p>
-            
-            <p style="color: #fbbf24; font-size: 1.05em; line-height: 1.6; max-width: 500px; margin-bottom: 30px; font-weight: 600;">
-                Vui lòng xem video hướng dẫn sử dụng bên dưới để biết cách trải nghiệm trên PC/Laptop nhé!
-            </p>
-            
-            <!-- Device Info -->
-            <div style="background: rgba(229, 9, 20, 0.05); border: 1px solid rgba(229, 9, 20, 0.2); border-radius: 12px; padding: 25px; max-width: 500px; width: 100%; margin-bottom: 30px;">
-                <div style="display: grid; gap: 15px; text-align: left;">
-                    <div style="display: flex; align-items: start; gap: 12px;">
-                        <div style="color: #e50914; font-size: 1.5em; flex-shrink: 0;">💻</div>
-                        <div>
-                            <div style="color: #fff; font-weight: 600; margin-bottom: 5px;">Thiết bị được hỗ trợ</div>
-                            <div style="color: #aaa; font-size: 0.95em;">PC Windows, Mac, Linux, Laptop</div>
-                        </div>
-                    </div>
-                    <div style="display: flex; align-items: start; gap: 12px;">
-                        <div style="color: #666; font-size: 1.5em; flex-shrink: 0;">📱</div>
-                        <div>
-                            <div style="color: #888; font-weight: 600; margin-bottom: 5px;">Không hỗ trợ</div>
-                            <div style="color: #666; font-size: 0.95em;">Điện thoại, Tablet (iOS, Android)</div>
-                        </div>
-                    </div>
+            <!-- Main Content Container -->
+            <div style="max-width: 650px; width: 100%;">
+                
+                <!-- Section 1: Thiết bị không được hỗ trợ -->
+                <div style="margin-bottom: 70px;">
+                    <h2 style="color: #fff; font-size: 2.2em; font-weight: 700; margin: 0 0 30px 0; text-align: center; line-height: 1.2;">
+                        Thiết bị không được hỗ trợ
+                    </h2>
+                    
+                    <p style="color: #b3b3b3; font-size: 1.15em; line-height: 1.8; margin: 0 0 40px 0; text-align: center; padding: 0 20px;">
+                        Dịch vụ <strong style="color: #e50914; font-weight: 600;">Xem với tư cách khách</strong> của Tiệm Bánh Netflix hiện chỉ hỗ trợ trên <strong style="color: #fff; font-weight: 600;">PC</strong> và <strong style="color: #fff; font-weight: 600;">Laptop</strong> do yêu cầu cài đặt Extension.
+                    </p>
+                    
+                    <a href="https://youtu.be/vrVgwrjUbpo" target="_blank" style="display: block; background: linear-gradient(135deg, #e50914 0%, #b20710 100%); color: #fff; padding: 20px 50px; border-radius: 8px; text-decoration: none; font-weight: 600; font-size: 1.15em; text-align: center; transition: transform 0.2s, box-shadow 0.2s; box-shadow: 0 4px 25px rgba(229, 9, 20, 0.3); margin: 0 auto; max-width: 400px;">
+                        Xem video hướng dẫn sử dụng
+                    </a>
                 </div>
+                
+                <!-- Divider -->
+                <div style="height: 1px; background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent); margin: 0 0 70px 0;"></div>
+                
+                <!-- Section 2: Muốn xem trên điện thoại -->
+                <div style="margin-bottom: 70px;">
+                    <h2 style="color: #fff; font-size: 2em; font-weight: 700; margin: 0 0 25px 0; text-align: center; line-height: 1.2;">
+                        Muốn xem trên điện thoại?
+                    </h2>
+                    
+                    <p style="color: #999; font-size: 1.05em; line-height: 1.7; margin: 0 0 35px 0; text-align: center; padding: 0 20px;">
+                        Vui lòng liên hệ với bọn mình để mua gói chính chủ với đầy đủ tính năng trên mọi thiết bị nha!
+                    </p>
+                    
+                    <a href="https://www.facebook.com/tiembanh4k/" target="_blank" style="display: block; background: #e50914; color: #fff; padding: 20px 50px; border-radius: 8px; text-decoration: none; font-weight: 600; font-size: 1.15em; text-align: center; transition: transform 0.2s, box-shadow 0.2s; box-shadow: 0 4px 25px rgba(229, 9, 20, 0.25); margin: 0 auto; max-width: 400px;">
+                        Mua gói chính chủ
+                    </a>
+                </div>
+                
+                <!-- Divider -->
+                <div style="height: 1px; background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent); margin: 0 0 70px 0;"></div>
+                
+                <!-- Section 3: Cần hỗ trợ -->
+                <div style="margin-bottom: 40px;">
+                    <h2 style="color: #fff; font-size: 2em; font-weight: 700; margin: 0 0 25px 0; text-align: center; line-height: 1.2;">
+                        Bạn có thắc mắc nào hông?
+                    </h2>
+                    
+                    <p style="color: #999; font-size: 1.05em; line-height: 1.7; margin: 0 0 35px 0; text-align: center; padding: 0 20px;">
+                        Nhân sự Tiệm Bánh luôn sẵn sàng giúp đỡ bạn.
+                    </p>
+                    
+                    <a href="contact/" target="_blank" style="display: block; background: transparent; border: 2px solid rgba(255, 255, 255, 0.3); color: #fff; padding: 18px 50px; border-radius: 8px; text-decoration: none; font-weight: 600; font-size: 1.15em; text-align: center; transition: all 0.2s; margin: 0 auto; max-width: 400px;">
+                        Liên hệ
+                    </a>
+                </div>
+                
             </div>
             
-            <!-- Alternative Option -->
-            <div style="background: rgba(59, 130, 246, 0.1); border: 1px solid rgba(59, 130, 246, 0.3); border-radius: 12px; padding: 25px; max-width: 500px; width: 100%; margin-bottom: 30px;">
-                <h3 style="color: #3b82f6; font-size: 1.2em; margin-bottom: 15px; font-weight: 600;">
-                    Muốn xem Netflix trên điện thoại?
-                </h3>
-                <p style="color: #ccc; font-size: 0.95em; line-height: 1.6; margin-bottom: 20px;">
-                    Vui lòng liên hệ với bọn mình để <strong style="color: #fff;">Mua gói chính chủ</strong> với đầy đủ tính năng trên mọi thiết bị nhaaa.
+            <!-- Footer -->
+            <div style="margin-top: 60px; padding-top: 30px; border-top: 1px solid rgba(255, 255, 255, 0.1);">
+                <p style="color: #666; font-size: 0.9em; margin: 0; text-align: center;">
+                    © 2024 Tiệm Bánh Netflix. All rights reserved.
                 </p>
             </div>
             
-            <!-- Action Buttons -->
-            <div style="display: grid; gap: 12px; max-width: 500px; width: 100%; margin-bottom: 20px;">
-                <!-- Xem video hướng dẫn -->
-                <a href="https://youtu.be/vrVgwrjUbpo" target="_blank" style="display: flex; align-items: center; justify-content: center; gap: 10px; background: linear-gradient(135deg, #ff0000 0%, #cc0000 100%); color: #fff; padding: 15px 25px; border-radius: 10px; text-decoration: none; font-weight: 600; font-size: 1.05em; transition: all 0.3s; box-shadow: 0 4px 15px rgba(255, 0, 0, 0.4);">
-                    <svg style="width: 24px; height: 24px;" fill="currentColor" viewBox="0 0 24 24">
-                        <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/>
-                    </svg>
-                    Xem video hướng dẫn
-                </a>
-                
-                <!-- Mua gói chính chủ -->
-                <a href="https://www.facebook.com/tiembanh4k/" target="_blank" style="display: flex; align-items: center; justify-content: center; gap: 10px; background: linear-gradient(135deg, #e50914 0%, #b20710 100%); color: #fff; padding: 15px 25px; border-radius: 10px; text-decoration: none; font-weight: 600; font-size: 1.05em; transition: all 0.3s; box-shadow: 0 4px 15px rgba(229, 9, 20, 0.4);">
-                    <svg style="width: 24px; height: 24px;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"/>
-                    </svg>
-                    Mua gói chính chủ
-                </a>
-                
-                <!-- Liên hệ hỗ trợ -->
-                <a href="contact/" target="_blank" style="display: flex; align-items: center; justify-content: center; gap: 10px; background: rgba(255, 255, 255, 0.1); border: 2px solid rgba(255, 255, 255, 0.3); color: #fff; padding: 15px 25px; border-radius: 10px; text-decoration: none; font-weight: 600; font-size: 1.05em; transition: all 0.3s;">
-                    <svg style="width: 24px; height: 24px;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"/>
-                    </svg>
-                    Liên hệ hỗ trợ
-                </a>
-            </div>
-            
-            <!-- Social Links -->
-            <div style="display: flex; gap: 15px; justify-content: center; margin-top: 20px;">
-                <a href="https://www.facebook.com/tiembanh4k/" target="_blank" style="display: flex; align-items: center; justify-content: center; width: 50px; height: 50px; background: rgba(59, 130, 246, 0.2); border: 1px solid rgba(59, 130, 246, 0.4); border-radius: 12px; color: #3b82f6; transition: all 0.3s; text-decoration: none;">
-                    <svg style="width: 24px; height: 24px;" fill="currentColor" viewBox="0 0 24 24">
-                        <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
-                    </svg>
-                </a>
-            </div>
         </div>
     </div>
     
