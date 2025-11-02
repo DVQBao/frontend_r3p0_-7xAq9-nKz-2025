@@ -293,10 +293,13 @@
                 background: rgba(255, 255, 255, 0.05) !important;
             }
             
-            /* Close button container - reduce margin to bring closer */
-            #officialPackageModal > div > div[style*="text-align: center"] {
-                margin-top: 20px !important;
-                padding-top: 0 !important;
+            /* Mobile: Show button inside package, hide outside button */
+            .mobile-only-home-btn {
+                display: block !important;
+            }
+            
+            .desktop-only-home-btn-container {
+                display: none !important;
             }
             
             /* Payment Modal - Clean up on mobile */
@@ -343,12 +346,17 @@
                 line-height: 1.6 !important;
             }
             
-            /* Thông tin thanh toán box - no borders */
+            /* Thông tin thanh toán box - no borders, reduce bottom spacing */
             #paymentModal > div > div > div:nth-child(2) > div > div:nth-child(1) {
                 background: transparent !important;
                 border: none !important;
-                padding: 15px 0 !important;
+                padding: 15px 0 8px 0 !important;
                 margin: 0 !important;
+            }
+            
+            /* Reduce margin of last paragraph in payment info to reduce gap before separator */
+            #paymentModal > div > div > div:nth-child(2) > div > div:nth-child(1) > div > p:last-child {
+                margin-bottom: 0 !important;
             }
             
             /* Lưu ý quan trọng - Add TOP border */
@@ -369,6 +377,17 @@
                 border-radius: 0 !important;
                 padding: 15px 0 !important;
                 margin: 0 !important;
+            }
+        }
+        
+        /* Desktop: Hide mobile button inside package, show outside button */
+        @media (min-width: 969px) {
+            .mobile-only-home-btn {
+                display: none !important;
+            }
+            
+            .desktop-only-home-btn-container {
+                display: block !important;
             }
         }
 
@@ -1536,10 +1555,16 @@
                     <button class="btn" style="width: 100%; background: linear-gradient(135deg, #eab308, #fbbf24); color: #000; font-weight: 700; font-size: 1rem; padding: 14px;" onclick="event.stopPropagation(); openPaymentModal('premium-12m', '920.000đ')">
                         Mua ngay
                     </button>
+                    
+                    <!-- Mobile-only: Quay về trang chủ button inside package -->
+                    <button class="btn btn-secondary mobile-only-home-btn" onclick="closeOfficialPackageModal(); window.location.href='/';" style="width: 100%; padding: 16px 0; margin-top: 12px;">
+                        Quay về trang chủ
+                    </button>
                 </div>
             </div>
 
-            <div style="text-align: center;">
+            <!-- Desktop-only: Quay về trang chủ button outside packages -->
+            <div style="text-align: center;" class="desktop-only-home-btn-container">
                 <button class="btn btn-secondary" onclick="closeOfficialPackageModal(); window.location.href='/';" style="width: 100%; padding: 16px 0;">
                     Quay về trang chủ
                 </button>
