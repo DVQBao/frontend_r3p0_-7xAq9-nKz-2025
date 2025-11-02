@@ -59,13 +59,13 @@ class CookieRetryHandler {
                 }
 
                 // ========================================
-                // PHÂN BIỆT: LỖI EXTENSION vs LỖI COOKIE
+                // PHÂN BIỆT: LỖI EXTENSION/NETWORK vs LỖI COOKIE
                 // ========================================
-                const extensionErrors = ['NO_RESPONSE', 'CHECK_FAILED', 'NO_EXTENSION', 'EXTENSION_OFFLINE'];
+                const extensionErrors = ['NO_RESPONSE', 'CHECK_FAILED', 'NO_EXTENSION', 'EXTENSION_OFFLINE', 'TIMEOUT_SLOW_NETWORK'];
 
                 if (extensionErrors.includes(result.errorCode)) {
-                    // ❌ LỖI EXTENSION - KHÔNG MARK COOKIE DIE
-                    console.error('🔌 Extension error detected! Stopping process...');
+                    // ❌ LỖI EXTENSION/NETWORK - KHÔNG MARK COOKIE DIE
+                    console.error('🔌 Extension/Network error detected! Stopping process...');
                     console.error(`Error code: ${result.errorCode}`);
 
                     // Release cookie preview (không mark die)
@@ -111,34 +111,54 @@ class CookieRetryHandler {
             } catch (error) {
                 console.error(`❌ Attempt ${this.currentRetry} failed:`, error);
 
-                // 🔌 EXTENSION ERROR - Dừng ngay, không retry, không mark cookie die
+                // 🔌 EXTENSION/NETWORK ERROR - Dừng ngay, không retry, không mark cookie die
                 if (error.isExtensionError) {
-                    console.error('🔌 EXTENSION ERROR - Stopping all retries');
+                    console.error('🔌 EXTENSION/NETWORK ERROR - Stopping all retries');
 
-                    // Hiển thị modal hướng dẫn fix extension
+                    // Hiển thị modal hướng dẫn tùy theo loại lỗi
                     if (typeof window.showCustomModal === 'function') {
+                        // Phân biệt lỗi timeout vs extension
+                        const isTimeout = error.code === 'TIMEOUT_SLOW_NETWORK';
+
                         window.showCustomModal({
-                            icon: '🔌',
-                            title: 'Lỗi Extension',
-                            message: `Không thể kết nối với Extension!\n\n` +
-                                `📋 Các bước khắc phục:\n\n` +
-                                `1️⃣ Kiểm tra Extension đã được cài đặt chưa\n` +
-                                `2️⃣ Refresh lại trang web này (Ctrl + F5)\n` +
-                                `3️⃣ Kiểm tra Extension có đang bật không\n` +
-                                `4️⃣ Thử tắt/bật lại Extension\n` +
-                                `5️⃣ Nếu vẫn lỗi, cài lại Extension\n\n` +
-                                `Vui lòng thử lại sau khi fix Extension!`,
-                            buttons: [
-                                { text: 'Hướng dẫn cài Extension', type: 'secondary', action: () => {
-                                    window.open('/install-guide', '_blank');
-                                }},
-                                { text: 'Refresh trang', type: 'primary', action: () => {
-                                    window.location.reload();
-                                }}
-                            ]
+                            icon: isTimeout ? '🐌' : '🔌',
+                            title: isTimeout ? 'Kết nối mạng chậm' : 'Lỗi Extension',
+                            message: isTimeout
+                                ? `Kết nối mạng của bạn quá chậm!\n\n` +
+                                  `📋 Các bước khắc phục:\n\n` +
+                                  `1️⃣ Kiểm tra kết nối internet\n` +
+                                  `2️⃣ Đổi sang mạng WiFi nhanh hơn\n` +
+                                  `3️⃣ Tắt các ứng dụng đang tải dữ liệu\n` +
+                                  `4️⃣ Thử lại sau vài phút\n\n` +
+                                  `Vui lòng thử lại khi mạng ổn định hơn!`
+                                : `Không thể kết nối với Extension!\n\n` +
+                                  `📋 Các bước khắc phục:\n\n` +
+                                  `1️⃣ Kiểm tra Extension đã được cài đặt chưa\n` +
+                                  `2️⃣ Refresh lại trang web này (Ctrl + F5)\n` +
+                                  `3️⃣ Kiểm tra Extension có đang bật không\n` +
+                                  `4️⃣ Thử tắt/bật lại Extension\n` +
+                                  `5️⃣ Nếu vẫn lỗi, cài lại Extension\n\n` +
+                                  `Vui lòng thử lại sau khi fix Extension!`,
+                            buttons: isTimeout
+                                ? [
+                                    { text: 'Thử lại', type: 'primary', action: () => {
+                                        window.location.reload();
+                                    }}
+                                ]
+                                : [
+                                    { text: 'Hướng dẫn cài Extension', type: 'secondary', action: () => {
+                                        window.open('/install-guide', '_blank');
+                                    }},
+                                    { text: 'Refresh trang', type: 'primary', action: () => {
+                                        window.location.reload();
+                                    }}
+                                ]
                         });
                     } else {
-                        alert('Lỗi Extension! Vui lòng kiểm tra lại Extension và refresh trang.');
+                        const msg = error.code === 'TIMEOUT_SLOW_NETWORK'
+                            ? 'Mạng quá chậm! Vui lòng kiểm tra kết nối và thử lại.'
+                            : 'Lỗi Extension! Vui lòng kiểm tra lại Extension và refresh trang.';
+                        alert(msg);
                     }
 
                     return {
@@ -307,17 +327,62 @@ class CookieRetryHandler {
                 console.error('❌ Injection failed:', response);
                 throw new Error(response?.error || 'Extension injection failed');
             }
-            
-            console.log('✅ Cookie injected successfully, waiting 7s...');
-            // Wait for Netflix to process cookie (increased for slow networks)
-            await this.sleep(7000);
-            
-            console.log('🔍 Checking login status...');
-            // Check login status via extension
-            const loginStatus = await this.checkNetflixLoginStatus();
-            console.log('📊 Login status:', loginStatus);
-            
-            return loginStatus;
+
+            console.log('✅ Cookie injected successfully!');
+            console.log('🔄 Starting ADAPTIVE POLLING to check cookie status...');
+
+            // ========================================
+            // ADAPTIVE TIMEOUT + POLLING
+            // Tự động điều chỉnh thời gian check dựa trên tốc độ mạng
+            // ========================================
+            const startTime = Date.now();
+            const maxWaitTime = 20000; // Max 20 seconds
+            let pollInterval = 3000;   // Start with 3s
+            const maxInterval = 5000;  // Max 5s between checks
+            let checkCount = 0;
+
+            while ((Date.now() - startTime) < maxWaitTime) {
+                checkCount++;
+                const elapsed = ((Date.now() - startTime) / 1000).toFixed(1);
+
+                // Wait before checking
+                await this.sleep(pollInterval);
+
+                console.log(`🔍 Check #${checkCount} after ${elapsed}s (interval: ${pollInterval/1000}s)...`);
+
+                // Check login status
+                const loginStatus = await this.checkNetflixLoginStatus();
+
+                // ✅ SUCCESS - Cookie is live!
+                if (loginStatus.success) {
+                    const totalTime = ((Date.now() - startTime) / 1000).toFixed(1);
+                    console.log(`✅ Cookie VERIFIED after ${totalTime}s (${checkCount} checks)`);
+                    return { success: true };
+                }
+
+                // ❌ REAL ERROR - Not just "not ready yet"
+                if (loginStatus.errorCode && loginStatus.errorCode !== 'NOT_BROWSING') {
+                    const totalTime = ((Date.now() - startTime) / 1000).toFixed(1);
+                    console.log(`❌ Real error detected after ${totalTime}s: ${loginStatus.errorCode}`);
+                    return loginStatus;
+                }
+
+                // ⏳ NOT_BROWSING - Still loading, increase interval adaptively
+                if (loginStatus.errorCode === 'NOT_BROWSING') {
+                    console.log('⏳ Netflix still loading, will check again...');
+                    // Gradually increase interval for slow networks
+                    pollInterval = Math.min(pollInterval + 1000, maxInterval);
+                }
+            }
+
+            // ⏱️ TIMEOUT - Exceeded max wait time
+            const totalTime = ((Date.now() - startTime) / 1000).toFixed(1);
+            console.log(`⏱️ Timeout after ${totalTime}s (${checkCount} checks) - Network too slow`);
+            return {
+                success: false,
+                errorCode: 'TIMEOUT_SLOW_NETWORK',
+                message: 'Network connection is too slow. Please check your internet and try again.'
+            };
             
         } catch (error) {
             console.error('❌ Inject cookie error:', error);
