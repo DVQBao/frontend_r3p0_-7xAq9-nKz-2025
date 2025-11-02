@@ -147,7 +147,7 @@
                 background: transparent !important;
                 border: none !important;
                 border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important;
-                padding: 30px 15px !important;
+                padding: 25px 15px !important;
                 margin: 0 !important;
             }
             
@@ -156,19 +156,50 @@
                 border-bottom: none !important;
             }
             
-            /* Package header - Make title and price side by side on mobile */
+            /* Package header - Vertical layout on mobile */
             #officialPackageModal div[style*="text-align: center; margin-bottom: 20px"] {
                 display: flex !important;
-                justify-content: space-between !important;
-                align-items: center !important;
+                flex-direction: column !important;
+                align-items: flex-start !important;
                 text-align: left !important;
                 margin-bottom: 15px !important;
             }
             
-            /* Package title */
+            /* Package title - Override text content */
             #officialPackageModal div[style*="font-size: 1.5rem"] {
                 font-size: 1.15rem !important;
                 margin: 0 !important;
+                font-weight: 700 !important;
+                letter-spacing: 0.5px !important;
+            }
+            
+            /* Override package names on mobile using nth-child */
+            #officialPackageModal div[style*="grid-template-columns: repeat(4, 1fr)"] > div:nth-child(1) div[style*="font-size: 1.5rem"]::after {
+                content: " - LINH HOẠT" !important;
+                font-size: 0.8rem !important;
+                font-weight: 600 !important;
+                color: #4ade80 !important;
+            }
+            
+            #officialPackageModal div[style*="grid-template-columns: repeat(4, 1fr)"] > div:nth-child(2) div[style*="font-size: 1.5rem"]::after {
+                content: " - ĐÁNG GIÁ" !important;
+                font-size: 0.8rem !important;
+                font-weight: 600 !important;
+                color: #3b82f6 !important;
+            }
+            
+            #officialPackageModal div[style*="grid-template-columns: repeat(4, 1fr)"] > div:nth-child(3) div[style*="font-size: 1.5rem"]::after {
+                content: " - CÂN BẰNG" !important;
+                font-size: 0.8rem !important;
+                font-weight: 600 !important;
+                color: #a855f7 !important;
+            }
+            
+            #officialPackageModal div[style*="grid-template-columns: repeat(4, 1fr)"] > div:nth-child(4) div[style*="font-size: 1.5rem"]::after {
+                content: " - ỔN ĐỊNH" !important;
+                font-size: 0.8rem !important;
+                font-weight: 600 !important;
+                color: #fb923c !important;
             }
             
             /* Hide subtitle text on mobile (Linh hoạt nhất, Đáng giá nhất, etc) */
@@ -177,12 +208,12 @@
                 display: none !important;
             }
             
-            /* Price container - align right */
+            /* Price container - align left, below title */
             #officialPackageModal div[style*="background: rgba(0, 0, 0, 0.3)"] {
                 background: transparent !important;
                 padding: 0 !important;
-                margin: 0 !important;
-                text-align: right !important;
+                margin: 8px 0 0 0 !important;
+                text-align: left !important;
             }
             
             /* Strike-through price - smaller */
@@ -208,19 +239,20 @@
                 display: none !important;
             }
             
-            /* Hide savings badge on mobile */
-            #officialPackageModal div[style*="background: rgba(74, 222, 128, 0.15)"],
-            #officialPackageModal div[style*="background: rgba(59, 130, 246, 0.15)"],
-            #officialPackageModal div[style*="background: rgba(168, 85, 247, 0.15)"],
-            #officialPackageModal div[style*="background: rgba(251, 146, 60, 0.15)"] {
+            /* Hide ALL savings badges on mobile (including "Tiết kiệm 25%", "31%", etc) */
+            #officialPackageModal div[style*="background: rgba(74, 222, 128"],
+            #officialPackageModal div[style*="background: rgba(59, 130, 246"],
+            #officialPackageModal div[style*="background: rgba(168, 85, 247"],
+            #officialPackageModal div[style*="background: rgba(251, 146, 60"] {
                 display: none !important;
             }
             
             /* Package features */
             #officialPackageModal ul {
                 font-size: 0.85rem !important;
-                margin-top: 15px !important;
-                margin-bottom: 15px !important;
+                margin-top: 12px !important;
+                margin-bottom: 12px !important;
+                line-height: 1.8 !important;
             }
             
             /* Buttons */
