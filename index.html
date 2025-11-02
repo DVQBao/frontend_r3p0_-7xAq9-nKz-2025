@@ -147,7 +147,7 @@
                 background: transparent !important;
                 border: none !important;
                 border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important;
-                padding: 25px 15px !important;
+                padding: 20px 15px !important;
                 margin: 0 !important;
             }
             
@@ -162,44 +162,61 @@
                 flex-direction: column !important;
                 align-items: flex-start !important;
                 text-align: left !important;
-                margin-bottom: 15px !important;
+                margin-bottom: 8px !important;
             }
             
-            /* Package title - Override text content */
+            /* Package title - Make all text uppercase and uniform style */
             #officialPackageModal div[style*="font-size: 1.5rem"] {
-                font-size: 1.15rem !important;
+                font-size: 1.05rem !important;
                 margin: 0 !important;
                 font-weight: 700 !important;
+                text-transform: uppercase !important;
                 letter-spacing: 0.5px !important;
             }
             
-            /* Override package names on mobile using nth-child */
+            /* Replace package names entirely on mobile */
+            #officialPackageModal div[style*="grid-template-columns: repeat(4, 1fr)"] > div:nth-child(1) div[style*="font-size: 1.5rem"] {
+                font-size: 0 !important;
+            }
+            
             #officialPackageModal div[style*="grid-template-columns: repeat(4, 1fr)"] > div:nth-child(1) div[style*="font-size: 1.5rem"]::after {
-                content: " - LINH HOẠT" !important;
-                font-size: 0.8rem !important;
-                font-weight: 600 !important;
-                color: #4ade80 !important;
+                content: "1 THÁNG - LINH HOẠT" !important;
+                font-size: 1.05rem !important;
+                font-weight: 700 !important;
+                color: #fff !important;
+            }
+            
+            #officialPackageModal div[style*="grid-template-columns: repeat(4, 1fr)"] > div:nth-child(2) div[style*="font-size: 1.5rem"] {
+                font-size: 0 !important;
             }
             
             #officialPackageModal div[style*="grid-template-columns: repeat(4, 1fr)"] > div:nth-child(2) div[style*="font-size: 1.5rem"]::after {
-                content: " - ĐÁNG GIÁ" !important;
-                font-size: 0.8rem !important;
-                font-weight: 600 !important;
-                color: #3b82f6 !important;
+                content: "3 THÁNG - ĐÁNG GIÁ" !important;
+                font-size: 1.05rem !important;
+                font-weight: 700 !important;
+                color: #fff !important;
+            }
+            
+            #officialPackageModal div[style*="grid-template-columns: repeat(4, 1fr)"] > div:nth-child(3) div[style*="font-size: 1.5rem"] {
+                font-size: 0 !important;
             }
             
             #officialPackageModal div[style*="grid-template-columns: repeat(4, 1fr)"] > div:nth-child(3) div[style*="font-size: 1.5rem"]::after {
-                content: " - CÂN BẰNG" !important;
-                font-size: 0.8rem !important;
-                font-weight: 600 !important;
-                color: #a855f7 !important;
+                content: "6 THÁNG - CÂN BẰNG" !important;
+                font-size: 1.05rem !important;
+                font-weight: 700 !important;
+                color: #fff !important;
+            }
+            
+            #officialPackageModal div[style*="grid-template-columns: repeat(4, 1fr)"] > div:nth-child(4) div[style*="font-size: 1.5rem"] {
+                font-size: 0 !important;
             }
             
             #officialPackageModal div[style*="grid-template-columns: repeat(4, 1fr)"] > div:nth-child(4) div[style*="font-size: 1.5rem"]::after {
-                content: " - ỔN ĐỊNH" !important;
-                font-size: 0.8rem !important;
-                font-weight: 600 !important;
-                color: #fb923c !important;
+                content: "12 THÁNG - ỔN ĐỊNH" !important;
+                font-size: 1.05rem !important;
+                font-weight: 700 !important;
+                color: #fff !important;
             }
             
             /* Hide subtitle text on mobile (Linh hoạt nhất, Đáng giá nhất, etc) */
@@ -212,7 +229,7 @@
             #officialPackageModal div[style*="background: rgba(0, 0, 0, 0.3)"] {
                 background: transparent !important;
                 padding: 0 !important;
-                margin: 8px 0 0 0 !important;
+                margin: 5px 0 0 0 !important;
                 text-align: left !important;
             }
             
@@ -239,26 +256,26 @@
                 display: none !important;
             }
             
-            /* Hide ALL savings badges on mobile (including "Tiết kiệm 25%", "31%", etc) */
-            #officialPackageModal div[style*="background: rgba(74, 222, 128"],
-            #officialPackageModal div[style*="background: rgba(59, 130, 246"],
-            #officialPackageModal div[style*="background: rgba(168, 85, 247"],
-            #officialPackageModal div[style*="background: rgba(251, 146, 60"] {
+            /* Hide ALL savings badges - comprehensive selectors */
+            #officialPackageModal div[style*="Tiết kiệm"],
+            #officialPackageModal div[style*="background"][style*="0.15"],
+            #officialPackageModal div[style*="border: 1px solid"][style*="border-radius: 6px"][style*="padding: 12px"] {
                 display: none !important;
             }
             
-            /* Package features */
+            /* Package features - reduce spacing */
             #officialPackageModal ul {
                 font-size: 0.85rem !important;
-                margin-top: 12px !important;
-                margin-bottom: 12px !important;
-                line-height: 1.8 !important;
+                margin-top: 8px !important;
+                margin-bottom: 8px !important;
+                line-height: 1.6 !important;
             }
             
-            /* Buttons */
+            /* Buttons - reduce spacing */
             #officialPackageModal button {
                 font-size: 0.95rem !important;
-                padding: 12px 20px !important;
+                padding: 10px 20px !important;
+                margin-top: 0 !important;
             }
             
             /* Payment Modal - Clean up on mobile */
