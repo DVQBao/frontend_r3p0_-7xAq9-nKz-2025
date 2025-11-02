@@ -147,7 +147,7 @@
                 background: transparent !important;
                 border: none !important;
                 border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important;
-                padding: 20px 15px !important;
+                padding: 18px 15px 15px 15px !important;
                 margin: 0 !important;
             }
             
@@ -272,11 +272,24 @@
                 flex: 0 !important; /* CRITICAL: Remove flex: 1 that pushes button down */
             }
             
-            /* Buttons - reduce spacing */
-            #officialPackageModal button {
-                font-size: 0.95rem !important;
-                padding: 10px 20px !important;
+            /* Buttons - Match mobile warning screen style */
+            #officialPackageModal button,
+            #paymentModal button {
+                background: transparent !important;
+                border: 1px solid rgba(255, 255, 255, 0.2) !important;
+                color: #fff !important;
+                padding: 16px 0 !important;
+                border-radius: 6px !important;
+                font-weight: 600 !important;
+                font-size: 0.95em !important;
+                text-align: center !important;
+                transition: all 0.3s !important;
                 margin-top: 0 !important;
+            }
+            
+            #officialPackageModal button:hover,
+            #paymentModal button:hover {
+                background: rgba(255, 255, 255, 0.05) !important;
             }
             
             /* Payment Modal - Clean up on mobile */
@@ -296,12 +309,12 @@
                 gap: 0 !important;
             }
             
-            /* Payment Modal - QR section with bottom border */
+            /* Payment Modal - QR section NO border */
             #paymentModal div[style*="background: rgba(255, 255, 255, 0.05)"] {
                 background: transparent !important;
                 border-radius: 0 !important;
                 padding: 20px 0 !important;
-                border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important;
+                border: none !important;
             }
             
             #paymentModal img {
