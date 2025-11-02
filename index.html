@@ -263,12 +263,13 @@
                 display: none !important;
             }
             
-            /* Package features - reduce spacing */
+            /* Package features - reduce spacing and REMOVE flex: 1 */
             #officialPackageModal ul {
                 font-size: 0.85rem !important;
-                margin-top: 8px !important;
-                margin-bottom: 8px !important;
+                margin-top: 10px !important;
+                margin-bottom: 10px !important;
                 line-height: 1.6 !important;
+                flex: 0 !important; /* CRITICAL: Remove flex: 1 that pushes button down */
             }
             
             /* Buttons - reduce spacing */
@@ -295,7 +296,7 @@
                 gap: 0 !important;
             }
             
-            /* Payment Modal - Remove container backgrounds and borders on mobile */
+            /* Payment Modal - QR section with bottom border */
             #paymentModal div[style*="background: rgba(255, 255, 255, 0.05)"] {
                 background: transparent !important;
                 border-radius: 0 !important;
@@ -306,12 +307,15 @@
             #paymentModal img {
                 max-width: 250px !important;
                 border: none !important;
-                margin-bottom: 20px !important;
+                margin-bottom: 15px !important;
             }
             
+            /* H3 "Hướng dẫn thanh toán" - add border below */
             #paymentModal h3 {
                 font-size: 1.1rem !important;
-                margin-bottom: 15px !important;
+                margin-bottom: 0 !important;
+                padding-bottom: 15px !important;
+                border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important;
             }
             
             #paymentModal p {
@@ -319,14 +323,30 @@
                 line-height: 1.6 !important;
             }
             
-            /* Add separators and clean styling */
-            #paymentModal div[style*="background: rgba(255, 193, 7, 0.1)"],
+            /* Thông tin thanh toán box - no borders */
+            #paymentModal > div > div > div:nth-child(2) > div > div:nth-child(1) {
+                background: transparent !important;
+                border: none !important;
+                padding: 15px 0 !important;
+                margin: 0 !important;
+            }
+            
+            /* Lưu ý quan trọng - NO borders */
+            #paymentModal div[style*="background: rgba(255, 193, 7, 0.1)"] {
+                background: transparent !important;
+                border: none !important;
+                border-radius: 0 !important;
+                padding: 15px 0 !important;
+                margin: 0 !important;
+            }
+            
+            /* Xác minh thanh toán - add top border */
             #paymentModal div[style*="background: rgba(59, 130, 246, 0.1)"] {
                 background: transparent !important;
                 border: none !important;
                 border-top: 1px solid rgba(255, 255, 255, 0.1) !important;
                 border-radius: 0 !important;
-                padding: 20px 0 !important;
+                padding: 15px 0 !important;
                 margin: 0 !important;
             }
         }
