@@ -119,29 +119,39 @@
             /* Official Package Modal - Make grid 1 column on mobile */
             #officialPackageModal .modal-content {
                 max-width: 95% !important;
-                background: #000 !important; /* Remove gradient background on mobile */
+                background: #000 !important; /* Solid black background on mobile */
+                backdrop-filter: none !important; /* Remove blur effect */
             }
             
             #officialPackageModal .modal-content h2 {
                 font-size: 1.5rem !important;
+                margin-bottom: 15px !important;
             }
             
             #officialPackageModal .modal-content p {
                 font-size: 0.9rem !important;
+                margin-bottom: 25px !important;
             }
             
             /* Change 4 column grid to 1 column on mobile */
             #officialPackageModal div[style*="grid-template-columns: repeat(4, 1fr)"] {
                 grid-template-columns: 1fr !important;
-                gap: 15px !important;
+                gap: 0 !important; /* Remove gap, use separator instead */
             }
             
-            /* Package cards - Remove background and border on mobile */
+            /* Package cards - Remove background and border, add separator on mobile */
             #officialPackageModal div[style*="background: rgba(255, 255, 255, 0.05)"],
             #officialPackageModal div[style*="background: linear-gradient"] {
                 background: transparent !important;
                 border: none !important;
-                padding: 20px !important;
+                border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important;
+                padding: 30px 15px !important;
+                margin: 0 !important;
+            }
+            
+            /* Last package card - remove bottom border */
+            #officialPackageModal div[style*="grid-template-columns: repeat(4, 1fr)"] > div:last-child {
+                border-bottom: none !important;
             }
             
             /* Package title */
@@ -165,39 +175,56 @@
                 padding: 12px 20px !important;
             }
             
+            /* Payment Modal - Clean up on mobile */
+            #paymentModal .modal-content {
+                background: #000 !important;
+                backdrop-filter: none !important;
+            }
+            
+            #paymentModal h2 {
+                font-size: 1.3rem !important;
+                margin-bottom: 20px !important;
+            }
+            
             /* Payment Modal - 2 columns to 1 column on mobile */
             #paymentModal div[style*="grid-template-columns: 1fr 1fr"] {
                 grid-template-columns: 1fr !important;
-                gap: 20px !important;
+                gap: 0 !important;
             }
             
             /* Payment Modal - Remove container backgrounds and borders on mobile */
             #paymentModal div[style*="background: rgba(255, 255, 255, 0.05)"] {
                 background: transparent !important;
                 border-radius: 0 !important;
-                padding: 15px 0 !important;
+                padding: 20px 0 !important;
+                border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important;
             }
             
             #paymentModal img {
                 max-width: 250px !important;
                 border: none !important;
+                margin-bottom: 20px !important;
             }
             
             #paymentModal h3 {
                 font-size: 1.1rem !important;
+                margin-bottom: 15px !important;
             }
             
             #paymentModal p {
                 font-size: 0.9rem !important;
+                line-height: 1.6 !important;
             }
             
-            /* Remove border from payment info boxes on mobile */
+            /* Add separators and clean styling */
             #paymentModal div[style*="background: rgba(255, 193, 7, 0.1)"],
             #paymentModal div[style*="background: rgba(59, 130, 246, 0.1)"] {
                 background: transparent !important;
                 border: none !important;
+                border-top: 1px solid rgba(255, 255, 255, 0.1) !important;
                 border-radius: 0 !important;
-                padding: 15px 0 !important;
+                padding: 20px 0 !important;
+                margin: 0 !important;
             }
         }
 
@@ -462,7 +489,7 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0, 0, 0, 0.95);
+            background: rgba(0, 0, 0, 0.98);
             z-index: 10000000;
             align-items: center;
             justify-content: center;
