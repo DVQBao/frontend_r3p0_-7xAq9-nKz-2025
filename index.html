@@ -295,9 +295,10 @@
             }
             
             /* Mobile: Show button inside package, hide outside button */
-            .mobile-only-home-btn {
+            /* MUST use higher specificity to override #officialPackageModal button margin-top: 0 */
+            #officialPackageModal .mobile-only-home-btn {
                 display: block !important;
-                margin-top: 24px !important; /* Ensure spacing from Mua ngay button */
+                margin-top: 24px !important; /* Override margin-top: 0 from #officialPackageModal button */
             }
             
             .desktop-only-home-btn-container {
@@ -384,7 +385,7 @@
         
         /* Desktop: Hide mobile button inside package, show outside button */
         @media (min-width: 969px) {
-            .mobile-only-home-btn {
+            #officialPackageModal .mobile-only-home-btn {
                 display: none !important;
             }
             
