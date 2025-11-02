@@ -130,7 +130,9 @@
             
             #officialPackageModal .modal-content p {
                 font-size: 0.9rem !important;
-                margin-bottom: 25px !important;
+                margin-bottom: 0 !important;
+                padding-bottom: 20px !important;
+                border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important;
             }
             
             /* Change 4 column grid to 1 column on mobile */
@@ -154,19 +156,71 @@
                 border-bottom: none !important;
             }
             
-            /* Package title */
-            #officialPackageModal div[style*="font-size: 1.5rem"] {
-                font-size: 1.2rem !important;
+            /* Package header - Make title and price side by side on mobile */
+            #officialPackageModal div[style*="text-align: center; margin-bottom: 20px"] {
+                display: flex !important;
+                justify-content: space-between !important;
+                align-items: center !important;
+                text-align: left !important;
+                margin-bottom: 15px !important;
             }
             
-            /* Price */
-            #officialPackageModal div[style*="font-size: 2.2rem"] {
-                font-size: 1.8rem !important;
+            /* Package title */
+            #officialPackageModal div[style*="font-size: 1.5rem"] {
+                font-size: 1.15rem !important;
+                margin: 0 !important;
+            }
+            
+            /* Hide subtitle text on mobile (Linh hoạt nhất, Đáng giá nhất, etc) */
+            #officialPackageModal div[style*="font-size: 0.9rem"][style*="font-weight: 600"],
+            #officialPackageModal div[style*="font-size: 0.8rem"][style*="color: #aaa"] {
+                display: none !important;
+            }
+            
+            /* Price container - align right */
+            #officialPackageModal div[style*="background: rgba(0, 0, 0, 0.3)"] {
+                background: transparent !important;
+                padding: 0 !important;
+                margin: 0 !important;
+                text-align: right !important;
+            }
+            
+            /* Strike-through price - smaller */
+            #officialPackageModal div[style*="text-decoration: line-through"] {
+                font-size: 0.75rem !important;
+                margin: 0 !important;
+            }
+            
+            /* Main price */
+            #officialPackageModal div[style*="font-size: 2.4rem"] {
+                font-size: 1.5rem !important;
+                margin: 0 !important;
+                line-height: 1.2 !important;
+            }
+            
+            /* Price per month - hide or make very small */
+            #officialPackageModal div[style*="font-size: 0.85rem"][style*="color: #aaa"] {
+                display: none !important;
+            }
+            
+            /* Hide top badges (PHỔ BIẾN, TIẾT KIỆM, etc) on mobile */
+            #officialPackageModal div[style*="position: absolute; top: -12px"] {
+                display: none !important;
+            }
+            
+            /* Hide savings badge on mobile */
+            #officialPackageModal div[style*="background: rgba(74, 222, 128, 0.15)"],
+            #officialPackageModal div[style*="background: rgba(59, 130, 246, 0.15)"],
+            #officialPackageModal div[style*="background: rgba(168, 85, 247, 0.15)"],
+            #officialPackageModal div[style*="background: rgba(251, 146, 60, 0.15)"] {
+                display: none !important;
             }
             
             /* Package features */
             #officialPackageModal ul {
                 font-size: 0.85rem !important;
+                margin-top: 15px !important;
+                margin-bottom: 15px !important;
             }
             
             /* Buttons */
