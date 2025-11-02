@@ -47,7 +47,7 @@ class CookieRetryHandler {
                     // Success! Confirm cookie assignment (tăng slot +1)
                     console.log('🎉 Login successful! Confirming cookie assignment...');
                     await this.confirmCookie(cookieData.cookieId);
-                    
+
                     if (onProgress) {
                         onProgress({
                             status: 'success',
@@ -57,14 +57,43 @@ class CookieRetryHandler {
                     }
                     return { success: true, cookieData };
                 }
-                
-                // Failed - mark cookie as dead (KHÔNG tăng slot)
-                console.log('❌ Login failed, marking cookie as dead...');
+
+                // ========================================
+                // PHÂN BIỆT: LỖI EXTENSION vs LỖI COOKIE
+                // ========================================
+                const extensionErrors = ['NO_RESPONSE', 'CHECK_FAILED', 'NO_EXTENSION', 'EXTENSION_OFFLINE'];
+
+                if (extensionErrors.includes(result.errorCode)) {
+                    // ❌ LỖI EXTENSION - KHÔNG MARK COOKIE DIE
+                    console.error('🔌 Extension error detected! Stopping process...');
+                    console.error(`Error code: ${result.errorCode}`);
+
+                    // Release cookie preview (không mark die)
+                    await this.releaseCookieAssignment(cookieData.cookieId);
+
+                    // Show error modal to user
+                    if (onProgress) {
+                        onProgress({
+                            status: 'extension_error',
+                            errorCode: result.errorCode,
+                            message: 'Lỗi extension - Vui lòng kiểm tra lại!'
+                        });
+                    }
+
+                    // Throw error to stop retry loop
+                    const error = new Error('Extension Error');
+                    error.code = result.errorCode;
+                    error.isExtensionError = true;
+                    throw error;
+                }
+
+                // ❌ LỖI COOKIE - Mark cookie as dead
+                console.log('❌ Cookie failed, marking as dead...');
                 await this.markCookieAsDead(cookieData.cookieId, result.errorCode);
-                
+
                 // Add to used list
                 this.usedCookies.add(cookieData.cookieId);
-                
+
                 // Update progress
                 if (onProgress) {
                     onProgress({
@@ -81,11 +110,49 @@ class CookieRetryHandler {
                 
             } catch (error) {
                 console.error(`❌ Attempt ${this.currentRetry} failed:`, error);
-                
+
+                // 🔌 EXTENSION ERROR - Dừng ngay, không retry, không mark cookie die
+                if (error.isExtensionError) {
+                    console.error('🔌 EXTENSION ERROR - Stopping all retries');
+
+                    // Hiển thị modal hướng dẫn fix extension
+                    if (typeof window.showCustomModal === 'function') {
+                        window.showCustomModal({
+                            icon: '🔌',
+                            title: 'Lỗi Extension',
+                            message: `Không thể kết nối với Extension!\n\n` +
+                                `📋 Các bước khắc phục:\n\n` +
+                                `1️⃣ Kiểm tra Extension đã được cài đặt chưa\n` +
+                                `2️⃣ Refresh lại trang web này (Ctrl + F5)\n` +
+                                `3️⃣ Kiểm tra Extension có đang bật không\n` +
+                                `4️⃣ Thử tắt/bật lại Extension\n` +
+                                `5️⃣ Nếu vẫn lỗi, cài lại Extension\n\n` +
+                                `Vui lòng thử lại sau khi fix Extension!`,
+                            buttons: [
+                                { text: 'Hướng dẫn cài Extension', type: 'secondary', action: () => {
+                                    window.open('/install-guide', '_blank');
+                                }},
+                                { text: 'Refresh trang', type: 'primary', action: () => {
+                                    window.location.reload();
+                                }}
+                            ]
+                        });
+                    } else {
+                        alert('Lỗi Extension! Vui lòng kiểm tra lại Extension và refresh trang.');
+                    }
+
+                    return {
+                        success: false,
+                        error: 'Extension Error',
+                        errorCode: error.code,
+                        isExtensionError: true
+                    };
+                }
+
                 // 🚫 RATE LIMIT ERROR - Dừng ngay, không retry, hiển thị modal cảnh báo
                 if (error.isRateLimited || error.code === 'RATE_LIMIT_EXCEEDED') {
                     console.error('🚫 RATE LIMIT EXCEEDED - Stopping all retries');
-                    
+
                     if (onProgress) {
                         onProgress({
                             status: 'rate_limited',
@@ -93,7 +160,7 @@ class CookieRetryHandler {
                             error: error.message
                         });
                     }
-                    
+
                     // Hiển thị modal cảnh báo (tương tự như đăng ký/đăng nhập)
                     // Phải dùng window.showCustomModal vì hàm này được define trong index.html
                     if (typeof window.showCustomModal === 'function') {
@@ -107,9 +174,9 @@ class CookieRetryHandler {
                         console.error('❌ showCustomModal not available!');
                         alert(error.message); // Fallback to alert
                     }
-                    
-                    return { 
-                        success: false, 
+
+                    return {
+                        success: false,
                         error: error.message,
                         isRateLimited: true
                     };
@@ -475,6 +542,36 @@ class CookieRetryHandler {
     }
     
     /**
+     * Release cookie assignment for a specific cookie (không mark die)
+     * Dùng khi gặp lỗi extension - cookie vẫn tốt nhưng không thể verify
+     */
+    async releaseCookieAssignment(cookieId) {
+        try {
+            console.log('🔓 Releasing cookie preview (not marking as dead)...');
+            console.log(`🍪 Cookie ID: ${cookieId}`);
+
+            // Gọi backend để release cookie khỏi preview state
+            // Không mark die, chỉ remove khỏi user's assignment
+            const response = await fetch(`${this.backendUrl}/api/cookies/release`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${this.authToken}`
+                }
+            });
+
+            if (response.ok) {
+                console.log('✅ Cookie preview released (cookie still active)');
+            } else {
+                console.warn('⚠️ Failed to release cookie:', response.status);
+            }
+
+        } catch (error) {
+            console.error('❌ Release cookie assignment error:', error);
+        }
+    }
+
+    /**
      * Release cookie from user (khi hết retries)
      */
     async releaseCookie() {
@@ -487,13 +584,13 @@ class CookieRetryHandler {
                     'Authorization': `Bearer ${this.authToken}`
                 }
             });
-            
+
             if (response.ok) {
                 console.log('✅ Cookie released successfully');
             } else {
                 console.warn('⚠️ Failed to release cookie:', response.status);
             }
-            
+
         } catch (error) {
             console.error('❌ Release cookie error:', error);
         }
