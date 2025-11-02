@@ -2171,7 +2171,10 @@
                 });
                 return;
             }
-            
+
+            // Đóng modal chọn lý do trước khi hiện modal "TRƯỚC KHI ĐỔI TÀI KHOẢN"
+            closeReportIssueModal();
+
             // Confirm action with new message
             const confirmed = await showConfirmCustomModal({
                 icon: '⚠️',
