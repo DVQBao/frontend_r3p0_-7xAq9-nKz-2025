@@ -37,7 +37,7 @@ class CookieRetryHandler {
                 const cookieData = await this.getCookieFromBackend();
                 
                 if (!cookieData) {
-                    throw new Error('Không có cookie khả dụng');
+                    throw new Error('Không có tài khoản Netflix khả dụng');
                 }
                 
                 // Try to inject cookie
@@ -100,7 +100,7 @@ class CookieRetryHandler {
                         status: 'retrying',
                         attempt: this.currentRetry,
                         maxAttempts: this.maxRetries,
-                        message: `Cookie #${cookieData.cookieNumber} lỗi, đang thử cookie khác...`,
+                        message: `Tài khoản Netflix #${cookieData.cookieNumber} lỗi, đang thử tài khoản khác...`,
                         errorCode: result.errorCode
                     });
                 }

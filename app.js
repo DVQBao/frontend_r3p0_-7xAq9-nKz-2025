@@ -627,7 +627,7 @@ async function handleStartWatching() {
                     elements.watchingProgress.textContent = 'Đang đăng nhập...';
                 }
                 if (progress.errorCode) {
-                    console.log(`Cookie lỗi (${progress.errorCode}), đang thử cookie khác...`);
+                    console.log(`Tài khoản Netflix lỗi (${progress.errorCode}), đang thử tài khoản khác...`);
                 }
             } else if (progress.status === 'success') {
                 if (elements.watchingIcon) elements.watchingIcon.textContent = '✅';
