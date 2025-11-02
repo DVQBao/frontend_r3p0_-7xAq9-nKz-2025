@@ -241,9 +241,9 @@ class CookieRetryHandler {
                 throw new Error(response?.error || 'Extension injection failed');
             }
             
-            console.log('✅ Cookie injected successfully, waiting 3s...');
-            // Wait for Netflix to process cookie
-            await this.sleep(3000);
+            console.log('✅ Cookie injected successfully, waiting 7s...');
+            // Wait for Netflix to process cookie (increased for slow networks)
+            await this.sleep(7000);
             
             console.log('🔍 Checking login status...');
             // Check login status via extension
@@ -365,7 +365,7 @@ class CookieRetryHandler {
             
             // Wait for page to load
             console.log('⏳ Waiting for page to reload...');
-            await this.sleep(5000); // Wait 5 seconds for page to fully load
+            await this.sleep(10000); // Wait 10 seconds for page to fully load (increased for slow networks)
             
             // Check status again
             console.log('🔍 Checking status after refresh...');
