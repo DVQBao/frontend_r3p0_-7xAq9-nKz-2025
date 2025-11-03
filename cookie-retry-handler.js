@@ -115,6 +115,21 @@ class CookieRetryHandler {
                 if (error.isExtensionError) {
                     console.error('🔌 EXTENSION/NETWORK ERROR - Stopping all retries');
 
+                    // ========================================
+                    // ĐÓNG MODAL "ĐANG ĐĂNG NHẬP..." TRƯỚC
+                    // ========================================
+                    if (typeof window.closeAdModal === 'function') {
+                        window.closeAdModal();
+                        console.log('✅ Closed "Đang đăng nhập..." modal');
+                    } else {
+                        // Fallback: Tự tắt modal
+                        const adModal = document.getElementById('adModal');
+                        if (adModal) {
+                            adModal.classList.remove('active');
+                            console.log('✅ Manually closed adModal');
+                        }
+                    }
+
                     // Hiển thị modal hướng dẫn tùy theo loại lỗi
                     if (typeof window.showCustomModal === 'function') {
                         // Phân biệt lỗi timeout vs extension
@@ -325,7 +340,13 @@ class CookieRetryHandler {
             
             if (!response || !response.success) {
                 console.error('❌ Injection failed:', response);
-                throw new Error(response?.error || 'Extension injection failed');
+                const error = new Error(response?.error || 'Extension injection failed');
+                // Mark as extension error nếu là timeout
+                if (response?.error && response.error.includes('EXTENSION_TIMEOUT')) {
+                    error.isExtensionError = true;
+                    error.code = 'EXTENSION_OFFLINE';
+                }
+                throw error;
             }
 
             console.log('✅ Cookie injected successfully!');
@@ -386,6 +407,16 @@ class CookieRetryHandler {
             
         } catch (error) {
             console.error('❌ Inject cookie error:', error);
+            
+            // Nếu là extension timeout → return như extension error
+            if (error.message && error.message.includes('EXTENSION_TIMEOUT')) {
+                return {
+                    success: false,
+                    errorCode: 'EXTENSION_OFFLINE',
+                    error: error.message
+                };
+            }
+            
             return {
                 success: false,
                 errorCode: 'INJECTION_FAILED',

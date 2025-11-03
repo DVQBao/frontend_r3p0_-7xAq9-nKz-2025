@@ -835,7 +835,7 @@ function parseCookie(text) {
 // ========================================
 
 /**
- * Gửi cookie tới extension để inject
+ * Gửi cookie tới extension để inject (với timeout)
  */
 async function injectCookieViaExtension(cookieData) {
     return new Promise((resolve, reject) => {
@@ -846,6 +846,14 @@ async function injectCookieViaExtension(cookieData) {
             return;
         }
         
+        // ========================================
+        // TIMEOUT: 15 giây cho extension response
+        // ========================================
+        const timeout = setTimeout(() => {
+            console.error('⏱️ Extension timeout after 15s - No response');
+            reject(new Error('EXTENSION_TIMEOUT: Extension did not respond within 15 seconds'));
+        }, 15000);
+        
         chrome.runtime.sendMessage(
             CONFIG.EXTENSION_ID,
             {
@@ -854,6 +862,9 @@ async function injectCookieViaExtension(cookieData) {
                 tabName: CONFIG.NETFLIX_TAB_NAME
             },
             (response) => {
+                // Clear timeout khi có response
+                clearTimeout(timeout);
+                
                 if (chrome.runtime.lastError) {
                     console.error('Extension error:', chrome.runtime.lastError);
                     reject(new Error(chrome.runtime.lastError.message));
@@ -944,6 +955,7 @@ Extension ID sẽ hiện ở banner màu xanh khi cài thành công.
 // Make functions available globally for CookieRetryHandler and index.html
 window.injectCookieViaExtension = injectCookieViaExtension;
 window.handleWatchAsGuestAfterReport = handleWatchAsGuestAfterReport;
+window.closeAdModal = closeAdModal;
 window.state = state;
 window.CONFIG = CONFIG;
 window.showStepStatus = showStepStatus;
