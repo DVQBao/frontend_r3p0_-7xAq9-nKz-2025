@@ -61,7 +61,8 @@ class CookieRetryHandler {
                 // ========================================
                 // PHÂN BIỆT: LỖI EXTENSION/NETWORK vs LỖI COOKIE
                 // ========================================
-                const extensionErrors = ['NO_RESPONSE', 'CHECK_FAILED', 'NO_EXTENSION', 'EXTENSION_OFFLINE', 'TIMEOUT_SLOW_NETWORK'];
+                // TIMEOUT_SLOW_NETWORK removed - đây là lỗi COOKIE không phải extension!
+                const extensionErrors = ['NO_RESPONSE', 'CHECK_FAILED', 'NO_EXTENSION', 'EXTENSION_OFFLINE'];
 
                 if (extensionErrors.includes(result.errorCode)) {
                     // ❌ LỖI EXTENSION/NETWORK - KHÔNG MARK COOKIE DIE
@@ -87,8 +88,8 @@ class CookieRetryHandler {
                     throw error;
                 }
 
-                // ❌ LỖI COOKIE - Mark cookie as dead
-                console.log('❌ Cookie failed, marking as dead...');
+                // ❌ LỖI COOKIE - Mark cookie as dead (bao gồm TIMEOUT)
+                console.log(`❌ Cookie failed (${result.errorCode}), marking as dead...`);
                 await this.markCookieAsDead(cookieData.cookieId, result.errorCode);
 
                 // Add to used list
@@ -437,7 +438,19 @@ class CookieRetryHandler {
     async checkNetflixLoginStatus() {
         try {
             // Use existing extension communication from app.js
-            if (!window.state?.hasExtension || !window.CONFIG?.EXTENSION_ID) {
+            // Check both extension presence and version
+            console.log('🔍 Extension state check:', {
+                hasExtension: window.state?.hasExtension,
+                extensionOutdated: window.state?.extensionOutdated,
+                extensionId: window.CONFIG?.EXTENSION_ID ? 'Present' : 'Missing'
+            });
+            
+            if (!window.state?.hasExtension || window.state?.extensionOutdated || !window.CONFIG?.EXTENSION_ID) {
+                console.error('❌ Extension check failed:', {
+                    hasExtension: window.state?.hasExtension,
+                    extensionOutdated: window.state?.extensionOutdated,
+                    hasExtensionId: !!window.CONFIG?.EXTENSION_ID
+                });
                 return { success: false, errorCode: 'NO_EXTENSION' };
             }
             

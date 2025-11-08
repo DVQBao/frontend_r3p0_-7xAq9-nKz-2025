@@ -22,7 +22,15 @@ function loadExtensionInfo() {
     const extensionId = chrome.runtime.id;
     document.getElementById('extensionId').textContent = extensionId;
     
+    // Display version từ manifest
+    const version = chrome.runtime.getManifest().version;
+    const versionElement = document.getElementById('extensionVersion');
+    if (versionElement) {
+        versionElement.textContent = `Version ${version}`;
+    }
+    
     console.log('Extension ID:', extensionId);
+    console.log('Extension Version:', version);
     
     // Check if extension is working
     chrome.permissions.contains({

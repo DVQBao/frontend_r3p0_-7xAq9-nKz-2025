@@ -1997,7 +1997,8 @@
                 const token = localStorage.getItem('auth_token');
                 if (!token) return;
                 
-                const response = await fetch('https://backend-c0r3-7xpq9zn2025.onrender.com/api/auth/me', {
+                const backendUrl = window.APP_CONFIG ? window.APP_CONFIG.BACKEND_URL : 'https://backend-c0r3-7xpq9zn2025.onrender.com';
+                const response = await fetch(`${backendUrl}/api/auth/me`, {
                     method: 'GET',
                     headers: {
                         'Authorization': `Bearer ${token}`,
@@ -2214,7 +2215,8 @@ Bạn đã thử 3 cách trên và vẫn không được?`,
                 showSmartLoading('Đang xử lý...', 500);
                 
                 // Call API to report issue
-                const response = await fetch('https://backend-c0r3-7xpq9zn2025.onrender.com/api/cookies/report-issue', {
+                const backendUrl = window.APP_CONFIG ? window.APP_CONFIG.BACKEND_URL : 'https://backend-c0r3-7xpq9zn2025.onrender.com';
+                const response = await fetch(`${backendUrl}/api/cookies/report-issue`, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
@@ -2485,15 +2487,79 @@ Vui lòng liên hệ Support (Facebook) để chúng tôi kiểm tra và reset l
         checkAuth();
         
         // Manual Extension Detection - Improved method
-        const EXTENSION_ID = 'akfpgaefjdmofdplmogeknigbeieiifi';
+        // Try multiple extension IDs (unpacked extension has different ID)
+        const POSSIBLE_EXTENSION_IDS = [
+            'akfpgaefjdmofdplmogeknigbeieiifi', // Published extension ID
+            'geohkippdgmeckiolifccmjmjmpfmoci', // Unpacked extension ID (local dev)
+        ];
         
-        // Method 1: Ping extension multiple times to ensure detection
-        function pingExtension(attempt = 1) {
-            console.log('🔍 Ping attempt ' + attempt + ' to extension:', EXTENSION_ID);
+        // Flag to track if extension already detected
+        let extensionDetected = false;
+        
+        // Method 1: Try to find extension by name first
+        async function findExtensionId() {
+            if (typeof chrome !== 'undefined' && chrome.management) {
+                try {
+                    const extensions = await chrome.management.getAll();
+                    const netflixExtension = extensions.find(ext => 
+                        ext.name === 'Tiệm Bánh Netflix' || 
+                        ext.name.includes('Netflix') ||
+                        ext.name.includes('Tiệm Bánh')
+                    );
+                    if (netflixExtension) {
+                        console.log('✅ Found extension by name:', netflixExtension.id, 'version:', netflixExtension.version);
+                        return netflixExtension.id;
+                    }
+                } catch (error) {
+                    console.warn('⚠️ Cannot use chrome.management API:', error);
+                }
+            }
+            return null;
+        }
+        
+        // Method 2: Ping extension multiple times to ensure detection
+        async function pingExtension(attempt = 1, extensionIdIndex = 0) {
+            // Stop if already detected
+            if (extensionDetected) {
+                console.log('✅ Extension already detected, stopping ping');
+                return;
+            }
+            
+            // Try to find extension ID first
+            let extensionId = await findExtensionId();
+            
+            // Fallback: Try each hardcoded ID
+            if (!extensionId) {
+                if (extensionIdIndex < POSSIBLE_EXTENSION_IDS.length) {
+                    extensionId = POSSIBLE_EXTENSION_IDS[extensionIdIndex];
+                    console.log(`🔄 Trying extension ID ${extensionIdIndex + 1}/${POSSIBLE_EXTENSION_IDS.length}:`, extensionId);
+                } else {
+                    // Tried all IDs, retry from beginning
+                    if (attempt < 5) {
+                        setTimeout(() => pingExtension(attempt + 1, 0), 500);
+                    } else {
+                        console.error('❌ Extension not found after trying all IDs');
+                        window.dispatchEvent(new CustomEvent('NetflixGuestExtensionNotFound'));
+                    }
+                    return;
+                }
+            }
+            
+            if (!extensionId) {
+                console.error('❌ Cannot find extension ID');
+                if (attempt < 5) {
+                    setTimeout(() => pingExtension(attempt + 1, 0), 500);
+                } else {
+                    window.dispatchEvent(new CustomEvent('NetflixGuestExtensionNotFound'));
+                }
+                return;
+            }
+            
+            console.log('🔍 Ping attempt ' + attempt + ' to extension:', extensionId);
             
             if (typeof chrome !== 'undefined' && chrome.runtime) {
                 chrome.runtime.sendMessage(
-                    EXTENSION_ID,
+                    extensionId,
                     { action: 'ping' },
                     (response) => {
                         console.log('📨 Response:', response);
@@ -2501,21 +2567,28 @@ Vui lòng liên hệ Support (Facebook) để chúng tôi kiểm tra và reset l
                         
                         if (!chrome.runtime.lastError && response && response.status === 'ok') {
                             console.log('✅ Extension detected via ping (attempt ' + attempt + ')');
+                            console.log('📦 Extension version received:', response.version);
+                            
+                            // Set flag to stop further pings
+                            extensionDetected = true;
+                            
                             // Trigger success event
                             window.dispatchEvent(new CustomEvent('NetflixGuestExtensionReady', {
                                 detail: {
                                     version: response.version || '1.0.0',
-                                    extensionId: EXTENSION_ID
+                                    extensionId: extensionId
                                 }
                             }));
                         } else {
                             console.warn('⏳ Ping attempt ' + attempt + ' failed:', chrome.runtime.lastError?.message);
-                            // Retry up to 5 times
-                            if (attempt < 5) {
-                                setTimeout(() => pingExtension(attempt + 1), 500);
+                            // Try next extension ID
+                            if (extensionIdIndex + 1 < POSSIBLE_EXTENSION_IDS.length) {
+                                setTimeout(() => pingExtension(attempt, extensionIdIndex + 1), 200);
+                            } else if (attempt < 5) {
+                                // Retry from beginning with next attempt
+                                setTimeout(() => pingExtension(attempt + 1, 0), 500);
                             } else {
                                 console.error('❌ Extension not found after 5 attempts');
-                                // Trigger not-found event
                                 window.dispatchEvent(new CustomEvent('NetflixGuestExtensionNotFound'));
                             }
                         }
@@ -2777,6 +2850,8 @@ Vui lòng liên hệ Support (Facebook) để chúng tôi kiểm tra và reset l
         </div>
     </footer>
 
+    <!-- Environment Configuration - Must load first -->
+    <script src="config.js"></script>
     <script src="cookie-retry-handler.js"></script>
     <script src="app.js"></script>
 </body>

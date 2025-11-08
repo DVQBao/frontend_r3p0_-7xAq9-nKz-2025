@@ -7,7 +7,8 @@
 // BACKEND CONFIGURATION
 // ========================================
 
-const BACKEND_URL = 'https://backend-c0r3-7xpq9zn2025.onrender.com';
+// Use dynamic configuration from config.js
+const BACKEND_URL = window.APP_CONFIG ? window.APP_CONFIG.BACKEND_URL : 'https://backend-c0r3-7xpq9zn2025.onrender.com';
 
 // ========================================
 // reCAPTCHA CONFIGURATION
@@ -468,9 +469,15 @@ async function handleLogin(event) {
             
             showSuccess('Đăng nhập thành công! Đang chuyển hướng...');
             
-            setTimeout(() => {
-                window.location.href = '/';
-            }, 1000);
+            // Check for Tiệm bánh message
+            setTimeout(async () => {
+                const hasMessage = await checkTiembanhMessage();
+                // If no message, redirect to homepage
+                if (!hasMessage) {
+                    window.location.href = '/';
+                }
+                // If has message, modal will handle redirect after countdown
+            }, 800);
         } else {
             showCustomModal({
                 icon: '❌',
@@ -651,10 +658,15 @@ async function handleRegister(event) {
             
             showSuccess('Đăng ký thành công! Đang đăng nhập...');
             
-            // Auto login
-            setTimeout(() => {
-                window.location.href = '/';
-            }, 1000);
+            // Check for Tiệm bánh message
+            setTimeout(async () => {
+                const hasMessage = await checkTiembanhMessage();
+                // If no message, redirect to homepage
+                if (!hasMessage) {
+                    window.location.href = '/';
+                }
+                // If has message, modal will handle redirect after countdown
+            }, 800);
         } else {
             // Handle invalid email domain
             if (data.error === 'INVALID_EMAIL_DOMAIN') {
@@ -911,6 +923,108 @@ document.addEventListener('DOMContentLoaded', () => {
 // Expose logout for global access
 window.netflixAuthLogout = logout;
 window.netflixAuthGetCurrentUser = getCurrentUser;
+
+// ========================================
+// TIỆM BÁNH MESSAGE MODAL
+// ========================================
+
+let tiembanhCountdownInterval = null;
+
+/**
+ * Check for message from Tiệm bánh and show modal if exists
+ * @returns {Promise<boolean>} - True if message shown, false otherwise
+ */
+async function checkTiembanhMessage() {
+    try {
+        const response = await fetch(`${BACKEND_URL}/api/message`);
+        const data = await response.json();
+        
+        if (data.hasMessage && data.message) {
+            console.log('📢 Tiệm bánh has a message');
+            showTiembanhMessage(data.message);
+            return true; // Message shown
+        } else {
+            console.log('ℹ️ No message from Tiệm bánh');
+            return false; // No message
+        }
+    } catch (error) {
+        console.error('❌ Error checking Tiệm bánh message:', error);
+        return false; // Error, no message shown
+    }
+}
+
+/**
+ * Show Tiệm bánh message modal with countdown
+ * @param {string} message - Message content
+ */
+function showTiembanhMessage(message) {
+    const overlay = document.getElementById('tiembanhMessageOverlay');
+    const messageBody = document.getElementById('tiembanhMessageBody');
+    const btn = document.getElementById('tiembanhMessageBtn');
+    
+    if (!overlay || !messageBody || !btn) {
+        console.error('❌ Tiệm bánh message modal elements not found');
+        return;
+    }
+    
+    // Set message content
+    messageBody.textContent = message;
+    
+    // Reset button
+    btn.disabled = true;
+    let countdown = 15;
+    
+    // Start countdown
+    updateButtonText();
+    tiembanhCountdownInterval = setInterval(() => {
+        countdown--;
+        if (countdown <= 0) {
+            clearInterval(tiembanhCountdownInterval);
+            btn.disabled = false;
+            btn.textContent = 'Được rồi! Gọi món thôiii...';
+        } else {
+            updateButtonText();
+        }
+    }, 1000);
+    
+    function updateButtonText() {
+        btn.textContent = `Đợi một chút, chúng ta sẽ tiếp tục sau ${countdown}s...`;
+    }
+    
+    // Button click handler - Close modal and redirect
+    btn.onclick = () => {
+        if (!btn.disabled) {
+            closeTiembanhMessage();
+            // Redirect to homepage
+            window.location.href = '/';
+        }
+    };
+    
+    // Prevent closing by clicking outside or ESC
+    overlay.onclick = (e) => {
+        // Do nothing - cannot close by clicking outside
+        e.stopPropagation();
+    };
+    
+    // Show modal
+    overlay.classList.add('active');
+}
+
+/**
+ * Close Tiệm bánh message modal
+ */
+function closeTiembanhMessage() {
+    const overlay = document.getElementById('tiembanhMessageOverlay');
+    if (overlay) {
+        overlay.classList.remove('active');
+    }
+    
+    // Clear countdown interval
+    if (tiembanhCountdownInterval) {
+        clearInterval(tiembanhCountdownInterval);
+        tiembanhCountdownInterval = null;
+    }
+}
 
 // ========================================
 // CUSTOM MODAL DIALOG SYSTEM

@@ -24,7 +24,10 @@ chrome.runtime.onMessageExternal.addListener(
         console.log('📨 Received external message:', request);
         
         if (request.action === 'ping') {
-            sendResponse({ status: 'ok', version: '1.3.0' });
+            // Lấy version từ manifest.json tự động
+            const version = chrome.runtime.getManifest().version;
+            console.log('📤 Ping response - Extension version:', version);
+            sendResponse({ status: 'ok', version: version });
             return true;
         }
         
@@ -235,6 +238,31 @@ chrome.runtime.onMessageExternal.addListener(
                     
                 } catch (error) {
                     console.error('❌ Focus Netflix tab error:', error);
+                    sendResponse({ 
+                        success: false, 
+                        error: error.message 
+                    });
+                }
+            })();
+            
+            return true;
+        }
+        
+        // NEW: Clear all Netflix cookies
+        if (request.action === 'clearNetflixCookies') {
+            (async () => {
+                try {
+                    console.log('🗑️ Clearing all Netflix cookies...');
+                    await clearNetflixCookies();
+                    console.log('✅ All Netflix cookies cleared');
+                    
+                    sendResponse({ 
+                        success: true,
+                        message: 'All Netflix cookies have been cleared'
+                    });
+                    
+                } catch (error) {
+                    console.error('❌ Clear Netflix cookies error:', error);
                     sendResponse({ 
                         success: false, 
                         error: error.message 
@@ -651,10 +679,11 @@ startAutoCleanupMonitoring();
 // ========================================
 
 chrome.runtime.onInstalled.addListener((details) => {
+    const version = chrome.runtime.getManifest().version;
     if (details.reason === 'install') {
-        console.log('🎉 Netflix Guest Helper installed!');
+        console.log(`🎉 Netflix Guest Helper installed! Version ${version}`);
     } else if (details.reason === 'update') {
-        console.log('🔄 Netflix Guest Helper updated to version 1.3.0 (Generic Cookie Parsing)');
+        console.log(`🔄 Netflix Guest Helper updated to version ${version}`);
     }
 });
 
@@ -663,12 +692,13 @@ chrome.runtime.onInstalled.addListener((details) => {
 // ========================================
 
 function broadcastPresence() {
+    const version = chrome.runtime.getManifest().version;
     chrome.tabs.query({}, (tabs) => {
         tabs.forEach(tab => {
             if (tab.url && (tab.url.includes('localhost') || tab.url.includes('127.0.0.1'))) {
                 chrome.tabs.sendMessage(tab.id, {
                     action: 'extensionReady',
-                    version: '1.3.0'
+                    version: version
                 }).catch(() => {});
             }
         });
@@ -677,4 +707,5 @@ function broadcastPresence() {
 
 broadcastPresence();
 
-console.log('✅ Background script ready (v1.3.0 - Generic Cookie Parsing like Cookie-Editor)');
+const manifestVersion = chrome.runtime.getManifest().version;
+console.log(`✅ Background script ready (v${manifestVersion} - Generic Cookie Parsing like Cookie-Editor)`);
