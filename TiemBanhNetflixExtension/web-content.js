@@ -14,9 +14,12 @@
  * Web app lắng nghe event này để detect extension
  */
 function broadcastExtensionPresence() {
+    // Lấy version từ manifest tự động
+    const version = chrome.runtime.getManifest().version;
+    
     const event = new CustomEvent('NetflixGuestExtensionReady', {
         detail: {
-            version: '1.0.0',
+            version: version,
             extensionId: chrome.runtime.id
         }
     });
@@ -24,7 +27,7 @@ function broadcastExtensionPresence() {
     window.dispatchEvent(event);
     
     // console.log('📢 Extension presence broadcasted:', {
-    //     version: '1.0.0',
+    //     version: version,
     //     extensionId: chrome.runtime.id
     // });
 }

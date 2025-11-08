@@ -7,7 +7,8 @@
 // BACKEND CONFIGURATION
 // ========================================
 
-const BACKEND_URL = 'https://backend-c0r3-7xpq9zn2025.onrender.com';
+// Use dynamic configuration from config.js
+const BACKEND_URL = window.APP_CONFIG ? window.APP_CONFIG.BACKEND_URL : 'https://backend-c0r3-7xpq9zn2025.onrender.com';
 
 // ========================================
 // CONFIGURATION
@@ -19,7 +20,10 @@ const CONFIG = {
     NETFLIX_TAB_NAME: 'NETFLIX_TAB',
     COOKIE_FILE: 'cookie.txt',
     // Extension ID sẽ được cập nhật tự động khi detect
-    EXTENSION_ID: null
+    EXTENSION_ID: null,
+    // Extension version requirement
+    REQUIRED_EXTENSION_VERSION: '1.4.0',
+    EXTENSION_DOWNLOAD_LINK: 'https://drive.google.com/drive/folders/1eozcbA4q54f8Ox46d2HlptSD92tDFHCl?usp=sharing'
 };
 
 // ========================================
@@ -66,6 +70,8 @@ const elements = {
 const state = {
     hasExtension: false,
     extensionId: null,
+    extensionVersion: null,
+    extensionOutdated: false,
     netflixTabRef: null,
     netflixTabId: null,
     adCountdown: CONFIG.AD_DURATION,
@@ -140,21 +146,44 @@ async function checkExtension() {
  * Khi extension được phát hiện
  */
 function onExtensionDetected(details) {
-    // Prevent multiple calls
-    if (state.hasExtension) {
-        console.log('ℹ️ Extension already detected, skipping duplicate call');
+    // Prevent multiple calls - NHƯNG cho phép update nếu version khác
+    if (state.hasExtension && state.extensionVersion === details.version) {
+        console.log('ℹ️ Extension already detected with same version, skipping duplicate call');
         return;
     }
     
+    console.log('🔄 Updating extension info:', details);
     state.hasExtension = true;
     state.extensionId = details.extensionId;
+    state.extensionVersion = details.version;
     CONFIG.EXTENSION_ID = details.extensionId;
     
-    // Update UI - Simple banner
-    if (elements.extensionBanner && elements.bannerTitle && elements.bannerText) {
-        elements.extensionBanner.className = 'extension-banner show success';
-        elements.bannerTitle.innerHTML = '✅ Extension đã cài đặt';
-        elements.bannerText.innerHTML = 'Bạn có thể tiếp tục tận hưởng Netflix 4K';
+    // Check version - Đơn giản: Chỉ check KHÁC hay GIỐNG
+    const currentVersion = String(details.version || '0.0.0').trim();
+    const requiredVersion = String(CONFIG.REQUIRED_EXTENSION_VERSION).trim();
+    
+    if (currentVersion !== requiredVersion) {
+        // Version KHÁC với yêu cầu → CỘI NHƯ CHƯA CÀI
+        state.extensionOutdated = true;
+        console.warn(`⚠️ Extension version mismatch: ${currentVersion} !== ${requiredVersion}`);
+        
+        // Update UI - Warning banner (giống như chưa cài)
+        if (elements.extensionBanner && elements.bannerTitle && elements.bannerText) {
+            elements.extensionBanner.className = 'extension-banner show error';
+            elements.bannerTitle.innerHTML = '⚠️ Extension cần cập nhật';
+            elements.bannerText.innerHTML = `Phiên bản hiện tại đã cũ. Vui lòng <a href="${CONFIG.EXTENSION_DOWNLOAD_LINK}" target="_blank" style="color: #fff; text-decoration: underline; font-weight: 600;">tải phiên bản mới tại đây</a> để tiếp tục sử dụng.`;
+        }
+    } else {
+        // Version KHỚP → OK
+        state.extensionOutdated = false;
+        console.log(`✅ Extension version match: ${currentVersion} === ${requiredVersion}`);
+        
+        // Update UI - Success banner
+        if (elements.extensionBanner && elements.bannerTitle && elements.bannerText) {
+            elements.extensionBanner.className = 'extension-banner show success';
+            elements.bannerTitle.innerHTML = '✅ Extension đã cài đặt';
+            elements.bannerText.innerHTML = `Phiên bản ${currentVersion} - Bạn có thể tiếp tục tận hưởng Netflix 4K`;
+        }
     }
     
     console.log('✅ Extension detected and UI updated successfully');
@@ -195,13 +224,35 @@ function onExtensionNotDetected() {
  * Xử lý nút "Mở Netflix.com"
  * Kiểm tra và mở tab Netflix nếu chưa có
  */
-function handleOpenNetflix() {
+async function handleOpenNetflix() {
     console.log('📍 Step 1: Opening Netflix tab...');
     
     // Reset status
     hideStepStatus(1);
     
     try {
+        // ✨ NEW: Xóa toàn bộ cookie Netflix cũ trước khi mở tab
+        if (state.hasExtension && !state.extensionOutdated && CONFIG.EXTENSION_ID) {
+            console.log('🗑️ Clearing all Netflix cookies...');
+            showStepStatus(1, 'info', '🗑️ Đang xóa cookie cũ...');
+            
+            try {
+                const clearResult = await chrome.runtime.sendMessage(
+                    CONFIG.EXTENSION_ID,
+                    { action: 'clearNetflixCookies' }
+                );
+                
+                if (clearResult && clearResult.success) {
+                    console.log('✅ Netflix cookies cleared successfully');
+                } else {
+                    console.warn('⚠️ Could not clear cookies:', clearResult?.error);
+                }
+            } catch (error) {
+                console.warn('⚠️ Cookie clear error (non-critical):', error);
+                // Không fail vì đây không phải critical step
+            }
+        }
+        
         // Kiểm tra xem đã có tab Netflix chưa
         if (state.netflixTabRef && !state.netflixTabRef.closed) {
             // Tab đã tồn tại, focus vào tab đó
@@ -245,7 +296,7 @@ function handleOpenNetflix() {
         setTimeout(() => {
             showStepStatus(1, 'success', '✅ Đã mở Netflix tab thành công! Sẵn sàng cho bước 2.');
             showToast('Đã mở Netflix xong!', 'success');
-            console.log('✅ Netflix tab opened successfully');
+            console.log('✅ Netflix tab opened successfully with clean cookies');
         }, 1000);
         
     } catch (error) {
@@ -334,10 +385,13 @@ async function _watchAsGuestInternal(skipQuotaCheck = false, skipAdAndPlanModal 
         return;
     }
     
-    // Kiểm tra extension
-    if (!state.hasExtension) {
-        showStepStatus(2, 'warning', '⚠️ Extension chưa được cài. Vui lòng xem hướng dẫn!');
-        showToast('Cần cài extension để bắt đầu', 'warning');
+    // Kiểm tra extension (bao gồm cả version cũ)
+    if (!state.hasExtension || state.extensionOutdated) {
+        const message = state.extensionOutdated 
+            ? '⚠️ Extension đã cũ. Vui lòng cập nhật phiên bản mới!' 
+            : '⚠️ Extension chưa được cài. Vui lòng xem hướng dẫn!';
+        showStepStatus(2, 'warning', message);
+        showToast(state.extensionOutdated ? 'Cần cập nhật extension' : 'Cần cài extension để bắt đầu', 'warning');
     }
     
     let freshUser = null;
@@ -588,10 +642,13 @@ async function handleStartWatching() {
             return;
         }
         
-        // Kiểm tra extension
-        if (!state.hasExtension) {
-            showStepStatus(2, 'error', '❌ Cần extension để login. Vui lòng cài extension.');
-            showToast('Cần cài extension để login', 'error');
+        // Kiểm tra extension (bao gồm cả version cũ)
+        if (!state.hasExtension || state.extensionOutdated) {
+            const message = state.extensionOutdated 
+                ? '❌ Extension đã cũ. Vui lòng cập nhật phiên bản mới để tiếp tục.' 
+                : '❌ Cần extension để login. Vui lòng cài extension.';
+            showStepStatus(2, 'error', message);
+            showToast(state.extensionOutdated ? 'Cần cập nhật extension' : 'Cần cài extension để login', 'error');
             closeAdModal();
             return;
         }
