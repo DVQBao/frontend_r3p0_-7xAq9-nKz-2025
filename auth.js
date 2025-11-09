@@ -939,9 +939,9 @@ async function checkTiembanhMessage() {
         const response = await fetch(`${BACKEND_URL}/api/message`);
         const data = await response.json();
         
-        if (data.hasMessage && data.message) {
+        if (data.hasMessage) {
             console.log('📢 Tiệm bánh has a message');
-            showTiembanhMessage(data.message);
+            showTiembanhMessage(data);
             return true; // Message shown
         } else {
             console.log('ℹ️ No message from Tiệm bánh');
@@ -955,9 +955,9 @@ async function checkTiembanhMessage() {
 
 /**
  * Show Tiệm bánh message modal with countdown
- * @param {string} message - Message content
+ * @param {Object} data - Message data (type: 'text'|'image', message|imageUrl)
  */
-function showTiembanhMessage(message) {
+function showTiembanhMessage(data) {
     const overlay = document.getElementById('tiembanhMessageOverlay');
     const messageBody = document.getElementById('tiembanhMessageBody');
     const btn = document.getElementById('tiembanhMessageBtn');
@@ -967,8 +967,20 @@ function showTiembanhMessage(message) {
         return;
     }
     
-    // Set message content
-    messageBody.textContent = message;
+    // Set message content (text or image)
+    messageBody.innerHTML = ''; // Clear previous content
+    
+    if (data.type === 'image' && data.imageUrl) {
+        // Display image
+        const img = document.createElement('img');
+        img.src = `${BACKEND_URL}${data.imageUrl}`;
+        img.alt = 'Thông điệp từ Tiệm bánh';
+        img.style.cssText = 'max-width: 100%; height: auto; display: block; margin: 0 auto; border-radius: 8px;';
+        messageBody.appendChild(img);
+    } else if (data.type === 'text' && data.message) {
+        // Display text
+        messageBody.textContent = data.message;
+    }
     
     // Reset button
     btn.disabled = true;
