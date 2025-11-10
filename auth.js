@@ -955,9 +955,16 @@ async function checkTiembanhMessage() {
 
 /**
  * Show Tiệm bánh message modal with countdown
- * @param {Object} data - Message data (type: 'text'|'image', message|imageUrl)
+ * @param {Object} data - Message data (type: 'video'|'image'|'text', videoUrl|imageUrl|message)
  */
 function showTiembanhMessage(data) {
+    // If video, show fullscreen video player
+    if (data.type === 'video' && data.videoUrl) {
+        showTiembanhVideo(data.videoUrl);
+        return;
+    }
+    
+    // Otherwise, show modal with image or text
     const overlay = document.getElementById('tiembanhMessageOverlay');
     const messageBody = document.getElementById('tiembanhMessageBody');
     const btn = document.getElementById('tiembanhMessageBtn');
@@ -1020,6 +1027,72 @@ function showTiembanhMessage(data) {
     
     // Show modal
     overlay.classList.add('active');
+}
+
+/**
+ * Show Tiệm bánh video player (fullscreen, auto-play, auto-close when ended)
+ * @param {string} videoUrl - URL to the video
+ */
+function showTiembanhVideo(videoUrl) {
+    const overlay = document.getElementById('tiembanhVideoOverlay');
+    const video = document.getElementById('tiembanhVideo');
+    const videoSource = document.getElementById('tiembanhVideoSource');
+    
+    if (!overlay || !video || !videoSource) {
+        console.error('❌ Tiệm bánh video player elements not found');
+        return;
+    }
+    
+    // Set video source
+    videoSource.src = `${BACKEND_URL}${videoUrl}`;
+    video.load(); // Reload video with new source
+    
+    // Auto-play video
+    video.play().catch(err => {
+        console.error('❌ Video autoplay failed:', err);
+    });
+    
+    // When video ends, auto-close and redirect to homepage
+    video.onended = () => {
+        closeTiembanhVideo();
+        window.location.href = '/';
+    };
+    
+    // Prevent right-click on video
+    video.oncontextmenu = (e) => {
+        e.preventDefault();
+        return false;
+    };
+    
+    // Prevent keyboard shortcuts (space, arrow keys, etc.)
+    video.onkeydown = (e) => {
+        e.preventDefault();
+        return false;
+    };
+    
+    // Show video overlay
+    overlay.classList.add('active');
+    
+    console.log('🎬 Playing video message from Tiệm bánh');
+}
+
+/**
+ * Close Tiệm bánh video player
+ */
+function closeTiembanhVideo() {
+    const overlay = document.getElementById('tiembanhVideoOverlay');
+    const video = document.getElementById('tiembanhVideo');
+    
+    if (overlay) {
+        overlay.classList.remove('active');
+    }
+    
+    if (video) {
+        video.pause();
+        video.currentTime = 0;
+    }
+    
+    console.log('✅ Video message closed');
 }
 
 /**
