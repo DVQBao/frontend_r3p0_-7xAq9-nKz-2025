@@ -1,50 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <!-- Homepage - Main landing page -->
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" 
+        xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
+  <!-- Homepage ONLY - Main landing page -->
   <url>
     <loc>https://tiembanh4k.com/</loc>
-    <lastmod>2025-11-01</lastmod>
+    <lastmod>2025-11-11</lastmod>
     <changefreq>daily</changefreq>
     <priority>1.0</priority>
-  </url>
-  
-  <!-- Auth Page - Login/Register -->
-  <url>
-    <loc>https://tiembanh4k.com/auth/</loc>
-    <lastmod>2025-11-01</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.9</priority>
-  </url>
-  
-  <!-- Install Guide - Extension setup tutorial -->
-  <url>
-    <loc>https://tiembanh4k.com/install-guide/</loc>
-    <lastmod>2025-11-01</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.9</priority>
-  </url>
-  
-  <!-- Contact Page - Support & inquiries -->
-  <url>
-    <loc>https://tiembanh4k.com/contact/</loc>
-    <lastmod>2025-11-01</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  
-  <!-- Privacy Policy - Legal compliance -->
-  <url>
-    <loc>https://tiembanh4k.com/privacy-policy/</loc>
-    <lastmod>2025-11-01</lastmod>
-    <changefreq>yearly</changefreq>
-    <priority>0.5</priority>
-  </url>
-  
-  <!-- Terms of Service - Legal compliance -->
-  <url>
-    <loc>https://tiembanh4k.com/terms-of-service/</loc>
-    <lastmod>2025-11-01</lastmod>
-    <changefreq>yearly</changefreq>
-    <priority>0.5</priority>
+    <image:image>
+      <image:loc>https://tiembanh4k.com/favicon.png</image:loc>
+      <image:title>Tiệm Bánh Netflix - Logo</image:title>
+    </image:image>
   </url>
 </urlset>
