@@ -1,24 +1,29 @@
 # robots.txt for tiembanh4k.com
-# Guide search engines what to crawl and what to block
+# Only allow homepage to be indexed by search engines
 
-# Allow all crawlers to index public pages
+# Allow all crawlers
 User-agent: *
-Allow: /
-Allow: /auth/
-Allow: /contact/
-Allow: /privacy-policy/
-Allow: /terms-of-service/
-Allow: /install-guide/
 
-# Block admin panel and sensitive pages
+# Allow ONLY homepage
+Allow: /$
+Allow: /favicon.png
+Allow: /og-image.png
+
+# Block ALL other pages from indexing
+Disallow: /auth/
+Disallow: /contact/
+Disallow: /privacy-policy/
+Disallow: /terms-of-service/
+Disallow: /install-guide/
 Disallow: /s3cure-panel-9mKp2Lq2025/
 Disallow: /admin/
+Disallow: /maintenance/
 Disallow: /test-extension.html
 Disallow: /*.log$
 Disallow: /api/
 
-# Crawl delay (optional - prevents server overload)
+# Crawl delay (prevents server overload)
 Crawl-delay: 1
 
-# Sitemap location - helps Google find all pages faster
+# Sitemap location - ONLY homepage included
 Sitemap: https://tiembanh4k.com/sitemap.xml
