@@ -353,7 +353,7 @@
             height: 100%;
             background: rgba(0, 0, 0, 0.8);
             backdrop-filter: blur(5px);
-            z-index: 10001;
+            z-index: 10002; /* Cao hơn verification modal (10001) để hiển thị lỗi phía trên */
             animation: fadeIn 0.2s ease-out;
         }
 
@@ -652,6 +652,380 @@
         @keyframes spin {
             to { transform: rotate(360deg); }
         }
+        
+        /* ========================================
+           EMAIL VERIFICATION MODAL STYLES
+           ======================================== */
+        
+        .verification-modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            backdrop-filter: blur(8px);
+            z-index: 10001;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            animation: fadeIn 0.3s ease-out;
+        }
+        
+        .verification-modal-dialog {
+            background: rgba(0, 0, 0, 0.95);
+            border-radius: 16px;
+            max-width: 500px;
+            width: 90%;
+            border: 2px solid rgba(251, 191, 36, 0.3);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.8),
+                        0 0 40px rgba(251, 191, 36, 0.1);
+            animation: slideUp 0.4s ease-out;
+            overflow: hidden;
+        }
+        
+        .verification-modal-header {
+            padding: 30px 32px 20px;
+            background: linear-gradient(135deg, rgba(251, 191, 36, 0.1) 0%, rgba(245, 158, 11, 0.05) 100%);
+            border-bottom: 1px solid rgba(251, 191, 36, 0.2);
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            position: relative;
+        }
+        
+        .verification-modal-close {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: transparent;
+            border: none;
+            color: #aaa;
+            font-size: 28px;
+            cursor: pointer;
+            width: 36px;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            transition: all 0.3s ease;
+            line-height: 1;
+        }
+        
+        .verification-modal-close:hover {
+            background: rgba(255, 255, 255, 0.1);
+            color: #fff;
+            transform: rotate(90deg);
+        }
+        
+        .verification-modal-icon {
+            font-size: 2.5rem;
+            filter: drop-shadow(0 0 10px rgba(251, 191, 36, 0.5));
+        }
+        
+        .verification-modal-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #fbbf24;
+            text-shadow: 0 0 10px rgba(251, 191, 36, 0.3);
+        }
+        
+        .verification-modal-body {
+            padding: 32px;
+        }
+        
+        .otp-input-container {
+            display: flex;
+            justify-content: center;
+            margin: 25px 0;
+        }
+        
+        .otp-input {
+            width: 100%;
+            max-width: 280px;
+            padding: 18px 20px;
+            font-size: 2rem;
+            font-weight: 700;
+            text-align: center;
+            letter-spacing: 12px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 3px solid rgba(251, 191, 36, 0.3);
+            border-radius: 12px;
+            color: #fbbf24;
+            outline: none;
+            transition: all 0.3s ease;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+        }
+        
+        .otp-input:focus {
+            border-color: #fbbf24;
+            background: rgba(251, 191, 36, 0.08);
+            box-shadow: 0 0 20px rgba(251, 191, 36, 0.3),
+                        inset 0 0 10px rgba(251, 191, 36, 0.1);
+        }
+        
+        .otp-input::placeholder {
+            color: rgba(251, 191, 36, 0.3);
+            letter-spacing: 12px;
+        }
+        
+        .verification-actions {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-top: 25px;
+        }
+        
+        .btn-verify {
+            padding: 16px;
+            background: linear-gradient(135deg, #fbbf24, #f59e0b);
+            color: #1f2937;
+            border: none;
+            border-radius: 10px;
+            font-weight: 700;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 16px rgba(251, 191, 36, 0.4);
+        }
+        
+        .btn-verify:hover {
+            background: linear-gradient(135deg, #f59e0b, #d97706);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(251, 191, 36, 0.6);
+        }
+        
+        .btn-verify:active {
+            transform: translateY(0);
+        }
+        
+        .btn-verify:disabled {
+            background: #555;
+            color: #999;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+        
+        .btn-resend {
+            padding: 12px;
+            background: transparent;
+            color: #fbbf24;
+            border: 2px solid rgba(251, 191, 36, 0.3);
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-resend:hover {
+            background: rgba(251, 191, 36, 0.1);
+            border-color: #fbbf24;
+        }
+        
+        .btn-resend:disabled {
+            color: #666;
+            border-color: #444;
+            cursor: not-allowed;
+        }
+        
+        .btn-resend:disabled:hover {
+            background: transparent;
+        }
+        
+        /* ========================================
+           PASSWORD RESET MODAL STYLES
+           ======================================== */
+        
+        .forgot-password-modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            backdrop-filter: blur(8px);
+            z-index: 10001;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            animation: fadeIn 0.3s ease-out;
+        }
+        
+        .forgot-password-modal-dialog {
+            background: rgba(0, 0, 0, 0.95);
+            border-radius: 16px;
+            max-width: 500px;
+            width: 90%;
+            border: 2px solid rgba(251, 191, 36, 0.3);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.8),
+                        0 0 40px rgba(251, 191, 36, 0.1);
+            animation: slideUp 0.4s ease-out;
+            overflow: hidden;
+        }
+        
+        .forgot-password-modal-header {
+            padding: 30px 32px 20px;
+            background: linear-gradient(135deg, rgba(251, 191, 36, 0.1) 0%, rgba(245, 158, 11, 0.05) 100%);
+            border-bottom: 1px solid rgba(251, 191, 36, 0.2);
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            position: relative;
+        }
+        
+        .forgot-password-modal-close {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: transparent;
+            border: none;
+            color: #aaa;
+            font-size: 28px;
+            cursor: pointer;
+            width: 36px;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            transition: all 0.3s ease;
+            line-height: 1;
+        }
+        
+        .forgot-password-modal-close:hover {
+            background: rgba(255, 255, 255, 0.1);
+            color: #fff;
+            transform: rotate(90deg);
+        }
+        
+        .forgot-password-modal-icon {
+            font-size: 2.5rem;
+            filter: drop-shadow(0 0 10px rgba(251, 191, 36, 0.5));
+        }
+        
+        .forgot-password-modal-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #fbbf24;
+            text-shadow: 0 0 10px rgba(251, 191, 36, 0.3);
+        }
+        
+        .forgot-password-modal-body {
+            padding: 32px;
+        }
+        
+        .password-input-wrapper {
+            position: relative;
+            margin-bottom: 20px;
+        }
+        
+        .password-input-wrapper label {
+            display: block;
+            color: #ddd;
+            margin-bottom: 8px;
+            font-size: 0.95rem;
+        }
+        
+        .password-input-wrapper input {
+            width: 100%;
+            padding: 14px 45px 14px 14px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 2px solid rgba(251, 191, 36, 0.3);
+            border-radius: 10px;
+            color: #fff;
+            font-size: 1rem;
+            outline: none;
+            transition: all 0.3s ease;
+            box-sizing: border-box;
+        }
+        
+        .password-input-wrapper input:focus {
+            border-color: #fbbf24;
+            background: rgba(251, 191, 36, 0.05);
+            box-shadow: 0 0 15px rgba(251, 191, 36, 0.2);
+        }
+        
+        .toggle-password-btn {
+            position: absolute;
+            right: 12px;
+            bottom: 12px;
+            background: transparent;
+            border: none;
+            color: #fbbf24;
+            font-size: 1.2rem;
+            cursor: pointer;
+            padding: 5px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            height: 24px;
+            width: 24px;
+        }
+        
+        .toggle-password-btn:hover {
+            color: #f59e0b;
+            transform: scale(1.1);
+        }
+        
+        /* Smart Loading Overlay */
+        .smart-loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.85);
+            backdrop-filter: blur(8px);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 99999;
+        }
+        
+        .smart-loading-spinner {
+            width: 50px;
+            height: 50px;
+            border: 4px solid rgba(229, 9, 20, 0.2);
+            border-top-color: #e50914;
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+            margin-bottom: 15px;
+        }
+        
+        .smart-loading-text {
+            color: #fff;
+            font-size: 1rem;
+            font-weight: 500;
+        }
+        
+        /* Mobile Responsive */
+        @media (max-width: 600px) {
+            .verification-modal-dialog {
+                width: 95%;
+            }
+            
+            .verification-modal-header {
+                padding: 20px;
+            }
+            
+            .verification-modal-body {
+                padding: 20px;
+            }
+            
+            .otp-input {
+                font-size: 1.5rem;
+                letter-spacing: 8px;
+                padding: 14px 16px;
+            }
+            
+            .otp-input::placeholder {
+                letter-spacing: 8px;
+            }
+        }
     </style>
 </head>
 <body>
@@ -789,6 +1163,161 @@
                 Your browser does not support video playback.
             </video>
         </div>
+    </div>
+
+    <!-- Email Verification Modal -->
+    <div class="verification-modal-overlay" id="verificationModalOverlay" style="display: none;">
+        <div class="verification-modal-dialog">
+            <div class="verification-modal-header">
+                <span class="verification-modal-icon">📧</span>
+                <div class="verification-modal-title">Xác thực Email</div>
+                <button class="verification-modal-close" onclick="closeVerificationModal()" aria-label="Đóng">×</button>
+            </div>
+            <div class="verification-modal-body">
+                <p style="color: #ddd; margin-bottom: 20px; text-align: center;">
+                    Chúng tôi đã gửi mã OTP 6 số đến email của bạn:<br>
+                    <strong id="verificationEmail" style="color: #fbbf24;"></strong>
+                </p>
+                
+                <div class="otp-input-container">
+                    <input type="text" id="otpInput" class="otp-input" maxlength="6" placeholder="000000" autocomplete="off">
+                </div>
+                
+                <p style="color: #aaa; font-size: 0.9rem; margin-top: 15px; text-align: center;">
+                    Mã có hiệu lực trong <strong id="otpTimer" style="color: #fbbf24;">10:00</strong> phút
+                </p>
+                
+                <div class="verification-actions">
+                    <button class="btn-verify" id="verifyBtn" onclick="handleVerifyEmail()">
+                        Xác thực
+                    </button>
+                    
+                    <button class="btn-resend" id="resendBtn" onclick="handleResendOTP()">
+                        <span id="resendText">Gửi lại mã</span>
+                        <span id="resendCooldown" style="display: none;">Gửi lại sau (<span id="cooldownTimer">60</span>s)</span>
+                    </button>
+                </div>
+                
+                <p style="color: #888; font-size: 0.85rem; margin-top: 20px; text-align: center;">
+                    Không nhận được email? Kiểm tra hộp thư Spam/Junk
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Forgot Password: Step 1 - Enter Email Modal -->
+    <div class="forgot-password-modal-overlay" id="forgotPasswordEmailModal" style="display: none;">
+        <div class="forgot-password-modal-dialog">
+            <div class="forgot-password-modal-header">
+                <span class="forgot-password-modal-icon">🔒</span>
+                <div class="forgot-password-modal-title">Quên Mật Khẩu</div>
+                <button class="forgot-password-modal-close" onclick="closeForgotPasswordEmailModal()" aria-label="Đóng">×</button>
+            </div>
+            <div class="forgot-password-modal-body">
+                <p style="color: #ddd; margin-bottom: 20px; text-align: center;">
+                    Nhập email đã đăng ký để nhận mã OTP xác thực
+                </p>
+                
+                <div style="margin-bottom: 20px;">
+                    <input type="email" id="forgotPasswordEmail" placeholder="Email của bạn" 
+                           style="width: 100%; padding: 14px; background: rgba(255, 255, 255, 0.05); border: 2px solid rgba(251, 191, 36, 0.3); border-radius: 10px; color: #fff; font-size: 1rem; outline: none; transition: all 0.3s ease; box-sizing: border-box;">
+                </div>
+                
+                <button class="btn-verify" onclick="sendForgotPasswordOTP()">
+                    Gửi mã OTP
+                </button>
+                
+                <p style="color: #888; font-size: 0.85rem; margin-top: 20px; text-align: center;">
+                    Chỉ chấp nhận email @gmail.com
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Forgot Password: Step 2 - Verify OTP Modal -->
+    <div class="forgot-password-modal-overlay" id="forgotPasswordOTPModal" style="display: none;">
+        <div class="forgot-password-modal-dialog">
+            <div class="forgot-password-modal-header">
+                <span class="forgot-password-modal-icon">📧</span>
+                <div class="forgot-password-modal-title">Xác Thực OTP</div>
+                <button class="forgot-password-modal-close" onclick="closeForgotPasswordOTPModal()" aria-label="Đóng">×</button>
+            </div>
+            <div class="forgot-password-modal-body">
+                <p style="color: #ddd; margin-bottom: 20px; text-align: center;">
+                    Chúng tôi đã gửi mã OTP 6 số đến email:<br>
+                    <strong id="forgotPasswordEmailDisplay" style="color: #fbbf24;"></strong>
+                </p>
+                
+                <div class="otp-input-container">
+                    <input type="text" id="forgotPasswordOTPInput" class="otp-input" maxlength="6" placeholder="000000" autocomplete="off">
+                </div>
+                
+                <p style="color: #aaa; font-size: 0.9rem; margin-top: 15px; text-align: center;">
+                    Mã có hiệu lực trong <strong id="forgotPasswordOTPTimer" style="color: #fbbf24;">10:00</strong> phút
+                </p>
+                
+                <div class="verification-actions">
+                    <button class="btn-verify" onclick="verifyForgotPasswordOTP()">
+                        Xác thực
+                    </button>
+                    
+                    <button class="btn-resend" id="forgotPasswordResendBtn" onclick="resendForgotPasswordOTP()">
+                        <span id="forgotPasswordResendText">Gửi lại mã</span>
+                        <span id="forgotPasswordResendCooldown" style="display: none;">Gửi lại sau (<span id="forgotPasswordCooldownTimer">60</span>s)</span>
+                    </button>
+                </div>
+                
+                <p style="color: #888; font-size: 0.85rem; margin-top: 20px; text-align: center;">
+                    Không nhận được email? Kiểm tra hộp thư Spam/Junk
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Forgot Password: Step 3 - New Password Modal -->
+    <div class="forgot-password-modal-overlay" id="forgotPasswordNewPasswordModal" style="display: none;">
+        <div class="forgot-password-modal-dialog">
+            <div class="forgot-password-modal-header">
+                <span class="forgot-password-modal-icon">🔑</span>
+                <div class="forgot-password-modal-title">Đặt Mật Khẩu Mới</div>
+                <button class="forgot-password-modal-close" onclick="closeForgotPasswordNewPasswordModal()" aria-label="Đóng">×</button>
+            </div>
+            <div class="forgot-password-modal-body">
+                <p style="color: #ddd; margin-bottom: 20px; text-align: center;">
+                    Nhập mật khẩu mới cho tài khoản của bạn
+                </p>
+                
+                <div class="password-input-wrapper">
+                    <label>Mật khẩu mới</label>
+                    <input type="password" id="forgotPasswordNewPassword" placeholder="Nhập mật khẩu mới">
+                    <button type="button" class="toggle-password-btn" onclick="togglePasswordVisibility('forgotPasswordNewPassword')">
+                        👁️
+                    </button>
+                </div>
+                
+                <div class="password-input-wrapper">
+                    <label>Xác nhận mật khẩu</label>
+                    <input type="password" id="forgotPasswordConfirmPassword" placeholder="Nhập lại mật khẩu mới">
+                    <button type="button" class="toggle-password-btn" onclick="togglePasswordVisibility('forgotPasswordConfirmPassword')">
+                        👁️
+                    </button>
+                </div>
+                
+                <button class="btn-verify" onclick="resetPassword()">
+                    Đổi mật khẩu
+                </button>
+                
+                <p style="color: #888; font-size: 0.85rem; margin-top: 20px; text-align: center;">
+                    Mật khẩu phải có ít nhất 6 ký tự
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Smart Loading Overlay -->
+    <div class="smart-loading-overlay" id="smartLoadingOverlay" style="display: none;">
+        <div class="smart-loading-spinner"></div>
+        <p id="smartLoadingText" class="smart-loading-text">Đang xử lý...</p>
     </div>
 
     <!-- Footer -->

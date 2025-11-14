@@ -1331,7 +1331,10 @@
                                 <span id="userAvatar">🥧</span>
                             </div>
                             <h3 id="userDisplayName" style="font-size: 1.4rem; margin-bottom: 5px; color: #fff; font-weight: 600;">User Name</h3>
-                            <p id="userEmail" style="font-size: 0.95rem; color: #aaa; margin-bottom: 20px;">email@example.com</p>
+                            <div style="display: flex; align-items: center; justify-content: center; gap: 8px; margin-bottom: 20px;">
+                                <p id="userEmail" style="font-size: 0.95rem; color: #aaa; margin: 0;">email@example.com</p>
+                                <span id="verifiedBadge" style="display: none; background: rgba(34, 197, 94, 0.15); color: #22c55e; padding: 3px 10px; border-radius: 6px; font-size: 0.75rem; font-weight: 600; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif; border: 1px solid rgba(34, 197, 94, 0.3);">Verified</span>
+                            </div>
                         </div>
 
                         <div id="userInfoCard" style="background: rgba(99, 102, 241, 0.08); border: 1px solid rgba(99, 102, 241, 0.25); padding: 15px; border-radius: 10px; margin-bottom: 15px;">
@@ -2387,6 +2390,14 @@ Vui lòng liên hệ Support (Facebook) để chúng tôi kiểm tra và reset l
                 // Update profile info
                 document.getElementById('userDisplayName').textContent = user.name;
                 document.getElementById('userEmail').textContent = user.email;
+                
+                // Show verified badge if email is verified
+                const verifiedBadge = document.getElementById('verifiedBadge');
+                if (user.emailVerified) {
+                    verifiedBadge.style.display = 'inline-block';
+                } else {
+                    verifiedBadge.style.display = 'none';
+                }
                 
                 // Update account type based on plan
                 const accountType = user.plan === 'pro' ? 'PRO PLAN' : 'FREE PLAN';
