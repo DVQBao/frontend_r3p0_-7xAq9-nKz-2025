@@ -696,6 +696,10 @@
                         <div class="stat-value" id="availableCookies">-</div>
                         <div class="stat-label">Khả dụng</div>
                     </div>
+                    <div class="stat-item">
+                        <div class="stat-value" id="smsOtpLeft" style="color: #f59e0b;">-</div>
+                        <div class="stat-label">SMS OTP LEFT</div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -709,6 +713,7 @@
             <button class="btn btn-info" onclick="showCookieManagement()">Quản lý Cookies</button>
             <button class="btn btn-info" onclick="showRateLimitManagement()">Rate Limit</button>
             <button class="btn btn-warning" onclick="autoAssignCookies()">Auto Assign</button>
+            <button class="btn" style="background: rgba(245, 158, 11, 0.1); color: #f59e0b; border: 1px solid #f59e0b;" onclick="setSmsOtpQuota()">Set SMS OTP</button>
             <a href="/" class="btn btn-success">Về trang chủ</a>
         </div>
 
@@ -1162,6 +1167,94 @@
             if (totalElement) totalElement.textContent = stats.total || 0;
             if (freeElement) freeElement.textContent = stats.free || 0;
             if (proElement) proElement.textContent = stats.pro || 0;
+            
+            // Load SMS OTP quota
+            loadSmsOtpQuota();
+        }
+        
+        // ========================================
+        // SMS OTP QUOTA FUNCTIONS
+        // ========================================
+        
+        async function loadSmsOtpQuota() {
+            try {
+                const response = await fetch(`${BACKEND_URL}/api/admin/sms-quota`, {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${localStorage.getItem('admin_token')}`
+                    }
+                });
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                
+                const data = await response.json();
+                const smsOtpLeftElement = document.getElementById('smsOtpLeft');
+                
+                if (smsOtpLeftElement) {
+                    smsOtpLeftElement.textContent = data.smsOtpLeft;
+                    
+                    // Change color based on quota
+                    if (data.smsOtpLeft <= 0) {
+                        smsOtpLeftElement.style.color = '#ef4444'; // Red
+                    } else if (data.smsOtpLeft <= 50) {
+                        smsOtpLeftElement.style.color = '#f59e0b'; // Orange
+                    } else {
+                        smsOtpLeftElement.style.color = '#22c55e'; // Green
+                    }
+                }
+                
+            } catch (error) {
+                console.error('Error loading SMS OTP quota:', error);
+                const smsOtpLeftElement = document.getElementById('smsOtpLeft');
+                if (smsOtpLeftElement) {
+                    smsOtpLeftElement.textContent = '?';
+                }
+            }
+        }
+        
+        async function setSmsOtpQuota() {
+            const currentQuota = document.getElementById('smsOtpLeft').textContent;
+            const newValue = prompt(`Nhập số lượng SMS OTP LEFT mới:\n\n(Hiện tại: ${currentQuota})`, currentQuota !== '?' ? currentQuota : '300');
+            
+            if (newValue === null) return; // User cancelled
+            
+            const quota = parseInt(newValue);
+            
+            if (isNaN(quota) || quota < 0) {
+                alert('Vui lòng nhập số nguyên không âm!');
+                return;
+            }
+            
+            try {
+                showMessage('Đang cập nhật SMS OTP quota...', 'info');
+                
+                const response = await fetch(`${BACKEND_URL}/api/admin/sms-quota/set`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${localStorage.getItem('admin_token')}`
+                    },
+                    body: JSON.stringify({ value: quota })
+                });
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                
+                const data = await response.json();
+                
+                showMessage(`✅ SMS OTP quota đã được set thành ${quota}`, 'success');
+                
+                // Reload quota
+                await loadSmsOtpQuota();
+                
+            } catch (error) {
+                console.error('Error setting SMS OTP quota:', error);
+                showMessage('Lỗi cập nhật quota: ' + error.message, 'error');
+            }
         }
 
         function renderUsersTable(users) {
@@ -1195,7 +1288,7 @@
                                 <th style="width: 150px;">Cookie No.</th>
                                 <th style="width: 150px;">IP</th>
                                 <th style="width: 150px;">Device</th>
-                                <th style="width: 150px;">Location</th>
+                                <th style="width: 100px;">Status</th>
                                 <th style="width: 200px;">Device Fingerprint</th>
                                 <th style="width: 100px;">Reg.date</th>
                                 <th style="width: 100px;">Pro Since</th>
@@ -1231,10 +1324,14 @@
                     cookieOptions += `<option value="${c._id}" ${selected}>Cookie #${c.cookieNumber} (${userCount}/4)</option>`;
                 });
                 
-                // IP, Device, Location (prioritize registrationIP for users who never logged in)
+                // IP, Device (prioritize registrationIP for users who never logged in)
                 const ip = user.registrationIP || user.lastLoginIP || '-';
                 const device = user.registrationDevice || user.lastLoginDevice || '-';
-                const location = user.registrationLocation || user.lastLoginLocation || '-';
+                
+                // Email verification status
+                const emailVerified = user.emailVerified;
+                const statusText = emailVerified ? 'Verified' : 'Unverified';
+                const statusColor = emailVerified ? '#22c55e' : '#f59e0b';
                 
                 // Device Fingerprint (show first 16 chars + ellipsis)
                 const fingerprint = user.deviceFingerprint 
@@ -1281,7 +1378,7 @@
                         </td>
                         <td style="font-size: 0.85rem; color: var(--text-primary);">${ip}</td>
                         <td style="font-size: 0.85rem; color: var(--text-primary);">${device}</td>
-                        <td style="font-size: 0.85rem; color: var(--text-primary);">${location}</td>
+                        <td style="font-size: 0.85rem; color: ${statusColor}; font-weight: 600; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;">${statusText}</td>
                         <td style="font-size: 0.75rem; color: ${user.deviceFingerprint ? '#10b981' : '#6b7280'}; font-family: monospace;" title="${user.deviceFingerprint || 'No fingerprint'}">${fingerprint}</td>
                         <td>${createdAt}</td>
                         <td style="color: ${user.proUpgradedAt ? '#8b5cf6' : '#6b7280'};">${proUpgraded}</td>
