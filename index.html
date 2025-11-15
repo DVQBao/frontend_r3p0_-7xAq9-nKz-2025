@@ -2367,6 +2367,17 @@ Vui lòng liên hệ Support (Facebook) để chúng tôi kiểm tra và reset l
         // AUTH CHECK
         // ========================================
         function checkAuth() {
+            // ✅ Check if user is in the middle of viewing Tiệm bánh message
+            const pendingToken = sessionStorage.getItem('pending_tiembanh_token');
+            const pendingUser = sessionStorage.getItem('pending_tiembanh_user');
+            
+            if (pendingToken && pendingUser) {
+                // User tried to bypass the message by changing URL
+                console.warn('⚠️ User attempted to bypass Tiệm bánh message, redirecting back to /auth');
+                window.location.href = '/auth';
+                return;
+            }
+            
             const currentUser = localStorage.getItem('current_user');
             const loggedIn = sessionStorage.getItem('logged_in') === 'true';
             
