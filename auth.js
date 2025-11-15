@@ -898,18 +898,21 @@ async function handleLogin(event) {
             // Login successful
             console.log('✅ Login successful:', data.user.email);
             
-            // Store token and user data
-            localStorage.setItem('auth_token', data.token);
-            localStorage.setItem('current_user', JSON.stringify(data.user));
-            sessionStorage.setItem('logged_in', 'true');
-            
             showSuccess('Đăng nhập thành công! Đang chuyển hướng...');
             
             // Check for Tiệm bánh message
             setTimeout(async () => {
-                const hasMessage = await checkTiembanhMessage();
+                const hasMessage = await checkTiembanhMessage(data.token, data.user);
                 if (!hasMessage) {
+                    // No message, save token and redirect immediately
+                    localStorage.setItem('auth_token', data.token);
+                    localStorage.setItem('current_user', JSON.stringify(data.user));
+                    sessionStorage.setItem('logged_in', 'true');
                     window.location.href = '/';
+                } else {
+                    // Has message, store token temporarily
+                    sessionStorage.setItem('pending_tiembanh_token', data.token);
+                    sessionStorage.setItem('pending_tiembanh_user', JSON.stringify(data.user));
                 }
             }, 800);
         } else {
@@ -1486,16 +1489,18 @@ let tiembanhCountdownInterval = null;
 
 /**
  * Check for message from Tiệm bánh and show modal if exists
+ * @param {string} token - Auth token to save after message
+ * @param {Object} user - User data to save after message
  * @returns {Promise<boolean>} - True if message shown, false otherwise
  */
-async function checkTiembanhMessage() {
+async function checkTiembanhMessage(token, user) {
     try {
         const response = await fetch(`${BACKEND_URL}/api/message`);
         const data = await response.json();
         
         if (data.hasMessage) {
             console.log('📢 Tiệm bánh has a message');
-            showTiembanhMessage(data);
+            showTiembanhMessage(data, token, user);
             return true; // Message shown
         } else {
             console.log('ℹ️ No message from Tiệm bánh');
@@ -1508,13 +1513,101 @@ async function checkTiembanhMessage() {
 }
 
 /**
+ * Parse plain text message to formatted HTML
+ * @param {string} text - Plain text message
+ * @returns {string} - Formatted HTML
+ */
+function parseMessageToHTML(text) {
+    if (!text) return '';
+    
+    const lines = text.split('\n');
+    let html = '';
+    let inOrderedList = false;
+    let listItems = [];
+    
+    for (let i = 0; i < lines.length; i++) {
+        const line = lines[i].trim();
+        
+        // Empty line - close list if open, add spacing
+        if (line === '') {
+            if (inOrderedList) {
+                html += '<ol style="margin: 15px 0; padding-left: 25px; color: #e5e7eb; line-height: 1.8;">';
+                listItems.forEach(item => {
+                    html += `<li style="margin: 8px 0;">${item}</li>`;
+                });
+                html += '</ol>';
+                inOrderedList = false;
+                listItems = [];
+            }
+            html += '<br>';
+            continue;
+        }
+        
+        // Numbered list item (1., 2., 3., etc.)
+        const numberedMatch = line.match(/^(\d+)\.\s+(.+)$/);
+        if (numberedMatch) {
+            const itemText = numberedMatch[2];
+            listItems.push(itemText);
+            inOrderedList = true;
+            continue;
+        }
+        
+        // Close list if we were in one
+        if (inOrderedList) {
+            html += '<ol style="margin: 15px 0; padding-left: 25px; color: #e5e7eb; line-height: 1.8;">';
+            listItems.forEach(item => {
+                html += `<li style="margin: 8px 0;">${item}</li>`;
+            });
+            html += '</ol>';
+            inOrderedList = false;
+            listItems = [];
+        }
+        
+        // Check if line is a URL
+        const urlRegex = /(https?:\/\/[^\s]+)/g;
+        if (urlRegex.test(line)) {
+            const formattedLine = line.replace(urlRegex, (url) => {
+                return `<a href="${url}" target="_blank" style="color: #60a5fa; text-decoration: underline; word-break: break-all;">${url}</a>`;
+            });
+            html += `<p style="margin: 12px 0; color: #e5e7eb; line-height: 1.8;">${formattedLine}</p>`;
+        } else {
+            // Regular text - check for bold patterns
+            let formattedLine = line;
+            
+            // Bold text with **text**
+            formattedLine = formattedLine.replace(/\*\*(.+?)\*\*/g, '<strong style="color: #fbbf24; font-weight: 600;">$1</strong>');
+            
+            // Check if it's a heading (ends with :)
+            if (line.endsWith(':')) {
+                html += `<p style="margin: 18px 0 8px 0; color: #fbbf24; font-weight: 600; font-size: 1.05rem; line-height: 1.8;">${formattedLine}</p>`;
+            } else {
+                html += `<p style="margin: 12px 0; color: #e5e7eb; line-height: 1.8;">${formattedLine}</p>`;
+            }
+        }
+    }
+    
+    // Close list if still open at end
+    if (inOrderedList) {
+        html += '<ol style="margin: 15px 0; padding-left: 25px; color: #e5e7eb; line-height: 1.8;">';
+        listItems.forEach(item => {
+            html += `<li style="margin: 8px 0;">${item}</li>`;
+        });
+        html += '</ol>';
+    }
+    
+    return html;
+}
+
+/**
  * Show Tiệm bánh message modal with countdown
  * @param {Object} data - Message data (type: 'video'|'image'|'text', videoUrl|imageUrl|message)
+ * @param {string} token - Auth token to save after countdown
+ * @param {Object} user - User data to save after countdown
  */
-function showTiembanhMessage(data) {
+function showTiembanhMessage(data, token, user) {
     // If video, show fullscreen video player
     if (data.type === 'video' && data.videoUrl) {
-        showTiembanhVideo(data.videoUrl);
+        showTiembanhVideo(data.videoUrl, token, user);
         return;
     }
     
@@ -1539,8 +1632,8 @@ function showTiembanhMessage(data) {
         img.style.cssText = 'max-width: 100%; height: auto; display: block; margin: 0 auto; border-radius: 8px;';
         messageBody.appendChild(img);
     } else if (data.type === 'text' && data.message) {
-        // Display text
-        messageBody.textContent = data.message;
+        // Display text with auto-formatting
+        messageBody.innerHTML = parseMessageToHTML(data.message);
     }
     
     // Reset button
@@ -1555,6 +1648,17 @@ function showTiembanhMessage(data) {
             clearInterval(tiembanhCountdownInterval);
             btn.disabled = false;
             btn.textContent = 'Được rồi! Gọi món thôiii...';
+            
+            // ✅ Save token to localStorage after countdown finishes
+            localStorage.setItem('auth_token', token);
+            localStorage.setItem('current_user', JSON.stringify(user));
+            sessionStorage.setItem('logged_in', 'true');
+            
+            // Clear temporary storage
+            sessionStorage.removeItem('pending_tiembanh_token');
+            sessionStorage.removeItem('pending_tiembanh_user');
+            
+            console.log('✅ Token saved after countdown finished');
         } else {
             updateButtonText();
         }
@@ -1586,8 +1690,10 @@ function showTiembanhMessage(data) {
 /**
  * Show Tiệm bánh video player (fullscreen, auto-play, auto-close when ended)
  * @param {string} videoUrl - URL to the video
+ * @param {string} token - Auth token to save after video ends
+ * @param {Object} user - User data to save after video ends
  */
-function showTiembanhVideo(videoUrl) {
+function showTiembanhVideo(videoUrl, token, user) {
     const overlay = document.getElementById('tiembanhVideoOverlay');
     const video = document.getElementById('tiembanhVideo');
     const videoSource = document.getElementById('tiembanhVideoSource');
@@ -1606,8 +1712,19 @@ function showTiembanhVideo(videoUrl) {
         console.error('❌ Video autoplay failed:', err);
     });
     
-    // When video ends, auto-close and redirect to homepage
+    // When video ends, save token and redirect to homepage
     video.onended = () => {
+        // ✅ Save token to localStorage after video ends
+        localStorage.setItem('auth_token', token);
+        localStorage.setItem('current_user', JSON.stringify(user));
+        sessionStorage.setItem('logged_in', 'true');
+        
+        // Clear temporary storage
+        sessionStorage.removeItem('pending_tiembanh_token');
+        sessionStorage.removeItem('pending_tiembanh_user');
+        
+        console.log('✅ Token saved after video finished');
+        
         closeTiembanhVideo();
         window.location.href = '/';
     };
