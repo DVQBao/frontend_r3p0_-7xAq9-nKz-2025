@@ -712,7 +712,6 @@
             <button class="btn btn-secondary" onclick="exportUsers()">Xuất Excel</button>
             <button class="btn btn-info" onclick="showCookieManagement()">Quản lý Cookies</button>
             <button class="btn btn-info" onclick="showRateLimitManagement()">Rate Limit</button>
-            <button class="btn btn-warning" onclick="autoAssignCookies()">Auto Assign</button>
             <button class="btn" style="background: rgba(245, 158, 11, 0.1); color: #f59e0b; border: 1px solid #f59e0b;" onclick="setSmsOtpQuota()">Set SMS OTP</button>
             <a href="/" class="btn btn-success">Về trang chủ</a>
         </div>
@@ -1490,28 +1489,42 @@
 
             // Tạo CSV content với BOM để Excel nhận diện UTF-8
             const BOM = '\uFEFF';
-            let csvContent = BOM + 'Tên,Email,Gói,Cookie No.,IP,Device,Device Fingerprint,Trạng thái,Ngày tạo,Đăng nhập cuối\n';
+            let csvContent = BOM + 'STT,Tên,Email,Gói,Cookie No.,IP,Device,Trạng thái Email,Device Fingerprint,Ngày đăng ký,Pro Since,Pro Exp.,Đăng nhập cuối,Monthly Limit\n';
             
-            currentUsers.forEach(user => {
+            currentUsers.forEach((user, index) => {
+                // Plan
                 const plan = user.plan === 'pro' ? 'Pro' : 'Free';
-                const status = user.verified ? 'Đã xác thực' : 'Chờ xác thực';
-                const createdAt = new Date(user.createdAt).toLocaleDateString('vi-VN');
-                const lastLogin = user.lastLogin ? new Date(user.lastLogin).toLocaleDateString('vi-VN') : 'Chưa đăng nhập';
                 
-                // Get cookie number
-                const assignedCookie = availableCookiesForAssign.find(c => c._id === user.assignedCookie);
-                const cookieNumber = assignedCookie ? `#${assignedCookie.cookieNumber}` : '-';
+                // Cookie number - Lấy từ cookieInfo mà backend đã cung cấp
+                const cookieNumber = user.cookieInfo ? `#${user.cookieInfo.cookieNumber}` : '-';
                 
-                // Get IP and Device
+                // IP and Device (prioritize registration for consistency with UI)
                 const ip = user.registrationIP || user.lastLoginIP || '-';
                 const device = user.registrationDevice || user.lastLoginDevice || '-';
                 
-                // Get Device Fingerprint (first 16 chars or status)
-                const fingerprint = user.deviceFingerprint 
-                    ? user.deviceFingerprint.substring(0, 16) + '...' 
-                    : (user.registrationIP ? 'Legacy' : '-');
+                // Email verification status
+                const emailStatus = user.emailVerified ? 'Verified' : 'Unverified';
                 
-                csvContent += `"${user.name}","${user.email}","${plan}","${cookieNumber}","${ip}","${device}","${fingerprint}","${status}","${createdAt}","${lastLogin}"\n`;
+                // Device Fingerprint (full or status)
+                const fingerprint = user.deviceFingerprint 
+                    ? user.deviceFingerprint
+                    : (user.registrationIP ? 'Legacy (IP-only)' : '-');
+                
+                // Dates
+                const createdAt = new Date(user.createdAt).toLocaleDateString('vi-VN');
+                const proUpgraded = user.proUpgradedAt ? new Date(user.proUpgradedAt).toLocaleDateString('vi-VN') : '-';
+                const proExpires = user.proExpiresAt ? new Date(user.proExpiresAt).toLocaleDateString('vi-VN') : '-';
+                const lastLogin = user.lastLogin ? new Date(user.lastLogin).toLocaleDateString('vi-VN') : 'No login';
+                
+                // Monthly Report Limit (quota)
+                const monthlyLimit = user.monthlyReportLimit !== undefined 
+                    ? user.monthlyReportLimit 
+                    : (user.plan === 'pro' ? 5 : 2);
+                const maxLimit = user.plan === 'pro' ? 5 : 2;
+                const limitDisplay = `${monthlyLimit}/${maxLimit}`;
+                
+                // Add row to CSV
+                csvContent += `${index + 1},"${user.name}","${user.email}","${plan}","${cookieNumber}","${ip}","${device}","${emailStatus}","${fingerprint}","${createdAt}","${proUpgraded}","${proExpires}","${lastLogin}","${limitDisplay}"\n`;
             });
 
             // Tạo và download file với UTF-8 BOM
@@ -1525,7 +1538,7 @@
             link.click();
             document.body.removeChild(link);
 
-            showMessage('Xuất file Excel thành công!', 'success');
+            showMessage(`✅ Xuất file Excel thành công! (${currentUsers.length} users)`, 'success');
         }
 
         function exportCookies() {
@@ -2063,60 +2076,6 @@
         // ========================================
         // Auto-Assign Cookies Function
         // ========================================
-        
-        async function autoAssignCookies() {
-            if (!confirm('TỰ ĐỘNG GÁN COOKIE\n\nHệ thống sẽ:\nTìm tất cả users chưa có cookie\nTìm cookies còn slot trống\nTự động gán cookie cho từng user\n\nBạn có muốn tiếp tục?')) {
-                return;
-            }
-            
-            try {
-                showMessage('Đang tự động gán cookies...', 'info');
-                
-                const response = await fetch(`${BACKEND_URL}/api/admin-users/auto-assign`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Authorization': `Bearer ${localStorage.getItem('admin_token')}`
-                    }
-                });
-                
-                const data = await response.json();
-                
-                if (data.success) {
-                    // Build detailed message
-                    let message = `TỰ ĐỘNG GÁN COOKIE HOÀN TẤT!\n\n`;
-                    message += `Đã gán: ${data.assigned} users\n`;
-                    message += `Thất bại: ${data.failed} users\n\n`;
-                    
-                    if (data.details && data.details.length > 0 && data.details.length <= 20) {
-                        message += `CHI TIẾT:\n`;
-                        data.details.forEach(detail => {
-                            if (detail.status === 'success') {
-                                message += `${detail.user} → Cookie #${detail.cookieNumber}\n`;
-                            } else {
-                                message += `${detail.user} → ${detail.reason}\n`;
-                            }
-                        });
-                    } else if (data.details && data.details.length > 20) {
-                        message += `(Chi tiết quá nhiều, xem console logs)\n`;
-                        console.log('Auto-assign details:', data.details);
-                    }
-                    
-                    showMessage(data.message, 'success');
-                    alert(message);
-                    
-                    // Reload users & stats
-                    loadUsers();
-                    loadCookieStats();
-                } else {
-                    showMessage(data.error || data.message || 'Lỗi khi tự động gán cookies', 'error');
-                }
-                
-            } catch (error) {
-                console.error('Auto-assign cookies error:', error);
-                showMessage('Lỗi kết nối server!', 'error');
-            }
-        }
         
         async function deleteAllCookies() {
             if (!confirm('BẠN CÓ CHẮC CHẮN MUỐN XÓA TẤT CẢ COOKIES?\n\nHành động này KHÔNG THỂ HOÀN TÁC!')) return;
