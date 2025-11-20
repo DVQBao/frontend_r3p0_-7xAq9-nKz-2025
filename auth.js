@@ -1513,7 +1513,8 @@ async function checkTiembanhMessage(token, user) {
 }
 
 /**
- * Parse plain text message to formatted HTML
+ * Parse plain text message to formatted HTML with custom formatting syntax
+ * Supports formatting like: "Text content *bold/yellow/underline"
  * @param {string} text - Plain text message
  * @returns {string} - Formatted HTML
  */
@@ -1525,15 +1526,145 @@ function parseMessageToHTML(text) {
     let inOrderedList = false;
     let listItems = [];
     
+    /**
+     * Parse formatting tags from end of line (e.g., *bold/yellow/underline)
+     * @param {string} line - Line of text
+     * @returns {Object} - {content: string, styles: string}
+     */
+    function parseLineFormatting(line) {
+        // Check if line ends with *formatting
+        const formatMatch = line.match(/^(.+?)\s*\*([a-z/]+)$/i);
+        
+        if (!formatMatch) {
+            return { content: line, styles: '' };
+        }
+        
+        const content = formatMatch[1].trim();
+        const formats = formatMatch[2].toLowerCase().split('/');
+        
+        let styles = [];
+        let fontWeight = 'normal';
+        let fontStyle = 'normal';
+        let textDecoration = 'none';
+        let color = '#e5e7eb'; // default color
+        
+        formats.forEach(format => {
+            switch(format) {
+                case 'bold':
+                case 'b':
+                    fontWeight = '600';
+                    break;
+                case 'italic':
+                case 'i':
+                    fontStyle = 'italic';
+                    break;
+                case 'underline':
+                case 'u':
+                    textDecoration = 'underline';
+                    break;
+                // Màu vàng cam
+                case 'yellow':
+                    color = '#fbbf24';
+                    break;
+                case 'gold':
+                    color = '#ffd700';
+                    break;
+                case 'orange':
+                    color = '#f97316';
+                    break;
+                case 'amber':
+                    color = '#f59e0b';
+                    break;
+                // Màu đỏ hồng
+                case 'red':
+                    color = '#ef4444';
+                    break;
+                case 'pink':
+                    color = '#ec4899';
+                    break;
+                case 'rose':
+                    color = '#f43f5e';
+                    break;
+                // Màu xanh lá
+                case 'green':
+                    color = '#10b981';
+                    break;
+                case 'lime':
+                    color = '#84cc16';
+                    break;
+                case 'emerald':
+                    color = '#10b981';
+                    break;
+                case 'teal':
+                    color = '#14b8a6';
+                    break;
+                // Màu xanh dương
+                case 'blue':
+                    color = '#60a5fa';
+                    break;
+                case 'cyan':
+                    color = '#06b6d4';
+                    break;
+                case 'sky':
+                    color = '#0ea5e9';
+                    break;
+                case 'indigo':
+                    color = '#6366f1';
+                    break;
+                // Màu tím
+                case 'purple':
+                    color = '#a855f7';
+                    break;
+                case 'violet':
+                    color = '#8b5cf6';
+                    break;
+                case 'fuchsia':
+                    color = '#d946ef';
+                    break;
+                case 'magenta':
+                    color = '#db2777';
+                    break;
+                // Màu trung tính
+                case 'white':
+                    color = '#ffffff';
+                    break;
+                case 'gray':
+                case 'grey':
+                    color = '#9ca3af';
+                    break;
+                case 'slate':
+                    color = '#94a3b8';
+                    break;
+                case 'zinc':
+                    color = '#a1a1aa';
+                    break;
+                case 'stone':
+                    color = '#a8a29e';
+                    break;
+            }
+        });
+        
+        // Build style string
+        if (fontWeight !== 'normal') styles.push(`font-weight: ${fontWeight}`);
+        if (fontStyle !== 'normal') styles.push(`font-style: ${fontStyle}`);
+        if (textDecoration !== 'none') styles.push(`text-decoration: ${textDecoration}`);
+        styles.push(`color: ${color}`);
+        
+        return {
+            content: content,
+            styles: styles.join('; ')
+        };
+    }
+    
     for (let i = 0; i < lines.length; i++) {
         const line = lines[i].trim();
         
         // Empty line - close list if open, add spacing
         if (line === '') {
             if (inOrderedList) {
-                html += '<ol style="margin: 15px 0; padding-left: 25px; color: #e5e7eb; line-height: 1.8;">';
+                html += '<ol style="margin: 15px 0; padding-left: 25px; color: #e5e7eb; line-height: 1.8; text-align: justify;">';
                 listItems.forEach(item => {
-                    html += `<li style="margin: 8px 0;">${item}</li>`;
+                    html += `<li style="margin: 8px 0; text-align: justify;">${item}</li>`;
                 });
                 html += '</ol>';
                 inOrderedList = false;
@@ -1547,50 +1678,71 @@ function parseMessageToHTML(text) {
         const numberedMatch = line.match(/^(\d+)\.\s+(.+)$/);
         if (numberedMatch) {
             const itemText = numberedMatch[2];
-            listItems.push(itemText);
+            
+            // Parse formatting for list items too
+            const parsed = parseLineFormatting(itemText);
+            const styledItem = parsed.styles 
+                ? `<span style="${parsed.styles}">${parsed.content}</span>`
+                : parsed.content;
+            
+            listItems.push(styledItem);
             inOrderedList = true;
             continue;
         }
         
         // Close list if we were in one
         if (inOrderedList) {
-            html += '<ol style="margin: 15px 0; padding-left: 25px; color: #e5e7eb; line-height: 1.8;">';
+            html += '<ol style="margin: 15px 0; padding-left: 25px; color: #e5e7eb; line-height: 1.8; text-align: justify;">';
             listItems.forEach(item => {
-                html += `<li style="margin: 8px 0;">${item}</li>`;
+                html += `<li style="margin: 8px 0; text-align: justify;">${item}</li>`;
             });
             html += '</ol>';
             inOrderedList = false;
             listItems = [];
         }
         
+        // Parse formatting for this line
+        const parsed = parseLineFormatting(line);
+        let content = parsed.content;
+        
         // Check if line is a URL
         const urlRegex = /(https?:\/\/[^\s]+)/g;
-        if (urlRegex.test(line)) {
-            const formattedLine = line.replace(urlRegex, (url) => {
+        if (urlRegex.test(content)) {
+            content = content.replace(urlRegex, (url) => {
                 return `<a href="${url}" target="_blank" style="color: #60a5fa; text-decoration: underline; word-break: break-all;">${url}</a>`;
             });
-            html += `<p style="margin: 12px 0; color: #e5e7eb; line-height: 1.8;">${formattedLine}</p>`;
+            
+            // Apply additional formatting if any
+            const baseStyle = 'margin: 12px 0; line-height: 1.8; text-align: justify;';
+            const fullStyle = parsed.styles ? `${baseStyle} ${parsed.styles}` : baseStyle;
+            html += `<p style="${fullStyle}">${content}</p>`;
         } else {
-            // Regular text - check for bold patterns
-            let formattedLine = line;
+            // Regular text - check for **bold** markdown syntax
+            content = content.replace(/\*\*(.+?)\*\*/g, '<strong style="color: #fbbf24; font-weight: 600;">$1</strong>');
             
-            // Bold text with **text**
-            formattedLine = formattedLine.replace(/\*\*(.+?)\*\*/g, '<strong style="color: #fbbf24; font-weight: 600;">$1</strong>');
+            // Determine paragraph style based on formatting
+            let paragraphStyle = 'margin: 12px 0; line-height: 1.8; text-align: justify;';
             
-            // Check if it's a heading (ends with :)
-            if (line.endsWith(':')) {
-                html += `<p style="margin: 18px 0 8px 0; color: #fbbf24; font-weight: 600; font-size: 1.05rem; line-height: 1.8;">${formattedLine}</p>`;
+            // If line ends with : (and no custom formatting), treat as heading
+            if (parsed.content.endsWith(':') && !parsed.styles) {
+                paragraphStyle = 'margin: 18px 0 8px 0; font-weight: 600; font-size: 1.05rem; line-height: 1.8; color: #fbbf24; text-align: left;';
+            } else if (parsed.styles) {
+                // Apply custom formatting
+                paragraphStyle += ' ' + parsed.styles;
             } else {
-                html += `<p style="margin: 12px 0; color: #e5e7eb; line-height: 1.8;">${formattedLine}</p>`;
+                // Default color for regular text
+                paragraphStyle += ' color: #e5e7eb;';
             }
+            
+            html += `<p style="${paragraphStyle}">${content}</p>`;
         }
     }
     
     // Close list if still open at end
     if (inOrderedList) {
-        html += '<ol style="margin: 15px 0; padding-left: 25px; color: #e5e7eb; line-height: 1.8;">';
+        html += '<ol style="margin: 15px 0; padding-left: 25px; color: #e5e7eb; line-height: 1.8; text-align: justify;">';
         listItems.forEach(item => {
-            html += `<li style="margin: 8px 0;">${item}</li>`;
+            html += `<li style="margin: 8px 0; text-align: justify;">${item}</li>`;
         });
         html += '</ol>';
     }
