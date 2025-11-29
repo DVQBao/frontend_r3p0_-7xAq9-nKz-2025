@@ -708,13 +708,21 @@
 
         <div class="controls">
             <input type="text" id="searchBox" class="search-box" placeholder="Tìm kiếm theo tên hoặc email...">
-            <button class="btn btn-primary" onclick="loadUsers()">Làm mới</button>
-            <button class="btn btn-secondary" onclick="exportUsers()">Xuất Excel</button>
-            <button class="btn btn-info" onclick="showCookieManagement()">Quản lý Cookies</button>
-            <button class="btn btn-info" onclick="showRateLimitManagement()">Rate Limit</button>
-            <button class="btn" style="background: rgba(245, 158, 11, 0.1); color: #f59e0b; border: 1px solid #f59e0b;" onclick="setSmsOtpQuota()">Set SMS OTP</button>
-            <a href="/" class="btn btn-success">Về trang chủ</a>
+            <button class="btn btn-primary" onclick="loadUsers(1, currentSearch, currentPlanFilter)">🔄 Làm mới</button>
+
+            <!-- Filter buttons -->
+            <button class="btn" style="background: rgba(16, 185, 129, 0.1); color: #10b981; border: 1px solid #10b981;" onclick="filterByPlan('')" id="filterAll">📊 Tất cả</button>
+            <button class="btn" style="background: rgba(59, 130, 246, 0.1); color: #3b82f6; border: 1px solid #3b82f6;" onclick="filterByPlan('free')" id="filterFree">🆓 Free</button>
+            <button class="btn" style="background: rgba(139, 92, 246, 0.1); color: #8b5cf6; border: 1px solid #8b5cf6;" onclick="filterByPlan('pro')" id="filterPro">⭐ Pro</button>
+
+            <button class="btn btn-secondary" onclick="exportUsers()">📥 Xuất Excel</button>
+            <button class="btn btn-info" onclick="showCookieManagement()">🍪 Quản lý Cookies</button>
+            <button class="btn btn-info" onclick="showRateLimitManagement()">⚡ Rate Limit</button>
+            <button class="btn" style="background: rgba(245, 158, 11, 0.1); color: #f59e0b; border: 1px solid #f59e0b;" onclick="setSmsOtpQuota()">📧 Set SMS OTP</button>
         </div>
+
+        <!-- Pagination controls (top) -->
+        <div id="pagination"></div>
 
         <div class="users-table">
             <div class="table-header">
@@ -795,6 +803,13 @@
         let currentUsers = [];
         let currentUserId = null;
 
+        // Pagination state
+        let currentPage = 1;
+        const pageLimit = 50;
+        let totalPages = 1;
+        let currentSearch = '';
+        let currentPlanFilter = '';
+
         // ========================================
         // INITIALIZATION
         // ========================================
@@ -827,7 +842,7 @@
                 });
                 
                 if (response.ok) {
-                    loadUsers();
+                    loadUsers(1, '', ''); // Start fresh on page 1
                     setupSearch();
                 } else {
                     localStorage.removeItem('admin_token');
@@ -867,7 +882,7 @@
                 if (response.ok) {
                     localStorage.setItem('admin_token', data.token);
                     showMessage('Đăng nhập Admin thành công!', 'success');
-                    loadUsers();
+                    loadUsers(1, '', ''); // Start fresh on page 1
                     setupSearch();
                 } else {
                     showMessage(data.error, 'error');
@@ -896,11 +911,24 @@
         // API FUNCTIONS
         // ========================================
 
-        async function loadUsers() {
+        async function loadUsers(page = 1, search = '', planFilter = '') {
             try {
-                showMessage('Đang tải danh sách người dùng...', 'info');
-                
-                const response = await fetch(`${BACKEND_URL}/api/admin/users`, {
+                // Save current state
+                currentPage = page;
+                currentSearch = search;
+                currentPlanFilter = planFilter;
+
+                showMessage(`⏳ Đang tải trang ${page}...`, 'info');
+
+                // Build query params
+                const params = new URLSearchParams({
+                    page: page,
+                    limit: pageLimit,
+                    search: search,
+                    plan: planFilter
+                });
+
+                const response = await fetch(`${BACKEND_URL}/api/admin/users?${params}`, {
                     method: 'GET',
                     headers: {
                         'Content-Type': 'application/json',
@@ -914,18 +942,25 @@
 
                 const data = await response.json();
                 currentUsers = data.users;
-                
+                currentPage = data.pagination.page;
+                totalPages = data.pagination.totalPages;
+
                 // Load available cookies for dropdown
                 await loadAvailableCookiesForDropdown();
-                
+
                 updateStats(data.stats);
                 renderUsersTable(currentUsers);
-                showMessage('Tải dữ liệu thành công!', 'success');
-                
+                renderPagination(data.pagination);
+
+                const searchInfo = search ? ` | Tìm kiếm: "${search}"` : '';
+                const filterInfo = planFilter ? ` | Lọc: ${planFilter.toUpperCase()}` : '';
+                showMessage(`✅ Tải thành công ${currentUsers.length} users (Trang ${currentPage}/${totalPages})${searchInfo}${filterInfo}`, 'success');
+
             } catch (error) {
                 console.error('Error loading users:', error);
-                showMessage('Lỗi tải dữ liệu: ' + error.message, 'error');
+                showMessage('❌ Lỗi tải dữ liệu: ' + error.message, 'error');
                 renderUsersTable([]);
+                renderPagination({ page: 1, totalPages: 0, total: 0 });
             }
         }
 
@@ -946,7 +981,7 @@
 
                 const data = await response.json();
                 showMessage(`Nâng cấp thành công! ${data.message}`, 'success');
-                loadUsers();
+                loadUsers(currentPage, currentSearch, currentPlanFilter);
                 
             } catch (error) {
                 console.error('Error upgrading user:', error);
@@ -970,7 +1005,7 @@
 
                 const data = await response.json();
                 showMessage(`Hạ cấp thành công! ${data.message}`, 'success');
-                loadUsers();
+                loadUsers(currentPage, currentSearch, currentPlanFilter);
                 
             } catch (error) {
                 console.error('Error downgrading user:', error);
@@ -997,7 +1032,7 @@
                 }
 
                 showMessage('Xóa người dùng thành công!', 'success');
-                loadUsers();
+                loadUsers(currentPage, currentSearch, currentPlanFilter);
                 
             } catch (error) {
                 console.error('Error deleting user:', error);
@@ -1037,9 +1072,9 @@
             row.querySelector('.edit-btn').style.display = 'inline-block';
             row.querySelector('.save-btn').style.display = 'none';
             row.querySelector('.cancel-btn').style.display = 'none';
-            
-            // Reload to reset values
-            loadUsers();
+
+            // Reload current page to reset values
+            loadUsers(currentPage, currentSearch, currentPlanFilter);
         }
         
         // Save edited user row
@@ -1056,8 +1091,9 @@
             const cookieId = inputs[4].value; // Dropdown value là cookieId, không phải cookieNumber
             const proExpiresAt = inputs[5].value;
             const monthlyReportLimit = parseInt(inputs[6].value); // Monthly report limit (0-5)
+            const credits = parseInt(inputs[7].value); // Credits
             
-            console.log('Saving user row...', { name, email, plan, cookieId, proExpiresAt, monthlyReportLimit });
+            console.log('Saving user row...', { name, email, plan, cookieId, proExpiresAt, monthlyReportLimit, credits });
             
             // Validate
             if (!name || !email) {
@@ -1075,6 +1111,11 @@
                 return;
             }
             
+            if (isNaN(credits) || credits < 0) {
+                alert('Credits phải >= 0!');
+                return;
+            }
+            
             try {
                 // Show loading on save button
                 const saveBtn = row.querySelector('.save-btn');
@@ -1083,7 +1124,7 @@
                 saveBtn.disabled = true;
                 
                 // Prepare update data
-                const updateData = { name, email, plan, proExpiresAt, monthlyReportLimit };
+                const updateData = { name, email, plan, proExpiresAt, monthlyReportLimit, credits };
                 
                 // Update user info
                 const response = await fetch(`${BACKEND_URL}/api/admin-users/${userId}`, {
@@ -1139,9 +1180,9 @@
                 
                 // Show success message
                 showMessage('Cập nhật thành công!', 'success');
-                
-                // Reload table
-                await loadUsers();
+
+                // Reload current page
+                await loadUsers(currentPage, currentSearch, currentPlanFilter);
                 
             } catch (error) {
                 console.error('Error saving user:', error);
@@ -1293,7 +1334,8 @@
                                 <th style="width: 100px;">Pro Since</th>
                                 <th style="width: 100px;">Pro Exp.</th>
                                 <th style="width: 100px;">Last login</th>
-                                <th style="width: 150px;">Monthly Limit</th>
+                                <th style="width: 120px;">Monthly Limit</th>
+                                <th style="width: 100px;">Credits</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -1323,9 +1365,9 @@
                     cookieOptions += `<option value="${c._id}" ${selected}>Cookie #${c.cookieNumber} (${userCount}/4)</option>`;
                 });
                 
-                // IP, Device (prioritize registrationIP for users who never logged in)
-                const ip = user.registrationIP || user.lastLoginIP || '-';
-                const device = user.registrationDevice || user.lastLoginDevice || '-';
+                // IP, Device (prioritize LATEST login IP, fallback to registration IP)
+                const ip = user.lastLoginIP || user.registrationIP || '-';
+                const device = user.lastLoginDevice || user.registrationDevice || '-';
                 
                 // Email verification status
                 const emailVerified = user.emailVerified;
@@ -1401,6 +1443,15 @@
                             </span>
                             <input type="number" class="edit-mode" value="${user.monthlyReportLimit !== undefined ? user.monthlyReportLimit : (user.plan === 'pro' ? 5 : 2)}" min="0" max="5" style="display: none; width: 100%; padding: 4px; border: 1px solid #ddd; border-radius: 4px; text-align: center;">
                         </td>
+                        <td>
+                            <span class="view-mode" style="color: ${(() => {
+                                const credits = user.credits !== undefined ? user.credits : 5;
+                                return credits <= 0 ? '#ef4444' : credits <= 5 ? '#fbbf24' : '#10b981';
+                            })()}; font-weight: 600;">
+                                ${user.credits !== undefined ? user.credits : 5}
+                            </span>
+                            <input type="number" class="edit-mode" value="${user.credits !== undefined ? user.credits : 5}" min="0" style="display: none; width: 100%; padding: 4px; border: 1px solid #ddd; border-radius: 4px; text-align: center;">
+                        </td>
                     </tr>
                 `;
             });
@@ -1416,14 +1467,105 @@
 
         function setupSearch() {
             const searchBox = document.getElementById('searchBox');
+            let searchTimeout;
+
             searchBox.addEventListener('input', function() {
-                const query = this.value.toLowerCase();
-                const filteredUsers = currentUsers.filter(user => 
-                    user.name.toLowerCase().includes(query) || 
-                    user.email.toLowerCase().includes(query)
-                );
-                renderUsersTable(filteredUsers);
+                clearTimeout(searchTimeout);
+                const query = this.value;
+
+                // Debounce: Chờ 500ms sau khi user ngừng gõ
+                searchTimeout = setTimeout(() => {
+                    loadUsers(1, query, currentPlanFilter); // Load page 1 with search
+                }, 500);
             });
+        }
+
+        // ========================================
+        // PAGINATION FUNCTIONS
+        // ========================================
+
+        function renderPagination(pagination) {
+            const paginationDiv = document.getElementById('pagination');
+
+            if (!paginationDiv) {
+                console.warn('Pagination div not found');
+                return;
+            }
+
+            const { page, totalPages, total } = pagination;
+
+            if (totalPages === 0 || total === 0) {
+                const emptyHTML = '<div style="text-align: center; padding: 20px; color: var(--text-secondary);">📭 Không có dữ liệu</div>';
+                paginationDiv.innerHTML = emptyHTML;
+                return;
+            }
+
+            let html = '<div style="display: flex; gap: 12px; align-items: center; justify-content: center; margin: 25px 0; flex-wrap: wrap; padding: 20px; background: rgba(255, 255, 255, 0.02); border-radius: 12px; border: 1px solid var(--border-color);">';
+
+            // Previous button
+            const prevDisabled = page === 1;
+            html += `<button class="btn btn-primary" onclick="goToPage(${page - 1})" ${prevDisabled ? 'disabled style="opacity: 0.5; cursor: not-allowed;"' : ''}>← Trước</button>`;
+
+            // Page info
+            html += `<span style="color: var(--text-primary); font-weight: 600; font-size: 15px; padding: 0 10px;">Trang <span style="color: var(--accent-red);">${page}</span> / ${totalPages}</span>`;
+
+            // Jump to page input
+            html += `<input type="number" id="jumpToPageInput" min="1" max="${totalPages}" placeholder="Nhập trang" value="${page}" style="width: 100px; padding: 10px 12px; border-radius: 8px; border: 1px solid var(--border-color); background: var(--bg-tertiary); color: var(--text-primary); text-align: center; font-weight: 600;">`;
+            html += `<button class="btn btn-secondary" onclick="jumpToPage()" style="background: rgba(139, 92, 246, 0.1); color: var(--accent-purple); border: 1px solid var(--accent-purple);">Đi tới</button>`;
+
+            // Next button
+            const nextDisabled = page === totalPages;
+            html += `<button class="btn btn-primary" onclick="goToPage(${page + 1})" ${nextDisabled ? 'disabled style="opacity: 0.5; cursor: not-allowed;"' : ''}>Tiếp →</button>`;
+
+            // Total info
+            html += `<span style="color: var(--text-secondary); font-size: 14px; margin-left: 10px;">| Tổng: <strong style="color: var(--text-primary);">${total}</strong> users</span>`;
+
+            html += '</div>';
+
+            // Render only top pagination
+            paginationDiv.innerHTML = html;
+        }
+
+        function jumpToPage() {
+            const input = document.getElementById('jumpToPageInput');
+            const page = parseInt(input.value);
+
+            if (isNaN(page) || page < 1 || page > totalPages) {
+                showMessage(`⚠️ Số trang phải từ 1 đến ${totalPages}!`, 'error');
+                input.value = currentPage;
+                return;
+            }
+
+            goToPage(page);
+        }
+
+        function goToPage(page) {
+            if (page < 1 || page > totalPages) {
+                return;
+            }
+            loadUsers(page, currentSearch, currentPlanFilter);
+        }
+
+        function filterByPlan(plan) {
+            currentPlanFilter = plan;
+            loadUsers(1, currentSearch, plan);
+            updateFilterButtonHighlight(plan);
+        }
+
+        function updateFilterButtonHighlight(activePlan) {
+            // Reset all filter buttons
+            document.getElementById('filterAll').style.opacity = '0.6';
+            document.getElementById('filterFree').style.opacity = '0.6';
+            document.getElementById('filterPro').style.opacity = '0.6';
+
+            // Highlight active filter
+            if (activePlan === '') {
+                document.getElementById('filterAll').style.opacity = '1';
+            } else if (activePlan === 'free') {
+                document.getElementById('filterFree').style.opacity = '1';
+            } else if (activePlan === 'pro') {
+                document.getElementById('filterPro').style.opacity = '1';
+            }
         }
 
         function openUpgradeModal(userId, userName, userEmail) {
@@ -1489,7 +1631,7 @@
 
             // Tạo CSV content với BOM để Excel nhận diện UTF-8
             const BOM = '\uFEFF';
-            let csvContent = BOM + 'STT,Tên,Email,Gói,Cookie No.,IP,Device,Trạng thái Email,Device Fingerprint,Ngày đăng ký,Pro Since,Pro Exp.,Đăng nhập cuối,Monthly Limit\n';
+            let csvContent = BOM + 'STT,Tên,Email,Gói,Cookie No.,IP,Device,Trạng thái Email,Device Fingerprint,Ngày đăng ký,Pro Since,Pro Exp.,Đăng nhập cuối,Monthly Limit,Credits\n';
             
             currentUsers.forEach((user, index) => {
                 // Plan
@@ -1498,9 +1640,9 @@
                 // Cookie number - Lấy từ cookieInfo mà backend đã cung cấp
                 const cookieNumber = user.cookieInfo ? `#${user.cookieInfo.cookieNumber}` : '-';
                 
-                // IP and Device (prioritize registration for consistency with UI)
-                const ip = user.registrationIP || user.lastLoginIP || '-';
-                const device = user.registrationDevice || user.lastLoginDevice || '-';
+                // IP and Device (prioritize LATEST login IP, fallback to registration IP)
+                const ip = user.lastLoginIP || user.registrationIP || '-';
+                const device = user.lastLoginDevice || user.registrationDevice || '-';
                 
                 // Email verification status
                 const emailStatus = user.emailVerified ? 'Verified' : 'Unverified';
@@ -1523,8 +1665,11 @@
                 const maxLimit = user.plan === 'pro' ? 5 : 2;
                 const limitDisplay = `${monthlyLimit}/${maxLimit}`;
                 
+                // Credits
+                const credits = user.credits !== undefined ? user.credits : 5;
+                
                 // Add row to CSV
-                csvContent += `${index + 1},"${user.name}","${user.email}","${plan}","${cookieNumber}","${ip}","${device}","${emailStatus}","${fingerprint}","${createdAt}","${proUpgraded}","${proExpires}","${lastLogin}","${limitDisplay}"\n`;
+                csvContent += `${index + 1},"${user.name}","${user.email}","${plan}","${cookieNumber}","${ip}","${device}","${emailStatus}","${fingerprint}","${createdAt}","${proUpgraded}","${proExpires}","${lastLogin}","${limitDisplay}","${credits}"\n`;
             });
 
             // Tạo và download file với UTF-8 BOM
@@ -1541,12 +1686,7 @@
             showMessage(`✅ Xuất file Excel thành công! (${currentUsers.length} users)`, 'success');
         }
 
-        function exportCookies() {
-            if (allCookies.length === 0) {
-                showMessage('Không có dữ liệu cookies để xuất!', 'error');
-                return;
-            }
-
+        async function exportCookies() {
             // Yêu cầu nhập mật khẩu trước khi export
             const password = prompt('Nhập mật khẩu để xuất danh sách cookies:');
             
@@ -1557,46 +1697,36 @@
                 return;
             }
 
-            // Tạo CSV content với BOM để Excel nhận diện UTF-8
-            const BOM = '\uFEFF';
-            let csvContent = BOM + 'Cookie #,Value (Toàn bộ),Ngày thêm,Hết hạn,Trạng thái,Users,Ghi chú\n';
-            
-            // Sắp xếp theo Cookie # tăng dần
-            const sortedCookies = [...allCookies].sort((a, b) => (a.cookieNumber || 0) - (b.cookieNumber || 0));
-            
-            sortedCookies.forEach(cookie => {
-                const cookieNum = cookie.cookieNumber || '-';
+            try {
+                showMessage('⏳ Đang tải TẤT CẢ cookies để xuất...', 'info');
                 
-                // Value: Xuất TOÀN BỘ cookie value
-                const fullValue = cookie.value || '-';
-                
-                // Ngày thêm
-                const createdAt = cookie.createdAt ? new Date(cookie.createdAt).toLocaleDateString('vi-VN') : '-';
-                
-                // Hết hạn
-                const expiresAt = cookie.expiresAt ? new Date(cookie.expiresAt).toLocaleDateString('vi-VN') : '-';
-                
-                // Trạng thái
-                const isExpired = cookie.expiresAt && new Date(cookie.expiresAt) < new Date();
-                const userCount = cookie.currentUsers?.length || 0;
-                const maxUsers = cookie.maxUsers || 4;
-                let status = '';
-                
-                if (!cookie.isActive) {
-                    status = 'Die - Recheck';
-                } else if (isExpired) {
-                    status = 'Hết hạn';
-                } else if (userCount >= maxUsers) {
-                    status = `Đã đầy (${userCount}/${maxUsers})`;
-                } else {
-                    status = `Còn slot (${userCount}/${maxUsers})`;
+                // Load TẤT CẢ cookies (không pagination)
+                const response = await fetch(`${BACKEND_URL}/api/admin/cookies?limit=10000&page=1`, {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${localStorage.getItem('admin_token')}`
+                    }
+                });
+
+                if (!response.ok) {
+                    throw new Error('Lỗi khi tải cookies');
                 }
+
+                const data = await response.json();
+                const allCookiesToExport = data.cookies || [];
                 
-                // Users count
-                const usersInfo = `${userCount}/${maxUsers}`;
+                if (allCookiesToExport.length === 0) {
+                    showMessage('Không có dữ liệu cookies để xuất!', 'error');
+                    return;
+                }
+
+                // Tạo CSV content với BOM để Excel nhận diện UTF-8
+                const BOM = '\uFEFF';
+                let csvContent = BOM + 'Cookie #,Value (Toàn bộ),Ngày thêm,Hết hạn,Trạng thái,Users,Ghi chú\n';
                 
-                // Ghi chú
-                const notes = cookie.notes || '-';
+                // Sắp xếp theo Cookie # tăng dần
+                const sortedCookies = [...allCookiesToExport].sort((a, b) => (a.cookieNumber || 0) - (b.cookieNumber || 0));
                 
                 // Escape quotes trong CSV
                 const escapeCsv = (str) => {
@@ -1604,21 +1734,60 @@
                     return str.replace(/"/g, '""'); // Escape double quotes
                 };
                 
-                csvContent += `"${cookieNum}","${escapeCsv(fullValue)}","${createdAt}","${expiresAt}","${escapeCsv(status)}","${usersInfo}","${escapeCsv(notes)}"\n`;
-            });
+                sortedCookies.forEach(cookie => {
+                    const cookieNum = cookie.cookieNumber || '-';
+                    
+                    // Value: Xuất TOÀN BỘ cookie value
+                    const fullValue = cookie.value || '-';
+                    
+                    // Ngày thêm
+                    const createdAt = cookie.createdAt ? new Date(cookie.createdAt).toLocaleDateString('vi-VN') : '-';
+                    
+                    // Hết hạn
+                    const expiresAt = cookie.expiresAt ? new Date(cookie.expiresAt).toLocaleDateString('vi-VN') : '-';
+                    
+                    // Trạng thái
+                    const isExpired = cookie.expiresAt && new Date(cookie.expiresAt) < new Date();
+                    const userCount = cookie.currentUsers?.length || 0;
+                    const maxUsers = cookie.maxUsers || 1;
+                    let status = '';
+                    
+                    if (!cookie.isActive) {
+                        status = 'Die - Recheck';
+                    } else if (isExpired) {
+                        status = 'Hết hạn';
+                    } else if (userCount >= maxUsers) {
+                        status = `Đã đầy (${userCount}/${maxUsers})`;
+                    } else {
+                        status = `Còn slot (${userCount}/${maxUsers})`;
+                    }
+                    
+                    // Users count
+                    const usersInfo = `${userCount}/${maxUsers}`;
+                    
+                    // Ghi chú
+                    const notes = cookie.notes || '-';
+                    
+                    csvContent += `"${cookieNum}","${escapeCsv(fullValue)}","${createdAt}","${expiresAt}","${escapeCsv(status)}","${usersInfo}","${escapeCsv(notes)}"\n`;
+                });
 
-            // Tạo và download file với UTF-8 BOM
-            const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
-            const link = document.createElement('a');
-            const url = URL.createObjectURL(blob);
-            link.setAttribute('href', url);
-            link.setAttribute('download', `netflix_cookies_${new Date().toISOString().split('T')[0]}.csv`);
-            link.style.visibility = 'hidden';
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
+                // Tạo và download file với UTF-8 BOM
+                const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+                const link = document.createElement('a');
+                const url = URL.createObjectURL(blob);
+                link.setAttribute('href', url);
+                link.setAttribute('download', `netflix_cookies_${new Date().toISOString().split('T')[0]}.csv`);
+                link.style.visibility = 'hidden';
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
 
-            showMessage(`Xuất ${allCookies.length} cookies ra Excel thành công!`, 'success');
+                showMessage(`✅ Xuất ${sortedCookies.length} cookies ra Excel thành công!`, 'success');
+                
+            } catch (error) {
+                console.error('Export cookies error:', error);
+                showMessage('❌ Lỗi khi xuất cookies: ' + error.message, 'error');
+            }
         }
 
         // ========================================
@@ -1723,7 +1892,7 @@
                         showMessage(`${data.message}`, 'success');
                         loadCookieStats();
                         if (window.currentCookieManagementPage) {
-                            loadCookiesList();
+                            loadCookiesList(currentCookiePage, currentCookieSearch, currentCookieStatusFilter);
                         }
                     } else {
                         showMessage(`${data.error}`, 'error');
@@ -1742,8 +1911,12 @@
             // Hide users table, show cookies management
             const usersTable = document.querySelector('.users-table');
             const controls = document.querySelector('.controls');
+            const pagination = document.getElementById('pagination');
             
             if (!usersTable || !controls) return;
+            
+            // Hide users components
+            if (pagination) pagination.style.display = 'none';
             
             // Create cookies management container
             const cookiesContainer = document.createElement('div');
@@ -1759,8 +1932,9 @@
                         <input type="text" id="cookieSearchBox" class="search-box" placeholder="Tìm Cookie #, value, ghi chú..." style="margin: 0;">
                         <select id="cookieStatusFilter" class="search-box" style="margin: 0;">
                             <option value="">Tất cả trạng thái</option>
-                            <option value="available">Còn slot</option>
-                            <option value="full">Đã đầy (4/4)</option>
+                            <option value="active">Active</option>
+                            <option value="inactive">Inactive (Die)</option>
+                            <option value="available">Available (Còn slot)</option>
                             <option value="expired">Hết hạn</option>
                         </select>
                         <button class="btn btn-success" onclick="showAddCookieModal()">Thêm</button>
@@ -1770,6 +1944,9 @@
                         <button class="btn btn-primary" onclick="backToUsers()">Quay lại Users</button>
                     </div>
                 </div>
+                
+                <!-- Cookie Pagination -->
+                <div id="cookiePagination"></div>
                 
                 <div id="cookiesTableContainer" style="max-height: 600px; overflow-y: auto; overflow-x: hidden;">
                     <div class="loading">
@@ -1787,28 +1964,50 @@
             
             // Load cookies list
             window.currentCookieManagementPage = true;
-            await loadCookiesList();
+            await loadCookiesList(1, '', '');
             
-            // Setup filters
-            document.getElementById('cookieSearchBox')?.addEventListener('input', filterCookies);
-            document.getElementById('cookieStatusFilter')?.addEventListener('change', filterCookies);
+            // Setup filters with debounce
+            let cookieSearchTimeout;
+            document.getElementById('cookieSearchBox')?.addEventListener('input', function() {
+                clearTimeout(cookieSearchTimeout);
+                const query = this.value;
+                
+                // Debounce: Chờ 500ms sau khi user ngừng gõ
+                cookieSearchTimeout = setTimeout(() => {
+                    loadCookiesList(1, query, currentCookieStatusFilter); // Reset to page 1
+                }, 500);
+            });
+            
+            document.getElementById('cookieStatusFilter')?.addEventListener('change', function() {
+                const status = this.value;
+                loadCookiesList(1, currentCookieSearch, status); // Reset to page 1
+            });
         }
         
         function backToUsers() {
             const cookiesContainer = document.getElementById('cookiesManagement');
             const usersTable = document.querySelector('.users-table');
             const controls = document.querySelector('.controls');
+            const pagination = document.getElementById('pagination');
             
             if (cookiesContainer) cookiesContainer.remove();
             if (usersTable) usersTable.style.display = 'block';
             if (controls) controls.style.display = 'flex';
-            
+            if (pagination) pagination.style.display = 'block';
+
             window.currentCookieManagementPage = false;
-            loadUsers();
+            loadUsers(currentPage, currentSearch, currentPlanFilter);
         }
         
         let allCookies = [];
-        let availableCookiesForAssign = []; // Cookies có thể assign (isActive=true, slot<4)
+        let availableCookiesForAssign = []; // Cookies có thể assign (isActive=true, slot<1)
+        
+        // Cookie pagination state
+        let currentCookiePage = 1;
+        const cookiePageLimit = 50;
+        let totalCookiePages = 1;
+        let currentCookieSearch = '';
+        let currentCookieStatusFilter = '';
         
         async function loadAvailableCookiesForDropdown() {
             try {
@@ -1822,7 +2021,7 @@
                     const data = await response.json();
                     // Lọc cookies: isActive=true và còn slot
                     availableCookiesForAssign = (data.cookies || [])
-                        .filter(c => c.isActive && (c.currentUsers?.length || 0) < (c.maxUsers || 4))
+                        .filter(c => c.isActive && (c.currentUsers?.length || 0) < (c.maxUsers || 1))
                         .sort((a, b) => (a.cookieNumber || 0) - (b.cookieNumber || 0));
                     
                     console.log(`Loaded ${availableCookiesForAssign.length} available cookies for assignment`);
@@ -1832,9 +2031,24 @@
             }
         }
         
-        async function loadCookiesList() {
+        async function loadCookiesList(page = 1, search = '', statusFilter = '') {
             try {
-                const response = await fetch(`${BACKEND_URL}/api/admin/cookies?limit=1000`, {
+                // Save current state
+                currentCookiePage = page;
+                currentCookieSearch = search;
+                currentCookieStatusFilter = statusFilter;
+                
+                showMessage(`⏳ Đang tải cookies trang ${page}...`, 'info');
+                
+                // Build query params
+                const params = new URLSearchParams({
+                    page: page,
+                    limit: cookiePageLimit,
+                    search: search,
+                    status: statusFilter
+                });
+                
+                const response = await fetch(`${BACKEND_URL}/api/admin/cookies?${params}`, {
                     method: 'GET',
                     headers: {
                         'Content-Type': 'application/json',
@@ -1845,14 +2059,86 @@
                 if (response.ok) {
                     const data = await response.json();
                     allCookies = data.cookies || [];
+                    currentCookiePage = data.pagination.page;
+                    totalCookiePages = data.pagination.pages;
+                    
                     renderCookiesTable(allCookies);
+                    renderCookiesPagination(data.pagination);
+                    
+                    const searchInfo = search ? ` | Tìm kiếm: "${search}"` : '';
+                    const filterInfo = statusFilter ? ` | Lọc: ${statusFilter}` : '';
+                    showMessage(`✅ Tải thành công ${allCookies.length} cookies (Trang ${currentCookiePage}/${totalCookiePages})${searchInfo}${filterInfo}`, 'success');
                 } else {
                     showMessage('Lỗi tải danh sách cookies!', 'error');
+                    renderCookiesTable([]);
+                    renderCookiesPagination({ page: 1, pages: 0, total: 0 });
                 }
             } catch (error) {
                 console.error('Load cookies error:', error);
-                showMessage('Lỗi kết nối!', 'error');
+                showMessage('❌ Lỗi kết nối!', 'error');
+                renderCookiesTable([]);
+                renderCookiesPagination({ page: 1, pages: 0, total: 0 });
             }
+        }
+        
+        function renderCookiesPagination(pagination) {
+            const paginationDiv = document.getElementById('cookiePagination');
+            
+            if (!paginationDiv) {
+                console.warn('Cookie pagination div not found');
+                return;
+            }
+            
+            const { page, pages, total } = pagination;
+            
+            if (pages === 0 || total === 0) {
+                paginationDiv.innerHTML = '<div style="text-align: center; padding: 20px; color: var(--text-secondary);">📭 Không có cookies</div>';
+                return;
+            }
+            
+            let html = '<div style="display: flex; gap: 12px; align-items: center; justify-content: center; margin: 25px 0; flex-wrap: wrap; padding: 20px; background: rgba(255, 255, 255, 0.02); border-radius: 12px; border: 1px solid var(--border-color);">';
+            
+            // Previous button
+            const prevDisabled = page === 1;
+            html += `<button class="btn btn-primary" onclick="goToCookiePage(${page - 1})" ${prevDisabled ? 'disabled style="opacity: 0.5; cursor: not-allowed;"' : ''}>← Trước</button>`;
+            
+            // Page info
+            html += `<span style="color: var(--text-primary); font-weight: 600; font-size: 15px; padding: 0 10px;">Trang <span style="color: var(--accent-red);">${page}</span> / ${pages}</span>`;
+            
+            // Jump to page input
+            html += `<input type="number" id="jumpToCookiePageInput" min="1" max="${pages}" placeholder="Nhập trang" value="${page}" style="width: 100px; padding: 10px 12px; border-radius: 8px; border: 1px solid var(--border-color); background: var(--bg-tertiary); color: var(--text-primary); text-align: center; font-weight: 600;">`;
+            html += `<button class="btn btn-secondary" onclick="jumpToCookiePage()" style="background: rgba(139, 92, 246, 0.1); color: var(--accent-purple); border: 1px solid var(--accent-purple);">Đi tới</button>`;
+            
+            // Next button
+            const nextDisabled = page === pages;
+            html += `<button class="btn btn-primary" onclick="goToCookiePage(${page + 1})" ${nextDisabled ? 'disabled style="opacity: 0.5; cursor: not-allowed;"' : ''}>Tiếp →</button>`;
+            
+            // Total info
+            html += `<span style="color: var(--text-secondary); font-size: 14px; margin-left: 10px;">| Tổng: <strong style="color: var(--text-primary);">${total}</strong> cookies</span>`;
+            
+            html += '</div>';
+            
+            paginationDiv.innerHTML = html;
+        }
+        
+        function goToCookiePage(page) {
+            if (page < 1 || page > totalCookiePages) {
+                return;
+            }
+            loadCookiesList(page, currentCookieSearch, currentCookieStatusFilter);
+        }
+        
+        function jumpToCookiePage() {
+            const input = document.getElementById('jumpToCookiePageInput');
+            const page = parseInt(input.value);
+            
+            if (isNaN(page) || page < 1 || page > totalCookiePages) {
+                showMessage(`⚠️ Số trang phải từ 1 đến ${totalCookiePages}!`, 'error');
+                input.value = currentCookiePage;
+                return;
+            }
+            
+            goToCookiePage(page);
         }
         
         function renderCookiesTable(cookies) {
@@ -1864,9 +2150,7 @@
                 return;
             }
             
-            // Sắp xếp cookies theo số thứ tự tăng dần
-            const sortedCookies = [...cookies].sort((a, b) => (a.cookieNumber || 0) - (b.cookieNumber || 0));
-            
+            // Backend đã sort theo cookieNumber, không cần sort lại
             let html = `
                 <table class="table">
                     <thead>
@@ -1876,7 +2160,7 @@
                             <th>Ngày thêm</th>
                             <th>Hết hạn</th>
                             <th>Trạng thái</th>
-                            <th>Users (${sortedCookies.reduce((sum, c) => sum + (c.currentUsers?.length || 0), 0)})</th>
+                            <th>Users (${cookies.reduce((sum, c) => sum + (c.currentUsers?.length || 0), 0)})</th>
                             <th>Ghi chú</th>
                             <th>Thao tác</th>
                         </tr>
@@ -1884,12 +2168,12 @@
                     <tbody>
             `;
             
-            sortedCookies.forEach(cookie => {
+            cookies.forEach(cookie => {
                 const createdAt = new Date(cookie.createdAt).toLocaleDateString('vi-VN');
                 const expiresAt = cookie.expiresAt ? new Date(cookie.expiresAt).toLocaleDateString('vi-VN') : '-';
                 const isExpired = cookie.expiresAt && new Date(cookie.expiresAt) < new Date();
                 const userCount = cookie.currentUsers?.length || 0;
-                const isFull = userCount >= (cookie.maxUsers || 4);
+                const isFull = userCount >= (cookie.maxUsers || 1);
                 const isDead = !cookie.isActive; // Cookie bị mark die
                 
                 let statusBadge = '';
@@ -1913,7 +2197,7 @@
                         <td>${createdAt}</td>
                         <td>${expiresAt}</td>
                         <td>${statusBadge}</td>
-                        <td><span style="color: ${isFull ? '#f59e0b' : '#10b981'}; font-weight: 600;">${userCount}/${cookie.maxUsers || 4}</span></td>
+                        <td><span style="color: ${isFull ? '#f59e0b' : '#10b981'}; font-weight: 600;">${userCount}/${cookie.maxUsers || 1}</span></td>
                         <td style="max-width: 150px; overflow: hidden; text-overflow: ellipsis;" title="${cookie.notes || ''}">${cookie.notes || '-'}</td>
                         <td>
                             <div style="display: flex; gap: 10px; flex-wrap: wrap;">
@@ -1930,38 +2214,6 @@
             container.innerHTML = html;
         }
         
-        function filterCookies() {
-            const searchText = document.getElementById('cookieSearchBox')?.value.toLowerCase() || '';
-            const statusFilter = document.getElementById('cookieStatusFilter')?.value || '';
-            
-            let filtered = allCookies;
-            
-            // Filter by search
-            if (searchText) {
-                filtered = filtered.filter(c => 
-                    String(c.cookieNumber).includes(searchText) ||
-                    c.value.toLowerCase().includes(searchText) ||
-                    (c.notes && c.notes.toLowerCase().includes(searchText))
-                );
-            }
-            
-            // Filter by status
-            if (statusFilter) {
-                filtered = filtered.filter(c => {
-                    const userCount = c.currentUsers?.length || 0;
-                    const isFull = userCount >= (c.maxUsers || 4);
-                    const isExpired = c.expiresAt && new Date(c.expiresAt) < new Date();
-                    
-                    if (statusFilter === 'available') return !isFull && !isExpired;
-                    if (statusFilter === 'full') return isFull;
-                    if (statusFilter === 'expired') return isExpired;
-                    return true;
-                });
-            }
-            
-            renderCookiesTable(filtered);
-        }
-        
         function viewCookieDetails(cookie) {
             const usersList = cookie.currentUsers?.length > 0 ? 
                 `<p><strong>Đang sử dụng (${cookie.currentUsers.length}):</strong></p><ul>${cookie.currentUsers.map(u => `<li>User ID: ${u}</li>`).join('')}</ul>` : 
@@ -1971,7 +2223,7 @@
                   `Value: ${cookie.value}\n\n` +
                   `Ngày tạo: ${new Date(cookie.createdAt).toLocaleString('vi-VN')}\n` +
                   `Hết hạn: ${cookie.expiresAt ? new Date(cookie.expiresAt).toLocaleString('vi-VN') : 'Không giới hạn'}\n` +
-                  `Users: ${cookie.currentUsers?.length || 0}/${cookie.maxUsers || 4}\n` +
+                  `Users: ${cookie.currentUsers?.length || 0}/${cookie.maxUsers || 1}\n` +
                   `Source: ${cookie.source}\n` +
                   `Ghi chú: ${cookie.notes || 'Không có'}`
             );
@@ -2003,7 +2255,7 @@
 
                 if (response.ok) {
                     showMessage('Thêm cookie thành công!', 'success');
-                    loadCookiesList();
+                    loadCookiesList(1, currentCookieSearch, currentCookieStatusFilter); // Reset to page 1 for new cookie
                     loadCookieStats();
                 } else {
                     showMessage(`${data.error}`, 'error');
@@ -2034,7 +2286,7 @@
 
                 if (response.ok) {
                     showMessage('Cập nhật thành công!', 'success');
-                    loadCookiesList();
+                    loadCookiesList(currentCookiePage, currentCookieSearch, currentCookieStatusFilter);
                 } else {
                     showMessage(`${data.error}`, 'error');
                 }
@@ -2062,7 +2314,7 @@
 
                 if (response.ok) {
                     showMessage('Xóa thành công!', 'success');
-                    loadCookiesList();
+                    loadCookiesList(currentCookiePage, currentCookieSearch, currentCookieStatusFilter);
                     loadCookieStats();
                 } else {
                     showMessage(`${data.error}`, 'error');
@@ -2097,7 +2349,7 @@
 
                 if (response.ok) {
                     showMessage('Đã xóa tất cả cookies!', 'success');
-                    loadCookiesList();
+                    loadCookiesList(1, '', ''); // Reset to page 1, clear filters
                     loadCookieStats();
                 } else {
                     showMessage(`${data.error}`, 'error');
@@ -2128,8 +2380,11 @@
             // Hide users table and controls
             const usersTable = document.querySelector('.users-table');
             const userControls = document.querySelector('.controls');
+            const pagination = document.getElementById('pagination');
+            
             if (usersTable) usersTable.style.display = 'none';
             if (userControls) userControls.style.display = 'none';
+            if (pagination) pagination.style.display = 'none';
             
             // Remove existing rate limit container if any
             const existingContainer = document.getElementById('rateLimitManagement');
@@ -2452,6 +2707,7 @@
             // Hide rate limit/cookie management, show users table and controls
             const usersTable = document.querySelector('.users-table');
             const userControls = document.querySelector('.controls');
+            const pagination = document.getElementById('pagination');
             const rateLimitContainer = document.getElementById('rateLimitManagement');
             const cookiesContainer = document.getElementById('cookiesManagement');
             
@@ -2459,6 +2715,7 @@
             if (cookiesContainer) cookiesContainer.remove();
             if (usersTable) usersTable.style.display = 'block';
             if (userControls) userControls.style.display = 'flex'; // controls dùng display: flex
+            if (pagination) pagination.style.display = 'block';
         }
     </script>
 </body>

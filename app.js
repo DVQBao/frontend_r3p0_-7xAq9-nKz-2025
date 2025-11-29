@@ -22,7 +22,7 @@ const CONFIG = {
     // Extension ID sẽ được cập nhật tự động khi detect
     EXTENSION_ID: null,
     // Extension version requirement
-    REQUIRED_EXTENSION_VERSION: '1.4.0',
+    REQUIRED_EXTENSION_VERSION: '1.5.0',
     EXTENSION_DOWNLOAD_LINK: 'https://drive.google.com/drive/folders/1eozcbA4q54f8Ox46d2HlptSD92tDFHCl?usp=sharing'
 };
 
@@ -170,7 +170,7 @@ function onExtensionDetected(details) {
         // Update UI - Warning banner (giống như chưa cài)
         if (elements.extensionBanner && elements.bannerTitle && elements.bannerText) {
             elements.extensionBanner.className = 'extension-banner show error';
-            elements.bannerTitle.innerHTML = '⚠️ Extension cần cập nhật';
+            elements.bannerTitle.innerHTML = 'Extension cần cập nhật';
             elements.bannerText.innerHTML = `Phiên bản hiện tại đã cũ. Vui lòng <a href="${CONFIG.EXTENSION_DOWNLOAD_LINK}" target="_blank" style="color: #fff; text-decoration: underline; font-weight: 600;">tải phiên bản mới tại đây</a> để tiếp tục sử dụng.`;
         }
     } else {
@@ -181,8 +181,8 @@ function onExtensionDetected(details) {
         // Update UI - Success banner
         if (elements.extensionBanner && elements.bannerTitle && elements.bannerText) {
             elements.extensionBanner.className = 'extension-banner show success';
-            elements.bannerTitle.innerHTML = '✅ Extension đã cài đặt';
-            elements.bannerText.innerHTML = `Phiên bản ${currentVersion} - Bạn có thể tiếp tục tận hưởng Netflix 4K`;
+            elements.bannerTitle.innerHTML = `Extension đã cài đặt - v${currentVersion}`;
+            elements.bannerText.innerHTML = `Bạn có thể tiếp tục Netflix and Chill`;
         }
     }
     
@@ -204,11 +204,11 @@ function onExtensionNotDetected() {
     // Update UI - Simple banner with install guide link
     if (elements.extensionBanner && elements.bannerTitle && elements.bannerText) {
         elements.extensionBanner.className = 'extension-banner show error';
-        elements.bannerTitle.innerHTML = '⚠️ Chưa cài Extension';
+        elements.bannerTitle.innerHTML = 'Chưa cài Extension';
         elements.bannerText.innerHTML = `
             Vui lòng cài đặt Extension Tiệm Bánh Netflix để sử dụng.<br>
             <a href="/install-guide/" style="color: #fff; text-decoration: underline; font-weight: 600;">
-                📖 Xem hướng dẫn cài đặt
+                Xem hướng dẫn cài đặt
             </a>
         `;
     }
@@ -342,7 +342,8 @@ async function refreshUserFromDatabase() {
             localStorage.setItem('current_user', JSON.stringify(data.user));
             console.log('✅ User data refreshed from database:', {
                 plan: data.user.plan,
-                monthlyReportLimit: data.user.monthlyReportLimit
+                monthlyReportLimit: data.user.monthlyReportLimit,
+                credits: data.user.credits
             });
             return data.user;
         }
@@ -419,7 +420,21 @@ async function _watchAsGuestInternal(skipQuotaCheck = false, skipAdAndPlanModal 
                 return; // Stop execution
             }
             
-            console.log(`✅ User has ${freshUser.monthlyReportLimit} quota remaining`);
+            // Kiểm tra hết credits
+            if (freshUser.credits !== undefined && freshUser.credits <= 0) {
+                console.log('💳 User has no credits (checked from DB)');
+                
+                // Show no credits modal
+                if (typeof showNoCreditsModal === 'function') {
+                    showNoCreditsModal();
+                } else {
+                    alert('Bạn đã hết credits. Vui lòng mua thêm để tiếp tục sử dụng!');
+                }
+                
+                return; // Stop execution
+            }
+            
+            console.log(`✅ User has ${freshUser.monthlyReportLimit} quota and ${freshUser.credits} credits remaining`);
         }
     } else {
         console.log('⚠️ Skipping quota check - User just reported issue');
@@ -439,10 +454,17 @@ async function _watchAsGuestInternal(skipQuotaCheck = false, skipAdAndPlanModal 
         if (elements.adSection) elements.adSection.style.display = 'none';
         if (elements.watchingSection) elements.watchingSection.style.display = 'block';
         
+        // RESET loading bar về trạng thái ban đầu
+        const loadingBarContainer = document.getElementById('loadingBarContainer');
+        if (loadingBarContainer) {
+            loadingBarContainer.style.display = 'block'; // Hiện lại loading bar
+        }
+        
         // Hiện thông báo đang xử lý
         showStepStatus(2, 'success', '⏳ Đang inject tài khoản Netflix mới...');
         if (elements.watchingProgress) {
             elements.watchingProgress.textContent = '⏳ Đang inject tài khoản Netflix mới...';
+            elements.watchingProgress.style.color = '#fff'; // Reset về màu trắng
         }
         
         // Tự động bắt đầu
@@ -466,10 +488,17 @@ async function _watchAsGuestInternal(skipQuotaCheck = false, skipAdAndPlanModal 
             if (elements.adSection) elements.adSection.style.display = 'none';
             if (elements.watchingSection) elements.watchingSection.style.display = 'block';
             
+            // RESET loading bar về trạng thái ban đầu
+            const loadingBarContainer = document.getElementById('loadingBarContainer');
+            if (loadingBarContainer) {
+                loadingBarContainer.style.display = 'block'; // Hiện lại loading bar
+            }
+            
             // Hiện thông báo đang xử lý
             showStepStatus(2, 'success', '⏳ Pro user - Đang kết nối Netflix...');
             if (elements.watchingProgress) {
                 elements.watchingProgress.textContent = '⏳ Pro user - Đang kết nối Netflix...';
+                elements.watchingProgress.style.color = '#fff'; // Reset về màu trắng
             }
             
             // Tự động bắt đầu
@@ -657,6 +686,12 @@ async function handleStartWatching() {
         if (elements.adSection) elements.adSection.style.display = 'none';
         if (elements.watchingSection) elements.watchingSection.style.display = 'block';
         
+        // RESET loading bar về trạng thái ban đầu
+        const loadingBarContainer = document.getElementById('loadingBarContainer');
+        if (loadingBarContainer) {
+            loadingBarContainer.style.display = 'block'; // Hiện lại loading bar
+        }
+        
         // Tạo retry handler
         const retryHandler = new CookieRetryHandler(
             BACKEND_URL,
@@ -666,6 +701,7 @@ async function handleStartWatching() {
         // Bắt đầu quá trình login với auto-retry
         showStepStatus(2, 'success', '⏳ Đang kết nối...');
         if (elements.watchingProgress) {
+            elements.watchingProgress.style.color = '#fff'; // Reset về màu trắng
             elements.watchingProgress.textContent = '⏳ Đang kết nối...';
         }
         
@@ -935,6 +971,42 @@ async function injectCookieViaExtension(cookieData) {
     });
 }
 
+/**
+ * Refresh Netflix tab via extension
+ */
+async function refreshNetflixTabViaExtension() {
+    return new Promise((resolve, reject) => {
+        console.log('🔄 Requesting Netflix tab refresh from extension...');
+        
+        if (!CONFIG.EXTENSION_ID) {
+            reject(new Error('Extension ID not found'));
+            return;
+        }
+        
+        const timeout = setTimeout(() => {
+            console.error('⏱️ Extension timeout after 5s - No response for refresh');
+            reject(new Error('Extension refresh timeout'));
+        }, 5000);
+        
+        chrome.runtime.sendMessage(
+            CONFIG.EXTENSION_ID,
+            { action: 'refreshNetflixTab' },
+            (response) => {
+                clearTimeout(timeout);
+                
+                if (chrome.runtime.lastError) {
+                    console.error('Extension refresh error:', chrome.runtime.lastError);
+                    reject(new Error(chrome.runtime.lastError.message));
+                    return;
+                }
+                
+                console.log('✅ Netflix tab refreshed:', response);
+                resolve(response);
+            }
+        );
+    });
+}
+
 // ========================================
 // UI HELPERS
 // ========================================
@@ -1011,6 +1083,7 @@ Extension ID sẽ hiện ở banner màu xanh khi cài thành công.
 
 // Make functions available globally for CookieRetryHandler and index.html
 window.injectCookieViaExtension = injectCookieViaExtension;
+window.refreshNetflixTabViaExtension = refreshNetflixTabViaExtension;
 window.handleWatchAsGuestAfterReport = handleWatchAsGuestAfterReport;
 window.closeAdModal = closeAdModal;
 window.state = state;

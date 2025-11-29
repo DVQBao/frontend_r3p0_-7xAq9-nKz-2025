@@ -1,6 +1,7 @@
 // ========================================
-// Netflix Guest Helper - Content Script
+// Netflix Guest Helper - Content Script v1.5
 // Chạy trên tất cả trang Netflix
+// Features: Auto F5 support, Login detection, Error detection
 // ========================================
 
 // DISABLE CONSOLE IN PRODUCTION
@@ -265,6 +266,50 @@ function showSuccessNotification() {
     
     console.log('✅ Success notification displayed');
 }
+
+// ========================================
+// MESSAGE HANDLERS - AUTO F5
+// ========================================
+
+/**
+ * Listen for force reload command from background script
+ * SIMULATE F5 (hard refresh) khi tab stuck
+ */
+chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
+    if (request.action === 'forceReload') {
+        console.log('🔄 Received forceReload command - Simulating F5...');
+        
+        try {
+            // Stop page loading
+            window.stop();
+            
+            // Wait 200ms then hard refresh (giống F5)
+            setTimeout(() => {
+                window.location.reload(true);
+                console.log('✅ F5 executed (hard refresh)');
+            }, 200);
+            
+            sendResponse({ success: true });
+        } catch (error) {
+            console.error('❌ Force reload error:', error);
+            sendResponse({ success: false, error: error.message });
+        }
+        
+        return true;  // Keep channel open for async response
+    }
+    
+    if (request.action === 'checkLoginStatus') {
+        const status = checkLoginStatus();
+        sendResponse(status);
+        return true;
+    }
+    
+    if (request.action === 'showSuccessNotification') {
+        showSuccessNotification();
+        sendResponse({ success: true });
+        return true;
+    }
+});
 
 // ========================================
 // WINDOW NAME DETECTION (for tab identification)

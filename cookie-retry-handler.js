@@ -185,6 +185,95 @@ class CookieRetryHandler {
                     };
                 }
 
+                // 🚫 NO CREDITS ERROR - Dừng ngay, hiển thị modal mua credits
+                if (error.code === 'NO_CREDITS') {
+                    console.error('💳 NO CREDITS - User needs to purchase more credits');
+
+                    if (onProgress) {
+                        onProgress({
+                            status: 'no_credits',
+                            message: 'Bạn đã hết credits',
+                            error: error.message
+                        });
+                    }
+
+                    // Hiển thị modal mua credits
+                    if (typeof window.showNoCreditsModal === 'function') {
+                        window.showNoCreditsModal();
+                    } else if (typeof window.showCustomModal === 'function') {
+                        window.showCustomModal({
+                            icon: '💳',
+                            title: 'Hết Credits',
+                            message: error.message,
+                            buttons: [{ text: 'OK', type: 'primary' }]
+                        });
+                    } else {
+                        alert(error.message);
+                    }
+
+                    return {
+                        success: false,
+                        error: error.message,
+                        isNoCredits: true
+                    };
+                }
+                
+                // 🚫 NO REPORT LIMIT ERROR - Dừng ngay, hiển thị modal hết lượt
+                if (error.code === 'NO_REPORT_LIMIT' || error.code === 'LIMIT_EXCEEDED') {
+                    console.error('⚠️ NO REPORT LIMIT - User out of monthly switches');
+
+                    if (onProgress) {
+                        onProgress({
+                            status: 'no_report_limit',
+                            message: 'Bạn đã hết lượt đổi tài khoản',
+                            error: error.message
+                        });
+                    }
+
+                    return {
+                        success: false,
+                        error: error.message,
+                        isNoReportLimit: true
+                    };
+                }
+
+                // 🚨 TOO MANY RETRIES ERROR - Abuse detected, dừng ngay
+                if (error.isTooManyRetries || error.code === 'TOO_MANY_RETRIES') {
+                    console.error('🚨 TOO MANY RETRIES - Abuse detected, stopping all retries');
+
+                    if (onProgress) {
+                        onProgress({
+                            status: 'too_many_retries',
+                            message: error.message,
+                            error: error.message
+                        });
+                    }
+
+                    // Hiển thị modal cảnh báo abuse
+                    if (typeof window.showCustomModal === 'function') {
+                        window.showCustomModal({
+                            icon: '🚨',
+                            title: 'Thử quá nhiều lần',
+                            message: error.message + '\n\nNếu bạn gặp vấn đề liên tục, vui lòng liên hệ support qua Facebook.',
+                            buttons: [
+                                { text: 'Liên hệ Support', type: 'secondary', action: () => {
+                                    window.open('https://www.facebook.com/tiembanh4k/', '_blank');
+                                }},
+                                { text: 'Đã hiểu', type: 'primary' }
+                            ]
+                        });
+                    } else {
+                        console.error('❌ showCustomModal not available!');
+                        alert(error.message);
+                    }
+
+                    return {
+                        success: false,
+                        error: error.message,
+                        isTooManyRetries: true
+                    };
+                }
+
                 // 🚫 RATE LIMIT ERROR - Dừng ngay, không retry, hiển thị modal cảnh báo
                 if (error.isRateLimited || error.code === 'RATE_LIMIT_EXCEEDED') {
                     console.error('🚫 RATE LIMIT EXCEEDED - Stopping all retries');
@@ -279,7 +368,7 @@ class CookieRetryHandler {
             
             if (!response.ok) {
                 const errorData = await response.json().catch(() => ({}));
-                
+
                 // ⚠️ CHECK RATE LIMIT ERROR - Dừng ngay, không retry
                 if (errorData.code === 'RATE_LIMIT_EXCEEDED') {
                     const rateLimitError = new Error(errorData.error || 'Tài khoản của bạn đã bị tạm khóa do nghi ngờ hoạt động bất thường. Vui lòng thử lại sau.');
@@ -288,7 +377,16 @@ class CookieRetryHandler {
                     console.error('🚫 RATE LIMIT EXCEEDED - Stop retrying');
                     throw rateLimitError;
                 }
-                
+
+                // 🚨 CHECK TOO MANY RETRIES - Abuse detected
+                if (errorData.code === 'TOO_MANY_RETRIES') {
+                    const abuseError = new Error(errorData.error || 'Bạn đã thử quá nhiều lần. Vui lòng liên hệ support.');
+                    abuseError.isTooManyRetries = true;
+                    abuseError.code = 'TOO_MANY_RETRIES';
+                    console.error('🚨 TOO MANY RETRIES - Abuse detected, stop retrying');
+                    throw abuseError;
+                }
+
                 throw new Error(errorData.error || `HTTP ${response.status}`);
             }
             
@@ -351,26 +449,34 @@ class CookieRetryHandler {
             }
 
             console.log('✅ Cookie injected successfully!');
-            console.log('🔄 Starting ADAPTIVE POLLING to check cookie status...');
+            console.log('🔄 Starting OPTIMIZED POLLING to check cookie status...');
 
             // ========================================
-            // ADAPTIVE TIMEOUT + POLLING
-            // Tự động điều chỉnh thời gian check dựa trên tốc độ mạng
+            // OPTIMIZED POLLING WITH HARD F5 RECOVERY
+            // Phase 1: 3 checks in 10s
+            // Phase 2: Hard F5 #1 + 2s wait
+            // Phase 3: Hard F5 #2 + 3s wait
+            // Phase 4: Timeout
             // ========================================
             const startTime = Date.now();
-            const maxWaitTime = 20000; // Max 20 seconds
-            let pollInterval = 3000;   // Start with 3s
-            const maxInterval = 5000;  // Max 5s between checks
             let checkCount = 0;
+            let hardResetCount = 0;
 
-            while ((Date.now() - startTime) < maxWaitTime) {
+            // ========================================
+            // PHASE 1: Initial polling (3 checks, max 10s)
+            // ========================================
+            console.log('📋 PHASE 1: Initial polling (3 checks in 10s)...');
+            const pollInterval = 3000; // 3s between checks
+            const maxChecks = 3;
+
+            for (let i = 0; i < maxChecks; i++) {
                 checkCount++;
                 const elapsed = ((Date.now() - startTime) / 1000).toFixed(1);
 
                 // Wait before checking
                 await this.sleep(pollInterval);
 
-                console.log(`🔍 Check #${checkCount} after ${elapsed}s (interval: ${pollInterval/1000}s)...`);
+                console.log(`🔍 Check #${checkCount} after ${elapsed}s...`);
 
                 // Check login status
                 const loginStatus = await this.checkNetflixLoginStatus();
@@ -378,7 +484,7 @@ class CookieRetryHandler {
                 // ✅ SUCCESS - Cookie is live!
                 if (loginStatus.success) {
                     const totalTime = ((Date.now() - startTime) / 1000).toFixed(1);
-                    console.log(`✅ Cookie VERIFIED after ${totalTime}s (${checkCount} checks)`);
+                    console.log(`✅ Cookie VERIFIED after ${totalTime}s (${checkCount} checks, ${hardResetCount} hard resets)`);
                     return { success: true };
                 }
 
@@ -389,21 +495,97 @@ class CookieRetryHandler {
                     return loginStatus;
                 }
 
-                // ⏳ NOT_BROWSING - Still loading, increase interval adaptively
+                // ⏳ NOT_BROWSING - Still loading
                 if (loginStatus.errorCode === 'NOT_BROWSING') {
-                    console.log('⏳ Netflix still loading, will check again...');
-                    // Gradually increase interval for slow networks
-                    pollInterval = Math.min(pollInterval + 1000, maxInterval);
+                    console.log('⏳ Netflix still loading...');
                 }
             }
 
-            // ⏱️ TIMEOUT - Exceeded max wait time
+            // ========================================
+            // PHASE 2: Hard F5 #1 + 2s wait
+            // ========================================
+            console.log('🔄 PHASE 2: Still NOT_BROWSING after 10s → Triggering HARD RESET F5 #1...');
+            hardResetCount++;
+            
+            try {
+                if (typeof window.refreshNetflixTabViaExtension !== 'function') {
+                    console.warn('⚠️ refreshNetflixTabViaExtension not available');
+                } else {
+                    const f5Result = await window.refreshNetflixTabViaExtension();
+                    console.log(`✅ Hard F5 #${hardResetCount} triggered:`, f5Result);
+                }
+            } catch (error) {
+                console.warn('⚠️ Failed to trigger Hard F5 #1:', error);
+            }
+
+            await this.sleep(2000); // Wait 2s
+            checkCount++;
+            let elapsed = ((Date.now() - startTime) / 1000).toFixed(1);
+            console.log(`🔍 Check #${checkCount} after ${elapsed}s (post Hard F5 #1)...`);
+
+            let loginStatus = await this.checkNetflixLoginStatus();
+
+            // ✅ SUCCESS after F5 #1
+            if (loginStatus.success) {
+                const totalTime = ((Date.now() - startTime) / 1000).toFixed(1);
+                console.log(`✅ Cookie VERIFIED after ${totalTime}s (${checkCount} checks, ${hardResetCount} hard resets)`);
+                return { success: true };
+            }
+
+            // ❌ REAL ERROR
+            if (loginStatus.errorCode && loginStatus.errorCode !== 'NOT_BROWSING') {
+                const totalTime = ((Date.now() - startTime) / 1000).toFixed(1);
+                console.log(`❌ Real error detected after ${totalTime}s: ${loginStatus.errorCode}`);
+                return loginStatus;
+            }
+
+            // ========================================
+            // PHASE 3: Hard F5 #2 + 3s wait
+            // ========================================
+            console.log('🔄 PHASE 3: Still NOT_BROWSING → Triggering HARD RESET F5 #2...');
+            hardResetCount++;
+            
+            try {
+                if (typeof window.refreshNetflixTabViaExtension !== 'function') {
+                    console.warn('⚠️ refreshNetflixTabViaExtension not available');
+                } else {
+                    const f5Result = await window.refreshNetflixTabViaExtension();
+                    console.log(`✅ Hard F5 #${hardResetCount} triggered:`, f5Result);
+                }
+            } catch (error) {
+                console.warn('⚠️ Failed to trigger Hard F5 #2:', error);
+            }
+
+            await this.sleep(3000); // Wait 3s
+            checkCount++;
+            elapsed = ((Date.now() - startTime) / 1000).toFixed(1);
+            console.log(`🔍 Check #${checkCount} after ${elapsed}s (post Hard F5 #2)...`);
+
+            loginStatus = await this.checkNetflixLoginStatus();
+
+            // ✅ SUCCESS after F5 #2
+            if (loginStatus.success) {
+                const totalTime = ((Date.now() - startTime) / 1000).toFixed(1);
+                console.log(`✅ Cookie VERIFIED after ${totalTime}s (${checkCount} checks, ${hardResetCount} hard resets)`);
+                return { success: true };
+            }
+
+            // ❌ REAL ERROR
+            if (loginStatus.errorCode && loginStatus.errorCode !== 'NOT_BROWSING') {
+                const totalTime = ((Date.now() - startTime) / 1000).toFixed(1);
+                console.log(`❌ Real error detected after ${totalTime}s: ${loginStatus.errorCode}`);
+                return loginStatus;
+            }
+
+            // ========================================
+            // PHASE 4: TIMEOUT - Failed after all attempts
+            // ========================================
             const totalTime = ((Date.now() - startTime) / 1000).toFixed(1);
-            console.log(`⏱️ Timeout after ${totalTime}s (${checkCount} checks) - Network too slow`);
+            console.log(`⏱️ TIMEOUT after ${totalTime}s (${checkCount} checks, ${hardResetCount} hard resets) - Cookie failed`);
             return {
                 success: false,
                 errorCode: 'TIMEOUT_SLOW_NETWORK',
-                message: 'Network connection is too slow. Please check your internet and try again.'
+                message: 'Network connection is too slow or cookie is invalid. Please try again.'
             };
             
         } catch (error) {
