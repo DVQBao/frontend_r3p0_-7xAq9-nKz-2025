@@ -1,8 +1,8 @@
 {
   "manifest_version": 3,
   "name": "Tiệm Bánh Netflix",
-  "version": "1.4.0",
-  "description": "Extension chính thức của Tiệm Bánh Netflix - Trải nghiệm Netflix 4K mượt mà",
+  "version": "1.5.0",
+  "description": "Extension chính thức của Tiệm Bánh Netflix",
   "icons": {
     "16": "icon16.png",
     "48": "icon48.png",

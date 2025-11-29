@@ -1,6 +1,7 @@
 // ========================================
 // Netflix Guest Helper - Background Service Worker
-// Manifest V3 compatible - IMPROVED VERSION with Auto Cleanup
+// Manifest V3 compatible - v1.5 with Auto F5
+// Features: Auto cleanup + Auto F5 when stuck (900ms detection)
 // ========================================
 
 // DISABLE CONSOLE IN PRODUCTION
@@ -95,15 +96,21 @@ chrome.runtime.onMessageExternal.addListener(
                 // Bước 3: Đợi một chút để cookies được set
                 await sleep(500);
                 
-                // Bước 4: CRITICAL FIX - Navigate về homepage SAU KHI inject
+                // Bước 4: Navigate với AUTO F5 
                 // Điều này đảm bảo mọi URL (account, settings...) đều reset về homepage
                 // NHƯNG cookies đã được inject sẵn rồi
-                await chrome.tabs.update(netflixTab.id, { 
-                    url: 'https://www.netflix.com/' 
-                });
-                console.log('🏠 Navigated to Netflix homepage with new cookies');
+                console.log('🏠 Navigating to Netflix homepage with auto F5 support...');
+                const navSuccess = await navigateTabWithAutoRetry(
+                    netflixTab.id, 
+                    'https://www.netflix.com/',
+                    10000  // 10s timeout
+                );
                 
-                // Bước 7: Monitor tab để phát hiện /browse
+                if (!navSuccess) {
+                    console.warn('⚠️ Navigation timeout after auto retry');
+                }
+                
+                // Bước 5: Monitor tab để phát hiện /browse
                 monitorNetflixTab(netflixTab.id);
                 
                 sendResponse({ success: true });
@@ -558,6 +565,111 @@ function notifyWebApp(data) {
  */
 function sleep(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
+}
+
+/**
+ * Navigate tab với Auto F5 khi stuck (tương tự Netflix_v1.py)
+ * @param {number} tabId - ID của tab cần reload
+ * @param {string} url - URL cần navigate
+ * @param {number} timeout - Timeout (ms), default 10000ms
+ * @returns {Promise<boolean>} - True nếu success, False nếu timeout
+ */
+async function navigateTabWithAutoRetry(tabId, url, timeout = 10000) {
+    console.log(`🚀 Navigate tab ${tabId} to ${url} with auto F5...`);
+    
+    try {
+        // Navigate to URL
+        await chrome.tabs.update(tabId, { url });
+        
+        // Poll tab status với auto F5
+        const startTime = Date.now();
+        const checkInterval = 300;  // Check mỗi 300ms
+        const MAX_F5_RETRIES = 3;   // Cho phép F5 tối đa 3 lần trong loop
+        let lastStatus = null;
+        let stuckCount = 0;
+        let f5Count = 0;
+        
+        while (Date.now() - startTime < timeout) {
+            try {
+                // Get tab info
+                const tab = await chrome.tabs.get(tabId);
+                const elapsed = Date.now() - startTime;
+                
+                console.log(`  [${elapsed}ms] status=${tab.status}, URL=${tab.url?.substring(0, 50)}...`);
+                
+                // Detect STUCK (status không đổi trong 3 lần check = 900ms)
+                if (tab.status === lastStatus && tab.status === 'loading') {
+                    stuckCount++;
+
+                    if (stuckCount >= 3 && f5Count < MAX_F5_RETRIES) {  // Stuck 900ms, cho phép F5 3 lần
+                        console.log(`⚠️ Tab STUCK detected at ${elapsed}ms! Triggering auto F5 (attempt ${f5Count + 1}/${MAX_F5_RETRIES})...`);
+
+                        // Send F5 command to content script
+                        try {
+                            await chrome.tabs.sendMessage(tabId, { action: 'forceReload' });
+                            console.log('🔄 F5 command sent');
+                        } catch (e) {
+                            console.warn('⚠️ Cannot send F5 command:', e);
+                            // Fallback: Use chrome.tabs.reload
+                            await chrome.tabs.reload(tabId, { bypassCache: true });
+                        }
+
+                        // Tăng counter và reset stuck count
+                        f5Count++;
+                        stuckCount = 0;
+                        console.log(`⏱️ F5 attempt ${f5Count}/${MAX_F5_RETRIES} completed`);
+
+                        await sleep(500);  // Chờ F5 bắt đầu
+                        continue;
+                    }
+                } else {
+                    stuckCount = 0;
+                }
+                
+                lastStatus = tab.status;
+                
+                // SUCCESS
+                if (tab.status === 'complete') {
+                    console.log(`✅ Tab ready (complete) after ${elapsed}ms`);
+                    return true;
+                }
+                
+                await sleep(checkInterval);
+                
+            } catch (pollError) {
+                console.warn('⚠️ Poll error:', pollError);
+                await sleep(checkInterval);
+            }
+        }
+        
+        // TIMEOUT - thử F5 lần cuối
+        console.log(`⏰ Timeout ${timeout}ms! Final F5 attempt...`);
+        try {
+            await chrome.tabs.sendMessage(tabId, { action: 'forceReload' });
+        } catch (e) {
+            // Fallback
+            await chrome.tabs.reload(tabId, { bypassCache: true });
+        }
+        
+        await sleep(2000);
+        
+        // Check lần cuối
+        try {
+            const finalTab = await chrome.tabs.get(tabId);
+            if (finalTab.status === 'complete') {
+                console.log('✅ Success after final F5!');
+                return true;
+            }
+        } catch (e) {
+            console.error('❌ Final check error:', e);
+        }
+        
+        return false;
+        
+    } catch (error) {
+        console.error('❌ Navigate error:', error);
+        return false;
+    }
 }
 
 /**

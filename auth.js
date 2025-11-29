@@ -2535,3 +2535,140 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 });
 
+// ========================================
+// CREDITS SYSTEM FUNCTIONS
+// ========================================
+
+/**
+ * Open Purchase Credits Modal
+ */
+window.openPurchaseCreditsModal = function() {
+    const modal = document.getElementById('purchaseCreditsModal');
+    if (modal) {
+        modal.style.display = 'flex';
+        // Reset form
+        document.getElementById('purchaseAmount').value = '';
+        document.getElementById('creditsPreview').style.display = 'none';
+        document.getElementById('confirmPurchaseBtn').disabled = true;
+    }
+}
+
+/**
+ * Close Purchase Credits Modal
+ */
+window.closePurchaseCreditsModal = function() {
+    const modal = document.getElementById('purchaseCreditsModal');
+    if (modal) {
+        modal.style.display = 'none';
+    }
+}
+
+/**
+ * Calculate credits from amount
+ */
+window.calculateCredits = function(amount) {
+    const numAmount = parseInt(amount);
+    const preview = document.getElementById('creditsPreview');
+    const creditsAmount = document.getElementById('creditsAmount');
+    const confirmBtn = document.getElementById('confirmPurchaseBtn');
+    
+    if (!amount || isNaN(numAmount)) {
+        preview.style.display = 'none';
+        confirmBtn.disabled = true;
+        return;
+    }
+    
+    // Check minimum
+    if (numAmount < 20000) {
+        preview.style.display = 'none';
+        confirmBtn.disabled = true;
+        return;
+    }
+    
+    // Check if round number (multiple of 1000)
+    if (numAmount % 1000 !== 0) {
+        preview.style.display = 'none';
+        confirmBtn.disabled = true;
+        return;
+    }
+    
+    // Calculate credits: 20,000 = 30 credits
+    const credits = Math.floor((numAmount / 20000) * 30);
+    
+    creditsAmount.textContent = `${credits} Credits`;
+    preview.style.display = 'block';
+    confirmBtn.disabled = false;
+}
+
+/**
+ * Confirm purchase credits
+ */
+window.confirmPurchaseCredits = async function() {
+    const amount = parseInt(document.getElementById('purchaseAmount').value);
+    
+    if (!amount || amount < 20000 || amount % 1000 !== 0) {
+        alert('⚠️ Vui lòng nhập số tiền hợp lệ (tối thiểu 20.000 VNĐ, số tròn nghìn)');
+        return;
+    }
+    
+    try {
+        showSmartLoading('Đang xử lý yêu cầu mua credits...');
+        
+        const response = await fetch(`${BACKEND_URL}/api/credits/purchase`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${localStorage.getItem('auth_token')}`
+            },
+            body: JSON.stringify({ amount })
+        });
+        
+        const data = await response.json();
+        
+        hideSmartLoading();
+        
+        if (response.ok && data.success) {
+            // Success!
+            closePurchaseCreditsModal();
+            
+            // Show success message
+            alert(`✅ ${data.message}\n\nSố credits hiện tại: ${data.credits}\n\n💡 Vui lòng chuyển khoản ${amount.toLocaleString('vi-VN')} VNĐ cho Admin để kích hoạt credits!`);
+            
+            // Refresh user info
+            if (typeof loadCookieInfo === 'function') {
+                await loadCookieInfo();
+            }
+            
+            // Open Facebook contact
+            window.open('https://www.facebook.com/tiembanh4k/', '_blank');
+            
+        } else {
+            alert(`❌ Lỗi: ${data.message || data.error || 'Có lỗi xảy ra'}`);
+        }
+        
+    } catch (error) {
+        hideSmartLoading();
+        console.error('Purchase credits error:', error);
+        alert('❌ Không thể kết nối đến server. Vui lòng thử lại sau!');
+    }
+}
+
+/**
+ * Update credits display trong Account Overview
+ */
+window.updateCreditsDisplay = function(credits) {
+    const creditsElement = document.getElementById('userCredits');
+    if (creditsElement) {
+        creditsElement.textContent = credits || 0;
+        
+        // Change color based on credits
+        if (credits <= 0) {
+            creditsElement.style.color = '#ef4444'; // Red
+        } else if (credits <= 5) {
+            creditsElement.style.color = '#fbbf24'; // Yellow
+        } else {
+            creditsElement.style.color = '#10b981'; // Green
+        }
+    }
+}
+

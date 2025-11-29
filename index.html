@@ -1346,27 +1346,31 @@
                             <div id="proExpiresContainer" style="display: none; border-top: 1px solid rgba(99, 102, 241, 0.25); padding-top: 12px; margin-top: 12px;">
                                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
                                     <span style="color: #fff; font-weight: 600; font-size: 0.9rem;">Active from:</span>
-                                    <span id="proUpgradedDate" style="color: #fff; font-size: 0.95rem;">-</span>
+                                    <span id="proUpgradedDate" style="color: #fff; font-size: 0.95rem; font-weight: 600;">-</span>
                                 </div>
                                 <div style="display: flex; justify-content: space-between; align-items: center;">
                                     <span style="color: #fff; font-weight: 600; font-size: 0.9rem;">Expires on:</span>
-                                    <span id="proExpiresDate" style="color: #fff; font-size: 0.95rem;">-</span>
+                                    <span id="proExpiresDate" style="color: #fff; font-size: 0.95rem; font-weight: 600;">-</span>
                                 </div>
                             </div>
                             <div id="netflixInfoBorder" style="border-top: 1px solid rgba(99, 102, 241, 0.25); padding-top: 12px; margin-top: 12px;">
                                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
-                                    <span style="color: #fff; font-weight: 600; font-size: 0.9rem;">Assigned Netflix account:</span>
-                                    <span id="assignedCookie" style="color: #10b981; font-size: 0.95rem;">-</span>
+                                    <span style="color: #fff; font-weight: 600; font-size: 0.9rem;">Credits:</span>
+                                    <span id="userCredits" style="color: #10b981; font-size: 0.95rem; font-weight: 600;">5</span>
+                                </div>
+                                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                                    <span style="color: #fff; font-weight: 600; font-size: 0.9rem;">Assigned Account:</span>
+                                    <span id="assignedCookie" style="color: #10b981; font-size: 0.95rem; font-weight: 600;">-</span>
                                 </div>
                                 <div style="display: flex; justify-content: space-between; align-items: center;">
-                                    <span style="color: #fff; font-weight: 600; font-size: 0.9rem;">Remaining Switches:</span>
-                                    <span id="reportLimit" style="color: #fbbf24; font-size: 0.95rem;">2/2</span>
+                                    <span style="color: #fff; font-weight: 600; font-size: 0.9rem;">Switches Left:</span>
+                                    <span id="reportLimit" style="color: #fbbf24; font-size: 0.95rem; font-weight: 600;">2/2</span>
                                 </div>
                             </div>
                         </div>
 
-                        <button id="upgradeToProBtn" onclick="openUpgradeToProModal()" class="btn" style="background: rgba(245, 158, 11, 0.1); color: #fbbf24; margin-bottom: 10px; border: 1px solid rgba(245, 158, 11, 0.3); border-radius: 8px; transition: all 0.3s;">
-                            Nâng cấp lên Pro Plan
+                        <button id="purchaseCreditsBtn" onclick="openPurchaseCreditsModal()" class="btn" style="background: rgba(245, 158, 11, 0.1); color: #fbbf24; margin-bottom: 10px; border: 1px solid rgba(245, 158, 11, 0.3); border-radius: 8px; transition: all 0.3s;">
+                            Mua thêm Credits
                         </button>
 
                         <button onclick="showReportIssueModal()" class="btn" style="background: rgba(59, 130, 246, 0.1); color: #60a5fa; margin-bottom: 10px; border: 1px solid rgba(59, 130, 246, 0.3); border-radius: 8px; transition: all 0.3s;">
@@ -1406,6 +1410,130 @@
     </div>
     <!-- End Main Wrapper -->
 
+    <!-- Purchase Credits Modal -->
+    <div class="modal" id="purchaseCreditsModal">
+        <div class="modal-content" style="max-width: 640px; background: linear-gradient(180deg, #1a1a1a 0%, #0f0f0f 100%); border-radius: 16px; border: 1px solid rgba(251, 191, 36, 0.15); box-shadow: 0 25px 80px rgba(0, 0, 0, 0.8); padding: 26px;">
+            
+            <!-- Header -->
+            <div style="text-align: center; margin-bottom: 16px;">
+                <h2 style="margin: 0 0 8px 0; font-size: 1.8rem; background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; font-weight: 900; letter-spacing: -1px;">Mua thêm Credits</h2>
+                <p style="color: #fbbf24; font-size: 0.88rem; margin: 0 0 10px 0; font-weight: 600;">
+                    1 credit = 1 lần đăng nhập thành công Netflix
+                </p>
+                <div style="height: 1px; background: rgba(251, 191, 36, 0.2); margin: 0 auto; max-width: 420px;"></div>
+            </div>
+            
+            <!-- Conversion Rate -->
+            <div style="text-align: center; margin-bottom: 18px; margin-top: 12px;">
+                <p style="color: #a1a1a1; font-size: 0.75rem; margin-bottom: 6px; font-weight: 500; text-transform: uppercase; letter-spacing: 0.5px;">Tỉ lệ quy đổi</p>
+                <div style="display: flex; align-items: center; justify-content: center; gap: 10px; margin-bottom: 6px;">
+                    <span style="color: #fff; font-size: 1.15rem; font-weight: 800;">1.000 VNĐ</span>
+                    <span style="color: #fbbf24; font-size: 0.95rem; opacity: 0.6;">=</span>
+                    <span style="color: #fbbf24; font-size: 1.15rem; font-weight: 800;">1 Credit</span>
+                </div>
+                <p style="color: #fbbf24; font-size: 0.78rem; margin: 0; font-weight: 600;">
+                    Tối thiểu 25.000 VNĐ - Chỉ chấp nhận số tròn nghìn
+                </p>
+            </div>
+            
+            <!-- 2 Column Layout -->
+            <div style="display: grid; grid-template-columns: 1.5fr 1fr; gap: 20px; margin-bottom: 20px;">
+                
+                <!-- LEFT: Input & Result -->
+                <div>
+                    <!-- Input Amount Box -->
+                    <div style="background: #0a0a0a; border: 2px solid rgba(255, 255, 255, 0.1); border-radius: 12px; padding: 16px; margin-bottom: 12px; transition: all 0.3s;" id="inputBox">
+                        <p style="color: #a1a1a1; font-size: 0.75rem; margin-bottom: 6px; font-weight: 500;">Số tiền nạp</p>
+                        <div style="position: relative;">
+                            <input 
+                                type="text" 
+                                id="purchaseAmount" 
+                                placeholder="0" 
+                                style="width: 100%; padding: 2px 0; padding-right: 50px; font-size: 2rem; font-weight: 900; border: none; background: transparent; color: #fff; text-align: left; outline: none; font-family: inherit;"
+                                oninput="calculateCredits(this.value)"
+                                onfocus="document.getElementById('inputBox').style.borderColor='rgba(251, 191, 36, 0.4)'"
+                                onblur="document.getElementById('inputBox').style.borderColor='rgba(255, 255, 255, 0.1)'"
+                            >
+                            <span style="position: absolute; right: 0; bottom: 6px; color: #6b7280; font-size: 1rem; font-weight: 700;">VNĐ</span>
+                        </div>
+                    </div>
+                    
+                    <!-- Credits Receive Box - Cố định -->
+                    <div style="background: linear-gradient(135deg, #fbbf24, #f59e0b); border-radius: 12px; padding: 16px; box-shadow: 0 6px 24px rgba(251, 191, 36, 0.25);">
+                        <p style="color: rgba(0, 0, 0, 0.7); font-size: 0.72rem; margin-bottom: 4px; font-weight: 600;">Bạn nhận được</p>
+                        <p style="color: #000; font-size: 2.2rem; font-weight: 900; margin: 0; line-height: 1;" id="creditsAmount">0</p>
+                        <p style="color: rgba(0, 0, 0, 0.8); font-size: 0.95rem; margin-top: 2px; font-weight: 700;">Credits</p>
+                    </div>
+                </div>
+                
+                <!-- RIGHT: Quick Select -->
+                <div>
+                    <p style="color: #a1a1a1; font-size: 0.75rem; margin-bottom: 8px; font-weight: 500;">Chọn nhanh</p>
+                    
+                    <div style="display: flex; flex-direction: column; gap: 7px;">
+                        <button type="button" onclick="document.getElementById('purchaseAmount').value='25.000'; calculateCredits('25.000');" 
+                            style="padding: 10px 12px; background: rgba(255, 255, 255, 0.04); border: 1.5px solid rgba(255, 255, 255, 0.12); border-radius: 8px; cursor: pointer; transition: all 0.2s;"
+                            onmouseover="this.style.background='rgba(251, 191, 36, 0.08)'; this.style.borderColor='rgba(251, 191, 36, 0.3)'"
+                            onmouseout="this.style.background='rgba(255, 255, 255, 0.04)'; this.style.borderColor='rgba(255, 255, 255, 0.12)'">
+                            <div style="display: flex; justify-content: space-between; align-items: center;">
+                                <span style="color: #fbbf24; font-size: 0.85rem; font-weight: 700;">25 credits</span>
+                                <span style="color: #fff; font-size: 0.85rem; font-weight: 700;">25.000</span>
+                            </div>
+                        </button>
+                        
+                        <button type="button" onclick="document.getElementById('purchaseAmount').value='50.000'; calculateCredits('50.000');" 
+                            style="padding: 10px 12px; background: rgba(255, 255, 255, 0.04); border: 1.5px solid rgba(255, 255, 255, 0.12); border-radius: 8px; cursor: pointer; transition: all 0.2s;"
+                            onmouseover="this.style.background='rgba(251, 191, 36, 0.08)'; this.style.borderColor='rgba(251, 191, 36, 0.3)'"
+                            onmouseout="this.style.background='rgba(255, 255, 255, 0.04)'; this.style.borderColor='rgba(255, 255, 255, 0.12)'">
+                            <div style="display: flex; justify-content: space-between; align-items: center;">
+                                <span style="color: #fbbf24; font-size: 0.85rem; font-weight: 700;">50 credits</span>
+                                <span style="color: #fff; font-size: 0.85rem; font-weight: 700;">50.000</span>
+                            </div>
+                        </button>
+                        
+                        <button type="button" onclick="document.getElementById('purchaseAmount').value='100.000'; calculateCredits('100.000');" 
+                            style="padding: 10px 12px; background: rgba(255, 255, 255, 0.04); border: 1.5px solid rgba(255, 255, 255, 0.12); border-radius: 8px; cursor: pointer; transition: all 0.2s;"
+                            onmouseover="this.style.background='rgba(251, 191, 36, 0.08)'; this.style.borderColor='rgba(251, 191, 36, 0.3)'"
+                            onmouseout="this.style.background='rgba(255, 255, 255, 0.04)'; this.style.borderColor='rgba(255, 255, 255, 0.12)'">
+                            <div style="display: flex; justify-content: space-between; align-items: center;">
+                                <span style="color: #fbbf24; font-size: 0.85rem; font-weight: 700;">100 credits</span>
+                                <span style="color: #fff; font-size: 0.85rem; font-weight: 700;">100.000</span>
+                            </div>
+                        </button>
+                        
+                        <button type="button" onclick="document.getElementById('purchaseAmount').value='200.000'; calculateCredits('200.000');" 
+                            style="padding: 10px 12px; background: rgba(255, 255, 255, 0.04); border: 1.5px solid rgba(255, 255, 255, 0.12); border-radius: 8px; cursor: pointer; transition: all 0.2s;"
+                            onmouseover="this.style.background='rgba(251, 191, 36, 0.08)'; this.style.borderColor='rgba(251, 191, 36, 0.3)'"
+                            onmouseout="this.style.background='rgba(255, 255, 255, 0.04)'; this.style.borderColor='rgba(255, 255, 255, 0.12)'">
+                            <div style="display: flex; justify-content: space-between; align-items: center;">
+                                <span style="color: #fbbf24; font-size: 0.85rem; font-weight: 700;">200 credits</span>
+                                <span style="color: #fff; font-size: 0.85rem; font-weight: 700;">200.000</span>
+                            </div>
+                        </button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Summary Box - Luôn hiển thị -->
+            <div style="background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 10px; padding: 12px 16px; margin-bottom: 18px;">
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <span style="color: #a1a1a1; font-size: 0.9rem; font-weight: 600;">Tổng thanh toán</span>
+                    <span style="color: #fbbf24; font-size: 1.4rem; font-weight: 900;" id="totalAmount">0 VNĐ</span>
+                </div>
+            </div>
+
+            <!-- Action buttons -->
+            <div style="display: flex; gap: 10px;">
+                <button class="btn" onclick="closePurchaseCreditsModal()" style="flex: 1; padding: 13px; font-size: 0.95rem; border-radius: 11px; background: rgba(255, 255, 255, 0.05); border: 1.5px solid rgba(255, 255, 255, 0.15); color: #fff; font-weight: 600; transition: all 0.2s; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;" onmouseover="this.style.borderColor='rgba(255, 255, 255, 0.3)'; this.style.background='rgba(255, 255, 255, 0.08)'" onmouseout="this.style.borderColor='rgba(255, 255, 255, 0.15)'; this.style.background='rgba(255, 255, 255, 0.05)'">
+                    Hủy
+                </button>
+                <button id="confirmPurchaseBtn" class="btn" onclick="confirmPurchaseCredits()" style="flex: 2.5; padding: 13px; font-size: 0.95rem; font-weight: 700; background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%); border-radius: 11px; box-shadow: 0 6px 20px rgba(251, 191, 36, 0.35); transition: all 0.3s; border: none; color: #000; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;" onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 10px 28px rgba(251, 191, 36, 0.5)'" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 6px 20px rgba(251, 191, 36, 0.35)'" disabled>
+                    Thanh toán
+                </button>
+            </div>
+        </div>
+    </div>
+
     <!-- Plan Selection Modal -->
     <div class="modal" id="planModal">
         <div class="modal-content" style="max-width: 600px;">
@@ -1415,7 +1543,10 @@
             <div style="background: rgba(255, 255, 255, 0.05); border: 2px solid rgba(255, 255, 255, 0.2); border-radius: 12px; padding: 25px; margin-bottom: 20px; cursor: pointer; transition: all 0.3s;" onmouseover="this.style.borderColor='#e50914'" onmouseout="this.style.borderColor='rgba(255,255,255,0.2)'" onclick="selectFreePlan()">
                 <h3 style="font-size: 1.4rem; margin-bottom: 10px;">Free Plan - Xem quảng cáo</h3>
                 <p style="color: #aaa; margin-bottom: 15px; line-height: 1.6;">
-                    Xem quảng cáo ngắn để mở khóa phiên xem tạm thời. Sau khi xem hết, bạn có thể bắt đầu xem phim ngay!
+                    • 5 credits mỗi tháng<br>
+                    • 1 credit = 1 lần đăng nhập thành công Netflix<br>
+                    • 2 lượt đổi tài khoản Netflix/tháng<br>
+                    • Xem quảng cáo ngắn để mở khóa phiên xem
                 </p>
                 <button class="btn" style="width: 100%;">
                     Xem quảng cáo (Miễn phí)
@@ -1431,23 +1562,24 @@
                 
                 <div style="background: rgba(0, 0, 0, 0.3); border-radius: 8px; padding: 15px; margin-bottom: 15px;">
                     <div style="text-align: center; margin-bottom: 10px;">
-                        <span style="font-size: 2.5rem; font-weight: 700; color: #ffc107;">20.000 VNĐ</span>
+                        <span style="font-size: 2.5rem; font-weight: 700; color: #ffc107;">25.000 VNĐ</span>
                         <span style="font-size: 1rem; color: #aaa;">/tháng</span>
                     </div>
                     <p style="color: #4ade80; text-align: center; font-size: 0.9rem; margin: 0;">
-                        Chỉ 20k/tháng – quá rẻ cho cả một thế giới phim ảnh!
+                        Chỉ 25.000 VNĐ/tháng – quá rẻ cho cả một thế giới phim ảnh!
                     </p>
                 </div>
 
                 <ul style="color: #ddd; line-height: 2; margin-bottom: 20px; margin-left: 20px;">
+                    <li>Nhận ngay <strong>25 credits</strong> khi nâng cấp</li>
+                    <li>1 credit = 1 lần đăng nhập thành công Netflix</li>
+                    <li>Có tới <strong>5 lượt đổi tài khoản Netflix/tháng</strong></li>
                     <li>Xem phim <strong>không quảng cáo</strong></li>
-                    <li>Tăng số lượt đổi tài khoản Netflix trong tháng lên đến 5 lượt</li>
                     <li>Ưu tiên hỗ trợ khi có sự cố</li>
-                    <li>Trải nghiệm mượt mà – giải trí không gián đoạn!</li>
                 </ul>
 
                 <button onclick="openUpgradeToProFromPlanModal()" class="btn" style="width: 100%; background: #ffc107; color: #000; font-weight: 700;">
-                    Nâng cấp Pro Plan - 20.000đ/tháng
+                    Nâng cấp Pro Plan - 25.000 VNĐ/tháng
                 </button>
             </div>
 
@@ -2052,6 +2184,11 @@
                         reportLimitElement.textContent = `${limit}/${maxLimit}`;
                         reportLimitElement.style.color = limit > threshold ? '#10b981' : limit > 0 ? '#fbbf24' : '#ef4444';
                     }
+                    
+                    // Update credits display
+                    if (data.user) {
+                        updateCreditsDisplay(data.user.credits || 0);
+                    }
                 }
             } catch (error) {
                 console.error('❌ Load cookie info error:', error);
@@ -2246,14 +2383,21 @@ Bạn đã thử 3 cách trên và vẫn không được?`,
                 hideSmartLoading();
                 
                 if (!response.ok) {
-                    // Handle LIMIT_EXCEEDED error
-                    if (data.code === 'LIMIT_EXCEEDED') {
+                    // Handle NO_REPORT_LIMIT error (hết lượt đổi tài khoản)
+                    if (data.code === 'NO_REPORT_LIMIT' || data.code === 'LIMIT_EXCEEDED') {
                         closeReportIssueModal();
                         if (data.plan === 'free') {
                             showLimitExceededFreeModal();
                         } else {
                             showLimitExceededProModal();
                         }
+                        return;
+                    }
+                    
+                    // Handle NO_CREDITS error (hết credits)
+                    if (data.code === 'NO_CREDITS') {
+                        closeReportIssueModal();
+                        showNoCreditsModal();
                         return;
                     }
                     
@@ -2329,22 +2473,39 @@ Bạn đã thử 3 cách trên và vẫn không được?`,
         // LIMIT EXCEEDED MODALS
         // ========================================
         
+        function showNoCreditsModal() {
+            showConfirmCustomModal({
+                icon: '💳',
+                title: 'HẾT CREDITS',
+                message: `Bạn đã sử dụng hết credits.
+
+Bạn có thể:
+• Mua thêm credits (1.000 VNĐ = 1 credit, tối thiểu 25.000 VNĐ)
+• Nâng cấp Pro 25.000 VNĐ/tháng → nhận ngay 25 credits + 5 lượt đổi tài khoản/tháng`,
+                confirmText: 'Mua thêm Credits',
+                cancelText: 'Đóng'
+            }).then(confirmed => {
+                if (confirmed) {
+                    openPurchaseCreditsModal();
+                }
+            });
+        }
+        
         function showLimitExceededFreeModal() {
             showConfirmCustomModal({
                 icon: '⚠️',
                 title: 'HẾT LƯỢT ĐỔI TÀI KHOẢN',
                 message: `Bạn đã sử dụng hết 2 lượt đổi tài khoản Netflix của gói Free trong tháng này.
-
-Nâng cấp lên Pro để có 5 lượt/tháng và nhiều quyền lợi khác:
+Nâng cấp lên Pro để nhận nhiều quyền lợi:
+• Nhận ngay 25 credits (1 credit = 1 lần đăng nhập thành công Netflix)
+• Tăng lượt đổi tài khoản Netflix lên 5 lượt/tháng
 • Xem phim không quảng cáo
-• Tăng số lượt đổi tài khoản Netflix lên 5 lượt/tháng
-• Ưu tiên hỗ trợ khi có sự cố
-• Trải nghiệm mượt mà – giải trí không gián đoạn!`,
-                confirmText: 'Nâng cấp Pro',
+• Ưu tiên hỗ trợ khi có sự cố`,
+                confirmText: 'Nâng cấp Pro - 25.000đ/tháng',
                 cancelText: 'Đóng'
             }).then(confirmed => {
                 if (confirmed) {
-                    openPaymentModal('pro', '20.000đ/tháng', 'pro');
+                    openPaymentModal('pro', '25.000đ/tháng', 'pro');
                 }
             });
         }
@@ -2354,8 +2515,7 @@ Nâng cấp lên Pro để có 5 lượt/tháng và nhiều quyền lợi khác:
                 icon: '⚠️',
                 title: 'HẾT LƯỢT ĐỔI TÀI KHOẢN',
                 message: `Bạn đã sử dụng hết 5 lượt đổi tài khoản Netflix của gói Pro trong tháng này.
-
-Vui lòng liên hệ Support (Facebook) để chúng tôi kiểm tra và reset lượt đổi nếu bạn không lạm dụng tài khoản Netflix.`,
+Nếu cần thêm lượt đổi tài khoản, vui lòng liên hệ Support qua Facebook để được hỗ trợ.`,
                 confirmText: 'Liên hệ Support',
                 cancelText: 'Đóng'
             }).then(confirmed => {
@@ -2448,10 +2608,13 @@ Vui lòng liên hệ Support (Facebook) để chúng tôi kiểm tra và reset l
                     if (upgradeBtn) upgradeBtn.style.display = 'none';
                 } else {
                     document.getElementById('proExpiresContainer').style.display = 'none';
-                    // Hiện nút nâng cấp Pro cho user Free
-                    const upgradeBtn = document.getElementById('upgradeToProBtn');
-                    if (upgradeBtn) upgradeBtn.style.display = 'block';
+                    // Hiện nút mua credits cho user Free (đã đổi tên button)
+                    const purchaseBtn = document.getElementById('purchaseCreditsBtn');
+                    if (purchaseBtn) purchaseBtn.style.display = 'block';
                 }
+                
+                // Update credits display
+                updateCreditsDisplay(user.credits || 0);
                 
                 // Avatar emoji based on provider
                 document.getElementById('userAvatar').textContent = user.provider === 'google' ? '🔵' : '🥧';
@@ -2664,7 +2827,7 @@ Vui lòng liên hệ Support (Facebook) để chúng tôi kiểm tra và reset l
             // Close plan modal first
             closePlanModal();
             // Open payment modal for Pro upgrade from plan modal
-            openPaymentModal('pro', '20.000đ/tháng', 'pro-from-plan');
+            openPaymentModal('pro', '25.000đ/tháng', 'pro-from-plan');
         }
 
         // Official Package Modal Functions
@@ -2689,14 +2852,15 @@ Vui lòng liên hệ Support (Facebook) để chúng tôi kiểm tra và reset l
         }
 
         // Payment Modal Functions
-        let paymentSource = 'package'; // 'package' or 'pro'
+        var paymentSource = 'package'; // 'package' or 'pro' or 'credits'
 
         function openPaymentModal(plan, amount, source = 'package') {
             const planNames = {
                 'basic': 'Cơ Bản',
                 'family': 'Gia Đình',
                 'premium': 'Premium Pro',
-                'pro': 'Pro'
+                'pro': 'Pro',
+                'credits': 'Mua Credits'
             };
             
             // Store payment source
@@ -2708,8 +2872,8 @@ Vui lòng liên hệ Support (Facebook) để chúng tôi kiểm tra và reset l
             
             // Set content based on source
             let contentText = '';
-            if ((source === 'pro' || source === 'pro-from-plan') && userEmail) {
-                // For Pro upgrade: show actual email
+            if ((source === 'pro' || source === 'pro-from-plan' || source === 'credits') && userEmail) {
+                // For Pro upgrade or Credits purchase: show actual email
                 contentText = userEmail;
             } else {
                 // For package purchase: show instruction
@@ -2730,7 +2894,7 @@ Vui lòng liên hệ Support (Facebook) để chúng tôi kiểm tra và reset l
 
         function openUpgradeToProModal() {
             // Open payment modal for Pro upgrade
-            openPaymentModal('pro', '20.000đ/tháng', 'pro');
+            openPaymentModal('pro', '25.000đ/tháng', 'pro');
         }
 
         function closePaymentModal() {
@@ -2742,7 +2906,10 @@ Vui lòng liên hệ Support (Facebook) để chúng tôi kiểm tra và reset l
             closePaymentModal();
             
             // Check payment source to decide where to go back
-            if (paymentSource === 'pro-from-plan') {
+            if (paymentSource === 'credits') {
+                // For Credits purchase: just close, don't open anything
+                // Do nothing - already closed modal
+            } else if (paymentSource === 'pro-from-plan') {
                 // For Pro upgrade from plan modal: go back to plan modal
                 showPlanModal();
             } else if (paymentSource === 'pro') {
@@ -2883,8 +3050,163 @@ Vui lòng liên hệ Support (Facebook) để chúng tôi kiểm tra và reset l
         </div>
     </footer>
 
+    <!-- Credits System Functions - Inline -->
+    <script>
+        // Open Purchase Credits Modal
+        function openPurchaseCreditsModal() {
+            const modal = document.getElementById('purchaseCreditsModal');
+            if (modal) {
+                modal.style.display = 'flex';
+                document.getElementById('purchaseAmount').value = '';
+                document.getElementById('creditsAmount').textContent = '0';
+                document.getElementById('totalAmount').textContent = '0 VNĐ';
+                
+                const confirmBtn = document.getElementById('confirmPurchaseBtn');
+                confirmBtn.disabled = true;
+                confirmBtn.style.opacity = '0.5';
+            }
+        }
+        
+        // Close Purchase Credits Modal
+        function closePurchaseCreditsModal() {
+            const modal = document.getElementById('purchaseCreditsModal');
+            if (modal) {
+                modal.style.display = 'none';
+            }
+        }
+        
+        // Format currency với dấu phân cách
+        function formatCurrency(value) {
+            // Remove all non-digits
+            const digits = value.replace(/\D/g, '');
+            if (!digits) return '';
+            
+            // Format with thousands separator
+            return parseInt(digits).toLocaleString('vi-VN');
+        }
+        
+        // Calculate credits from amount + Format input
+        function calculateCredits(value) {
+            const input = document.getElementById('purchaseAmount');
+            const creditsAmount = document.getElementById('creditsAmount');
+            const confirmBtn = document.getElementById('confirmPurchaseBtn');
+            const totalAmount = document.getElementById('totalAmount');
+            
+            // Save cursor position
+            const cursorPos = input.selectionStart;
+            
+            // Format input value với dấu phân cách
+            const formatted = formatCurrency(value);
+            const oldValue = input.value;
+            input.value = formatted;
+            
+            // Restore cursor position
+            if (formatted.length > oldValue.length) {
+                input.setSelectionRange(cursorPos + 1, cursorPos + 1);
+            } else if (formatted.length < oldValue.length) {
+                input.setSelectionRange(cursorPos - 1, cursorPos - 1);
+            } else {
+                input.setSelectionRange(cursorPos, cursorPos);
+            }
+            
+            // Parse to number (remove dots)
+            const numAmount = parseInt(formatted.replace(/\./g, '') || '0');
+            
+            // Luôn hiển thị (0 nếu invalid)
+            if (!formatted || isNaN(numAmount) || numAmount < 25000 || numAmount % 1000 !== 0) {
+                creditsAmount.textContent = '0';
+                if (totalAmount) totalAmount.textContent = '0 VNĐ';
+                confirmBtn.disabled = true;
+                confirmBtn.style.opacity = '0.4';
+                return;
+            }
+            
+            // Valid amount → Calculate credits (1.000 VNĐ = 1 credit)
+            const credits = Math.floor(numAmount / 1000);
+            
+            creditsAmount.textContent = credits.toLocaleString('vi-VN');
+            if (totalAmount) totalAmount.textContent = formatted + ' VNĐ';
+            
+            confirmBtn.disabled = false;
+            confirmBtn.style.opacity = '1';
+        }
+        
+        // Confirm purchase credits - Open Payment Modal
+        function confirmPurchaseCredits() {
+            // Parse amount (remove dots)
+            const inputValue = document.getElementById('purchaseAmount').value;
+            const amount = parseInt(inputValue.replace(/\./g, ''));
+            
+            if (!amount || amount < 25000 || amount % 1000 !== 0) {
+                alert('Vui lòng nhập số tiền hợp lệ\n\nTối thiểu: 25.000 VNĐ\nChỉ chấp nhận số tròn nghìn');
+                return;
+            }
+            
+            // Close purchase modal
+            closePurchaseCreditsModal();
+            
+            // Calculate credits
+            const credits = Math.floor((amount / 20000) * 30);
+            
+            // Format amount
+            const formattedAmount = amount.toLocaleString('vi-VN') + 'đ';
+            
+            // Debug log
+            console.log('Opening payment modal for credits:', formattedAmount);
+            console.log('openPaymentModal function exists:', typeof openPaymentModal);
+            
+            // Wait a moment for DOM to be ready, then open payment modal
+            setTimeout(() => {
+                if (typeof openPaymentModal === 'function') {
+                    console.log('Calling openPaymentModal...');
+                    openPaymentModal('credits', formattedAmount, 'credits');
+                } else {
+                    console.error('openPaymentModal not found!');
+                    alert(`Vui lòng chuyển khoản ${formattedAmount} và liên hệ Admin qua Facebook để nhận ${credits} credits!`);
+                    window.open('https://www.facebook.com/tiembanh4k/', '_blank');
+                }
+            }, 100);
+        }
+        
+        // Update credits display
+        function updateCreditsDisplay(credits) {
+            const creditsElement = document.getElementById('userCredits');
+            if (creditsElement) {
+                creditsElement.textContent = credits || 0;
+                if (credits <= 0) {
+                    creditsElement.style.color = '#ef4444';
+                } else if (credits <= 5) {
+                    creditsElement.style.color = '#fbbf24';
+                } else {
+                    creditsElement.style.color = '#10b981';
+                }
+            }
+        }
+        
+        // Show no credits modal
+        function showNoCreditsModal() {
+            if (typeof showConfirmCustomModal === 'function') {
+                showConfirmCustomModal({
+                    icon: '',
+                    title: 'HẾT CREDITS',
+                    message: 'Bạn đã sử dụng hết credits.\nMua thêm credits để tiếp tục xem Netflix:\n• 25.000 VNĐ = 25 credits\n• 1 credit = 1 lần đăng nhập thành công Netflix\n• Và các quyền lợi khác của gói Pro',
+                    confirmText: 'Mua thêm Credits',
+                    cancelText: 'Đóng'
+                }).then(confirmed => {
+                    if (confirmed) {
+                        openPurchaseCreditsModal();
+                    }
+                });
+            } else {
+                alert('Bạn đã hết credits. Vui lòng mua thêm để tiếp tục!');
+                openPurchaseCreditsModal();
+            }
+        }
+    </script>
+
     <!-- Environment Configuration - Must load first -->
     <script src="config.js"></script>
+    <script src="auth.js"></script>
     <script src="cookie-retry-handler.js"></script>
     <script src="app.js"></script>
 </body>
