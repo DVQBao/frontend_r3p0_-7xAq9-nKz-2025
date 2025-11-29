@@ -2528,7 +2528,7 @@ Nếu cần thêm lượt đổi tài khoản, vui lòng liên hệ Support qua 
         // ========================================
         // AUTH CHECK
         // ========================================
-        function checkAuth() {
+        async function checkAuth() {
             // ✅ Check if user is in the middle of viewing Tiệm bánh message
             const pendingToken = sessionStorage.getItem('pending_tiembanh_token');
             const pendingUser = sessionStorage.getItem('pending_tiembanh_user');
@@ -2544,16 +2544,39 @@ Nếu cần thêm lượt đổi tài khoản, vui lòng liên hệ Support qua 
             const loggedIn = sessionStorage.getItem('logged_in') === 'true';
             
             if (loggedIn && currentUser) {
-                const user = JSON.parse(currentUser);
+                // ✅ FETCH FRESH DATA FROM BACKEND FIRST
+                console.log('🔄 Fetching fresh user data from backend...');
+                const token = localStorage.getItem('auth_token');
+                let user = JSON.parse(currentUser); // Fallback nếu API fail
                 
-                // Load fresh user data from localStorage to get updated plan
-                const users = JSON.parse(localStorage.getItem('netflix_users') || '[]');
-                const freshUser = users.find(u => u.email === user.email);
-                
-                if (freshUser) {
-                    // Update localStorage with fresh data
-                    localStorage.setItem('current_user', JSON.stringify(freshUser));
-                    user.plan = freshUser.plan; // Update plan
+                if (token) {
+                    try {
+                        const backendUrl = window.APP_CONFIG ? window.APP_CONFIG.BACKEND_URL : 'https://backend-c0r3-7xpq9zn2025.onrender.com';
+                        const response = await fetch(`${backendUrl}/api/auth/me`, {
+                            method: 'GET',
+                            headers: {
+                                'Authorization': `Bearer ${token}`,
+                                'Content-Type': 'application/json'
+                            }
+                        });
+                        
+                        if (response.ok) {
+                            const data = await response.json();
+                            if (data.success && data.user) {
+                                user = data.user; // Use fresh data from API
+                                // Update localStorage với data mới
+                                localStorage.setItem('current_user', JSON.stringify(user));
+                                localStorage.setItem('currentUser', JSON.stringify(user));
+                                console.log('✅ Fresh user data loaded:', {
+                                    plan: user.plan,
+                                    credits: user.credits,
+                                    monthlyReportLimit: user.monthlyReportLimit
+                                });
+                            }
+                        }
+                    } catch (error) {
+                        console.warn('⚠️ Failed to fetch fresh user data, using cached:', error);
+                    }
                 }
                 
                 // Hide login section, show profile
@@ -2622,8 +2645,8 @@ Nếu cần thêm lượt đổi tài khoản, vui lòng liên hệ Support qua 
                 // Load cookie info from backend (initial - chỉ 1 lần khi login)
                 loadCookieInfo();
                 
-                // ❌ REMOVED: Auto-refresh mỗi 30s (quá lãng phí!)
-                // ✅ Thay vào đó: Sync khi cần thiết (trước khi watch as guest, sau khi báo hỏng)
+                // ✅ Data đã được refresh từ backend khi page load
+                // Không cần auto-refresh mỗi 30s nữa
                 
                 // Enable guest section
                 const loginRequired = document.getElementById('loginRequired');
