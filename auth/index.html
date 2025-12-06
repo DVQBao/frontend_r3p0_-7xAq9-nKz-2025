@@ -1031,6 +1031,179 @@
                 letter-spacing: 8px;
             }
         }
+
+        /* Referral Notification Modal */
+        .referral-notification-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.85);
+            backdrop-filter: blur(8px);
+            z-index: 10002;
+            animation: fadeIn 0.3s ease-out;
+        }
+
+        .referral-notification-overlay.active {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .referral-notification-modal {
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+            border-radius: 20px;
+            padding: 0;
+            max-width: 480px;
+            width: 90%;
+            box-shadow: 0 25px 80px rgba(0, 0, 0, 0.9), 0 0 40px rgba(251, 191, 36, 0.15);
+            border: 1px solid rgba(251, 191, 36, 0.3);
+            animation: slideUp 0.4s ease-out;
+            overflow: hidden;
+        }
+
+        .referral-notification-header {
+            padding: 28px 28px 20px;
+            text-align: center;
+            background: linear-gradient(180deg, rgba(251, 191, 36, 0.1) 0%, transparent 100%);
+        }
+
+        .referral-notification-icon {
+            font-size: 56px;
+            line-height: 1;
+            margin-bottom: 12px;
+            animation: celebrateBounce 0.6s ease-out;
+        }
+
+        @keyframes celebrateBounce {
+            0% { transform: scale(0); }
+            50% { transform: scale(1.2); }
+            70% { transform: scale(0.9); }
+            100% { transform: scale(1); }
+        }
+
+        .referral-notification-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #fbbf24;
+            margin-bottom: 8px;
+        }
+
+        .referral-notification-subtitle {
+            font-size: 0.95rem;
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        .referral-notification-body {
+            padding: 24px 28px;
+        }
+
+        .referral-notification-item {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 12px;
+            border-left: 3px solid #fbbf24;
+        }
+
+        .referral-notification-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .referral-notification-item-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+
+        .referral-notification-email {
+            font-size: 0.95rem;
+            color: #60a5fa;
+            font-weight: 500;
+        }
+
+        .referral-notification-credits {
+            font-size: 0.9rem;
+            color: #4ade80;
+            font-weight: 600;
+            background: rgba(74, 222, 128, 0.15);
+            padding: 4px 10px;
+            border-radius: 20px;
+        }
+
+        .referral-notification-time {
+            font-size: 0.8rem;
+            color: rgba(255, 255, 255, 0.5);
+        }
+
+        .referral-notification-summary {
+            background: linear-gradient(135deg, rgba(251, 191, 36, 0.15) 0%, rgba(251, 191, 36, 0.05) 100%);
+            border-radius: 12px;
+            padding: 20px;
+            margin-top: 16px;
+            text-align: center;
+            border: 1px solid rgba(251, 191, 36, 0.2);
+        }
+
+        .referral-notification-total {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #fbbf24;
+            margin-bottom: 4px;
+        }
+
+        .referral-notification-total-label {
+            font-size: 0.85rem;
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+        .referral-notification-remaining {
+            margin-top: 12px;
+            font-size: 0.9rem;
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        .referral-notification-remaining strong {
+            color: #60a5fa;
+        }
+
+        .referral-notification-cta {
+            margin-top: 16px;
+            padding: 12px;
+            background: rgba(96, 165, 250, 0.1);
+            border-radius: 8px;
+            font-size: 0.9rem;
+            color: #60a5fa;
+            text-align: center;
+        }
+
+        .referral-notification-footer {
+            padding: 20px 28px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            text-align: center;
+        }
+
+        .referral-notification-btn {
+            padding: 14px 40px;
+            border: none;
+            border-radius: 10px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: inherit;
+            background: linear-gradient(135deg, #fbbf24, #f59e0b);
+            color: #1a1a2e;
+        }
+
+        .referral-notification-btn:hover {
+            background: linear-gradient(135deg, #f59e0b, #d97706);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(251, 191, 36, 0.4);
+        }
     </style>
 </head>
 <body>
@@ -1384,6 +1557,25 @@
         });
     </script>
     
+    <!-- Referral Notification Modal -->
+    <div class="referral-notification-overlay" id="referralNotificationOverlay">
+        <div class="referral-notification-modal">
+            <div class="referral-notification-header">
+                <div class="referral-notification-icon">🎉</div>
+                <div class="referral-notification-title">Tin vui!</div>
+                <div class="referral-notification-subtitle">Có người đã nhập mã giới thiệu của bạn</div>
+            </div>
+            <div class="referral-notification-body" id="referralNotificationBody">
+                <!-- Nội dung sẽ được inject bằng JS -->
+            </div>
+            <div class="referral-notification-footer">
+                <button class="referral-notification-btn" id="referralNotificationBtn" onclick="closeReferralNotification()">
+                    Tuyệt vời! Tiếp tục
+                </button>
+            </div>
+        </div>
+    </div>
+
     <!-- Environment Configuration - Must load first -->
     <script src="../config.js"></script>
     <script src="../auth.js"></script>

@@ -119,15 +119,15 @@ class CookieRetryHandler {
                     // ========================================
                     // ĐÓNG MODAL "ĐANG ĐĂNG NHẬP..." TRƯỚC
                     // ========================================
-                    if (typeof window.closeAdModal === 'function') {
-                        window.closeAdModal();
+                    if (typeof window.closeTeamModal === 'function') {
+                        window.closeTeamModal();
                         console.log('✅ Closed "Đang đăng nhập..." modal');
                     } else {
                         // Fallback: Tự tắt modal
-                        const adModal = document.getElementById('adModal');
-                        if (adModal) {
-                            adModal.classList.remove('active');
-                            console.log('✅ Manually closed adModal');
+                        const teamModal = document.getElementById('teamModal');
+                        if (teamModal) {
+                            teamModal.classList.remove('active');
+                            console.log('✅ Manually closed teamModal');
                         }
                     }
 

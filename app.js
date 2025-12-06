@@ -15,7 +15,7 @@ const BACKEND_URL = window.APP_CONFIG ? window.APP_CONFIG.BACKEND_URL : 'https:/
 // ========================================
 
 const CONFIG = {
-    AD_DURATION: 15, // seconds - Thời gian quảng cáo và tâm sự từ team
+    AD_DURATION: 30, // seconds - Thời gian quảng cáo và tâm sự từ team
     NETFLIX_URL: 'https://www.netflix.com',
     NETFLIX_TAB_NAME: 'NETFLIX_TAB',
     COOKIE_FILE: 'cookie.txt',
@@ -48,9 +48,9 @@ const elements = {
     // Plan modal
     planModal: document.getElementById('planModal'),
     
-    // Ad modal
-    adModal: document.getElementById('adModal'),
-    adSection: document.getElementById('adSection'),
+    // Team message modal (tránh ad blocker chặn)
+    teamModal: document.getElementById('teamModal'),
+    messageSection: document.getElementById('messageSection'),
     watchingSection: document.getElementById('watchingSection'),
     watchingProgress: document.getElementById('watchingProgress'),
     watchingIcon: document.getElementById('watchingIcon'),
@@ -105,7 +105,182 @@ document.addEventListener('DOMContentLoaded', () => {
     
     // Setup event listeners
     setupEventListeners();
+    
+    // Kiểm tra referral notification khi trang load (nếu đã đăng nhập)
+    checkReferralNotificationOnLoad();
 });
+
+// ========================================
+// CHECK REFERRAL NOTIFICATION ON PAGE LOAD
+// ========================================
+
+/**
+ * Kiểm tra và hiển thị referral notification khi user reload trang
+ * Chỉ chạy nếu user đã đăng nhập
+ */
+async function checkReferralNotificationOnLoad() {
+    const authToken = localStorage.getItem('auth_token');
+    
+    if (!authToken) {
+        console.log('ℹ️ User chưa đăng nhập, bỏ qua kiểm tra referral notification');
+        return;
+    }
+    
+    console.log('🔍 Kiểm tra referral notification khi load trang...');
+    
+    try {
+        // Gọi API trực tiếp thay vì phụ thuộc vào auth.js
+        const response = await fetch(`${BACKEND_URL}/api/referral/unread`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${authToken}`
+            }
+        });
+        
+        const data = await response.json();
+        
+        if (data.success && data.hasUnread && data.unreadCount > 0) {
+            console.log(`🎉 Có ${data.unreadCount} thông báo referral chưa đọc`);
+            
+            // Lấy thông tin lượt mời còn lại
+            const infoResponse = await fetch(`${BACKEND_URL}/api/referral/info`, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${authToken}`
+                }
+            });
+            const infoData = await infoResponse.json();
+            
+            // Hiển thị modal
+            showReferralNotificationModalOnLoad(data, infoData, authToken);
+        } else {
+            console.log('ℹ️ Không có referral notification mới');
+        }
+    } catch (error) {
+        console.error('❌ Lỗi kiểm tra referral notification:', error);
+    }
+}
+
+/**
+ * Hiển thị modal thông báo referral khi load trang
+ */
+function showReferralNotificationModalOnLoad(data, infoData, token) {
+    const overlay = document.getElementById('referralNotificationOverlay');
+    const body = document.getElementById('referralNotificationBody');
+    
+    if (!overlay || !body) {
+        console.error('❌ Không tìm thấy modal referral notification');
+        return;
+    }
+    
+    // Tạo nội dung modal
+    let itemsHTML = '';
+    
+    // Hiển thị từng referral chưa đọc
+    data.unreadReferrals.forEach(ref => {
+        const time = new Date(ref.timestamp).toLocaleString('vi-VN', {
+            day: '2-digit',
+            month: '2-digit',
+            year: 'numeric',
+            hour: '2-digit',
+            minute: '2-digit'
+        });
+        
+        // Hiển thị email đầy đủ
+        const email = ref.referredEmail || 'Người dùng mới';
+        
+        itemsHTML += `
+            <div class="referral-notification-item">
+                <div class="referral-notification-item-header">
+                    <span class="referral-notification-email">${email}</span>
+                    <span class="referral-notification-credits">+${ref.creditsEarned || 5} credits</span>
+                </div>
+                <div class="referral-notification-time">🕐 ${time}</div>
+            </div>
+        `;
+    });
+    
+    // Tính lượt mời còn lại
+    const referralsRemaining = infoData.success ? infoData.referralsRemaining : 0;
+    
+    // Tổng credits nhận được
+    const totalCredits = data.totalCreditsEarned || 0;
+    
+    // Tạo CTA phù hợp với số lượt mời còn lại
+    const ctaMessage = referralsRemaining > 0
+        ? '💡 Tiếp tục mời bạn bè để nhận thêm credits miễn phí!'
+        : '🎉 Bạn đã dùng hết lượt mời tháng này. Lượt mời sẽ được reset vào ngày 1 tháng sau!';
+    
+    // Tạo summary
+    const summaryHTML = `
+        <div class="referral-notification-summary">
+            <div class="referral-notification-total">+${totalCredits} credits</div>
+            <div class="referral-notification-total-label">Tổng credits nhận được</div>
+            <div class="referral-notification-remaining">
+                Lượt mời còn lại tháng này: <strong>${referralsRemaining}/2</strong>
+            </div>
+        </div>
+        <div class="referral-notification-cta">
+            ${ctaMessage}
+        </div>
+    `;
+    
+    body.innerHTML = itemsHTML + summaryHTML;
+    
+    // Lưu token để đánh dấu đã đọc khi đóng modal
+    overlay.dataset.token = token;
+    
+    // Hiển thị modal
+    overlay.classList.add('active');
+}
+
+/**
+ * Ẩn một phần email để bảo mật
+ */
+function maskEmailOnLoad(email) {
+    if (!email || !email.includes('@')) return email;
+    
+    const [localPart, domain] = email.split('@');
+    if (localPart.length <= 3) {
+        return localPart[0] + '***@' + domain;
+    }
+    
+    const visibleStart = localPart.substring(0, 2);
+    const visibleEnd = localPart.substring(localPart.length - 1);
+    return visibleStart + '***' + visibleEnd + '@' + domain;
+}
+
+/**
+ * Đóng modal referral notification (gọi từ onclick)
+ */
+async function closeReferralNotificationOnLoad() {
+    const overlay = document.getElementById('referralNotificationOverlay');
+    
+    if (!overlay) return;
+    
+    const token = overlay.dataset.token;
+    
+    // Đóng modal
+    overlay.classList.remove('active');
+    
+    // Đánh dấu đã đọc
+    if (token) {
+        try {
+            await fetch(`${BACKEND_URL}/api/referral/mark-read`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                }
+            });
+            console.log('✅ Đã đánh dấu referral notifications là đã đọc');
+        } catch (error) {
+            console.error('❌ Lỗi đánh dấu đã đọc:', error);
+        }
+    }
+}
 
 // ========================================
 // EVENT LISTENERS
@@ -120,7 +295,7 @@ function setupEventListeners() {
         elements.watchAsGuestBtn.addEventListener('click', handleWatchAsGuest);
     }
     if (elements.cancelBtn) {
-        elements.cancelBtn.addEventListener('click', closeAdModal);
+        elements.cancelBtn.addEventListener('click', closeTeamModal);
     }
     if (elements.startWatchingBtn) {
         elements.startWatchingBtn.addEventListener('click', handleStartWatching);
@@ -448,10 +623,10 @@ async function _watchAsGuestInternal(skipQuotaCheck = false, skipAdAndPlanModal 
         showToast('🎬 Đang tự động inject tài khoản Netflix mới...', 'success');
         
         // Mở modal và chỉ hiện watching section
-        elements.adModal.classList.add('active');
+        elements.teamModal.classList.add('active');
         
-        // Ẩn ad section, hiện watching section
-        if (elements.adSection) elements.adSection.style.display = 'none';
+        // Ẩn message section, hiện watching section
+        if (elements.messageSection) elements.messageSection.style.display = 'none';
         if (elements.watchingSection) elements.watchingSection.style.display = 'block';
         
         // RESET loading bar về trạng thái ban đầu
@@ -482,10 +657,10 @@ async function _watchAsGuestInternal(skipQuotaCheck = false, skipAdAndPlanModal 
             showToast('⭐ Pro user - Bắt đầu xem ngay!', 'success');
             
             // Mở modal và chỉ hiện watching section
-            elements.adModal.classList.add('active');
+            elements.teamModal.classList.add('active');
             
-            // Ẩn ad section, hiện watching section
-            if (elements.adSection) elements.adSection.style.display = 'none';
+            // Ẩn message section, hiện watching section
+            if (elements.messageSection) elements.messageSection.style.display = 'none';
             if (elements.watchingSection) elements.watchingSection.style.display = 'block';
             
             // RESET loading bar về trạng thái ban đầu
@@ -551,9 +726,9 @@ function selectFreePlan() {
     console.log('📺 User selected Free Plan - Watch ad');
     closePlanModal();
     
-    // Hiển thị modal quảng cáo
-    showAdModal();
-    showStepStatus(2, 'success', '⏳ Đang xem quảng cáo...');
+    // Hiển thị modal thông điệp team
+    showTeamModal();
+    showStepStatus(2, 'success', '⏳ Đang xem thông điệp...');
 }
 
 /**
@@ -582,31 +757,31 @@ Tiếp tục?`);
 }
 
 // ========================================
-// AD MODAL LOGIC
+// TEAM MESSAGE MODAL LOGIC (tránh ad blocker)
 // ========================================
 
 /**
- * Hiển thị modal quảng cáo
+ * Hiển thị modal thông điệp team
  */
-function showAdModal() {
-    elements.adModal.classList.add('active');
-    resetAdState();
-    startAdCountdown();
+function showTeamModal() {
+    elements.teamModal.classList.add('active');
+    resetModalState();
+    startModalCountdown();
     animateAdContent();
 }
 
 /**
- * Đóng modal quảng cáo
+ * Đóng modal thông điệp team
  */
-function closeAdModal() {
-    elements.adModal.classList.remove('active');
-    resetAdState();
+function closeTeamModal() {
+    elements.teamModal.classList.remove('active');
+    resetModalState();
 }
 
 /**
- * Reset trạng thái quảng cáo
+ * Reset trạng thái modal
  */
-function resetAdState() {
+function resetModalState() {
     clearInterval(state.adInterval);
     state.adCountdown = CONFIG.AD_DURATION;
     elements.startWatchingBtn.disabled = true;
@@ -614,9 +789,9 @@ function resetAdState() {
 }
 
 /**
- * Bắt đầu đếm ngược quảng cáo
+ * Bắt đầu đếm ngược modal
  */
-function startAdCountdown() {
+function startModalCountdown() {
     state.adCountdown = CONFIG.AD_DURATION;
     
     // Update button text with countdown
@@ -667,7 +842,7 @@ async function handleStartWatching() {
         if (!state.netflixTabRef || state.netflixTabRef.closed) {
             showStepStatus(2, 'error', '❌ Netflix tab đã bị đóng! Vui lòng mở lại ở bước 1.');
             showToast('Netflix tab đã đóng, vui lòng mở lại', 'error');
-            closeAdModal();
+            closeTeamModal();
             return;
         }
         
@@ -678,12 +853,12 @@ async function handleStartWatching() {
                 : '❌ Cần extension để login. Vui lòng cài extension.';
             showStepStatus(2, 'error', message);
             showToast(state.extensionOutdated ? 'Cần cập nhật extension' : 'Cần cài extension để login', 'error');
-            closeAdModal();
+            closeTeamModal();
             return;
         }
         
-        // Chuyển sang watching section (ẩn ad, hiện progress)
-        if (elements.adSection) elements.adSection.style.display = 'none';
+        // Chuyển sang watching section (ẩn message, hiện progress)
+        if (elements.messageSection) elements.messageSection.style.display = 'none';
         if (elements.watchingSection) elements.watchingSection.style.display = 'block';
         
         // RESET loading bar về trạng thái ban đầu
@@ -747,7 +922,7 @@ async function handleStartWatching() {
             if (elements.watchingIcon) elements.watchingIcon.textContent = '✅';
             if (elements.watchingProgress) {
                 elements.watchingProgress.textContent = 'Đăng nhập thành công!';
-                elements.watchingProgress.style.color = '#10b981'; // Màu xanh lá
+                elements.watchingProgress.style.color = '#4ade80'; // Màu xanh lá sáng
             }
             
             // Ẩn loading bar khi đã thành công
@@ -806,10 +981,10 @@ async function handleStartWatching() {
             // Thất bại sau khi đã retry
             const errorMsg = result.error || 'Không thể đăng nhập sau nhiều lần thử';
             
-            // 🚫 NẾU BỊ RATE LIMIT - Đóng modal ad/watching
+            // 🚫 NẾU BỊ RATE LIMIT - Đóng modal team/watching
             if (result.isRateLimited) {
                 console.log('🚫 Rate limited - Closing modal');
-                closeAdModal();
+                closeTeamModal();
                 showStepStatus(2, 'error', `⚠️ ${errorMsg}`);
                 // Modal cảnh báo đã được hiển thị trong CookieRetryHandler
             } else {
@@ -1085,7 +1260,7 @@ Extension ID sẽ hiện ở banner màu xanh khi cài thành công.
 window.injectCookieViaExtension = injectCookieViaExtension;
 window.refreshNetflixTabViaExtension = refreshNetflixTabViaExtension;
 window.handleWatchAsGuestAfterReport = handleWatchAsGuestAfterReport;
-window.closeAdModal = closeAdModal;
+window.closeTeamModal = closeTeamModal;
 window.state = state;
 window.CONFIG = CONFIG;
 window.showStepStatus = showStepStatus;
