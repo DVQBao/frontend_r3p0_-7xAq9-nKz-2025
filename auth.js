@@ -900,20 +900,35 @@ async function handleLogin(event) {
             
             showSuccess('Đăng nhập thành công! Đang chuyển hướng...');
             
-            // Check for Tiệm bánh message
+            // Lưu token tạm để dùng cho các modal
+            sessionStorage.setItem('pending_tiembanh_token', data.token);
+            sessionStorage.setItem('pending_tiembanh_user', JSON.stringify(data.user));
+            
+            // Flow: Referral Notification → Tiệm bánh Message → Redirect
             setTimeout(async () => {
+                // Bước 1: Kiểm tra referral notification trước
+                const hasReferralNotification = await checkReferralNotifications(data.token);
+                
+                if (hasReferralNotification) {
+                    // Có referral notification → hiển thị modal
+                    // Sau khi đóng modal, closeReferralNotification() sẽ tự động kiểm tra thông điệp Tiệm bánh
+                    console.log('📢 Hiển thị referral notification modal');
+                    return;
+                }
+                
+                // Bước 2: Không có referral notification → kiểm tra thông điệp Tiệm bánh
                 const hasMessage = await checkTiembanhMessage(data.token, data.user);
+                
                 if (!hasMessage) {
-                    // No message, save token and redirect immediately
+                    // Không có thông điệp → lưu token và redirect ngay
                     localStorage.setItem('auth_token', data.token);
                     localStorage.setItem('current_user', JSON.stringify(data.user));
                     sessionStorage.setItem('logged_in', 'true');
+                    sessionStorage.removeItem('pending_tiembanh_token');
+                    sessionStorage.removeItem('pending_tiembanh_user');
                     window.location.href = '/';
-                } else {
-                    // Has message, store token temporarily
-                    sessionStorage.setItem('pending_tiembanh_token', data.token);
-                    sessionStorage.setItem('pending_tiembanh_user', JSON.stringify(data.user));
                 }
+                // Nếu có thông điệp, checkTiembanhMessage đã xử lý hiển thị modal
             }, 800);
         } else {
             // ✅ Handle EMAIL_NOT_VERIFIED - CÓ QUOTA → BLOCK, bắt buộc verify
@@ -1201,10 +1216,9 @@ async function handleRegister(event) {
                     
                     showSuccess('Đăng ký thành công!');
                     
-                    // Redirect to homepage
-                    setTimeout(() => {
-                        window.location.href = '/';
-                    }, 1000);
+                    // ✅ Hiện modal nhập mã giới thiệu (giống như khi verify OTP thành công)
+                    console.log('🎁 New user (no OTP) - showing referral modal');
+                    showReferralModal();
                 } else {
                     showCustomModal({
                         icon: '❌',
@@ -2333,19 +2347,14 @@ async function handleVerifyEmail() {
             // Close verification modal
             closeVerificationModal();
             
-            // Show success modal
-            showCustomModal({
-                icon: '🎉',
-                title: 'Đăng ký thành công!',
-                message: 'Tài khoản của bạn đã được tạo và xác thực.\n\nBạn có thể bắt đầu sử dụng dịch vụ ngay bây giờ!',
-                buttons: [{
-                    text: 'Bắt đầu ngay',
-                    type: 'primary',
-                    onClick: () => {
-                        window.location.href = '/';
-                    }
-                }]
-            });
+            // ✅ Check nếu là user mới → hiện modal nhập mã giới thiệu
+            if (data.isNewUser && data.showReferralModal) {
+                console.log('🎁 New user - showing referral modal');
+                showReferralModal();
+            } else {
+                // Show success modal (cho existing user verify email)
+                showWelcomeModal();
+            }
             
         } else {
             // ❌ Verification failed
@@ -2592,8 +2601,8 @@ window.calculateCredits = function(amount) {
         return;
     }
     
-    // Calculate credits: 20,000 = 30 credits
-    const credits = Math.floor((numAmount / 20000) * 30);
+    // Calculate credits: 500 VNĐ = 1 credit (25.000 = 50 credits)
+    const credits = Math.floor(numAmount / 500);
     
     creditsAmount.textContent = `${credits} Credits`;
     preview.style.display = 'block';
@@ -2672,3 +2681,475 @@ window.updateCreditsDisplay = function(credits) {
     }
 }
 
+
+// ========================================
+// REFERRAL MODAL SYSTEM
+// ========================================
+
+let referralAttempts = 0;
+const MAX_REFERRAL_ATTEMPTS = 5;
+
+/**
+ * Hiển thị modal nhập mã giới thiệu
+ */
+function showReferralModal() {
+    // Tạo modal HTML nếu chưa có
+    if (!document.getElementById('referralModalOverlay')) {
+        createReferralModalHTML();
+    }
+    
+    // Reset state
+    referralAttempts = 0;
+    const input = document.getElementById('referralCodeInput');
+    if (input) input.value = '';
+    
+    // Update attempts display
+    updateReferralAttemptsDisplay();
+    
+    // Show modal
+    document.getElementById('referralModalOverlay').style.display = 'flex';
+}
+
+/**
+ * Tạo HTML cho modal giới thiệu
+ */
+function createReferralModalHTML() {
+    const modalHTML = `
+    <div class="verification-modal-overlay" id="referralModalOverlay" style="display: none;">
+        <div class="verification-modal-dialog">
+            <div class="verification-modal-header">
+                <span class="verification-modal-icon">🎁</span>
+                <div class="verification-modal-title">Mã Giới Thiệu</div>
+            </div>
+            <div class="verification-modal-body">
+                <p style="color: #ddd; margin-bottom: 15px; text-align: center;">
+                    Bạn có mã giới thiệu từ bạn bè không?<br>
+                    <span style="color: #fbbf24;">Nhập mã để nhận ngay 5 credits miễn phí!</span>
+                </p>
+                
+                <div style="margin-bottom: 15px;">
+                    <input type="email" id="referralCodeInput" 
+                           placeholder="Nhập email người giới thiệu" 
+                           style="width: 100%; padding: 14px; background: rgba(255, 255, 255, 0.05); border: 2px solid rgba(251, 191, 36, 0.3); border-radius: 10px; color: #fff; font-size: 1rem; outline: none; transition: all 0.3s ease; box-sizing: border-box;">
+                </div>
+                
+                <p id="referralAttemptsText" style="color: #aaa; font-size: 0.85rem; margin-bottom: 15px; text-align: center;">
+                    Còn <strong style="color: #fbbf24;">5</strong> lần thử
+                </p>
+                
+                <div id="referralErrorMsg" style="display: none; background: rgba(220, 53, 69, 0.2); border: 1px solid rgba(220, 53, 69, 0.5); color: #f87171; padding: 10px; border-radius: 8px; margin-bottom: 15px; font-size: 0.9rem; text-align: center;"></div>
+                
+                <div class="verification-actions">
+                    <button class="btn-verify" id="applyReferralBtn" onclick="handleApplyReferral()">
+                        Áp dụng mã
+                    </button>
+                    
+                    <button class="btn-resend" onclick="handleSkipReferral()">
+                        Bỏ qua
+                    </button>
+                </div>
+                
+                <p style="color: #888; font-size: 0.8rem; margin-top: 15px; text-align: center;">
+                    Mã giới thiệu là email của người đã giới thiệu bạn
+                </p>
+            </div>
+        </div>
+    </div>
+    `;
+    
+    document.body.insertAdjacentHTML('beforeend', modalHTML);
+}
+
+/**
+ * Cập nhật hiển thị số lần thử còn lại
+ */
+function updateReferralAttemptsDisplay() {
+    const attemptsText = document.getElementById('referralAttemptsText');
+    const remaining = MAX_REFERRAL_ATTEMPTS - referralAttempts;
+    
+    if (attemptsText) {
+        attemptsText.innerHTML = `Còn <strong style="color: #fbbf24;">${remaining}</strong> lần thử`;
+    }
+}
+
+/**
+ * Hiển thị lỗi trong modal giới thiệu
+ */
+function showReferralError(message) {
+    const errorDiv = document.getElementById('referralErrorMsg');
+    if (errorDiv) {
+        errorDiv.textContent = message;
+        errorDiv.style.display = 'block';
+    }
+}
+
+/**
+ * Ẩn lỗi trong modal giới thiệu
+ */
+function hideReferralError() {
+    const errorDiv = document.getElementById('referralErrorMsg');
+    if (errorDiv) {
+        errorDiv.style.display = 'none';
+    }
+}
+
+/**
+ * Xử lý áp dụng mã giới thiệu
+ */
+async function handleApplyReferral() {
+    const input = document.getElementById('referralCodeInput');
+    const applyBtn = document.getElementById('applyReferralBtn');
+    const referralCode = input?.value?.trim();
+    
+    hideReferralError();
+    
+    if (!referralCode) {
+        showReferralError('Vui lòng nhập mã giới thiệu');
+        return;
+    }
+    
+    try {
+        if (applyBtn) applyBtn.disabled = true;
+        showSmartLoading('Đang xác thực mã...', 100);
+        
+        const token = localStorage.getItem('auth_token');
+        const response = await fetch(`${BACKEND_URL}/api/referral/apply`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            },
+            body: JSON.stringify({ referralCode })
+        });
+        
+        const data = await response.json();
+        hideSmartLoading();
+        
+        if (response.ok && data.success) {
+            // ✅ Thành công!
+            console.log('✅ Referral applied successfully!');
+            
+            // Cập nhật user trong localStorage
+            const currentUser = JSON.parse(localStorage.getItem('current_user') || '{}');
+            currentUser.credits = data.totalCredits;
+            currentUser.referralUsed = true;
+            localStorage.setItem('current_user', JSON.stringify(currentUser));
+            
+            // Đóng modal giới thiệu
+            closeReferralModal();
+            
+            // Hiện modal chào mừng với thông báo bonus
+            showCustomModal({
+                icon: '🎉',
+                title: 'Chúc mừng!',
+                message: `Áp dụng mã giới thiệu thành công!\n\nBạn nhận được +5 credits.\nTổng credits hiện tại: ${data.totalCredits} credits.\n\nChúc bạn xem phim vui vẻ!`,
+                buttons: [{
+                    text: 'Bắt đầu ngay',
+                    type: 'primary',
+                    onClick: () => {
+                        window.location.href = '/';
+                    }
+                }]
+            });
+            
+        } else {
+            // ❌ Thất bại
+            referralAttempts++;
+            updateReferralAttemptsDisplay();
+            
+            // Check nếu hết lượt
+            if (data.code === 'MAX_ATTEMPTS' || referralAttempts >= MAX_REFERRAL_ATTEMPTS) {
+                closeReferralModal();
+                showCustomModal({
+                    icon: '⚠️',
+                    title: 'Hết lượt nhập mã',
+                    message: 'Bạn đã nhập sai quá nhiều lần.\n\nTài khoản này sẽ không thể áp dụng mã giới thiệu nữa.\n\nBạn vẫn có thể sử dụng dịch vụ bình thường với 5 credits ban đầu.',
+                    buttons: [{
+                        text: 'Tiếp tục',
+                        type: 'primary',
+                        onClick: () => {
+                            showWelcomeModal();
+                        }
+                    }]
+                });
+                return;
+            }
+            
+            // Hiện lỗi
+            const errorMsg = data.error || 'Mã giới thiệu không hợp lệ';
+            showReferralError(errorMsg);
+            
+            // Clear input
+            if (input) {
+                input.value = '';
+                input.focus();
+            }
+        }
+        
+    } catch (error) {
+        hideSmartLoading();
+        console.error('❌ Apply referral error:', error);
+        showReferralError('Lỗi kết nối. Vui lòng thử lại.');
+    } finally {
+        if (applyBtn) applyBtn.disabled = false;
+    }
+}
+
+/**
+ * Xử lý bỏ qua mã giới thiệu
+ */
+async function handleSkipReferral() {
+    try {
+        showSmartLoading('Đang xử lý...', 100);
+        
+        const token = localStorage.getItem('auth_token');
+        await fetch(`${BACKEND_URL}/api/referral/skip`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            }
+        });
+        
+        hideSmartLoading();
+        
+    } catch (error) {
+        hideSmartLoading();
+        console.error('Skip referral error:', error);
+    }
+    
+    // Đóng modal giới thiệu và hiện modal chào mừng
+    closeReferralModal();
+    showWelcomeModal();
+}
+
+/**
+ * Đóng modal giới thiệu
+ */
+function closeReferralModal() {
+    const modal = document.getElementById('referralModalOverlay');
+    if (modal) {
+        modal.style.display = 'none';
+    }
+}
+
+/**
+ * Hiển thị modal chào mừng
+ */
+function showWelcomeModal() {
+    showCustomModal({
+        icon: '🎉',
+        title: 'Đăng ký thành công!',
+        message: 'Tài khoản của bạn đã được tạo và xác thực.\n\nBạn có thể bắt đầu sử dụng dịch vụ ngay bây giờ!',
+        buttons: [{
+            text: 'Bắt đầu ngay',
+            type: 'primary',
+            onClick: () => {
+                window.location.href = '/';
+            }
+        }]
+    });
+}
+
+// Export functions
+window.showReferralModal = showReferralModal;
+window.handleApplyReferral = handleApplyReferral;
+window.handleSkipReferral = handleSkipReferral;
+window.closeReferralModal = closeReferralModal;
+window.showWelcomeModal = showWelcomeModal;
+
+// ========================================
+// REFERRAL NOTIFICATION MODAL
+// Hiển thị khi có người nhập mã giới thiệu của user
+// ========================================
+
+/**
+ * Kiểm tra và hiển thị thông báo referral chưa đọc
+ * @param {string} token - Auth token
+ * @returns {Promise<boolean>} - True nếu có thông báo và đã hiển thị
+ */
+async function checkReferralNotifications(token) {
+    try {
+        const response = await fetch(`${BACKEND_URL}/api/referral/unread`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            }
+        });
+        
+        const data = await response.json();
+        
+        if (data.success && data.hasUnread && data.unreadCount > 0) {
+            console.log(`🎉 Có ${data.unreadCount} thông báo referral chưa đọc`);
+            
+            // Lấy thông tin lượt mời còn lại
+            const infoResponse = await fetch(`${BACKEND_URL}/api/referral/info`, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                }
+            });
+            const infoData = await infoResponse.json();
+            
+            showReferralNotificationModal(data, infoData, token);
+            return true;
+        }
+        
+        console.log('ℹ️ Không có thông báo referral mới');
+        return false;
+        
+    } catch (error) {
+        console.error('❌ Lỗi kiểm tra referral notifications:', error);
+        return false;
+    }
+}
+
+/**
+ * Hiển thị modal thông báo referral
+ * @param {Object} data - Dữ liệu referral chưa đọc
+ * @param {Object} infoData - Thông tin referral của user
+ * @param {string} token - Auth token
+ */
+function showReferralNotificationModal(data, infoData, token) {
+    const overlay = document.getElementById('referralNotificationOverlay');
+    const body = document.getElementById('referralNotificationBody');
+    
+    if (!overlay || !body) {
+        console.error('❌ Không tìm thấy modal referral notification');
+        return;
+    }
+    
+    // Tạo nội dung modal
+    let itemsHTML = '';
+    
+    // Hiển thị từng referral chưa đọc
+    data.unreadReferrals.forEach(ref => {
+        const time = new Date(ref.timestamp).toLocaleString('vi-VN', {
+            day: '2-digit',
+            month: '2-digit',
+            year: 'numeric',
+            hour: '2-digit',
+            minute: '2-digit'
+        });
+        
+        // Hiển thị email đầy đủ
+        const email = ref.referredEmail || 'Người dùng mới';
+        
+        itemsHTML += `
+            <div class="referral-notification-item">
+                <div class="referral-notification-item-header">
+                    <span class="referral-notification-email">${email}</span>
+                    <span class="referral-notification-credits">+${ref.creditsEarned || 5} credits</span>
+                </div>
+                <div class="referral-notification-time">🕐 ${time}</div>
+            </div>
+        `;
+    });
+    
+    // Tính lượt mời còn lại
+    const referralsRemaining = infoData.success ? infoData.referralsRemaining : 0;
+    
+    // Tổng credits nhận được
+    const totalCredits = data.totalCreditsEarned || 0;
+    
+    // Tạo CTA phù hợp với số lượt mời còn lại
+    const ctaMessage = referralsRemaining > 0
+        ? '💡 Tiếp tục mời bạn bè để nhận thêm credits miễn phí!'
+        : '🎉 Bạn đã dùng hết lượt mời tháng này. Lượt mời sẽ được reset vào tháng sau!';
+    
+    // Tạo summary
+    const summaryHTML = `
+        <div class="referral-notification-summary">
+            <div class="referral-notification-total">+${totalCredits} credits</div>
+            <div class="referral-notification-total-label">Tổng credits nhận được</div>
+            <div class="referral-notification-remaining">
+                Lượt mời còn lại tháng này: <strong>${referralsRemaining}/2</strong>
+            </div>
+        </div>
+        <div class="referral-notification-cta">
+            ${ctaMessage}
+        </div>
+    `;
+    
+    body.innerHTML = itemsHTML + summaryHTML;
+    
+    // Lưu token để đánh dấu đã đọc khi đóng modal
+    overlay.dataset.token = token;
+    
+    // Hiển thị modal
+    overlay.classList.add('active');
+}
+
+/**
+ * Ẩn một phần email để bảo mật
+ * @param {string} email - Email gốc
+ * @returns {string} - Email đã được mask
+ */
+function maskEmail(email) {
+    if (!email || !email.includes('@')) return email;
+    
+    const [localPart, domain] = email.split('@');
+    if (localPart.length <= 3) {
+        return localPart[0] + '***@' + domain;
+    }
+    
+    const visibleStart = localPart.substring(0, 2);
+    const visibleEnd = localPart.substring(localPart.length - 1);
+    return visibleStart + '***' + visibleEnd + '@' + domain;
+}
+
+/**
+ * Đóng modal thông báo referral và đánh dấu đã đọc
+ */
+async function closeReferralNotification() {
+    const overlay = document.getElementById('referralNotificationOverlay');
+    
+    if (!overlay) return;
+    
+    const token = overlay.dataset.token;
+    
+    // Đóng modal
+    overlay.classList.remove('active');
+    
+    // Đánh dấu đã đọc
+    if (token) {
+        try {
+            await fetch(`${BACKEND_URL}/api/referral/mark-read`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                }
+            });
+            console.log('✅ Đã đánh dấu referral notifications là đã đọc');
+        } catch (error) {
+            console.error('❌ Lỗi đánh dấu đã đọc:', error);
+        }
+    }
+    
+    // Sau khi đóng referral notification, kiểm tra thông điệp Tiệm bánh
+    const pendingToken = sessionStorage.getItem('pending_tiembanh_token');
+    const pendingUser = sessionStorage.getItem('pending_tiembanh_user');
+    
+    if (pendingToken && pendingUser) {
+        const user = JSON.parse(pendingUser);
+        const hasMessage = await checkTiembanhMessage(pendingToken, user);
+        
+        if (!hasMessage) {
+            // Không có thông điệp, lưu token và redirect
+            localStorage.setItem('auth_token', pendingToken);
+            localStorage.setItem('current_user', pendingUser);
+            sessionStorage.setItem('logged_in', 'true');
+            sessionStorage.removeItem('pending_tiembanh_token');
+            sessionStorage.removeItem('pending_tiembanh_user');
+            window.location.href = '/';
+        }
+    }
+}
+
+// Export referral notification functions
+window.checkReferralNotifications = checkReferralNotifications;
+window.showReferralNotificationModal = showReferralNotificationModal;
+window.closeReferralNotification = closeReferralNotification;

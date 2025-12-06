@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <!-- SEO Meta Tags -->
+    <meta name="description" content="Quầy Lưu Niệm - Tiệm Bánh Netflix. Ủng hộ cộng đồng với những sản phẩm nhỏ xinh từ Tiệm Bánh.">
+    <meta name="keywords" content="Tiệm Bánh Netflix, quầy lưu niệm, shop, sản phẩm">
+    <meta name="author" content="Tiệm Bánh Netflix">
+    <meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://tiembanh4k.com/shop/">
+    
+    <!-- Theme Color -->
+    <meta name="theme-color" content="#e50914">
+    
+    <!-- Open Graph -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://tiembanh4k.com/shop/">
+    <meta property="og:title" content="Quầy Lưu Niệm - Tiệm Bánh Netflix">
+    <meta property="og:description" content="Ủng hộ cộng đồng với những sản phẩm nhỏ xinh từ Tiệm Bánh.">
+    <meta property="og:image" content="https://tiembanh4k.com/Background.webp">
+    <meta property="og:locale" content="vi_VN">
+    
+    <title>Quầy Lưu Niệm - Tiệm Bánh Netflix</title>
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" sizes="48x48" href="../favicon-48.png">
+    <link rel="icon" type="image/png" sizes="96x96" href="../favicon-96.png">
+    <link rel="icon" type="image/png" sizes="192x192" href="../favicon.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="../favicon.png">
+    
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, rgba(20, 20, 20, 0.95) 0%, rgba(26, 26, 26, 0.95) 100%), 
+                        url('../Background.webp') center/cover fixed;
+            color: #fff;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .main-wrapper { min-height: calc(100vh - 40px); display: flex; flex-direction: column; }
+        .container { max-width: 1200px; width: 100%; margin: 0 auto; }
+
+        /* Header */
+        .header { text-align: center; margin-bottom: 40px; padding-top: 20px; }
+
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 15px;
+            background: linear-gradient(90deg, #e50914);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            font-weight: 700;
+            letter-spacing: -1px;
+        }
+
+        .description { color: #ffffff; font-size: 1rem; line-height: 1.7; max-width: 700px; margin: 0 auto 20px; }
+
+        /* Products Grid */
+        .products-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 25px; margin-bottom: 50px; }
+
+        .product-card {
+            background: rgba(0, 0, 0, 0.85);
+            backdrop-filter: blur(10px);
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 12px 48px rgba(0, 0, 0, 0.7);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.3s ease;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .product-card:hover {
+            transform: translateY(-5px);
+            border-color: rgba(229, 9, 20, 0.5);
+            box-shadow: 0 16px 60px rgba(229, 9, 20, 0.2);
+        }
+
+        .product-image {
+            width: 100%; height: 280px;
+            background: rgba(255, 255, 255, 0.05);
+            display: flex; align-items: center; justify-content: center;
+            color: #555; font-size: 0.9rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            overflow: hidden;
+        }
+
+        .product-image img { width: 100%; height: 100%; object-fit: cover; }
+        .product-info { padding: 20px; display: flex; flex-direction: column; flex: 1; }
+        .product-name { font-size: 1.2rem; font-weight: 600; margin-bottom: 8px; color: #fff; min-height: 58px; display: -webkit-box; -webkit-line-clamp: 2; line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+
+        .product-desc-link {
+            display: inline-flex; align-items: center; gap: 6px;
+            font-size: 0.85rem; color: #888; cursor: pointer;
+            margin-bottom: 15px; transition: color 0.3s ease;
+        }
+        .product-desc-link:hover { color: #e50914; }
+
+        /* Modal */
+        .desc-modal {
+            display: none; position: fixed; top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            z-index: 10000; align-items: center; justify-content: center;
+        }
+        .desc-modal.active { display: flex; }
+
+        .desc-modal-content {
+            background: rgba(20, 20, 20, 0.98);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 12px; padding: 25px;
+            max-width: 500px; width: 90%; position: relative;
+        }
+
+        .desc-modal-close {
+            position: absolute; top: 12px; right: 12px;
+            background: none; border: none; color: #888;
+            font-size: 1.5rem; cursor: pointer; line-height: 1; transition: color 0.3s;
+        }
+        .desc-modal-close:hover { color: #fff; }
+
+        .desc-modal-title { font-size: 1.2rem; font-weight: 600; margin-bottom: 15px; color: #fff; }
+        .desc-modal-text { font-size: 0.95rem; color: #ccc; line-height: 1.7; max-height: 60vh; overflow-y: auto; }
+        .desc-modal-text ul { list-style: none; padding: 0; margin: 0; }
+        .desc-modal-text li { padding: 8px 0; border-bottom: 1px solid rgba(255, 255, 255, 0.08); }
+        .desc-modal-text li:last-child { border-bottom: none; }
+
+        /* Price */
+        .product-price { margin-bottom: 15px; }
+        .price-row { display: flex; align-items: center; gap: 10px; }
+        .price-current { font-size: 1.3rem; font-weight: 700; color: #fbbf24; }
+        .price-original { font-size: 0.95rem; color: #888; text-decoration: line-through; }
+        .price-discount { display: inline-block; font-size: 0.8rem; color: #4ade80; background: rgba(74, 222, 128, 0.1); padding: 2px 8px; border-radius: 4px; font-weight: 600; margin-top: 5px; }
+
+        .product-actions { display: flex; flex-direction: column; gap: 12px; margin-top: auto; }
+
+        .btn {
+            display: inline-block; width: 100%; padding: 12px 20px;
+            background: #e50914; color: #fff; text-decoration: none;
+            text-align: center; border-radius: 8px; font-weight: 600;
+            border: none; cursor: pointer; transition: all 0.3s ease; font-size: 0.95rem;
+        }
+        .btn:hover { background: #f40612; transform: translateY(-1px); box-shadow: 0 4px 12px rgba(229, 9, 20, 0.4); }
+
+        /* QR Section */
+        .qr-section {
+            display: flex; align-items: center; justify-content: flex-start; gap: 10px;
+            padding: 12px; background: rgba(255, 255, 255, 0.03);
+            border-radius: 8px; border: 1px dashed rgba(255, 255, 255, 0.15);
+        }
+        .qr-placeholder {
+            width: 60px; height: 60px; background: rgba(255, 255, 255, 0.1);
+            border-radius: 6px; display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+        }
+        .qr-placeholder img { width: 100%; height: 100%; object-fit: contain; border-radius: 6px; }
+        .qr-text { font-size: 0.85rem; color: #4ade80; text-align: left; flex: 1; }
+
+        /* Footer */
+        footer { background: rgba(0, 0, 0, 0.3); padding: 40px 20px; margin-top: 60px; border-top: 1px solid rgba(255, 255, 255, 0.1); }
+        footer p { color: rgba(255, 255, 255, 0.6); font-size: 0.85rem; margin: 0; text-align: center; }
+        footer a { color: #e50914; text-decoration: none; }
+        footer a:hover { text-decoration: underline; }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            h1 { font-size: 1.8rem; }
+            .description { font-size: 0.9rem; padding: 0 10px; }
+            .products-grid { grid-template-columns: 1fr; gap: 20px; }
+            .product-image { height: 240px; }
+        }
+
+        /* Loading */
+        .loading { text-align: center; padding: 50px; color: #888; }
+    </style>
+</head>
+<body>
+    <div class="main-wrapper">
+        <div class="container">
+            <div class="header">
+                <h1>QUẦY LƯU NIỆM – TIỆM BÁNH NETFLIX</h1>
+                <p class="description">
+                    Mỗi đơn hàng mà bạn ủng hộ đều là nguồn động lực to lớn để<br>
+                    Tiệm Bánh tiếp tục vận hành và phát triển. Cảm ơn bạn rất nhiều!
+                </p>
+            </div>
+
+            <div class="products-grid" id="productsGrid">
+                <div class="loading">Đang tải sản phẩm...</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal mô tả sản phẩm -->
+    <div class="desc-modal" id="descModal" onclick="closeDescModal(event)">
+        <div class="desc-modal-content" onclick="event.stopPropagation()">
+            <button class="desc-modal-close" onclick="closeDescModal()">&times;</button>
+            <h3 class="desc-modal-title" id="descModalTitle"></h3>
+            <div class="desc-modal-text" id="descModalText"></div>
+        </div>
+    </div>
+
+    <footer>
+        <div style="max-width: 1200px; margin: 0 auto;">
+            <p>© 2025 <a href="../">Tiệm Bánh Netflix</a> • Cảm ơn bạn đã ủng hộ! 💖</p>
+        </div>
+    </footer>
+
+    <!-- Dữ liệu sản phẩm được inject bởi product_manager.py -->
+    <script src="products-data.js"></script>
+    <script>
+        // productsData được load từ products-data.js
+
+        // Render danh sách sản phẩm
+        function renderProducts() {
+            const grid = document.getElementById('productsGrid');
+            
+            if (productsData.length === 0) {
+                grid.innerHTML = '<p class="loading">Chưa có sản phẩm nào</p>';
+                return;
+            }
+
+            grid.innerHTML = productsData.map(product => `
+                <div class="product-card">
+                    <div class="product-image">
+                        <img src="${product.image}" alt="${product.name}" onerror="this.parentElement.innerHTML='<div style=\\'color:#555\\'>Ảnh không tải được</div>'">
+                    </div>
+                    <div class="product-info">
+                        <h3 class="product-name">${product.name}</h3>
+                        <span class="product-desc-link" onclick="showDescModal('${product.id}')">
+                            Xem mô tả chi tiết sản phẩm
+                        </span>
+                        <div class="product-price">
+                            <div class="price-row">
+                                <span class="price-current">${product.priceNow}</span>
+                                ${product.priceOriginal ? `<span class="price-original">${product.priceOriginal}</span>` : ''}
+                            </div>
+                            ${product.discount ? `<span class="price-discount">${product.discount}</span>` : ''}
+                        </div>
+                        <div class="product-actions">
+                            <a href="${product.buyLink}" target="_blank" class="btn">Mua ngay</a>
+                            ${product.qrImage ? `
+                            <div class="qr-section">
+                                <div class="qr-placeholder">
+                                    <img src="${product.qrImage}" alt="QR ${product.name}">
+                                </div>
+                                <span class="qr-text">Bật camera quét mã QR này để mua hàng qua điện thoại nhé!</span>
+                            </div>
+                            ` : ''}
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Hiển thị modal mô tả
+        function showDescModal(productId) {
+            const product = productsData.find(p => p.id === productId);
+            if (!product) return;
+            
+            document.getElementById('descModalTitle').textContent = product.name;
+            const descText = document.getElementById('descModalText');
+            
+            if (product.description && product.description.length > 0) {
+                descText.innerHTML = '<ul>' + product.description.map(d => `<li>${d}</li>`).join('') + '</ul>';
+            } else {
+                descText.textContent = 'Chưa có mô tả';
+            }
+            
+            document.getElementById('descModal').classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        // Đóng modal
+        function closeDescModal(event) {
+            if (event && event.target !== event.currentTarget) return;
+            document.getElementById('descModal').classList.remove('active');
+            document.body.style.overflow = '';
+        }
+
+        document.addEventListener('keydown', e => { if (e.key === 'Escape') closeDescModal(); });
+
+        // Khởi chạy
+        renderProducts();
+    </script>
+</body>
+</html>

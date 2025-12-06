@@ -1329,13 +1329,13 @@
                                 <th style="width: 150px;">IP</th>
                                 <th style="width: 150px;">Device</th>
                                 <th style="width: 100px;">Status</th>
-                                <th style="width: 200px;">Device Fingerprint</th>
                                 <th style="width: 100px;">Reg.date</th>
                                 <th style="width: 100px;">Pro Since</th>
                                 <th style="width: 100px;">Pro Exp.</th>
                                 <th style="width: 100px;">Last login</th>
                                 <th style="width: 120px;">Monthly Limit</th>
                                 <th style="width: 100px;">Credits</th>
+                                <th style="width: 80px;">Invites</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -1374,10 +1374,9 @@
                 const statusText = emailVerified ? 'Verified' : 'Unverified';
                 const statusColor = emailVerified ? '#22c55e' : '#f59e0b';
                 
-                // Device Fingerprint (show first 16 chars + ellipsis)
-                const fingerprint = user.deviceFingerprint 
-                    ? user.deviceFingerprint.substring(0, 16) + '...' 
-                    : (user.registrationIP ? 'Legacy (IP-only)' : '-');
+                // Monthly Invites (2 - monthlyReferralsUsed)
+                const invitesUsed = user.monthlyReferralsUsed || 0;
+                const invitesRemaining = Math.max(0, 2 - invitesUsed);
 
                 tableHTML += `
                     <tr data-user-id="${user._id}" id="row-${user._id}">
@@ -1420,7 +1419,6 @@
                         <td style="font-size: 0.85rem; color: var(--text-primary);">${ip}</td>
                         <td style="font-size: 0.85rem; color: var(--text-primary);">${device}</td>
                         <td style="font-size: 0.85rem; color: ${statusColor}; font-weight: 600; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;">${statusText}</td>
-                        <td style="font-size: 0.75rem; color: ${user.deviceFingerprint ? '#10b981' : '#6b7280'}; font-family: monospace;" title="${user.deviceFingerprint || 'No fingerprint'}">${fingerprint}</td>
                         <td>${createdAt}</td>
                         <td style="color: ${user.proUpgradedAt ? '#8b5cf6' : '#6b7280'};">${proUpgraded}</td>
                         <td>
@@ -1451,6 +1449,11 @@
                                 ${user.credits !== undefined ? user.credits : 5}
                             </span>
                             <input type="number" class="edit-mode" value="${user.credits !== undefined ? user.credits : 5}" min="0" style="display: none; width: 100%; padding: 4px; border: 1px solid #ddd; border-radius: 4px; text-align: center;">
+                        </td>
+                        <td style="text-align: center;">
+                            <span style="color: ${invitesRemaining >= 2 ? '#10b981' : invitesRemaining === 1 ? '#fbbf24' : '#ef4444'}; font-weight: 600;">
+                                ${invitesRemaining}/2
+                            </span>
                         </td>
                     </tr>
                 `;
@@ -1631,7 +1634,7 @@
 
             // Tạo CSV content với BOM để Excel nhận diện UTF-8
             const BOM = '\uFEFF';
-            let csvContent = BOM + 'STT,Tên,Email,Gói,Cookie No.,IP,Device,Trạng thái Email,Device Fingerprint,Ngày đăng ký,Pro Since,Pro Exp.,Đăng nhập cuối,Monthly Limit,Credits\n';
+            let csvContent = BOM + 'STT,Tên,Email,Gói,Cookie No.,IP,Device,Trạng thái Email,Ngày đăng ký,Pro Since,Pro Exp.,Đăng nhập cuối,Monthly Limit,Credits,Invites\n';
             
             currentUsers.forEach((user, index) => {
                 // Plan
@@ -1646,11 +1649,6 @@
                 
                 // Email verification status
                 const emailStatus = user.emailVerified ? 'Verified' : 'Unverified';
-                
-                // Device Fingerprint (full or status)
-                const fingerprint = user.deviceFingerprint 
-                    ? user.deviceFingerprint
-                    : (user.registrationIP ? 'Legacy (IP-only)' : '-');
                 
                 // Dates
                 const createdAt = new Date(user.createdAt).toLocaleDateString('vi-VN');
@@ -1668,8 +1666,12 @@
                 // Credits
                 const credits = user.credits !== undefined ? user.credits : 5;
                 
+                // Invites remaining
+                const invitesUsed = user.monthlyReferralsUsed || 0;
+                const invitesRemaining = `${Math.max(0, 2 - invitesUsed)}/2`;
+                
                 // Add row to CSV
-                csvContent += `${index + 1},"${user.name}","${user.email}","${plan}","${cookieNumber}","${ip}","${device}","${emailStatus}","${fingerprint}","${createdAt}","${proUpgraded}","${proExpires}","${lastLogin}","${limitDisplay}","${credits}"\n`;
+                csvContent += `${index + 1},"${user.name}","${user.email}","${plan}","${cookieNumber}","${ip}","${device}","${emailStatus}","${createdAt}","${proUpgraded}","${proExpires}","${lastLogin}","${limitDisplay}","${credits}","${invitesRemaining}"\n`;
             });
 
             // Tạo và download file với UTF-8 BOM
