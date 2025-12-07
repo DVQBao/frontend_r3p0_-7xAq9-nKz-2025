@@ -153,7 +153,7 @@ class CookieRetryHandler {
                                   `2️⃣ Refresh lại trang web này (Ctrl + F5)\n` +
                                   `3️⃣ Kiểm tra Extension có đang bật không\n` +
                                   `4️⃣ Thử tắt/bật lại Extension\n` +
-                                  `5️⃣ Nếu vẫn lỗi, cài lại Extension\n\n` +
+                                  `5️⃣ Nếu vẫn lỗi, chuyển sang trình duyệt khác (NÊN LÀM)\n\n` +
                                   `Vui lòng thử lại sau khi fix Extension!`,
                             buttons: isTimeout
                                 ? [

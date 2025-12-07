@@ -1851,6 +1851,7 @@ function showTiembanhMessage(data, token, user) {
     
     // Show modal
     overlay.classList.add('active');
+    document.body.style.overflow = 'hidden'; // Ẩn scroll body khi modal mở
 }
 
 /**
@@ -1940,6 +1941,7 @@ function closeTiembanhMessage() {
     if (overlay) {
         overlay.classList.remove('active');
     }
+    document.body.style.overflow = ''; // Khôi phục scroll body khi đóng modal
     
     // Clear countdown interval
     if (tiembanhCountdownInterval) {
