@@ -710,6 +710,7 @@ async function handleWatchAsGuestAfterReport() {
  */
 function showPlanModal() {
     elements.planModal.classList.add('active');
+    document.body.style.overflow = 'hidden';
 }
 
 /**
@@ -717,6 +718,7 @@ function showPlanModal() {
  */
 function closePlanModal() {
     elements.planModal.classList.remove('active');
+    document.body.style.overflow = '';
 }
 
 /**
@@ -765,6 +767,7 @@ Tiếp tục?`);
  */
 function showTeamModal() {
     elements.teamModal.classList.add('active');
+    document.body.style.overflow = 'hidden';
     resetModalState();
     startModalCountdown();
     animateAdContent();
@@ -775,6 +778,7 @@ function showTeamModal() {
  */
 function closeTeamModal() {
     elements.teamModal.classList.remove('active');
+    document.body.style.overflow = '';
     resetModalState();
 }
 
