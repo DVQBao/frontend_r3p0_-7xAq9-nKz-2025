@@ -1006,6 +1006,71 @@ async function handleLogin(event) {
                 return;
             }
             
+            // ✅ Handle BANNED - Tài khoản/IP bị khóa
+            if (data.code === 'BANNED') {
+                const isPermanent = data.isPermanent;
+                const remainingTime = data.remainingSeconds;
+                
+                let timeMessage = '';
+                if (isPermanent) {
+                    timeMessage = 'Tài khoản của bạn đã bị khóa vĩnh viễn.';
+                } else if (remainingTime) {
+                    const hours = Math.floor(remainingTime / 3600);
+                    const minutes = Math.floor((remainingTime % 3600) / 60);
+                    if (hours > 0) {
+                        timeMessage = `Thời gian còn lại: ${hours} giờ ${minutes} phút`;
+                    } else {
+                        timeMessage = `Thời gian còn lại: ${minutes} phút`;
+                    }
+                }
+                
+                showCustomModal({
+                    icon: '🚫',
+                    title: 'Tài khoản bị khóa',
+                    message: `Lý do: ${data.error || 'Tài khoản của bạn đã bị khóa do các hoạt động bất thường.'}\n\n${timeMessage}\n\nNếu bạn cho rằng đây là nhầm lẫn, vui lòng liên hệ Support để được hỗ trợ.`,
+                    buttons: [
+                        {
+                            text: 'Liên hệ Support',
+                            type: 'primary',
+                            onClick: () => {
+                                window.open('https://www.facebook.com/tiembanh4k/', '_blank');
+                            }
+                        },
+                        {
+                            text: 'Đóng',
+                            type: 'secondary'
+                        }
+                    ]
+                });
+                return;
+            }
+            
+            // ✅ Handle RATE_LIMIT_EXCEEDED - Bị rate limit tự động
+            if (data.code === 'RATE_LIMIT_EXCEEDED') {
+                const retryAfter = data.retryAfter || 60;
+                const minutes = Math.ceil(retryAfter / 60);
+                
+                showCustomModal({
+                    icon: '⏳',
+                    title: 'Tạm khóa do hoạt động bất thường',
+                    message: `Thiết bị của bạn đã bị tạm khóa do nghi ngờ hoạt động bất thường.\n\nVui lòng thử lại sau ${minutes} phút.\n\nNếu bạn cho rằng đây là nhầm lẫn, vui lòng liên hệ Support.`,
+                    buttons: [
+                        {
+                            text: 'Liên hệ Support',
+                            type: 'primary',
+                            onClick: () => {
+                                window.open('https://www.facebook.com/tiembanh4k/', '_blank');
+                            }
+                        },
+                        {
+                            text: 'Đóng',
+                            type: 'secondary'
+                        }
+                    ]
+                });
+                return;
+            }
+            
             // ✅ Handle other errors (wrong password, account locked, etc)
             showCustomModal({
                 icon: '❌',
@@ -1239,6 +1304,71 @@ async function handleRegister(event) {
                 showVerificationModal(email);
             }, 1000);
         } else {
+            // ✅ Handle BANNED - Tài khoản/IP bị khóa
+            if (data.code === 'BANNED') {
+                const isPermanent = data.isPermanent;
+                const remainingTime = data.remainingSeconds;
+                
+                let timeMessage = '';
+                if (isPermanent) {
+                    timeMessage = 'Thiết bị của bạn đã bị khóa vĩnh viễn.';
+                } else if (remainingTime) {
+                    const hours = Math.floor(remainingTime / 3600);
+                    const minutes = Math.floor((remainingTime % 3600) / 60);
+                    if (hours > 0) {
+                        timeMessage = `Thời gian còn lại: ${hours} giờ ${minutes} phút`;
+                    } else {
+                        timeMessage = `Thời gian còn lại: ${minutes} phút`;
+                    }
+                }
+                
+                showCustomModal({
+                    icon: '🚫',
+                    title: 'Không thể đăng ký',
+                    message: `${data.error || 'Thiết bị của bạn đã bị khóa do các hoạt động bất thường.'}\n\n${timeMessage}\n\nNếu bạn cho rằng đây là nhầm lẫn, vui lòng liên hệ Support để được hỗ trợ.`,
+                    buttons: [
+                        {
+                            text: 'Liên hệ Support',
+                            type: 'primary',
+                            onClick: () => {
+                                window.open('https://www.facebook.com/tiembanh4k/', '_blank');
+                            }
+                        },
+                        {
+                            text: 'Đóng',
+                            type: 'secondary'
+                        }
+                    ]
+                });
+                return;
+            }
+            
+            // ✅ Handle RATE_LIMIT_EXCEEDED - Bị rate limit tự động
+            if (data.code === 'RATE_LIMIT_EXCEEDED') {
+                const retryAfter = data.retryAfter || 60;
+                const minutes = Math.ceil(retryAfter / 60);
+                
+                showCustomModal({
+                    icon: '⏳',
+                    title: 'Tạm khóa do hoạt động bất thường',
+                    message: `Thiết bị của bạn đã bị tạm khóa do nghi ngờ hoạt động bất thường.\n\nVui lòng thử lại sau ${minutes} phút.\n\nNếu bạn cho rằng đây là nhầm lẫn, vui lòng liên hệ Support.`,
+                    buttons: [
+                        {
+                            text: 'Liên hệ Support',
+                            type: 'primary',
+                            onClick: () => {
+                                window.open('https://www.facebook.com/tiembanh4k/', '_blank');
+                            }
+                        },
+                        {
+                            text: 'Đóng',
+                            type: 'secondary'
+                        }
+                    ]
+                });
+                return;
+            }
+            
             // Handle invalid email domain
             if (data.error === 'INVALID_EMAIL_DOMAIN') {
                 showCustomModal({
@@ -2590,7 +2720,7 @@ window.calculateCredits = function(amount) {
     }
     
     // Check minimum
-    if (numAmount < 20000) {
+    if (numAmount < 30000) {
         preview.style.display = 'none';
         confirmBtn.disabled = true;
         return;
@@ -2603,7 +2733,7 @@ window.calculateCredits = function(amount) {
         return;
     }
     
-    // Calculate credits: 500 VNĐ = 1 credit (25.000 = 50 credits)
+    // Calculate credits: 500 VNĐ = 1 credit (30.000 = 60 credits)
     const credits = Math.floor(numAmount / 500);
     
     creditsAmount.textContent = `${credits} Credits`;
@@ -2617,8 +2747,8 @@ window.calculateCredits = function(amount) {
 window.confirmPurchaseCredits = async function() {
     const amount = parseInt(document.getElementById('purchaseAmount').value);
     
-    if (!amount || amount < 20000 || amount % 1000 !== 0) {
-        alert('⚠️ Vui lòng nhập số tiền hợp lệ (tối thiểu 20.000 VNĐ, số tròn nghìn)');
+    if (!amount || amount < 30000 || amount % 1000 !== 0) {
+        alert('⚠️ Vui lòng nhập số tiền hợp lệ (tối thiểu 30.000 VNĐ, số tròn nghìn)');
         return;
     }
     

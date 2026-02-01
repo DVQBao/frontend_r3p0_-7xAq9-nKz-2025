@@ -291,6 +291,39 @@
         ::-webkit-scrollbar-thumb:hover {
             background: #555;
         }
+        
+        /* Search wrapper cho desktop */
+        .search-wrapper {
+            display: flex;
+            gap: 10px;
+            flex: 1;
+            min-width: 300px;
+            align-items: stretch;
+        }
+        
+        .search-wrapper .search-box {
+            flex: 1;
+            min-width: 0;
+        }
+        
+        .search-wrapper .search-btn {
+            padding: 0 20px;
+            white-space: nowrap;
+        }
+        
+        /* Ẩn mobile buttons trên desktop */
+        .mobile-top-buttons {
+            display: none;
+        }
+        
+        /* Ẩn mobile search results trên desktop */
+        .mobile-search-results {
+            display: none;
+        }
+        
+        .mobile-search-title {
+            display: none;
+        }
 
         .search-box {
             flex: 1;
@@ -558,6 +591,7 @@
         .form-group textarea {
             width: 100%;
             padding: 12px;
+            font-family: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             border: 1px solid #444;
             border-radius: 8px;
             font-size: 16px;
@@ -617,28 +651,41 @@
 
         @media (max-width: 768px) {
             .container {
-                padding: 20px;
+                padding: 15px 10px;
+                background: transparent;
             }
 
             .header {
-                padding: 24px 20px;
+                padding: 15px;
+                background: transparent;
+                border: none;
+                border-radius: 0;
+            }
+            
+            .header::before {
+                display: none;
             }
 
             .header-left h1 {
-                font-size: 1.5em;
+                font-size: 1.3em;
+                margin-bottom: 3px;
+            }
+            
+            .header-left p {
+                font-size: 0.85em;
             }
 
             .header-stats {
                 flex-wrap: wrap;
-                gap: 12px;
+                gap: 8px;
             }
 
             .stat-item {
-                flex: 1 1 calc(50% - 12px);
-                min-width: 100px;
-                padding: 12px;
-                background: rgba(0, 0, 0, 0.2);
-                border-radius: 8px;
+                flex: 1 1 calc(33.33% - 8px);
+                min-width: 80px;
+                padding: 8px 5px;
+                background: rgba(0, 0, 0, 0.3);
+                border-radius: 6px;
             }
 
             .stat-item:not(:last-child)::after {
@@ -646,15 +693,684 @@
             }
 
             .stat-value {
-                font-size: 1.5em;
+                font-size: 1.2em;
+                margin-bottom: 2px;
+            }
+            
+            .stat-label {
+                font-size: 0.6em;
             }
 
             .controls {
                 flex-direction: column;
+                background: transparent;
+                border: none;
+                padding: 10px 0 0 0;
             }
 
             .search-box {
                 min-width: auto;
+                width: 100%;
+            }
+            
+            .search-wrapper {
+                display: flex;
+                gap: 8px;
+                width: 100%;
+                margin-top: -5px;
+            }
+            
+            .search-wrapper .search-box {
+                flex: 1;
+            }
+            
+            .search-wrapper .search-btn {
+                background: transparent !important;
+                border: 1px solid rgba(255, 255, 255, 0.3) !important;
+                color: #fff !important;
+                font-size: 11px !important;
+                padding: 8px 12px !important;
+            }
+            
+            /* Ẩn các nút desktop-only trên mobile */
+            .desktop-only {
+                display: none !important;
+            }
+            
+            /* Hiện 3 nút chính trên mobile */
+            .mobile-top-buttons {
+                display: flex;
+                gap: 8px;
+                width: 100%;
+                margin-bottom: 8px;
+            }
+            
+            .mobile-action-btn {
+                flex: 1;
+                background: transparent !important;
+                border: 1px solid rgba(255, 255, 255, 0.3) !important;
+                color: #fff !important;
+                font-size: 11px !important;
+                padding: 8px 5px !important;
+                white-space: nowrap;
+                text-align: center;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+            
+            /* Font size nhỏ hơn cho search box */
+            .search-box {
+                font-size: 12px !important;
+                padding: 8px 12px !important;
+            }
+            
+            /* Giảm khoảng cách giữa stat và controls */
+            .controls {
+                margin-top: -30px;
+            }
+            
+            /* Ẩn pagination trên mobile */
+            #pagination {
+                display: none !important;
+            }
+            
+            /* Ẩn bảng danh sách người dùng mặc định trên mobile */
+            .users-table {
+                display: none !important;
+            }
+            
+            /* Hiện Rate Limit và Cookie Management trên mobile */
+            #rateLimitManagement .users-table,
+            #cookiesManagement .users-table {
+                display: block !important;
+                background: transparent;
+                border: none;
+                padding: 0;
+                margin-top: -25px;
+            }
+            
+            #rateLimitManagement .table-header,
+            #cookiesManagement .table-header {
+                font-size: 13px;
+                font-weight: 600;
+                color: #fff;
+                padding: 0;
+                margin-bottom: 5px;
+                background: transparent;
+                border: none;
+            }
+            
+            /* Stats box */
+            #rateLimitManagement #rateLimitStats {
+                display: none !important;
+            }
+            
+            /* Controls layout */
+            #rateLimitManagement .users-table > div[style*="grid"] {
+                display: flex !important;
+                flex-direction: column;
+                gap: 8px;
+            }
+            
+            #rateLimitManagement input.search-box,
+            #rateLimitManagement select.search-box {
+                width: 100% !important;
+                font-size: 11px !important;
+                padding: 8px 10px !important;
+                background: rgba(255, 255, 255, 0.05) !important;
+                border: 1px solid rgba(255, 255, 255, 0.1) !important;
+                border-radius: 6px !important;
+                color: #fff !important;
+                -webkit-appearance: none;
+                appearance: none;
+            }
+            
+            #rateLimitManagement select.search-box {
+                background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='%23fff' viewBox='0 0 16 16'%3E%3Cpath d='M8 11L3 6h10l-5 5z'/%3E%3C/svg%3E") !important;
+                background-repeat: no-repeat !important;
+                background-position: right 12px center !important;
+                padding-right: 32px !important;
+            }
+            
+            #rateLimitManagement select.search-box option {
+                background: #1a1a1a;
+                color: #fff;
+                padding: 10px;
+            }
+            
+            #rateLimitManagement .btn {
+                width: 100%;
+                padding: 8px !important;
+                font-size: 11px !important;
+                border-radius: 6px !important;
+                background: transparent !important;
+                border: 1px solid rgba(255, 255, 255, 0.3) !important;
+                color: #fff !important;
+                text-align: center;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+            
+            #rateLimitManagement .btn-danger,
+            #rateLimitManagement .btn-warning,
+            #rateLimitManagement .btn-primary {
+                background: transparent !important;
+                border: 1px solid rgba(255, 255, 255, 0.3) !important;
+                color: #fff !important;
+            }
+            
+            /* Layout 1 hàng cho 4 nút trên mobile */
+            #rateLimitManagement .rate-limit-buttons {
+                display: grid !important;
+                grid-template-columns: repeat(4, 1fr);
+                gap: 4px;
+                width: 100%;
+                margin-top: -5px;
+            }
+            
+            #rateLimitManagement .rate-limit-controls {
+                display: flex !important;
+                flex-direction: column;
+                gap: 4px;
+            }
+            
+            /* Ẩn dropdown categories trên mobile */
+            #rateLimitManagement #filterCategory {
+                display: none !important;
+            }
+            
+            /* Search wrapper với nút tìm kiếm */
+            #rateLimitManagement .rate-limit-search-wrapper {
+                display: flex;
+                gap: 6px;
+                width: 100%;
+            }
+            
+            #rateLimitManagement .rate-limit-search-wrapper .search-box {
+                flex: 1;
+            }
+            
+            #rateLimitManagement .rate-limit-search-btn {
+                white-space: nowrap;
+                width: auto !important;
+                padding: 8px 12px !important;
+            }
+            
+            /* Table container */
+            #rateLimitManagement #bannedIPsTableContainer {
+                max-height: 400px !important;
+                font-size: 11px;
+                overflow-x: hidden !important;
+            }
+            
+            /* Thanh cuộn mỏng trên mobile */
+            #rateLimitManagement #bannedIPsTableContainer::-webkit-scrollbar {
+                width: 4px;
+            }
+            
+            #rateLimitManagement #bannedIPsTableContainer::-webkit-scrollbar-track {
+                background: transparent;
+            }
+            
+            #rateLimitManagement #bannedIPsTableContainer::-webkit-scrollbar-thumb {
+                background: rgba(255, 255, 255, 0.2);
+                border-radius: 2px;
+            }
+            
+            #rateLimitManagement .loading p,
+            #rateLimitManagement #bannedIPsTableContainer p {
+                font-size: 12px;
+                color: #888;
+                text-align: center;
+                padding: 20px;
+            }
+            
+            /* Ẩn bảng mặc định, hiện dạng card trên mobile */
+            #rateLimitManagement table {
+                display: none !important;
+            }
+            
+            #rateLimitManagement .mobile-banned-list {
+                display: block !important;
+            }
+            
+            .mobile-banned-card {
+                background: rgba(255, 255, 255, 0.03);
+                border: 1px solid rgba(255, 255, 255, 0.1);
+                border-radius: 8px;
+                padding: 12px;
+                margin-bottom: 10px;
+            }
+            
+            .mobile-banned-card .banned-header {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                margin-bottom: 8px;
+                padding-bottom: 8px;
+                border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            }
+            
+            .mobile-banned-card .banned-ip {
+                font-weight: 600;
+                color: #ef4444;
+                font-size: 12px;
+                word-break: break-all;
+            }
+            
+            .mobile-banned-card .banned-info {
+                font-size: 11px;
+                color: #888;
+                margin-bottom: 4px;
+            }
+            
+            .mobile-banned-card .banned-info span {
+                color: #ccc;
+            }
+            
+            .mobile-banned-card .btn-unban {
+                width: 100%;
+                margin-top: 10px;
+                padding: 8px;
+                font-size: 11px;
+                background: transparent;
+                border: 1px solid rgba(255, 255, 255, 0.3);
+                color: #fff;
+                border-radius: 6px;
+                cursor: pointer;
+            }
+            
+            /* Mobile search results */
+            .mobile-search-title {
+                display: block;
+                font-size: 14px;
+                font-weight: 600;
+                color: #fff;
+                margin: -15px 0 5px 0;
+            }
+            
+            .mobile-search-results {
+                display: block;
+                padding: 0;
+            }
+            
+            .mobile-search-placeholder {
+                text-align: center;
+                color: #666;
+                padding: 15px;
+                font-size: 13px;
+            }
+            
+            .mobile-user-card {
+                background: rgba(255, 255, 255, 0.03);
+                border: 1px solid rgba(255, 255, 255, 0.1);
+                border-radius: 10px;
+                padding: 15px;
+                margin-bottom: 12px;
+            }
+            
+            .mobile-user-card .user-header {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                margin-bottom: 12px;
+                padding-bottom: 10px;
+                border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            }
+            
+            .mobile-user-card .user-name {
+                font-weight: 600;
+                font-size: 14px;
+                color: #fff;
+            }
+            
+            .mobile-user-card .user-plan {
+                padding: 3px 10px;
+                border-radius: 10px;
+                font-size: 11px;
+                font-weight: 600;
+                text-transform: uppercase;
+            }
+            
+            .mobile-user-card .user-plan.free {
+                background: rgba(107, 114, 128, 0.2);
+                color: #9ca3af;
+            }
+            
+            .mobile-user-card .user-plan.pro {
+                background: rgba(16, 185, 129, 0.2);
+                color: #34d399;
+            }
+            
+            .mobile-user-card .user-info {
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+                gap: 8px;
+                font-size: 11px;
+            }
+            
+            .mobile-user-card .info-item {
+                display: flex;
+                flex-direction: column;
+            }
+            
+            .mobile-user-card .info-label {
+                color: #666;
+                font-size: 10px;
+                text-transform: uppercase;
+                margin-bottom: 2px;
+            }
+            
+            .mobile-user-card .info-value {
+                color: #ccc;
+                word-break: break-all;
+            }
+            
+            .mobile-user-card .user-actions {
+                display: flex;
+                gap: 8px;
+                margin-top: 12px;
+                padding-top: 10px;
+                border-top: 1px solid rgba(255, 255, 255, 0.1);
+            }
+            
+            .mobile-user-card .user-actions button {
+                flex: 1;
+                padding: 8px;
+                font-size: 11px;
+                border-radius: 6px;
+                cursor: pointer;
+                border: none;
+                font-weight: 500;
+            }
+            
+            .mobile-user-card .btn-edit {
+                background: rgba(59, 130, 246, 0.2);
+                color: #3b82f6;
+            }
+            
+            .mobile-user-card .btn-upgrade {
+                background: rgba(16, 185, 129, 0.2);
+                color: #10b981;
+            }
+            
+            .mobile-user-card .btn-downgrade {
+                background: rgba(239, 68, 68, 0.2);
+                color: #ef4444;
+            }
+            
+            .mobile-user-card .btn-save {
+                background: rgba(16, 185, 129, 0.2);
+                color: #10b981;
+            }
+            
+            .mobile-user-card .btn-cancel {
+                background: rgba(107, 114, 128, 0.2);
+                color: #9ca3af;
+            }
+            
+            .mobile-user-card .hidden {
+                display: none !important;
+            }
+            
+            /* Pro Log cards */
+            .mobile-pro-card {
+                background: rgba(139, 92, 246, 0.05);
+                border: 1px solid rgba(139, 92, 246, 0.2);
+                border-radius: 8px;
+                padding: 12px;
+                margin-bottom: 8px;
+            }
+            
+            .mobile-pro-card .pro-card-header {
+                display: flex;
+                align-items: center;
+                gap: 8px;
+                margin-bottom: 8px;
+                padding-bottom: 8px;
+                border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            }
+            
+            .mobile-pro-card .pro-index {
+                color: #8b5cf6;
+                font-size: 11px;
+                font-weight: 600;
+            }
+            
+            .mobile-pro-card .pro-name {
+                color: #fff;
+                font-size: 13px;
+                font-weight: 600;
+            }
+            
+            .mobile-pro-card .pro-card-info {
+                display: flex;
+                flex-direction: column;
+                gap: 4px;
+            }
+            
+            .mobile-pro-card .pro-info-row {
+                display: flex;
+                justify-content: space-between;
+                font-size: 11px;
+            }
+            
+            .mobile-pro-card .pro-label {
+                color: #666;
+            }
+            
+            .mobile-pro-card .pro-value {
+                color: #ccc;
+                word-break: break-all;
+                text-align: right;
+                max-width: 60%;
+            }
+            
+            /* Pro Log filter controls */
+            .pro-filter-controls {
+                display: flex;
+                gap: 10px;
+                margin-bottom: 12px;
+                align-items: center;
+            }
+            
+            .pro-filter-controls select {
+                flex: 0 0 60%;
+                padding: 10px 12px;
+                background: rgba(255, 255, 255, 0.05);
+                border: 1px solid rgba(255, 255, 255, 0.2);
+                border-radius: 6px;
+                color: #fff;
+                font-size: 12px;
+                font-family: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                -webkit-appearance: none;
+                appearance: none;
+                background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='%23fff' viewBox='0 0 16 16'%3E%3Cpath d='M8 11L3 6h10l-5 5z'/%3E%3C/svg%3E");
+                background-repeat: no-repeat;
+                background-position: right 10px center;
+                padding-right: 30px;
+            }
+            
+            .pro-filter-controls select option {
+                background: #1a1a1a;
+                color: #fff;
+            }
+            
+            .pro-count {
+                flex: 0 0 35%;
+                font-size: 12px;
+                color: #8b5cf6;
+                text-align: right;
+            }
+            
+            .mobile-user-card .edit-input {
+                width: 100%;
+                padding: 6px 8px;
+                background: rgba(255, 255, 255, 0.1);
+                border: 1px solid rgba(255, 255, 255, 0.2);
+                border-radius: 4px;
+                color: #fff;
+                font-size: 11px;
+            }
+            
+            .mobile-user-card .user-header .edit-input {
+                margin-right: 8px;
+            }
+            
+            .mobile-user-card select.edit-input {
+                padding: 6px 8px;
+                background: rgba(30, 30, 30, 0.95);
+                color: #fff;
+                -webkit-appearance: none;
+                appearance: none;
+                background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='%23fff' viewBox='0 0 16 16'%3E%3Cpath d='M8 11L3 6h10l-5 5z'/%3E%3C/svg%3E");
+                background-repeat: no-repeat;
+                background-position: right 8px center;
+                padding-right: 28px;
+            }
+            
+            .mobile-user-card select.edit-input option {
+                background: #1a1a1a;
+                color: #fff;
+                padding: 8px;
+            }
+            
+            /* Modal style cho mobile - chỉ khi hiển thị */
+            .modal[style*="display: block"],
+            .modal[style*="display:block"] {
+                display: flex !important;
+                align-items: center;
+                justify-content: center;
+            }
+            
+            .modal-content {
+                background: #1a1a1a;
+                border: none;
+                border-radius: 12px;
+                padding: 20px;
+                max-width: 90%;
+                width: 320px;
+                margin: 0;
+                position: relative;
+                top: auto;
+                left: auto;
+                transform: none;
+            }
+            
+            .modal-header {
+                border: none;
+                padding: 0 0 15px 0;
+                margin-bottom: 15px;
+                border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            }
+            
+            .modal-header h3 {
+                font-size: 16px;
+                font-weight: 600;
+                color: #fff;
+                margin: 0;
+            }
+            
+            .modal-header .close {
+                position: absolute;
+                top: 15px;
+                right: 15px;
+                font-size: 20px;
+                color: #666;
+            }
+            
+            .modal .form-group {
+                margin-bottom: 12px;
+            }
+            
+            .modal .form-group label {
+                font-size: 11px;
+                color: #888;
+                margin-bottom: 5px;
+                display: block;
+            }
+            
+            .modal .form-group input,
+            .modal .form-group select {
+                width: 100%;
+                padding: 10px 12px;
+                background: rgba(255, 255, 255, 0.05);
+                border: 1px solid rgba(255, 255, 255, 0.1);
+                border-radius: 6px;
+                color: #fff;
+                font-size: 13px;
+            }
+            
+            .modal .form-group select {
+                -webkit-appearance: none;
+                appearance: none;
+                background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='%23fff' viewBox='0 0 16 16'%3E%3Cpath d='M8 11L3 6h10l-5 5z'/%3E%3C/svg%3E");
+                background-repeat: no-repeat;
+                background-position: right 12px center;
+                padding-right: 32px;
+            }
+            
+            .modal .form-group select option {
+                background: #1a1a1a;
+                color: #fff;
+                padding: 10px;
+            }
+            
+            .modal p {
+                font-size: 12px;
+                margin: 15px 0;
+            }
+            
+            .modal-actions {
+                display: flex;
+                gap: 10px;
+                margin-top: 20px;
+                padding-top: 15px;
+                border-top: 1px solid rgba(255, 255, 255, 0.1);
+            }
+            
+            .modal-actions button {
+                flex: 1;
+                padding: 10px;
+                font-size: 12px;
+                border-radius: 6px;
+                border: none;
+                cursor: pointer;
+                font-weight: 500;
+                text-align: center;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+            
+            .modal-actions .btn-secondary {
+                background: rgba(107, 114, 128, 0.2);
+                color: #9ca3af;
+            }
+            
+            .modal-actions .btn-success {
+                background: rgba(16, 185, 129, 0.2);
+                color: #10b981;
+            }
+            
+            .modal-actions .btn-danger {
+                background: rgba(239, 68, 68, 0.2);
+                color: #ef4444;
+            }
+            
+            /* Textarea trong modal */
+            .modal .form-group textarea {
+                width: 100%;
+                padding: 10px 12px;
+                background: rgba(255, 255, 255, 0.05);
+                border: 1px solid rgba(255, 255, 255, 0.1);
+                border-radius: 6px;
+                color: #fff;
+                font-size: 13px;
+                resize: vertical;
+                min-height: 60px;
             }
 
             .table {
@@ -698,7 +1414,7 @@
                     </div>
                     <div class="stat-item">
                         <div class="stat-value" id="smsOtpLeft" style="color: #f59e0b;">-</div>
-                        <div class="stat-label">SMS OTP LEFT</div>
+                        <div class="stat-label">SMS OTP</div>
                     </div>
                 </div>
             </div>
@@ -707,22 +1423,41 @@
         <div id="messageArea"></div>
 
         <div class="controls">
-            <input type="text" id="searchBox" class="search-box" placeholder="Tìm kiếm theo tên hoặc email...">
-            <button class="btn btn-primary" onclick="loadUsers(1, currentSearch, currentPlanFilter)">🔄 Làm mới</button>
+            <!-- Mobile: 3 nút chính hiển thị ngang -->
+            <div class="mobile-top-buttons">
+                <button class="btn btn-primary mobile-action-btn" onclick="mobileRefresh()">Làm mới</button>
+                <button class="btn btn-info mobile-action-btn" onclick="showRateLimitManagement()">Rate Limit</button>
+                <button class="btn mobile-action-btn" style="background: rgba(245, 158, 11, 0.1); color: #f59e0b; border: 1px solid #f59e0b;" onclick="setSmsOtpQuota()">SMS OTP</button>
+                <button class="btn mobile-action-btn" style="background: rgba(139, 92, 246, 0.1); color: #8b5cf6; border: 1px solid #8b5cf6;" onclick="showProLog()">Pro Log</button>
+            </div>
+            
+            <div class="search-wrapper">
+                <input type="text" id="searchBox" class="search-box" placeholder="Tìm kiếm theo tên hoặc email...">
+                <button class="btn btn-primary search-btn" id="searchBtn" onclick="performSearch()" style="padding: 11px 20px;">Tìm kiếm</button>
+            </div>
+            <button class="btn btn-primary desktop-only" onclick="loadUsers(1, currentSearch, currentPlanFilter)">Làm mới</button>
 
-            <!-- Filter buttons -->
-            <button class="btn" style="background: rgba(16, 185, 129, 0.1); color: #10b981; border: 1px solid #10b981;" onclick="filterByPlan('')" id="filterAll">📊 Tất cả</button>
-            <button class="btn" style="background: rgba(59, 130, 246, 0.1); color: #3b82f6; border: 1px solid #3b82f6;" onclick="filterByPlan('free')" id="filterFree">🆓 Free</button>
-            <button class="btn" style="background: rgba(139, 92, 246, 0.1); color: #8b5cf6; border: 1px solid #8b5cf6;" onclick="filterByPlan('pro')" id="filterPro">⭐ Pro</button>
+            <!-- Filter buttons - desktop only -->
+            <button class="btn desktop-only" style="background: rgba(16, 185, 129, 0.1); color: #10b981; border: 1px solid #10b981;" onclick="filterByPlan('')" id="filterAll">Tất cả</button>
+            <button class="btn desktop-only" style="background: rgba(59, 130, 246, 0.1); color: #3b82f6; border: 1px solid #3b82f6;" onclick="filterByPlan('free')" id="filterFree">Free</button>
+            <button class="btn desktop-only" style="background: rgba(139, 92, 246, 0.1); color: #8b5cf6; border: 1px solid #8b5cf6;" onclick="filterByPlan('pro')" id="filterPro">Pro</button>
 
-            <button class="btn btn-secondary" onclick="exportUsers()">📥 Xuất Excel</button>
-            <button class="btn btn-info" onclick="showCookieManagement()">🍪 Quản lý Cookies</button>
-            <button class="btn btn-info" onclick="showRateLimitManagement()">⚡ Rate Limit</button>
-            <button class="btn" style="background: rgba(245, 158, 11, 0.1); color: #f59e0b; border: 1px solid #f59e0b;" onclick="setSmsOtpQuota()">📧 Set SMS OTP</button>
+            <button class="btn btn-secondary desktop-only" onclick="exportUsers()">Xuất Excel</button>
+            <button class="btn btn-info desktop-only" onclick="showCookieManagement()">Quản lý Cookies</button>
+            <button class="btn btn-info desktop-only" onclick="showRateLimitManagement()">Rate Limit</button>
+            <button class="btn desktop-only" style="background: rgba(245, 158, 11, 0.1); color: #f59e0b; border: 1px solid #f59e0b;" onclick="setSmsOtpQuota()">Set SMS OTP</button>
         </div>
 
         <!-- Pagination controls (top) -->
         <div id="pagination"></div>
+        
+        <!-- Mobile search results container -->
+        <div class="mobile-search-title">KẾT QUẢ TÌM KIẾM</div>
+        <div id="mobileSearchResults" class="mobile-search-results">
+            <div class="mobile-search-placeholder">
+                Nhập tên hoặc email để tìm kiếm
+            </div>
+        </div>
 
         <div class="users-table">
             <div class="table-header">
@@ -740,7 +1475,7 @@
     <div id="upgradeModal" class="modal">
         <div class="modal-content">
             <div class="modal-header">
-                <h3>🚀 Nâng cấp lên Pro</h3>
+                <h3>Nâng cấp lên Pro</h3>
                 <span class="close" onclick="closeModal('upgradeModal')">&times;</span>
             </div>
             <div class="form-group">
@@ -771,7 +1506,7 @@
     <div id="downgradeModal" class="modal">
         <div class="modal-content">
             <div class="modal-header">
-                <h3>⬇️ Hạ cấp về Free</h3>
+                <h3>Hạ cấp về Free</h3>
                 <span class="close" onclick="closeModal('downgradeModal')">&times;</span>
             </div>
             <div class="form-group">
@@ -782,10 +1517,59 @@
                 <label>Email:</label>
                 <input type="text" id="downgradeUserEmail" readonly>
             </div>
-            <p style="color: #dc3545; font-weight: bold;">Bạn có chắc chắn muốn hạ cấp người dùng này về gói Free?</p>
             <div class="modal-actions">
                 <button class="btn btn-secondary" onclick="closeModal('downgradeModal')">Hủy</button>
                 <button class="btn btn-danger" onclick="confirmDowngrade()">Hạ cấp</button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Modal sửa thông tin user (Mobile) -->
+    <div id="mobileEditModal" class="modal">
+        <div class="modal-content" style="max-width: 400px;">
+            <div class="modal-header">
+                <h3>Sửa thông tin</h3>
+                <span class="close" onclick="closeModal('mobileEditModal')">&times;</span>
+            </div>
+            <input type="hidden" id="editUserId">
+            <div class="form-group">
+                <label>Tên:</label>
+                <input type="text" id="editUserName">
+            </div>
+            <div class="form-group">
+                <label>Email:</label>
+                <input type="email" id="editUserEmail">
+            </div>
+            <div class="form-group">
+                <label>Mật khẩu mới (để trống nếu không đổi):</label>
+                <input type="text" id="editUserPassword" placeholder="Nhập mật khẩu mới">
+            </div>
+            <div class="form-group">
+                <label>Gói:</label>
+                <select id="editUserPlan">
+                    <option value="free">Free</option>
+                    <option value="pro">Pro</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>Pro hết hạn:</label>
+                <input type="date" id="editProExpires">
+            </div>
+            <div class="form-group">
+                <label>Free hết hạn:</label>
+                <input type="date" id="editFreeExpires">
+            </div>
+            <div class="form-group">
+                <label>Monthly Limit (0-5):</label>
+                <input type="number" id="editMonthlyLimit" min="0" max="5">
+            </div>
+            <div class="form-group">
+                <label>Credits:</label>
+                <input type="number" id="editCredits" min="0">
+            </div>
+            <div class="modal-actions">
+                <button class="btn btn-secondary" onclick="closeModal('mobileEditModal')">Hủy</button>
+                <button class="btn btn-success" onclick="saveMobileEdit()">Lưu</button>
             </div>
         </div>
     </div>
@@ -855,18 +1639,321 @@
             }
         }
 
-        async function showLoginModal() {
-            const username = prompt('Nhập tên đăng nhập Admin:');
-            if (!username) {
-                window.location.href = '/';
+        function showLoginModal() {
+            // Ẩn container chính
+            document.querySelector('.container').style.display = 'none';
+            
+            // Tạo login overlay nếu chưa có
+            let loginOverlay = document.getElementById('adminLoginOverlay');
+            if (!loginOverlay) {
+                loginOverlay = document.createElement('div');
+                loginOverlay.id = 'adminLoginOverlay';
+                loginOverlay.innerHTML = `
+                    <div class="admin-login-container">
+                        <div class="admin-login-box">
+                            <div class="admin-login-header">
+                                <div class="admin-login-icon">🔐</div>
+                                <h1>Admin Panel</h1>
+                                <p>Tiệm Bánh Netflix</p>
+                            </div>
+                            <form id="adminLoginForm" onsubmit="handleAdminLogin(event)">
+                                <div class="admin-login-field">
+                                    <label for="adminUsername">Tên đăng nhập</label>
+                                    <input type="text" id="adminUsername" placeholder="Nhập tên đăng nhập" required autocomplete="username">
+                                </div>
+                                <div class="admin-login-field">
+                                    <label for="adminPassword">Mật khẩu</label>
+                                    <div class="password-input-wrapper">
+                                        <input type="password" id="adminPassword" placeholder="Nhập mật khẩu" required autocomplete="current-password">
+                                        <button type="button" class="toggle-password" onclick="toggleAdminPassword()">👁️</button>
+                                    </div>
+                                </div>
+                                <div id="adminLoginError" class="admin-login-error"></div>
+                                <button type="submit" class="admin-login-btn" id="adminLoginBtn">
+                                    <span>Đăng nhập</span>
+                                </button>
+                            </form>
+                            <div class="admin-login-footer">
+                                <a href="/" class="back-home">← Quay về trang chủ</a>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                document.body.appendChild(loginOverlay);
+                
+                // Thêm CSS cho login form
+                const loginStyles = document.createElement('style');
+                loginStyles.textContent = `
+                    #adminLoginOverlay {
+                        position: fixed;
+                        top: 0;
+                        left: 0;
+                        width: 100%;
+                        height: 100%;
+                        background: linear-gradient(135deg, #0f0f0f 0%, #1a1a2e 50%, #16213e 100%);
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        z-index: 10000;
+                    }
+                    
+                    .admin-login-container {
+                        width: 100%;
+                        max-width: 420px;
+                        padding: 20px;
+                    }
+                    
+                    .admin-login-box {
+                        background: rgba(30, 30, 30, 0.95);
+                        border-radius: 16px;
+                        padding: 40px;
+                        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(255, 255, 255, 0.1);
+                        backdrop-filter: blur(10px);
+                    }
+                    
+                    .admin-login-header {
+                        text-align: center;
+                        margin-bottom: 32px;
+                    }
+                    
+                    .admin-login-icon {
+                        font-size: 48px;
+                        margin-bottom: 16px;
+                        animation: pulse 2s infinite;
+                    }
+                    
+                    @keyframes pulse {
+                        0%, 100% { transform: scale(1); }
+                        50% { transform: scale(1.1); }
+                    }
+                    
+                    .admin-login-header h1 {
+                        color: #e50914;
+                        font-size: 28px;
+                        font-weight: 700;
+                        margin: 0 0 8px 0;
+                        letter-spacing: -0.5px;
+                    }
+                    
+                    .admin-login-header p {
+                        color: #888;
+                        font-size: 14px;
+                        margin: 0;
+                    }
+                    
+                    .admin-login-field {
+                        margin-bottom: 20px;
+                    }
+                    
+                    .admin-login-field label {
+                        display: block;
+                        color: #aaa;
+                        font-size: 13px;
+                        font-weight: 600;
+                        margin-bottom: 8px;
+                        text-transform: uppercase;
+                        letter-spacing: 0.5px;
+                    }
+                    
+                    .admin-login-field input {
+                        width: 100%;
+                        padding: 14px 16px;
+                        background: rgba(255, 255, 255, 0.05);
+                        border: 1px solid rgba(255, 255, 255, 0.1);
+                        border-radius: 8px;
+                        color: #fff;
+                        font-size: 15px;
+                        transition: all 0.3s ease;
+                        box-sizing: border-box;
+                    }
+                    
+                    .admin-login-field input:focus {
+                        outline: none;
+                        border-color: #e50914;
+                        background: rgba(229, 9, 20, 0.05);
+                        box-shadow: 0 0 0 3px rgba(229, 9, 20, 0.1);
+                    }
+                    
+                    .admin-login-field input::placeholder {
+                        color: #555;
+                    }
+                    
+                    .password-input-wrapper {
+                        position: relative;
+                    }
+                    
+                    .password-input-wrapper input {
+                        padding-right: 50px;
+                    }
+                    
+                    .toggle-password {
+                        position: absolute;
+                        right: 12px;
+                        top: 50%;
+                        transform: translateY(-50%);
+                        background: none;
+                        border: none;
+                        cursor: pointer;
+                        font-size: 18px;
+                        opacity: 0.6;
+                        transition: opacity 0.2s;
+                    }
+                    
+                    .toggle-password:hover {
+                        opacity: 1;
+                    }
+                    
+                    .admin-login-error {
+                        color: #ff4757;
+                        font-size: 13px;
+                        margin-bottom: 16px;
+                        padding: 10px 14px;
+                        background: rgba(255, 71, 87, 0.1);
+                        border-radius: 6px;
+                        display: none;
+                    }
+                    
+                    .admin-login-error.show {
+                        display: block;
+                    }
+                    
+                    .admin-login-btn {
+                        width: 100%;
+                        padding: 14px;
+                        background: linear-gradient(135deg, #e50914, #b20710);
+                        border: none;
+                        border-radius: 8px;
+                        color: #fff;
+                        font-size: 16px;
+                        font-weight: 600;
+                        cursor: pointer;
+                        transition: all 0.3s ease;
+                        position: relative;
+                        overflow: hidden;
+                    }
+                    
+                    .admin-login-btn:hover {
+                        transform: translateY(-2px);
+                        box-shadow: 0 8px 25px rgba(229, 9, 20, 0.4);
+                    }
+                    
+                    .admin-login-btn:active {
+                        transform: translateY(0);
+                    }
+                    
+                    .admin-login-btn:disabled {
+                        opacity: 0.7;
+                        cursor: not-allowed;
+                        transform: none;
+                    }
+                    
+                    .admin-login-btn.loading span {
+                        visibility: hidden;
+                    }
+                    
+                    .admin-login-btn.loading::after {
+                        content: '';
+                        position: absolute;
+                        width: 20px;
+                        height: 20px;
+                        top: 50%;
+                        left: 50%;
+                        margin-left: -10px;
+                        margin-top: -10px;
+                        border: 2px solid transparent;
+                        border-top-color: #fff;
+                        border-radius: 50%;
+                        animation: spin 0.8s linear infinite;
+                    }
+                    
+                    @keyframes spin {
+                        to { transform: rotate(360deg); }
+                    }
+                    
+                    @keyframes shake {
+                        0%, 100% { transform: translateX(0); }
+                        10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
+                        20%, 40%, 60%, 80% { transform: translateX(5px); }
+                    }
+                    
+                    .admin-login-footer {
+                        text-align: center;
+                        margin-top: 24px;
+                        padding-top: 20px;
+                        border-top: 1px solid rgba(255, 255, 255, 0.1);
+                    }
+                    
+                    .back-home {
+                        color: #888;
+                        text-decoration: none;
+                        font-size: 14px;
+                        transition: color 0.2s;
+                    }
+                    
+                    .back-home:hover {
+                        color: #e50914;
+                    }
+                    
+                    /* === MOBILE STYLES - Chỉ áp dụng cho điện thoại === */
+                    @media (max-width: 768px) {
+                        .admin-login-box {
+                            background: transparent;
+                            box-shadow: none;
+                            border-radius: 0;
+                            padding: 20px;
+                            backdrop-filter: none;
+                        }
+                        
+                        .admin-login-footer {
+                            display: none;
+                        }
+                    }
+                `;
+                document.head.appendChild(loginStyles);
+            }
+            
+            loginOverlay.style.display = 'flex';
+            
+            // Focus vào ô username
+            setTimeout(() => {
+                document.getElementById('adminUsername').focus();
+            }, 100);
+        }
+        
+        function toggleAdminPassword() {
+            const passwordInput = document.getElementById('adminPassword');
+            const toggleBtn = document.querySelector('.toggle-password');
+            if (passwordInput.type === 'password') {
+                passwordInput.type = 'text';
+                toggleBtn.textContent = '🙈';
+            } else {
+                passwordInput.type = 'password';
+                toggleBtn.textContent = '👁️';
+            }
+        }
+        
+        async function handleAdminLogin(event) {
+            event.preventDefault();
+            
+            const username = document.getElementById('adminUsername').value.trim();
+            const password = document.getElementById('adminPassword').value;
+            const errorDiv = document.getElementById('adminLoginError');
+            const loginBtn = document.getElementById('adminLoginBtn');
+            
+            // Reset error
+            errorDiv.classList.remove('show');
+            errorDiv.textContent = '';
+            
+            // Validate
+            if (!username || !password) {
+                errorDiv.textContent = 'Vui lòng nhập đầy đủ thông tin!';
+                errorDiv.classList.add('show');
                 return;
             }
             
-            const password = prompt('Nhập mật khẩu Admin:');
-            if (!password) {
-                window.location.href = '/';
-                return;
-            }
+            // Loading state
+            loginBtn.classList.add('loading');
+            loginBtn.disabled = true;
             
             try {
                 const response = await fetch(`${BACKEND_URL}/api/admin-auth/login`, {
@@ -881,21 +1968,31 @@
                 
                 if (response.ok) {
                     localStorage.setItem('admin_token', data.token);
+                    
+                    // Ẩn login overlay, hiện container
+                    document.getElementById('adminLoginOverlay').style.display = 'none';
+                    document.querySelector('.container').style.display = 'block';
+                    
                     showMessage('Đăng nhập Admin thành công!', 'success');
-                    loadUsers(1, '', ''); // Start fresh on page 1
+                    loadUsers(1, '', '');
                     setupSearch();
                 } else {
-                    showMessage(data.error, 'error');
+                    errorDiv.textContent = data.error || 'Sai tên đăng nhập hoặc mật khẩu!';
+                    errorDiv.classList.add('show');
+                    
+                    // Shake animation
+                    document.querySelector('.admin-login-box').style.animation = 'shake 0.5s';
                     setTimeout(() => {
-                        window.location.href = '/';
-                    }, 2000);
+                        document.querySelector('.admin-login-box').style.animation = '';
+                    }, 500);
                 }
             } catch (error) {
                 console.error('Admin login error:', error);
-                showMessage('Lỗi kết nối! Vui lòng thử lại.', 'error');
-                setTimeout(() => {
-                    window.location.href = '/';
-                }, 2000);
+                errorDiv.textContent = 'Lỗi kết nối! Vui lòng thử lại.';
+                errorDiv.classList.add('show');
+            } finally {
+                loginBtn.classList.remove('loading');
+                loginBtn.disabled = false;
             }
         }
 
@@ -966,13 +2063,16 @@
 
         async function upgradeUser(userId, duration) {
             try {
+                // Convert ngày thành tháng (30 ngày = 1 tháng)
+                const months = Math.ceil(parseInt(duration) / 30);
+                
                 const response = await fetch(`${BACKEND_URL}/api/admin/users/${userId}/upgrade`, {
                     method: 'PUT',
                     headers: {
                         'Content-Type': 'application/json',
                         'Authorization': `Bearer ${localStorage.getItem('admin_token')}`
                     },
-                    body: JSON.stringify({ duration: parseInt(duration) })
+                    body: JSON.stringify({ months: months })
                 });
 
                 if (!response.ok) {
@@ -982,6 +2082,12 @@
                 const data = await response.json();
                 showMessage(`Nâng cấp thành công! ${data.message}`, 'success');
                 loadUsers(currentPage, currentSearch, currentPlanFilter);
+                
+                // Refresh mobile search nếu đang trên mobile
+                const query = document.getElementById('searchBox').value;
+                if (query && window.innerWidth <= 768) {
+                    mobileSearch(query);
+                }
                 
             } catch (error) {
                 console.error('Error upgrading user:', error);
@@ -1006,6 +2112,12 @@
                 const data = await response.json();
                 showMessage(`Hạ cấp thành công! ${data.message}`, 'success');
                 loadUsers(currentPage, currentSearch, currentPlanFilter);
+                
+                // Refresh mobile search nếu đang trên mobile
+                const query = document.getElementById('searchBox').value;
+                if (query && window.innerWidth <= 768) {
+                    mobileSearch(query);
+                }
                 
             } catch (error) {
                 console.error('Error downgrading user:', error);
@@ -1090,10 +2202,11 @@
             const plan = inputs[3].value;
             const cookieId = inputs[4].value; // Dropdown value là cookieId, không phải cookieNumber
             const proExpiresAt = inputs[5].value;
-            const monthlyReportLimit = parseInt(inputs[6].value); // Monthly report limit (0-5)
-            const credits = parseInt(inputs[7].value); // Credits
+            const freeExpiresAt = inputs[6].value; // Free Exp. date (để tính lastCreditsReset)
+            const monthlyReportLimit = parseInt(inputs[7].value); // Monthly report limit (0-5)
+            const credits = parseInt(inputs[8].value); // Credits
             
-            console.log('Saving user row...', { name, email, plan, cookieId, proExpiresAt, monthlyReportLimit, credits });
+            console.log('Saving user row...', { name, email, plan, cookieId, proExpiresAt, freeExpiresAt, monthlyReportLimit, credits });
             
             // Validate
             if (!name || !email) {
@@ -1125,6 +2238,13 @@
                 
                 // Prepare update data
                 const updateData = { name, email, plan, proExpiresAt, monthlyReportLimit, credits };
+                
+                // Nếu có freeExpiresAt, tính ngược lại lastCreditsReset (freeExpiresAt - 7 ngày)
+                if (freeExpiresAt && plan === 'free') {
+                    const expDate = new Date(freeExpiresAt);
+                    expDate.setDate(expDate.getDate() - 7);
+                    updateData.lastCreditsReset = expDate.toISOString();
+                }
                 
                 // Update user info
                 const response = await fetch(`${BACKEND_URL}/api/admin-users/${userId}`, {
@@ -1256,10 +2376,32 @@
         }
         
         async function setSmsOtpQuota() {
+            const isMobile = window.innerWidth <= 768;
             const currentQuota = document.getElementById('smsOtpLeft').textContent;
+            
+            if (isMobile) {
+                // Hiện modal input trên mobile
+                const html = '<div id="smsOtpModal" style="position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.8);display:flex;align-items:center;justify-content:center;z-index:99999;padding:20px;box-sizing:border-box;">' +
+                    '<div style="background:#1a1a1a;border-radius:12px;padding:20px;max-width:300px;width:100%;border:1px solid rgba(255,255,255,0.1);">' +
+                        '<p style="color:#fff;font-size:14px;margin:0 0 5px;">Nhập số lượng SMS OTP</p>' +
+                        '<p style="color:#888;font-size:11px;margin:0 0 15px;">Hiện tại: ' + currentQuota + '</p>' +
+                        '<input type="number" id="smsOtpInput" value="' + (currentQuota !== '?' ? currentQuota : '300') + '" style="width:100%;padding:10px 12px;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);border-radius:6px;color:#fff;font-size:13px;margin-bottom:15px;box-sizing:border-box;">' +
+                        '<div style="display:flex;gap:10px;">' +
+                            '<button onclick="document.getElementById(\'smsOtpModal\').remove()" style="flex:1;background:transparent;color:#fff;border:1px solid rgba(255,255,255,0.3);padding:10px;border-radius:6px;font-size:12px;cursor:pointer;">Hủy</button>' +
+                            '<button onclick="submitSmsOtpQuota()" style="flex:1;background:rgba(16,185,129,0.2);color:#10b981;border:1px solid #10b981;padding:10px;border-radius:6px;font-size:12px;cursor:pointer;">Lưu</button>' +
+                        '</div>' +
+                    '</div>' +
+                '</div>';
+                
+                document.body.insertAdjacentHTML('beforeend', html);
+                document.getElementById('smsOtpInput').focus();
+                return;
+            }
+            
+            // Desktop dùng prompt
             const newValue = prompt(`Nhập số lượng SMS OTP LEFT mới:\n\n(Hiện tại: ${currentQuota})`, currentQuota !== '?' ? currentQuota : '300');
             
-            if (newValue === null) return; // User cancelled
+            if (newValue === null) return;
             
             const quota = parseInt(newValue);
             
@@ -1268,6 +2410,23 @@
                 return;
             }
             
+            await doSetSmsOtpQuota(quota);
+        }
+        
+        async function submitSmsOtpQuota() {
+            const input = document.getElementById('smsOtpInput');
+            const quota = parseInt(input.value);
+            
+            if (isNaN(quota) || quota < 0) {
+                showMobileNotice('Vui lòng nhập số nguyên không âm!', 'error');
+                return;
+            }
+            
+            document.getElementById('smsOtpModal').remove();
+            await doSetSmsOtpQuota(quota);
+        }
+        
+        async function doSetSmsOtpQuota(quota) {
             try {
                 showMessage('Đang cập nhật SMS OTP quota...', 'info');
                 
@@ -1286,9 +2445,8 @@
                 
                 const data = await response.json();
                 
-                showMessage(`✅ SMS OTP quota đã được set thành ${quota}`, 'success');
+                showMessage(`SMS OTP quota đã được set thành ${quota}`, 'success');
                 
-                // Reload quota
                 await loadSmsOtpQuota();
                 
             } catch (error) {
@@ -1332,6 +2490,7 @@
                                 <th style="width: 100px;">Reg.date</th>
                                 <th style="width: 100px;">Pro Since</th>
                                 <th style="width: 100px;">Pro Exp.</th>
+                                <th style="width: 100px;">Free Exp.</th>
                                 <th style="width: 100px;">Last login</th>
                                 <th style="width: 120px;">Monthly Limit</th>
                                 <th style="width: 100px;">Credits</th>
@@ -1346,6 +2505,32 @@
                 const proUpgraded = user.proUpgradedAt ? new Date(user.proUpgradedAt).toLocaleDateString('vi-VN') : '-';
                 const proExpires = user.proExpiresAt ? new Date(user.proExpiresAt).toISOString().split('T')[0] : '';
                 const lastLogin = user.lastLogin ? new Date(user.lastLogin).toLocaleDateString('vi-VN') : 'No login';
+                
+                // Tính Free Exp. (số ngày còn lại cho Free credits - 7 ngày từ lastCreditsReset)
+                let freeExpDays = '-';
+                let freeExpColor = '#6b7280';
+                let freeExpDate = '';
+                if (user.plan === 'free') {
+                    const lastReset = user.lastCreditsReset ? new Date(user.lastCreditsReset) : new Date(user.createdAt);
+                    const now = new Date();
+                    const daysSinceReset = Math.floor((now - lastReset) / (1000 * 60 * 60 * 24));
+                    const daysLeft = Math.max(0, 7 - daysSinceReset);
+                    
+                    // Tính ngày hết hạn
+                    const expireDate = new Date(lastReset);
+                    expireDate.setDate(expireDate.getDate() + 7);
+                    freeExpDate = expireDate.toISOString().split('T')[0];
+                    const expireDateStr = expireDate.toLocaleDateString('vi-VN');
+                    
+                    // Nếu credits = 0 hoặc đã hết hạn → hiện "Expired (ngày)"
+                    if (user.credits <= 0 || daysLeft <= 0) {
+                        freeExpDays = `Expired (${expireDateStr})`;
+                        freeExpColor = '#ef4444';
+                    } else {
+                        freeExpDays = `${daysLeft}d`;
+                        freeExpColor = daysLeft <= 3 ? '#f59e0b' : '#10b981';
+                    }
+                }
                 
                 // Cookie info
                 let cookieNumber = '-';
@@ -1418,12 +2603,16 @@
                         </td>
                         <td style="font-size: 0.85rem; color: var(--text-primary);">${ip}</td>
                         <td style="font-size: 0.85rem; color: var(--text-primary);">${device}</td>
-                        <td style="font-size: 0.85rem; color: ${statusColor}; font-weight: 600; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;">${statusText}</td>
+                        <td style="font-size: 0.85rem; color: ${statusColor}; font-weight: 600;">${statusText}</td>
                         <td>${createdAt}</td>
                         <td style="color: ${user.proUpgradedAt ? '#8b5cf6' : '#6b7280'};">${proUpgraded}</td>
                         <td>
                             <span class="view-mode">${proExpires ? new Date(proExpires).toLocaleDateString('vi-VN') : '-'}</span>
                             <input type="date" class="edit-mode" value="${proExpires}" style="display: none; width: 100%; padding: 4px; border: 1px solid #ddd; border-radius: 4px;">
+                        </td>
+                        <td>
+                            <span class="view-mode" style="color: ${freeExpColor}; font-weight: 600;">${freeExpDays}</span>
+                            <input type="date" class="edit-mode free-exp-input" value="${freeExpDate}" style="display: none; width: 100%; padding: 4px; border: 1px solid #ddd; border-radius: 4px;" ${user.plan !== 'free' ? 'disabled' : ''}>
                         </td>
                         <td>${lastLogin}</td>
                         <td>
@@ -1471,16 +2660,176 @@
         function setupSearch() {
             const searchBox = document.getElementById('searchBox');
             let searchTimeout;
+            
+            // Kiểm tra nếu là mobile thì không auto search
+            const isMobile = window.innerWidth <= 768;
 
             searchBox.addEventListener('input', function() {
+                // Trên mobile: không auto search, phải bấm nút
+                if (isMobile) return;
+                
                 clearTimeout(searchTimeout);
                 const query = this.value;
 
-                // Debounce: Chờ 500ms sau khi user ngừng gõ
+                // Debounce: Chờ 500ms sau khi user ngừng gõ (chỉ trên desktop)
                 searchTimeout = setTimeout(() => {
                     loadUsers(1, query, currentPlanFilter); // Load page 1 with search
                 }, 500);
             });
+            
+            // Cho phép Enter để tìm kiếm
+            searchBox.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    performSearch();
+                }
+            });
+        }
+        
+        // Function tìm kiếm khi bấm nút
+        function performSearch() {
+            const query = document.getElementById('searchBox').value;
+            const isMobile = window.innerWidth <= 768;
+            
+            if (isMobile) {
+                // Tìm kiếm riêng cho mobile
+                mobileSearch(query);
+            } else {
+                loadUsers(1, query, currentPlanFilter);
+            }
+        }
+        
+        // Tìm kiếm cho mobile - hiển thị dạng card
+        async function mobileSearch(query) {
+            const container = document.getElementById('mobileSearchResults');
+            
+            if (!query || query.trim() === '') {
+                container.innerHTML = '<div class="mobile-search-placeholder">Nhập tên hoặc email để tìm kiếm</div>';
+                return;
+            }
+            
+            container.innerHTML = '<div class="mobile-search-placeholder">Đang tìm kiếm...</div>';
+            
+            try {
+                const adminToken = localStorage.getItem('admin_token');
+                const response = await fetch(`${BACKEND_URL}/api/admin/users?page=1&limit=20&search=${encodeURIComponent(query)}`, {
+                    headers: {
+                        'Authorization': `Bearer ${adminToken}`
+                    }
+                });
+                
+                if (!response.ok) throw new Error('Lỗi tìm kiếm');
+                
+                const data = await response.json();
+                const users = data.users || [];
+                
+                if (users.length === 0) {
+                    container.innerHTML = '<div class="mobile-search-placeholder">Không tìm thấy kết quả</div>';
+                    return;
+                }
+                
+                let html = '';
+                users.forEach((user, index) => {
+                    const plan = user.plan || 'free';
+                    const proSince = user.proUpgradedAt ? new Date(user.proUpgradedAt).toLocaleDateString('vi-VN') : '-';
+                    const proExp = user.proExpiresAt ? new Date(user.proExpiresAt).toLocaleDateString('vi-VN') : '-';
+                    const proExpRaw = user.proExpiresAt ? user.proExpiresAt.split('T')[0] : '';
+                    
+                    // Tính Free Exp. từ lastCreditsReset (7 ngày từ reset)
+                    let freeExp = '-';
+                    let freeExpRaw = '';
+                    if (plan === 'free') {
+                        const lastReset = user.lastCreditsReset ? new Date(user.lastCreditsReset) : new Date(user.createdAt);
+                        const now = new Date();
+                        const daysSinceReset = Math.floor((now - lastReset) / (1000 * 60 * 60 * 24));
+                        const daysRemaining = 7 - daysSinceReset;
+                        
+                        // Tính ngày hết hạn
+                        const expDate = new Date(lastReset);
+                        expDate.setDate(expDate.getDate() + 7);
+                        freeExpRaw = expDate.toISOString().split('T')[0];
+                        const expDateStr = expDate.toLocaleDateString('vi-VN');
+                        
+                        // Nếu credits = 0 hoặc đã hết hạn → hiện "Expired (ngày)"
+                        if (user.credits <= 0 || daysRemaining <= 0) {
+                            freeExp = `Expired (${expDateStr})`;
+                        } else {
+                            freeExp = `${daysRemaining} ngày`;
+                        }
+                    }
+                    
+                    const lastLogin = user.lastLogin ? new Date(user.lastLogin).toLocaleDateString('vi-VN') : '-';
+                    const ip = user.lastLoginIP || '-';
+                    const monthlyLimit = user.monthlyReportLimit !== undefined ? user.monthlyReportLimit : (plan === 'pro' ? 5 : 2);
+                    const credits = user.credits || 0;
+                    
+                    html += `
+                        <div class="mobile-user-card" data-user-id="${user._id}" id="mobile-card-${user._id}">
+                            <div class="user-header">
+                                <span class="user-name view-mode">#${index + 1} ${user.name}</span>
+                                <input type="text" class="edit-mode edit-input" value="${user.name}" data-field="name" style="display:none; flex:1;">
+                                <span class="user-plan ${plan} view-mode">${plan.toUpperCase()}</span>
+                                <select class="edit-mode edit-input" data-field="plan" style="display:none;">
+                                    <option value="free" ${plan === 'free' ? 'selected' : ''}>FREE</option>
+                                    <option value="pro" ${plan === 'pro' ? 'selected' : ''}>PRO</option>
+                                </select>
+                            </div>
+                            <div class="user-info">
+                                <div class="info-item">
+                                    <span class="info-label">Email</span>
+                                    <span class="info-value view-mode">${user.email}</span>
+                                    <input type="email" class="edit-mode edit-input" value="${user.email}" data-field="email" style="display:none;">
+                                </div>
+                                <div class="info-item">
+                                    <span class="info-label">Password</span>
+                                    <span class="info-value view-mode">********</span>
+                                    <input type="text" class="edit-mode edit-input" placeholder="Mat khau moi" data-field="password" style="display:none;">
+                                </div>
+                                <div class="info-item">
+                                    <span class="info-label">Pro Exp.</span>
+                                    <span class="info-value view-mode">${proExp}</span>
+                                    <input type="date" class="edit-mode edit-input" value="${proExpRaw}" data-field="proExpiresAt" style="display:none;">
+                                </div>
+                                <div class="info-item">
+                                    <span class="info-label">Free Exp.</span>
+                                    <span class="info-value view-mode">${freeExp}</span>
+                                    <input type="date" class="edit-mode edit-input" value="${freeExpRaw}" data-field="freeExpiresAt" style="display:none;">
+                                </div>
+                                <div class="info-item">
+                                    <span class="info-label">Monthly Limit</span>
+                                    <span class="info-value view-mode">${monthlyLimit}</span>
+                                    <input type="number" class="edit-mode edit-input" value="${monthlyLimit}" min="0" max="5" data-field="monthlyReportLimit" style="display:none;">
+                                </div>
+                                <div class="info-item">
+                                    <span class="info-label">Credits</span>
+                                    <span class="info-value view-mode">${credits}</span>
+                                    <input type="number" class="edit-mode edit-input" value="${credits}" min="0" data-field="credits" style="display:none;">
+                                </div>
+                                <div class="info-item">
+                                    <span class="info-label">IP</span>
+                                    <span class="info-value">${ip}</span>
+                                </div>
+                                <div class="info-item">
+                                    <span class="info-label">Last Login</span>
+                                    <span class="info-value">${lastLogin}</span>
+                                </div>
+                            </div>
+                            <div class="user-actions">
+                                <button class="btn-edit view-mode" onclick="enableMobileEdit('${user._id}')">Sửa</button>
+                                <button class="btn-upgrade view-mode ${plan === 'free' ? '' : 'hidden'}" onclick="openUpgradeModal('${user._id}', '${user.name}', '${user.email}')">Nâng cấp</button>
+                                <button class="btn-downgrade view-mode ${plan === 'pro' ? '' : 'hidden'}" onclick="openDowngradeModal('${user._id}', '${user.name}', '${user.email}')">Hạ cấp</button>
+                                <button class="btn-save edit-mode" onclick="saveMobileCard('${user._id}')" style="display:none;">Lưu</button>
+                                <button class="btn-cancel edit-mode" onclick="cancelMobileEdit('${user._id}')" style="display:none;">Hủy</button>
+                            </div>
+                        </div>
+                    `;
+                });
+                
+                container.innerHTML = html;
+                
+            } catch (error) {
+                console.error('Mobile search error:', error);
+                container.innerHTML = '<div class="mobile-search-placeholder">Lỗi tìm kiếm. Vui lòng thử lại.</div>';
+            }
         }
 
         // ========================================
@@ -1583,6 +2932,323 @@
             document.getElementById('downgradeUserName').value = userName;
             document.getElementById('downgradeUserEmail').value = userEmail;
             document.getElementById('downgradeModal').style.display = 'block';
+        }
+        
+        // Mobile Edit Modal Functions
+        
+        // Hiển thị thông báo dạng modal thay vì alert
+        function showMobileNotice(message, type) {
+            // type: 'success', 'error', 'info'
+            const color = type === 'success' ? '#10b981' : type === 'error' ? '#ef4444' : '#3b82f6';
+            const icon = type === 'success' ? '✓' : type === 'error' ? '✕' : 'ℹ';
+            
+            const html = '<div id="mobileNoticeModal" style="position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.8);display:flex;align-items:center;justify-content:center;z-index:99999;padding:20px;box-sizing:border-box;">' +
+                '<div style="background:#1a1a1a;border-radius:12px;padding:25px 20px;max-width:300px;width:100%;text-align:center;border:1px solid rgba(255,255,255,0.1);">' +
+                    '<div style="width:50px;height:50px;border-radius:50%;background:' + color + ';color:#fff;font-size:24px;display:flex;align-items:center;justify-content:center;margin:0 auto 15px;">' + icon + '</div>' +
+                    '<p style="color:#fff;font-size:14px;margin:0 0 20px;line-height:1.5;">' + message + '</p>' +
+                    '<button onclick="closeMobileNotice()" style="background:' + color + ';color:#fff;border:none;padding:10px 30px;border-radius:6px;font-size:13px;cursor:pointer;">OK</button>' +
+                '</div>' +
+            '</div>';
+            
+            document.body.insertAdjacentHTML('beforeend', html);
+        }
+        
+        function closeMobileNotice() {
+            var modal = document.getElementById('mobileNoticeModal');
+            if (modal) modal.remove();
+        }
+        
+        // Confirm modal thay thế confirm() trên mobile
+        function showConfirmModal(message, onConfirm) {
+            const html = '<div id="mobileConfirmModal" style="position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.8);display:flex;align-items:center;justify-content:center;z-index:99999;padding:20px;box-sizing:border-box;">' +
+                '<div style="background:#1a1a1a;border-radius:12px;padding:20px;max-width:300px;width:100%;text-align:center;border:1px solid rgba(255,255,255,0.1);">' +
+                    '<p style="color:#fff;font-size:13px;margin:0 0 20px;line-height:1.5;">' + message + '</p>' +
+                    '<div style="display:flex;gap:10px;">' +
+                        '<button id="confirmModalCancel" style="flex:1;background:transparent;color:#fff;border:1px solid rgba(255,255,255,0.3);padding:10px;border-radius:6px;font-size:12px;cursor:pointer;">Hủy</button>' +
+                        '<button id="confirmModalOk" style="flex:1;background:rgba(239,68,68,0.2);color:#ef4444;border:1px solid #ef4444;padding:10px;border-radius:6px;font-size:12px;cursor:pointer;">Xác nhận</button>' +
+                    '</div>' +
+                '</div>' +
+            '</div>';
+            
+            document.body.insertAdjacentHTML('beforeend', html);
+            
+            document.getElementById('confirmModalCancel').onclick = function() {
+                document.getElementById('mobileConfirmModal').remove();
+            };
+            
+            document.getElementById('confirmModalOk').onclick = function() {
+                document.getElementById('mobileConfirmModal').remove();
+                if (onConfirm) onConfirm();
+            };
+        }
+        
+        function enableMobileEdit(userId) {
+            const card = document.getElementById('mobile-card-' + userId);
+            if (!card) return;
+            
+            // Ẩn view mode, hiện edit mode
+            card.querySelectorAll('.view-mode').forEach(el => el.style.display = 'none');
+            card.querySelectorAll('.edit-mode').forEach(el => el.style.display = 'block');
+        }
+        
+        function cancelMobileEdit(userId) {
+            const card = document.getElementById('mobile-card-' + userId);
+            if (!card) return;
+            
+            // Ẩn edit mode, hiện view mode
+            card.querySelectorAll('.edit-mode').forEach(el => el.style.display = 'none');
+            card.querySelectorAll('.view-mode').forEach(el => el.style.display = '');
+            
+            // Reset lại giá trị bằng cách tìm kiếm lại
+            const query = document.getElementById('searchBox').value;
+            if (query) mobileSearch(query);
+        }
+        
+        // Làm mới trang trên mobile - xóa search box và kết quả
+        function mobileRefresh() {
+            document.getElementById('searchBox').value = '';
+            document.getElementById('mobileSearchResults').innerHTML = '<div class="mobile-search-placeholder">Nhập tên hoặc email để tìm kiếm</div>';
+            loadStats();
+        }
+        
+        // Hiển thị danh sách Pro users trên mobile
+        let allProUsers = []; // Lưu danh sách Pro users để filter
+        
+        async function showProLog() {
+            const container = document.getElementById('mobileSearchResults');
+            container.innerHTML = '<div class="mobile-search-placeholder">Đang tải danh sách Pro...</div>';
+            
+            try {
+                const adminToken = localStorage.getItem('admin_token');
+                const response = await fetch(`${BACKEND_URL}/api/admin/users?page=1&limit=100&plan=pro`, {
+                    headers: {
+                        'Authorization': `Bearer ${adminToken}`
+                    }
+                });
+                
+                if (!response.ok) throw new Error('Lỗi tải dữ liệu');
+                
+                const data = await response.json();
+                allProUsers = data.users || [];
+                
+                if (allProUsers.length === 0) {
+                    container.innerHTML = '<div class="mobile-search-placeholder">Không có Pro user nào</div>';
+                    return;
+                }
+                
+                renderProLog(allProUsers);
+                
+            } catch (error) {
+                console.error('Pro log error:', error);
+                container.innerHTML = '<div class="mobile-search-placeholder">Lỗi tải dữ liệu. Vui lòng thử lại.</div>';
+            }
+        }
+        
+        // Biến lưu filter hiện tại
+        let currentProFilter = '';
+        
+        function renderProLog(users, selectedFilter) {
+            const container = document.getElementById('mobileSearchResults');
+            
+            // Lưu filter hiện tại
+            if (selectedFilter !== undefined) {
+                currentProFilter = selectedFilter;
+            }
+            
+            // Tạo filter controls
+            const now = new Date();
+            
+            // Lấy danh sách các tháng thực sự có Pro user nâng cấp
+            const monthsWithPro = {};
+            allProUsers.forEach(user => {
+                if (user.proUpgradedAt) {
+                    const d = new Date(user.proUpgradedAt);
+                    const key = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`;
+                    const label = `Tháng ${d.getMonth() + 1}/${d.getFullYear()}`;
+                    if (!monthsWithPro[key]) {
+                        monthsWithPro[key] = { label, count: 0 };
+                    }
+                    monthsWithPro[key].count++;
+                }
+            });
+            
+            // Sắp xếp theo thời gian mới nhất
+            const sortedMonths = Object.entries(monthsWithPro).sort((a, b) => b[0].localeCompare(a[0]));
+            
+            let filterHtml = `
+                <div class="pro-filter-controls">
+                    <select id="proMonthFilter" onchange="filterProLog()">
+                        <option value="" ${currentProFilter === '' ? 'selected' : ''}>Tất cả</option>
+                        <option value="expiring" ${currentProFilter === 'expiring' ? 'selected' : ''}>Sắp hết hạn</option>
+            `;
+            
+            // Chỉ hiển thị các tháng có Pro user
+            sortedMonths.forEach(([value, data]) => {
+                const selected = currentProFilter === value ? 'selected' : '';
+                filterHtml += `<option value="${value}" ${selected}>${data.label}</option>`;
+            });
+            
+            filterHtml += `
+                    </select>
+                    <span class="pro-count">${users.length} kết quả</span>
+                </div>
+            `;
+            
+            if (users.length === 0) {
+                container.innerHTML = filterHtml + '<div class="mobile-search-placeholder">Không có kết quả</div>';
+                return;
+            }
+            
+            let html = filterHtml;
+            users.forEach((user, index) => {
+                const proSince = user.proUpgradedAt ? new Date(user.proUpgradedAt).toLocaleDateString('vi-VN') : '-';
+                const proExp = user.proExpiresAt ? new Date(user.proExpiresAt).toLocaleDateString('vi-VN') : '-';
+                
+                // Tính số ngày còn lại
+                let daysLeft = '';
+                let expStyle = 'color: #8b5cf6;';
+                if (user.proExpiresAt) {
+                    const expDate = new Date(user.proExpiresAt);
+                    const diffDays = Math.ceil((expDate - now) / (1000 * 60 * 60 * 24));
+                    if (diffDays <= 5 && diffDays > 0) {
+                        daysLeft = ` (${diffDays} ngày)`;
+                        expStyle = 'color: #ef4444; font-weight: 600;';
+                    } else if (diffDays <= 0) {
+                        daysLeft = ' (Hết hạn)';
+                        expStyle = 'color: #ef4444; font-weight: 600;';
+                    }
+                }
+                
+                html += `
+                    <div class="mobile-pro-card">
+                        <div class="pro-card-header">
+                            <span class="pro-index">#${index + 1}</span>
+                            <span class="pro-name">${user.name}</span>
+                        </div>
+                        <div class="pro-card-info">
+                            <div class="pro-info-row">
+                                <span class="pro-label">Email</span>
+                                <span class="pro-value">${user.email}</span>
+                            </div>
+                            <div class="pro-info-row">
+                                <span class="pro-label">Pro Since</span>
+                                <span class="pro-value">${proSince}</span>
+                            </div>
+                            <div class="pro-info-row">
+                                <span class="pro-label">Pro Exp</span>
+                                <span class="pro-value" style="${expStyle}">${proExp}${daysLeft}</span>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            });
+            
+            container.innerHTML = html;
+        }
+        
+        function filterProLog() {
+            const monthFilter = document.getElementById('proMonthFilter').value;
+            
+            if (!monthFilter) {
+                renderProLog(allProUsers, '');
+                return;
+            }
+            
+            // Filter sắp hết hạn
+            if (monthFilter === 'expiring') {
+                const now = new Date();
+                const fiveDaysLater = new Date(now.getTime() + 5 * 24 * 60 * 60 * 1000);
+                
+                const filtered = allProUsers.filter(user => {
+                    if (!user.proExpiresAt) return false;
+                    const expDate = new Date(user.proExpiresAt);
+                    return expDate <= fiveDaysLater && expDate >= now;
+                });
+                
+                renderProLog(filtered, 'expiring');
+                return;
+            }
+            
+            // Filter theo tháng
+            const [year, month] = monthFilter.split('-').map(Number);
+            
+            const filtered = allProUsers.filter(user => {
+                if (!user.proUpgradedAt) return false;
+                const d = new Date(user.proUpgradedAt);
+                return d.getFullYear() === year && d.getMonth() + 1 === month;
+            });
+            
+            renderProLog(filtered, monthFilter);
+        }
+        
+        async function saveMobileCard(userId) {
+            const card = document.getElementById('mobile-card-' + userId);
+            if (!card) return;
+            
+            // Lấy dữ liệu từ các input
+            const inputs = card.querySelectorAll('.edit-input');
+            const updateData = {};
+            let freeExpValue = null;
+            
+            inputs.forEach(input => {
+                const field = input.dataset.field;
+                let value = input.value;
+                
+                if (field === 'password') {
+                    if (value && value.trim()) {
+                        if (value.length < 8) {
+                            showMobileNotice('Mật khẩu phải có ít nhất 8 ký tự!', 'error');
+                            return;
+                        }
+                        updateData.password = value;
+                    }
+                } else if (field === 'monthlyReportLimit' || field === 'credits') {
+                    updateData[field] = parseInt(value) || 0;
+                } else if (field === 'proExpiresAt') {
+                    updateData[field] = value || null;
+                } else if (field === 'freeExpiresAt') {
+                    freeExpValue = value;
+                } else {
+                    updateData[field] = value;
+                }
+            });
+            
+            // Convert freeExpiresAt thành lastCreditsReset (trừ 7 ngày) cho tài khoản Free
+            if (freeExpValue && updateData.plan === 'free') {
+                const expDate = new Date(freeExpValue);
+                expDate.setDate(expDate.getDate() - 7);
+                updateData.lastCreditsReset = expDate.toISOString();
+            }
+            
+            // Validate
+            if (!updateData.name || !updateData.email) {
+                showMobileNotice('Tên và Email không được để trống!', 'error');
+                return;
+            }
+            
+            try {
+                const adminToken = localStorage.getItem('admin_token');
+                const response = await fetch(BACKEND_URL + '/api/admin-users/' + userId, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': 'Bearer ' + adminToken
+                    },
+                    body: JSON.stringify(updateData)
+                });
+                
+                if (response.ok) {
+                    // Refresh search results ngay lập tức, không hiện thông báo
+                    const query = document.getElementById('searchBox').value;
+                    if (query) mobileSearch(query);
+                } else {
+                    const error = await response.json();
+                    showMobileNotice('Lỗi: ' + (error.message || 'Không thể cập nhật'), 'error');
+                }
+            } catch (error) {
+                console.error('Save error:', error);
+                showMobileNotice('Lỗi kết nối. Vui lòng thử lại.', 'error');
+            }
         }
 
         function closeModal(modalId) {
@@ -2384,6 +4050,12 @@
             const userControls = document.querySelector('.controls');
             const pagination = document.getElementById('pagination');
             
+            // Ẩn mobile search results và title
+            const mobileSearchResults = document.getElementById('mobileSearchResults');
+            const mobileSearchTitle = document.querySelector('.mobile-search-title');
+            if (mobileSearchResults) mobileSearchResults.style.display = 'none';
+            if (mobileSearchTitle) mobileSearchTitle.style.display = 'none';
+            
             if (usersTable) usersTable.style.display = 'none';
             if (userControls) userControls.style.display = 'none';
             if (pagination) pagination.style.display = 'none';
@@ -2407,8 +4079,11 @@
                     </div>
                     
                     <!-- Controls -->
-                    <div style="display: grid; grid-template-columns: 1fr auto auto auto; gap: 12px; margin-bottom: 20px; align-items: center;">
-                        <input type="text" id="searchRateLimitBox" class="search-box" placeholder="Tìm kiếm theo IP hoặc Email..." oninput="filterBannedIPs()">
+                    <div class="rate-limit-controls" style="display: grid; grid-template-columns: 1fr auto auto auto auto; gap: 12px; margin-bottom: 20px; align-items: center;">
+                        <div class="rate-limit-search-wrapper">
+                            <input type="text" id="searchRateLimitBox" class="search-box" placeholder="Tìm kiếm theo IP hoặc Email...">
+                            <button class="btn btn-primary rate-limit-search-btn" onclick="filterBannedIPs()">Tìm kiếm</button>
+                        </div>
                         <select id="filterCategory" class="search-box" style="width: 200px;" onchange="filterBannedIPs()">
                             <option value="">Tất cả Categories</option>
                             <option value="auth">Auth (Login/Register)</option>
@@ -2416,10 +4091,11 @@
                             <option value="cookieReport">Cookie Report</option>
                             <option value="general">General API</option>
                         </select>
-                        <button class="btn btn-primary" onclick="loadBannedIPs()">Làm mới</button>
-                        <div style="display: flex; gap: 8px;">
+                        <div class="rate-limit-buttons">
+                            <button class="btn btn-primary" onclick="showUsersTable()">Quay lại</button>
+                            <button class="btn btn-primary" onclick="loadBannedIPs()">Làm mới</button>
+                            <button class="btn btn-danger" onclick="showManualBanModal()">Manual Ban</button>
                             <button class="btn btn-warning" onclick="unbanAllCategories()">Unban All</button>
-                            <button class="btn btn-danger" onclick="showUsersTable()">Quay lại User</button>
                         </div>
                     </div>
                     
@@ -2467,11 +4143,13 @@
                 Object.keys(categories).forEach(type => {
                     const ips = result.data[type] || [];
                     ips.forEach(data => {
+                        // Nếu là manual ban (bannedCategories = 'ALL'), hiển thị đặc biệt
+                        const isAllCategories = data.bannedCategories === 'ALL';
                         allBannedIPs.push({
                             ...data,
                             type,
-                            typeName: categories[type].name,
-                            typeColor: categories[type].color
+                            typeName: isAllCategories ? '🔒 ALL' : categories[type].name,
+                            typeColor: isAllCategories ? '#ef4444' : categories[type].color
                         });
                     });
                 });
@@ -2537,6 +4215,7 @@
         
         function renderBannedIPsTable(ips) {
             const container = document.getElementById('bannedIPsTableContainer');
+            const isMobile = window.innerWidth <= 768;
             
             if (ips.length === 0) {
                 container.innerHTML = `
@@ -2547,16 +4226,46 @@
                 return;
             }
             
+            // Mobile view - dạng card
+            if (isMobile) {
+                let mobileHtml = '<div class="mobile-banned-list">';
+                ips.forEach((data, index) => {
+                    const minutes = Math.floor(data.remainingSeconds / 60);
+                    const seconds = data.remainingSeconds % 60;
+                    const isPermanent = data.isPermanent || data.remainingSeconds > 365 * 24 * 60 * 60;
+                    const timeLeft = isPermanent ? 'Vĩnh viễn' : (minutes > 0 ? `${minutes}m ${seconds}s` : `${seconds}s`);
+                    const reason = data.reason || (data.isManual ? 'Manual ban' : 'Rate limit exceeded');
+                    const bannedAt = new Date(data.bannedAt).toLocaleString('vi-VN', { hour: '2-digit', minute: '2-digit', day: '2-digit', month: '2-digit' });
+                    
+                    mobileHtml += `
+                        <div class="mobile-banned-card">
+                            <div class="banned-header">
+                                <span class="banned-ip">#${index + 1} ${data.ip}</span>
+                            </div>
+                            <div class="banned-info">Email: <span>${data.userEmail}</span></div>
+                            <div class="banned-info">Lý do: <span>${reason}</span></div>
+                            <div class="banned-info">Thời gian: <span style="color: ${isPermanent ? '#ef4444' : '#f59e0b'};">${timeLeft}</span></div>
+                            <div class="banned-info">Banned: <span>${bannedAt}</span></div>
+                            <button class="btn-unban" onclick="unbanIP('${data.type}', '${data.ip}')">Unban</button>
+                        </div>
+                    `;
+                });
+                mobileHtml += '</div>';
+                container.innerHTML = mobileHtml;
+                return;
+            }
+            
+            // Desktop view - bảng
             let html = `
                 <table style="width: 100%; border-collapse: collapse; background: var(--bg-elevated); border-radius: 8px; overflow: hidden; font-size: 0.95em;">
                     <thead>
                         <tr style="background: var(--bg-tertiary); border-bottom: 2px solid var(--border-color);">
                             <th style="padding: 14px; text-align: center; color: var(--text-secondary); font-weight: 600; font-size: 0.95em; width: 60px;">STT</th>
-                            <th style="padding: 14px; text-align: left; color: var(--text-secondary); font-weight: 600; font-size: 0.95em;">IP Address</th>
+                            <th style="padding: 14px; text-align: left; color: var(--text-secondary); font-weight: 600; font-size: 0.95em;">IP/Email</th>
                             <th style="padding: 14px; text-align: left; color: var(--text-secondary); font-weight: 600; font-size: 0.95em;">User Email</th>
                             <th style="padding: 14px; text-align: center; color: var(--text-secondary); font-weight: 600; font-size: 0.95em;">Category</th>
+                            <th style="padding: 14px; text-align: left; color: var(--text-secondary); font-weight: 600; font-size: 0.95em;">Reason</th>
                             <th style="padding: 14px; text-align: center; color: var(--text-secondary); font-weight: 600; font-size: 0.95em;">Banned At</th>
-                            <th style="padding: 14px; text-align: center; color: var(--text-secondary); font-weight: 600; font-size: 0.95em;">Auto Unban At</th>
                             <th style="padding: 14px; text-align: center; color: var(--text-secondary); font-weight: 600; font-size: 0.95em;">Time Left</th>
                             <th style="padding: 14px; text-align: center; color: var(--text-secondary); font-weight: 600; font-size: 0.95em; width: 100px;">Action</th>
                         </tr>
@@ -2567,28 +4276,30 @@
             ips.forEach((data, index) => {
                 const minutes = Math.floor(data.remainingSeconds / 60);
                 const seconds = data.remainingSeconds % 60;
-                const timeLeft = minutes > 0 ? `${minutes}m ${seconds}s` : `${seconds}s`;
+                const isPermanent = data.isPermanent || data.remainingSeconds > 365 * 24 * 60 * 60; // > 1 năm = vĩnh viễn
+                const timeLeft = isPermanent ? '♾️ Vĩnh viễn' : (minutes > 0 ? `${minutes}m ${seconds}s` : `${seconds}s`);
+                const timeLeftColor = isPermanent ? '#ef4444' : 'var(--accent-orange)';
                 
-                const resetDate = new Date(data.resetTime);
-                const resetTimeStr = resetDate.toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+                const reason = data.reason || (data.isManual ? 'Manual ban' : 'Rate limit exceeded');
+                const isManual = data.isManual ? '🚫' : '⚡';
                 
                 html += `
                     <tr style="border-bottom: 1px solid var(--border-color); transition: background 0.2s;" onmouseover="this.style.background='var(--bg-tertiary)'" onmouseout="this.style.background='transparent'">
                         <td style="padding: 14px; text-align: center; color: var(--text-secondary); font-size: 0.95em;">${index + 1}</td>
-                        <td style="padding: 14px; color: var(--text-primary); font-weight: 600; font-size: 0.95em;">${data.ip}</td>
+                        <td style="padding: 14px; color: var(--text-primary); font-weight: 600; font-size: 0.95em;">${isManual} ${data.ip}</td>
                         <td style="padding: 14px; color: var(--text-secondary); font-size: 0.95em;">${data.userEmail}</td>
                         <td style="padding: 14px; text-align: center;">
                             <span style="display: inline-block; padding: 6px 12px; border-radius: 6px; font-size: 0.9em; font-weight: 600; background: ${data.typeColor}20; color: ${data.typeColor}; border: 1px solid ${data.typeColor}40;">
                                 ${data.typeName}
                             </span>
                         </td>
+                        <td style="padding: 14px; color: var(--text-secondary); font-size: 0.85em; max-width: 200px; overflow: hidden; text-overflow: ellipsis;" title="${reason}">
+                            ${reason.length > 30 ? reason.substring(0, 30) + '...' : reason}
+                        </td>
                         <td style="padding: 14px; text-align: center; color: var(--text-secondary); font-size: 0.9em;">
-                            ${new Date(data.bannedAt).toLocaleString('vi-VN', { hour: '2-digit', minute: '2-digit', second: '2-digit', day: '2-digit', month: '2-digit' })}
+                            ${new Date(data.bannedAt).toLocaleString('vi-VN', { hour: '2-digit', minute: '2-digit', day: '2-digit', month: '2-digit' })}
                         </td>
-                        <td style="padding: 14px; text-align: center; color: var(--accent-purple); font-weight: 600; font-size: 0.95em;">
-                            ${resetTimeStr}
-                        </td>
-                        <td style="padding: 14px; text-align: center; color: var(--accent-orange); font-weight: 700; font-size: 1em;">
+                        <td style="padding: 14px; text-align: center; color: ${timeLeftColor}; font-weight: 700; font-size: 1em;">
                             ${timeLeft}
                         </td>
                         <td style="padding: 14px; text-align: center;">
@@ -2635,32 +4346,41 @@
         }
         
         async function unbanIP(type, ip) {
-            if (!confirm(`Unban IP ${ip} khỏi ${type}?`)) return;
+            const isMobile = window.innerWidth <= 768;
             
-            try {
-                showMessage(`Đang unban ${ip}...`, 'info');
-                
-                const response = await fetch(`${BACKEND_URL}/api/admin/rate-limit/unban`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Authorization': `Bearer ${localStorage.getItem('admin_token')}`
-                    },
-                    body: JSON.stringify({ type, ip })
-                });
-                
-                const result = await response.json();
-                
-                if (response.ok) {
-                    showMessage(result.message, 'success');
-                    loadBannedIPs(); // Reload list
-                } else {
-                    showMessage(result.error || 'Lỗi khi unban', 'error');
+            const doUnban = async () => {
+                try {
+                    showMessage(`Đang unban ${ip}...`, 'info');
+                    
+                    const response = await fetch(`${BACKEND_URL}/api/admin/rate-limit/unban`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Authorization': `Bearer ${localStorage.getItem('admin_token')}`
+                        },
+                        body: JSON.stringify({ type, ip })
+                    });
+                    
+                    const result = await response.json();
+                    
+                    if (response.ok) {
+                        showMessage(result.message, 'success');
+                        loadBannedIPs();
+                    } else {
+                        showMessage(result.error || 'Lỗi khi unban', 'error');
+                    }
+                    
+                } catch (error) {
+                    console.error('Unban IP error:', error);
+                    showMessage('Lỗi kết nối!', 'error');
                 }
-                
-            } catch (error) {
-                console.error('Unban IP error:', error);
-                showMessage('Lỗi kết nối!', 'error');
+            };
+            
+            if (isMobile) {
+                showConfirmModal(`Unban ${ip}?`, doUnban);
+            } else {
+                if (!confirm(`Unban IP ${ip} khỏi ${type}?`)) return;
+                doUnban();
             }
         }
         
@@ -2671,37 +4391,45 @@
                 return;
             }
             
-            if (!confirm(`Unban TẤT CẢ ${totalBanned} IPs trong tất cả categories?`)) return;
+            const isMobile = window.innerWidth <= 768;
             
-            try {
-                showMessage(`Đang unban ${totalBanned} IPs...`, 'info');
-                
-                // Unban all categories
-                const categories = ['auth', 'cookieGet', 'cookieReport', 'general'];
-                let totalUnbanned = 0;
-                
-                for (const type of categories) {
-                    const response = await fetch(`${BACKEND_URL}/api/admin/rate-limit/unban-all`, {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'Authorization': `Bearer ${localStorage.getItem('admin_token')}`
-                        },
-                        body: JSON.stringify({ type })
-                    });
+            const doUnbanAll = async () => {
+                try {
+                    showMessage(`Đang unban ${totalBanned} IPs...`, 'info');
                     
-                    const result = await response.json();
-                    if (response.ok && result.unbanned) {
-                        totalUnbanned += result.unbanned;
+                    const categories = ['auth', 'cookieGet', 'cookieReport', 'general'];
+                    let totalUnbanned = 0;
+                    
+                    for (const type of categories) {
+                        const response = await fetch(`${BACKEND_URL}/api/admin/rate-limit/unban-all`, {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'Authorization': `Bearer ${localStorage.getItem('admin_token')}`
+                            },
+                            body: JSON.stringify({ type })
+                        });
+                        
+                        const result = await response.json();
+                        if (response.ok && result.unbanned) {
+                            totalUnbanned += result.unbanned;
+                        }
                     }
+                    
+                    showMessage(`Đã unban ${totalUnbanned} IPs`, 'success');
+                    loadBannedIPs();
+                    
+                } catch (error) {
+                    console.error('Unban all error:', error);
+                    showMessage('Lỗi kết nối!', 'error');
                 }
-                
-                showMessage(`Đã unban ${totalUnbanned} IPs`, 'success');
-                loadBannedIPs(); // Reload list
-                
-            } catch (error) {
-                console.error('Unban all error:', error);
-                showMessage('Lỗi kết nối!', 'error');
+            };
+            
+            if (isMobile) {
+                showConfirmModal(`Unban TẤT CẢ ${totalBanned} IPs?`, doUnbanAll);
+            } else {
+                if (!confirm(`Unban TẤT CẢ ${totalBanned} IPs trong tất cả categories?`)) return;
+                doUnbanAll();
             }
         }
         
@@ -2713,11 +4441,128 @@
             const rateLimitContainer = document.getElementById('rateLimitManagement');
             const cookiesContainer = document.getElementById('cookiesManagement');
             
+            // Khôi phục mobile search results và title
+            const mobileSearchResults = document.getElementById('mobileSearchResults');
+            const mobileSearchTitle = document.querySelector('.mobile-search-title');
+            if (window.innerWidth <= 768) {
+                if (mobileSearchResults) mobileSearchResults.style.display = 'block';
+                if (mobileSearchTitle) mobileSearchTitle.style.display = 'block';
+            }
+            
             if (rateLimitContainer) rateLimitContainer.remove();
             if (cookiesContainer) cookiesContainer.remove();
             if (usersTable) usersTable.style.display = 'block';
             if (userControls) userControls.style.display = 'flex'; // controls dùng display: flex
             if (pagination) pagination.style.display = 'block';
+        }
+        
+        // ========================================
+        // MANUAL BAN FUNCTIONS
+        // ========================================
+        
+        function showManualBanModal() {
+            // Tạo modal nếu chưa có
+            let modal = document.getElementById('manualBanModal');
+            if (!modal) {
+                modal = document.createElement('div');
+                modal.id = 'manualBanModal';
+                modal.className = 'modal';
+                modal.innerHTML = `
+                    <div class="modal-content" style="max-width: 500px;">
+                        <div class="modal-header">
+                            <h3>Ban thủ công IP/Email</h3>
+                            <span class="close" onclick="closeManualBanModal()">&times;</span>
+                        </div>
+                        <div class="form-group">
+                            <label>IP hoặc Email:</label>
+                            <input type="text" id="banIdentifier" placeholder="Nhập IP hoặc Email">
+                        </div>
+                        <div class="form-group">
+                            <label>Lý do ban:</label>
+                            <textarea id="banReason" rows="2" placeholder="Nhập lý do ban (tùy chọn)"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label>Thời gian ban:</label>
+                            <select id="banDuration">
+                                <option value="15">15 phút</option>
+                                <option value="60">1 giờ</option>
+                                <option value="360">6 giờ</option>
+                                <option value="1440" selected>1 ngày</option>
+                                <option value="10080">7 ngày</option>
+                                <option value="43200">30 ngày</option>
+                                <option value="0">Vĩnh viễn</option>
+                            </select>
+                        </div>
+                        <div class="modal-actions">
+                            <button class="btn btn-secondary" onclick="closeManualBanModal()">Hủy</button>
+                            <button class="btn btn-danger" onclick="confirmManualBan()">Ban ngay</button>
+                        </div>
+                    </div>
+                `;
+                document.body.appendChild(modal);
+            }
+            
+            // Reset form
+            document.getElementById('banIdentifier').value = '';
+            document.getElementById('banReason').value = '';
+            document.getElementById('banDuration').value = '1440';
+            
+            modal.style.display = 'block';
+        }
+        
+        function closeManualBanModal() {
+            const modal = document.getElementById('manualBanModal');
+            if (modal) modal.style.display = 'none';
+        }
+        
+        async function confirmManualBan() {
+            const identifier = document.getElementById('banIdentifier').value.trim();
+            const reason = document.getElementById('banReason').value.trim();
+            const durationMinutes = parseInt(document.getElementById('banDuration').value);
+            
+            if (!identifier) {
+                showMessage('Vui lòng nhập IP hoặc Email!', 'error');
+                return;
+            }
+            
+            // Bỏ confirm trên mobile, ban luôn
+            const isMobile = window.innerWidth <= 768;
+            if (!isMobile) {
+                const durationText = durationMinutes === 0 ? 'vĩnh viễn' : `${durationMinutes} phút`;
+                if (!confirm(`Ban ${identifier} trong ${durationText}?\n\nLưu ý: Sẽ chặn TẤT CẢ hoạt động của IP/Email này.`)) return;
+            }
+            
+            try {
+                showMessage(`Đang ban ${identifier}...`, 'info');
+                
+                const response = await fetch(`${BACKEND_URL}/api/admin/rate-limit/manual-ban`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${localStorage.getItem('admin_token')}`
+                    },
+                    body: JSON.stringify({ 
+                        type: 'auth', // Backend sẽ tự ban tất cả categories
+                        identifier, 
+                        reason: reason || 'Manual ban by admin',
+                        durationMinutes 
+                    })
+                });
+                
+                const result = await response.json();
+                
+                if (response.ok) {
+                    showMessage(`${result.message} - Đã chặn TẤT CẢ hoạt động (${result.duration})`, 'success');
+                    closeManualBanModal();
+                    loadBannedIPs(); // Reload danh sách
+                } else {
+                    showMessage(result.error || 'Lỗi khi ban', 'error');
+                }
+                
+            } catch (error) {
+                console.error('Manual ban error:', error);
+                showMessage('Lỗi kết nối!', 'error');
+            }
         }
     </script>
 </body>

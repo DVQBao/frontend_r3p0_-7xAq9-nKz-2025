@@ -1353,9 +1353,49 @@
                     <p style="color: #888; font-size: 0.95em; line-height: 1.6; margin: 0 0 25px 0;">
                         Liên hệ bọn mình để mua gói chính chủ với đầy đủ tính năng nha!
                     </p>
-                    <a href="javascript:void(0)" onclick="showOfficialPackageModal(); return false;" style="display: block; background: transparent; border: 1px solid rgba(255, 255, 255, 0.2); color: #fff; padding: 16px 0; border-radius: 6px; text-decoration: none; font-weight: 600; font-size: 0.95em; text-align: center; transition: all 0.3s;">
+                    <button type="button" id="buyOfficialBtn" style="display: block; width: 100%; background: transparent; border: 1px solid rgba(255, 255, 255, 0.2); color: #fff; padding: 16px 0; border-radius: 6px; font-weight: 600; font-size: 0.95em; text-align: center; transition: all 0.3s; cursor: pointer;">
                         Mua Netflix chính chủ
-                    </a>
+                    </button>
+                    
+                    <!-- Modal tạm ngưng cho mobile -->
+                    <div id="suspendedModalMobile" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); align-items: center; justify-content: center; z-index: 99999; padding: 20px; box-sizing: border-box;">
+                        <div style="background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%); border-radius: 12px; padding: 25px 20px; max-width: 320px; width: 100%; text-align: center; box-shadow: 0 20px 60px rgba(0,0,0,0.5); border: 1px solid rgba(255,255,255,0.1);">
+                            <div style="font-size: 2.5rem; margin-bottom: 12px;">⚠️</div>
+                            <h2 style="color: #fbbf24; margin: 0 0 10px 0; font-size: 1.1rem;">Tạm ngưng phát hành</h2>
+                            <p style="color: #ccc; line-height: 1.5; margin: 0 0 12px 0; font-size: 0.85rem;">
+                                Tiệm Bánh đang <strong style="color: #e50914;">tạm ngưng các gói chính chủ</strong> do thay đổi chính sách của Netflix.
+                            </p>
+                            <p style="color: #888; line-height: 1.5; margin: 0 0 18px 0; font-size: 0.8rem;">
+                                Bọn mình sẽ thông báo khi mở lại. Cảm ơn bạn! 💖
+                            </p>
+                            <button id="closeSuspendedModalMobile" style="background: #e50914; color: #fff; border: none; padding: 10px 30px; border-radius: 6px; font-size: 0.9rem; font-weight: 600; cursor: pointer;">Đã hiểu</button>
+                        </div>
+                    </div>
+                    
+                    <script>
+                        (function() {
+                            var btn = document.getElementById('buyOfficialBtn');
+                            var modal = document.getElementById('suspendedModalMobile');
+                            var closeBtn = document.getElementById('closeSuspendedModalMobile');
+                            
+                            btn.onclick = function() {
+                                modal.style.display = 'flex';
+                                document.body.style.overflow = 'hidden';
+                            };
+                            
+                            closeBtn.onclick = function() {
+                                modal.style.display = 'none';
+                                document.body.style.overflow = '';
+                            };
+                            
+                            modal.onclick = function(e) {
+                                if (e.target === modal) {
+                                    modal.style.display = 'none';
+                                    document.body.style.overflow = '';
+                                }
+                            };
+                        })();
+                    </script>
                 </div>
                 
                 <!-- Separator -->
@@ -1587,6 +1627,11 @@
                                     <span style="color: #fff; font-weight: 500; font-size: 0.9rem;">Credits:</span>
                                     <span id="userCredits" style="color: #22c55e; font-size: 0.9rem; font-weight: 600;">5</span>
                                 </div>
+                                <!-- Hiển thị số ngày còn lại cho Free credits (chỉ hiện khi plan = free và credits > 0) -->
+                                <div id="creditsExpiresRow" style="display: none; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                                    <span style="color: #fff; font-weight: 500; font-size: 0.9rem;">Expires:</span>
+                                    <span id="creditsExpires" style="color: #22c55e; font-size: 0.9rem; font-weight: 600;">7 days left</span>
+                                </div>
                                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
                                     <span style="color: #fff; font-weight: 500; font-size: 0.9rem;">Assigned Account:</span>
                                     <span id="assignedCookie" style="color: #22c55e; font-size: 0.9rem; font-weight: 600;">-</span>
@@ -1671,7 +1716,7 @@
                     <span style="color: #fbbf24; font-size: 1.15rem; font-weight: 800;">1 Credit</span>
                 </div>
                 <p style="color: #fbbf24; font-size: 0.78rem; margin: 0; font-weight: 600;">
-                    Tối thiểu 25.000 VNĐ = 50 credits
+                    Tối thiểu 30.000 VNĐ = 60 credits
                 </p>
             </div>
             
@@ -1710,13 +1755,13 @@
                     <p style="color: #a1a1a1; font-size: 0.75rem; margin-bottom: 8px; font-weight: 500;">Chọn nhanh</p>
                     
                     <div style="display: flex; flex-direction: column; gap: 7px;">
-                        <button type="button" onclick="document.getElementById('purchaseAmount').value='25.000'; calculateCredits('25.000');" 
+                        <button type="button" onclick="document.getElementById('purchaseAmount').value='30.000'; calculateCredits('30.000');" 
                             style="padding: 10px 12px; background: rgba(255, 255, 255, 0.04); border: 1.5px solid rgba(255, 255, 255, 0.12); border-radius: 8px; cursor: pointer; transition: all 0.2s;"
                             onmouseover="this.style.background='rgba(251, 191, 36, 0.08)'; this.style.borderColor='rgba(251, 191, 36, 0.3)'"
                             onmouseout="this.style.background='rgba(255, 255, 255, 0.04)'; this.style.borderColor='rgba(255, 255, 255, 0.12)'">
                             <div style="display: flex; justify-content: space-between; align-items: center;">
-                                <span style="color: #fbbf24; font-size: 0.85rem; font-weight: 700;">50 credits</span>
-                                <span style="color: #fff; font-size: 0.85rem; font-weight: 700;">25.000</span>
+                                <span style="color: #fbbf24; font-size: 0.85rem; font-weight: 700;">60 credits</span>
+                                <span style="color: #fff; font-size: 0.85rem; font-weight: 700;">30.000</span>
                             </div>
                         </button>
                         
@@ -1792,7 +1837,7 @@
                     </div>
                     
                     <p style="color: #aaa; margin-bottom: 15px; line-height: 1.6; flex: 1;">
-                        • 5 credits mỗi tháng<br>
+                        • 5 credits sử dụng trong 7 ngày đầu đăng ký<br>
                         • 1 credit = 1 lần đăng nhập thành công Netflix<br>
                         • 2 lượt đổi tài khoản Netflix/tháng<br>
                         • Xem quảng cáo ngắn để mở khóa phiên xem
@@ -1811,7 +1856,7 @@
                     
                     <div style="background: rgba(0, 0, 0, 0.3); border-radius: 8px; padding: 15px; margin-bottom: 15px; height: 100px;">
                         <div style="text-align: center; margin-bottom: 2px;">
-                            <span style="font-size: 2.5rem; font-weight: 700; color: #ffc107;">25.000 VNĐ</span>
+                            <span style="font-size: 2.5rem; font-weight: 700; color: #ffc107;">30.000 VNĐ</span>
                             <span style="font-size: 1rem; color: #aaa;">/tháng</span>
                         </div>
                         <p style="color: #4ade80; text-align: center; font-size: 0.9rem; margin: 0;">
@@ -1820,7 +1865,7 @@
                     </div>
 
                     <ul style="color: #ddd; line-height: 2; margin-bottom: 20px; margin-left: 20px; flex: 1;">
-                        <li>Nhận ngay <strong>50 credits</strong> khi nâng cấp</li>
+                        <li>Nhận ngay <strong>60 credits</strong> khi nâng cấp</li>
                         <li>1 credit = 1 lần đăng nhập thành công Netflix</li>
                         <li>Có tới <strong>5 lượt đổi tài khoản Netflix/tháng</strong></li>
                         <li>Xem phim <strong>không quảng cáo</strong></li>
@@ -1828,7 +1873,7 @@
                     </ul>
 
                     <button onclick="openUpgradeToProFromPlanModal()" class="btn" style="width: 100%; background: #ffc107; color: #000; font-weight: 700;">
-                        Nâng cấp Pro Plan - 25.000 VNĐ/tháng
+                        Nâng cấp Pro Plan - 30.000 VNĐ/tháng
                     </button>
                 </div>
             </div>
@@ -2043,36 +2088,9 @@
                         <strong style="color: #4ade80;">Cảm ơn bạn đã luôn đồng hành cùng Tiệm Bánh!</strong>
                     </p>
                     
-                    <!-- 4 Product Cards với ảnh -->
-                    <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; margin-bottom: 15px;">
-                        <a href="https://s.shopee.vn/10vZa6Mqmk" target="_blank" style="text-decoration: none; background: rgba(0,0,0,0.4); border-radius: 10px; padding: 10px; border: 1px solid rgba(255,255,255,0.1); transition: all 0.3s; display: flex; gap: 10px; align-items: center;" onmouseover="this.style.borderColor='#e50914'; this.style.transform='translateY(-2px)';" onmouseout="this.style.borderColor='rgba(255,255,255,0.1)'; this.style.transform='translateY(0)';">
-                            <img src="aff-data/may_chieu_mini_di_dong_goojodoq.webp" alt="Máy chiếu Mini" style="width: 50px; height: 50px; object-fit: cover; border-radius: 6px; flex-shrink: 0;">
-                            <div>
-                                <p style="color: #fff; font-size: 0.95rem; font-weight: 600; margin: 0 0 4px 0; line-height: 1.3;">Máy chiếu Mini di động GOOJODOQ</p>
-                                <p style="color: #4ade80; font-size: 0.9rem; margin: 0;">1.143.120₫ <span style="color: #888; text-decoration: line-through; font-size: 0.85rem;">2.980.000₫</span></p>
-                            </div>
-                        </a>
-                        <a href="https://s.shopee.vn/5fhOKWcNSH" target="_blank" style="text-decoration: none; background: rgba(0,0,0,0.4); border-radius: 10px; padding: 10px; border: 1px solid rgba(255,255,255,0.1); transition: all 0.3s; display: flex; gap: 10px; align-items: center;" onmouseover="this.style.borderColor='#e50914'; this.style.transform='translateY(-2px)';" onmouseout="this.style.borderColor='rgba(255,255,255,0.1)'; this.style.transform='translateY(0)';">
-                            <img src="aff-data/man_hinh_cong_spin_24_27_32_full_hd_2k.jpg" alt="Màn hình cong Spin" style="width: 50px; height: 50px; object-fit: cover; border-radius: 6px; flex-shrink: 0;">
-                            <div>
-                                <p style="color: #fff; font-size: 0.95rem; font-weight: 600; margin: 0 0 4px 0; line-height: 1.3;">Màn hình cong Spin 24/27/32"</p>
-                                <p style="color: #4ade80; font-size: 0.9rem; margin: 0;">1.735.000₫ <span style="color: #888; text-decoration: line-through; font-size: 0.85rem;">2.350.000₫</span></p>
-                            </div>
-                        </a>
-                        <a href="https://s.shopee.vn/8AOjKEaFoe" target="_blank" style="text-decoration: none; background: rgba(0,0,0,0.4); border-radius: 10px; padding: 10px; border: 1px solid rgba(255,255,255,0.1); transition: all 0.3s; display: flex; gap: 10px; align-items: center;" onmouseover="this.style.borderColor='#e50914'; this.style.transform='translateY(-2px)';" onmouseout="this.style.borderColor='rgba(255,255,255,0.1)'; this.style.transform='translateY(0)';">
-                            <img src="aff-data/loa_bluetooth_soundbar_led_dopetech_a39.webp" alt="Loa Bluetooth Soundbar" style="width: 50px; height: 50px; object-fit: cover; border-radius: 6px; flex-shrink: 0;">
-                            <div>
-                                <p style="color: #fff; font-size: 0.95rem; font-weight: 600; margin: 0 0 4px 0; line-height: 1.3;">Loa Bluetooth Soundbar LED A39</p>
-                                <p style="color: #4ade80; font-size: 0.9rem; margin: 0;">207.000₫ <span style="color: #888; text-decoration: line-through; font-size: 0.85rem;">280.000₫</span></p>
-                            </div>
-                        </a>
-                        <a href="https://s.shopee.vn/1LYTrZHFla" target="_blank" style="text-decoration: none; background: rgba(0,0,0,0.4); border-radius: 10px; padding: 10px; border: 1px solid rgba(255,255,255,0.1); transition: all 0.3s; display: flex; gap: 10px; align-items: center;" onmouseover="this.style.borderColor='#e50914'; this.style.transform='translateY(-2px)';" onmouseout="this.style.borderColor='rgba(255,255,255,0.1)'; this.style.transform='translateY(0)';">
-                            <img src="aff-data/combo_bap_rang_youus_netflix.webp" alt="Combo Bắp Rang Youus" style="width: 50px; height: 50px; object-fit: cover; border-radius: 6px; flex-shrink: 0;">
-                            <div>
-                                <p style="color: #fff; font-size: 0.95rem; font-weight: 600; margin: 0 0 4px 0; line-height: 1.3;">Combo Bắp Rang Youus Netflix</p>
-                                <p style="color: #4ade80; font-size: 0.9rem; margin: 0;">190.000₫ <span style="color: #888; text-decoration: line-through; font-size: 0.85rem;">276.700₫</span></p>
-                            </div>
-                        </a>
+                    <!-- 4 Product Cards - Load động từ featured-products.js -->
+                    <div id="modalProductsGrid1" style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; margin-bottom: 15px;">
+                        <!-- Sản phẩm sẽ được load bằng JS -->
                     </div>
                     
                     <p style="color: #aaa; font-size: 0.85rem; text-align: center; margin-bottom: 15px;">
@@ -2127,35 +2145,8 @@
                     <!-- Product Cards -->
                     <div style="border-top: 1px solid rgba(255, 255, 255, 0.1); padding-top: 20px;">
                         <p style="color: #fbbf24; font-size: 0.95rem; margin-bottom: 12px; text-align: center; font-weight: 500;">Trong lúc chờ đợi, khách yêu ghé Quầy Lưu Niệm chơi nhé!</p>
-                        <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px;">
-                            <a href="https://s.shopee.vn/10vZa6Mqmk" target="_blank" style="text-decoration: none; background: rgba(0,0,0,0.4); border-radius: 8px; padding: 10px; border: 1px solid rgba(255,255,255,0.1); transition: all 0.3s; display: flex; gap: 10px; align-items: center;" onmouseover="this.style.borderColor='#e50914'; this.style.transform='translateY(-2px)';" onmouseout="this.style.borderColor='rgba(255,255,255,0.1)'; this.style.transform='translateY(0)';">
-                                <img src="aff-data/may_chieu_mini_di_dong_goojodoq.webp" alt="Máy chiếu Mini" style="width: 50px; height: 50px; object-fit: cover; border-radius: 6px; flex-shrink: 0;">
-                                <div style="text-align: left;">
-                                    <p style="color: #fff; font-size: 0.95rem; font-weight: 600; margin: 0 0 4px 0; line-height: 1.3;">Máy chiếu Mini GOOJODOQ</p>
-                                    <p style="color: #4ade80; font-size: 0.9rem; margin: 0; text-align: left;">1.143.120₫ <span style="color: #888; text-decoration: line-through; font-size: 0.85rem;">2.980.000₫</span></p>
-                                </div>
-                            </a>
-                            <a href="https://s.shopee.vn/5fhOKWcNSH" target="_blank" style="text-decoration: none; background: rgba(0,0,0,0.4); border-radius: 8px; padding: 10px; border: 1px solid rgba(255,255,255,0.1); transition: all 0.3s; display: flex; gap: 10px; align-items: center;" onmouseover="this.style.borderColor='#e50914'; this.style.transform='translateY(-2px)';" onmouseout="this.style.borderColor='rgba(255,255,255,0.1)'; this.style.transform='translateY(0)';">
-                                <img src="aff-data/man_hinh_cong_spin_24_27_32_full_hd_2k.jpg" alt="Màn hình cong Spin" style="width: 50px; height: 50px; object-fit: cover; border-radius: 6px; flex-shrink: 0;">
-                                <div style="text-align: left;">
-                                    <p style="color: #fff; font-size: 0.95rem; font-weight: 600; margin: 0 0 4px 0; line-height: 1.3;">Màn hình cong Spin 24/27/32"</p>
-                                    <p style="color: #4ade80; font-size: 0.9rem; margin: 0; text-align: left;">1.735.000₫ <span style="color: #888; text-decoration: line-through; font-size: 0.85rem;">2.350.000₫</span></p>
-                                </div>
-                            </a>
-                            <a href="https://s.shopee.vn/8AOjKEaFoe" target="_blank" style="text-decoration: none; background: rgba(0,0,0,0.4); border-radius: 8px; padding: 10px; border: 1px solid rgba(255,255,255,0.1); transition: all 0.3s; display: flex; gap: 10px; align-items: center;" onmouseover="this.style.borderColor='#e50914'; this.style.transform='translateY(-2px)';" onmouseout="this.style.borderColor='rgba(255,255,255,0.1)'; this.style.transform='translateY(0)';">
-                                <img src="aff-data/loa_bluetooth_soundbar_led_dopetech_a39.webp" alt="Loa Bluetooth Soundbar" style="width: 50px; height: 50px; object-fit: cover; border-radius: 6px; flex-shrink: 0;">
-                                <div style="text-align: left;">
-                                    <p style="color: #fff; font-size: 0.95rem; font-weight: 600; margin: 0 0 4px 0; line-height: 1.3;">Loa Soundbar LED A39</p>
-                                    <p style="color: #4ade80; font-size: 0.9rem; margin: 0; text-align: left;">207.000₫ <span style="color: #888; text-decoration: line-through; font-size: 0.85rem;">280.000₫</span></p>
-                                </div>
-                            </a>
-                            <a href="https://s.shopee.vn/1LYTrZHFla" target="_blank" style="text-decoration: none; background: rgba(0,0,0,0.4); border-radius: 8px; padding: 10px; border: 1px solid rgba(255,255,255,0.1); transition: all 0.3s; display: flex; gap: 10px; align-items: center;" onmouseover="this.style.borderColor='#e50914'; this.style.transform='translateY(-2px)';" onmouseout="this.style.borderColor='rgba(255,255,255,0.1)'; this.style.transform='translateY(0)';">
-                                <img src="aff-data/combo_bap_rang_youus_netflix.webp" alt="Combo Bắp Rang Youus" style="width: 50px; height: 50px; object-fit: cover; border-radius: 6px; flex-shrink: 0;">
-                                <div style="text-align: left;">
-                                    <p style="color: #fff; font-size: 0.95rem; font-weight: 600; margin: 0 0 4px 0; line-height: 1.3;">Combo Bắp Rang Netflix</p>
-                                    <p style="color: #4ade80; font-size: 0.9rem; margin: 0; text-align: left;">190.000₫ <span style="color: #888; text-decoration: line-through; font-size: 0.85rem;">276.700₫</span></p>
-                                </div>
-                            </a>
+                        <div id="modalProductsGrid2" style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px;">
+                            <!-- Sản phẩm sẽ được load bằng JS -->
                         </div>
                         <p style="color: #aaa; font-size: 0.9rem; text-align: center; margin-top: 12px;">
                             <a href="/shop/" target="_blank" style="color: #fbbf24; font-weight: 600;">Ghé qua Quầy lưu niệm →</a>
@@ -2503,6 +2494,7 @@
                     // Update credits display
                     if (data.user) {
                         updateCreditsDisplay(data.user.credits || 0);
+                        updateCreditsExpiration(data.user);
                     }
                 }
                 
@@ -2747,6 +2739,7 @@
                 title: 'Giải thích thông tin tài khoản',
                 message: `<div style="text-align: justify; line-height: 1.5; width: 400px;">
 <p style="margin: 0 0 6px 0;"><strong style="color: #fbbf24;">Credits:</strong> Số lượt đăng nhập Netflix còn lại. Mỗi lần bấm "Watch as Guest" thành công sẽ trừ 1 credit.</p>
+<p style="margin: 0 0 6px 0;"><strong style="color: #fbbf24;">Expires:</strong> Ngày hết hạn credits. Với gói Free, credits sẽ hết hạn sau 7 ngày kể từ ngày đăng ký hoặc được cấp lại. Sau khi hết hạn, credits sẽ về 0.</p>
 <p style="margin: 0 0 6px 0;"><strong style="color: #fbbf24;">Assigned Account:</strong> Tài khoản Netflix đang được gán cho bạn. Mỗi user sẽ được gán 1 tài khoản riêng.</p>
 <p style="margin: 0 0 6px 0;"><strong style="color: #fbbf24;">Switches Left:</strong> Số lần đổi tài khoản Netflix còn lại trong tháng. Dùng khi tài khoản hiện tại bị lỗi.</p>
 <p style="margin: 0;"><strong style="color: #fbbf24;">Monthly Invites:</strong> Số lượt mời bạn bè còn lại trong tháng. Khi bạn bè nhập mã giới thiệu của bạn để đăng ký thành công tài khoản tại Tiệm Bánh, cả 2 sẽ được nhận thêm 5 credits.<br><br><strong>Mã giới thiệu của bạn là:</strong> <span style="color: #22c55e; user-select: all;">${userEmail}</span></p>
@@ -2948,6 +2941,46 @@ Bạn đã thử 3 cách trên và vẫn không được?`,
                 hideSmartLoading();
                 
                 if (!response.ok) {
+                    // Handle BANNED error (tài khoản bị khóa)
+                    if (data.code === 'BANNED') {
+                        closeReportIssueModal();
+                        const isPermanent = data.isPermanent;
+                        const remainingTime = data.remainingSeconds;
+                        
+                        let timeMessage = '';
+                        if (isPermanent) {
+                            timeMessage = 'Tài khoản của bạn đã bị khóa vĩnh viễn.';
+                        } else if (remainingTime) {
+                            const hours = Math.floor(remainingTime / 3600);
+                            const minutes = Math.floor((remainingTime % 3600) / 60);
+                            if (hours > 0) {
+                                timeMessage = `Thời gian còn lại: ${hours} giờ ${minutes} phút`;
+                            } else {
+                                timeMessage = `Thời gian còn lại: ${minutes} phút`;
+                            }
+                        }
+                        
+                        showCustomModal({
+                            icon: '🚫',
+                            title: 'Tài khoản bị khóa',
+                            message: `Lý do: ${data.error || 'Tài khoản của bạn đã bị khóa do các hoạt động bất thường.'}\n\n${timeMessage}\n\nNếu bạn cho rằng đây là nhầm lẫn, vui lòng liên hệ Support để được hỗ trợ.`,
+                            buttons: [
+                                {
+                                    text: 'Liên hệ Support',
+                                    type: 'primary',
+                                    onClick: () => {
+                                        window.open('https://www.facebook.com/tiembanh4k/', '_blank');
+                                    }
+                                },
+                                {
+                                    text: 'Đóng',
+                                    type: 'secondary'
+                                }
+                            ]
+                        });
+                        return;
+                    }
+                    
                     // Handle NO_REPORT_LIMIT error (hết lượt đổi tài khoản)
                     if (data.code === 'NO_REPORT_LIMIT' || data.code === 'LIMIT_EXCEEDED') {
                         closeReportIssueModal();
@@ -3049,8 +3082,8 @@ Bạn đã thử 3 cách trên và vẫn không được?`,
                 message: `Bạn đã sử dụng hết credits.
 
 Bạn có thể:
-• Mua thêm credits (500 VNĐ = 1 credit, tối thiểu 25.000 VNĐ = 50 credits)
-• Nâng cấp Pro 25.000 VNĐ/tháng → nhận ngay 50 credits + 5 lượt đổi tài khoản/tháng
+• Mua thêm credits (500 VNĐ = 1 credit, tối thiểu 30.000 VNĐ = 60 credits)
+• Nâng cấp Pro 30.000 VNĐ/tháng → nhận ngay 60 credits + 5 lượt đổi tài khoản/tháng
 • Giới thiệu bạn bè đăng ký Tiệm Bánh Netflix → nhận 5 credits/người
 (tối đa 2 lượt/tháng)
 
@@ -3070,15 +3103,15 @@ Bạn có thể:
                 title: 'HẾT LƯỢT ĐỔI TÀI KHOẢN',
                 message: `Bạn đã sử dụng hết 2 lượt đổi tài khoản Netflix của gói Free trong tháng này.
 Nâng cấp lên Pro để nhận nhiều quyền lợi:
-• Nhận ngay 50 credits (1 credit = 1 lần đăng nhập thành công Netflix)
+• Nhận ngay 60 credits (1 credit = 1 lần đăng nhập thành công Netflix)
 • Tăng lượt đổi tài khoản Netflix lên 5 lượt/tháng
 • Xem phim không quảng cáo
 • Ưu tiên hỗ trợ khi có sự cố`,
-                confirmText: 'Nâng cấp Pro - 25.000đ/tháng',
+                confirmText: 'Nâng cấp Pro - 30.000đ/tháng',
                 cancelText: 'Đóng'
             }).then(confirmed => {
                 if (confirmed) {
-                    openPaymentModal('pro', '25.000đ/tháng', 'pro');
+                    openPaymentModal('pro', '30.000đ/tháng', 'pro');
                 }
             });
         }
@@ -3222,6 +3255,9 @@ Nếu cần thêm lượt đổi tài khoản, vui lòng liên hệ Support qua 
                 
                 // Update credits display
                 updateCreditsDisplay(user.credits || 0);
+                
+                // Update credits expiration display (chỉ cho Free plan)
+                updateCreditsExpiration(user);
                 
                 // Avatar emoji based on provider
                 document.getElementById('userAvatar').textContent = user.provider === 'google' ? '🔵' : '🥧';
@@ -3436,13 +3472,60 @@ Nếu cần thêm lượt đổi tài khoản, vui lòng liên hệ Support qua 
             // Close plan modal first
             closePlanModal();
             // Open payment modal for Pro upgrade from plan modal
-            openPaymentModal('pro', '25.000đ/tháng', 'pro-from-plan');
+            openPaymentModal('pro', '30.000đ/tháng', 'pro-from-plan');
         }
 
         // Official Package Modal Functions
+        // ⚠️ TẠM NGƯNG: Đặt thành false để mở lại modal chính chủ khi cần
+        const OFFICIAL_PACKAGE_ENABLED = false;
+        
         function showOfficialPackageModal() {
+            // Kiểm tra xem tính năng có được bật không
+            if (!OFFICIAL_PACKAGE_ENABLED) {
+                // Hiện thông báo tạm ngưng
+                showSuspendedNotice();
+                return;
+            }
+            
+            // Logic gốc - mở modal chính chủ
             document.getElementById('officialPackageModal').classList.add('active');
             document.body.style.overflow = 'hidden'; // Ẩn scroll body khi modal mở
+        }
+        
+        // Thông báo tạm ngưng phát hành gói chính chủ
+        function showSuspendedNotice() {
+            // Tạo modal thông báo
+            const noticeHTML = `
+                <div class="modal active" id="suspendedNoticeModal" style="z-index: 10001;">
+                    <div class="modal-content" style="max-width: 500px; text-align: center; padding: 40px 30px;">
+                        <div style="font-size: 4rem; margin-bottom: 20px;">⚠️</div>
+                        <h2 style="color: #fbbf24; margin-bottom: 15px; font-size: 1.4rem;">Tạm ngưng phát hành</h2>
+                        <p style="color: #ccc; line-height: 1.7; margin-bottom: 25px; font-size: 0.95rem;">
+                            Hiện tại Tiệm Bánh đang <strong style="color: #e50914;">tạm ngưng phát hành các gói Netflix chính chủ</strong> 
+                            do một số thay đổi trong chính sách của Netflix.
+                        </p>
+                        <p style="color: #888; line-height: 1.6; margin-bottom: 30px; font-size: 0.85rem;">
+                            Bọn mình sẽ thông báo ngay khi dịch vụ được mở lại.<br>
+                            Cảm ơn bạn đã thông cảm! 💖
+                        </p>
+                        <button onclick="closeSuspendedNotice()" class="btn" style="padding: 14px 40px; font-size: 1rem;">
+                            Đã hiểu
+                        </button>
+                    </div>
+                </div>
+            `;
+            
+            // Thêm modal vào body
+            document.body.insertAdjacentHTML('beforeend', noticeHTML);
+            document.body.style.overflow = 'hidden';
+        }
+        
+        function closeSuspendedNotice() {
+            const modal = document.getElementById('suspendedNoticeModal');
+            if (modal) {
+                modal.remove();
+                document.body.style.overflow = '';
+            }
         }
 
         function closeOfficialPackageModal() {
@@ -3506,7 +3589,7 @@ Nếu cần thêm lượt đổi tài khoản, vui lòng liên hệ Support qua 
 
         function openUpgradeToProModal() {
             // Open payment modal for Pro upgrade
-            openPaymentModal('pro', '25.000đ/tháng', 'pro');
+            openPaymentModal('pro', '30.000đ/tháng', 'pro');
         }
 
         function closePaymentModal() {
@@ -3666,6 +3749,10 @@ Nếu cần thêm lượt đổi tài khoản, vui lòng liên hệ Support qua 
                     Liên Hệ
                 </a>
                 <span style="color: rgba(255, 255, 255, 0.3);">|</span>
+                <a href="/install-guide/" style="color: #fff; text-decoration: none; font-size: 0.95rem; transition: color 0.3s;" onmouseover="this.style.color='#fbbf24'" onmouseout="this.style.color='#fff'">
+                    Cài Extension
+                </a>
+                <span style="color: rgba(255, 255, 255, 0.3);">|</span>
                 <a href="https://youtu.be/vrVgwrjUbpo" target="_blank" style="color: #fff; text-decoration: none; font-size: 0.95rem; transition: color 0.3s;" onmouseover="this.style.color='#fbbf24'" onmouseout="this.style.color='#fff'">
                     Hướng Dẫn Sử Dụng
                 </a>
@@ -3745,7 +3832,7 @@ Nếu cần thêm lượt đổi tài khoản, vui lòng liên hệ Support qua 
             const numAmount = parseInt(formatted.replace(/\./g, '') || '0');
             
             // Luôn hiển thị (0 nếu invalid)
-            if (!formatted || isNaN(numAmount) || numAmount < 25000 || numAmount % 1000 !== 0) {
+            if (!formatted || isNaN(numAmount) || numAmount < 30000 || numAmount % 1000 !== 0) {
                 creditsAmount.textContent = '0';
                 if (totalAmount) totalAmount.textContent = '0 VNĐ';
                 confirmBtn.disabled = true;
@@ -3753,7 +3840,7 @@ Nếu cần thêm lượt đổi tài khoản, vui lòng liên hệ Support qua 
                 return;
             }
             
-            // Valid amount → Calculate credits (500 VNĐ = 1 credit, tức 25.000 = 50 credits)
+            // Valid amount → Calculate credits (500 VNĐ = 1 credit, tức 30.000 = 60 credits)
             const credits = Math.floor(numAmount / 500);
             
             creditsAmount.textContent = credits.toLocaleString('vi-VN');
@@ -3769,16 +3856,16 @@ Nếu cần thêm lượt đổi tài khoản, vui lòng liên hệ Support qua 
             const inputValue = document.getElementById('purchaseAmount').value;
             const amount = parseInt(inputValue.replace(/\./g, ''));
             
-            if (!amount || amount < 25000 || amount % 1000 !== 0) {
-                alert('Vui lòng nhập số tiền hợp lệ\n\nTối thiểu: 25.000 VNĐ\nChỉ chấp nhận số tròn nghìn');
+            if (!amount || amount < 30000 || amount % 1000 !== 0) {
+                alert('Vui lòng nhập số tiền hợp lệ\n\nTối thiểu: 30.000 VNĐ\nChỉ chấp nhận số tròn nghìn');
                 return;
             }
             
             // Close purchase modal
             closePurchaseCreditsModal();
             
-            // Calculate credits
-            const credits = Math.floor((amount / 20000) * 30);
+            // Calculate credits (500 VNĐ = 1 credit)
+            const credits = Math.floor(amount / 500);
             
             // Format amount
             const formattedAmount = amount.toLocaleString('vi-VN') + 'đ';
@@ -3815,6 +3902,50 @@ Nếu cần thêm lượt đổi tài khoản, vui lòng liên hệ Support qua 
             }
         }
         
+        // Update credits expiration display (cho Free plan)
+        function updateCreditsExpiration(user) {
+            const expiresRow = document.getElementById('creditsExpiresRow');
+            const expiresText = document.getElementById('creditsExpires');
+            
+            if (!expiresRow || !expiresText) return;
+            
+            // Chỉ hiện cho Free plan
+            if (user.plan !== 'free') {
+                expiresRow.style.display = 'none';
+                return;
+            }
+            
+            // Tính số ngày còn lại (7 ngày từ lastCreditsReset)
+            const lastReset = user.lastCreditsReset ? new Date(user.lastCreditsReset) : new Date();
+            const now = new Date();
+            const daysSinceReset = Math.floor((now - lastReset) / (1000 * 60 * 60 * 24));
+            const daysLeft = Math.max(0, 7 - daysSinceReset);
+            
+            // Tính ngày hết hạn
+            const expireDate = new Date(lastReset);
+            expireDate.setDate(expireDate.getDate() + 7);
+            const expireDateStr = expireDate.toLocaleDateString('vi-VN', { day: '2-digit', month: '2-digit', year: 'numeric' });
+            
+            // Hiển thị row
+            expiresRow.style.display = 'flex';
+            
+            // Cập nhật text và màu sắc
+            if (daysLeft <= 0 || user.credits <= 0) {
+                // Đã hết hạn - hiện ngày hết hạn
+                expiresText.textContent = `Expired (${expireDateStr})`;
+                expiresText.style.color = '#ef4444'; // Đỏ
+            } else if (daysLeft === 1) {
+                expiresText.textContent = '1 day left';
+                expiresText.style.color = '#ef4444'; // Đỏ
+            } else if (daysLeft <= 3) {
+                expiresText.textContent = `${daysLeft} days left`;
+                expiresText.style.color = '#f59e0b'; // Cam
+            } else {
+                expiresText.textContent = `${daysLeft} days left`;
+                expiresText.style.color = '#22c55e'; // Xanh
+            }
+        }
+        
         // Show no credits modal
         function showNoCreditsModal() {
             // Lấy email của user hiện tại
@@ -3825,7 +3956,7 @@ Nếu cần thêm lượt đổi tài khoản, vui lòng liên hệ Support qua 
                 showConfirmCustomModal({
                     icon: '💳',
                     title: 'HẾT CREDITS',
-                    message: `Bạn đã sử dụng hết credits.\n\nCách nhận thêm credits:\n• Mua credits (500 VNĐ = 1 credit, tối thiểu 25.000 VNĐ = 50 credits)\n• Giới thiệu bạn bè → nhận 5 credits/người\n (tối đa 2 lượt/tháng)\n\n💡 Mã giới thiệu của bạn là: ${userEmail}`,
+                    message: `Bạn đã sử dụng hết credits.\n\nCách nhận thêm credits:\n• Mua credits (500 VNĐ = 1 credit, tối thiểu 30.000 VNĐ = 60 credits)\n• Giới thiệu bạn bè → nhận 5 credits/người\n (tối đa 2 lượt/tháng)\n\n💡 Mã giới thiệu của bạn là: ${userEmail}`,
                     confirmText: 'Mua thêm Credits',
                     cancelText: 'Đóng'
                 }).then(confirmed => {
@@ -3844,6 +3975,31 @@ Nếu cần thêm lượt đổi tài khoản, vui lòng liên hệ Support qua 
     <script src="config.js"></script>
     <script src="auth.js"></script>
     <script src="cookie-retry-handler.js"></script>
+    <script src="shop/featured-products.js"></script>
+    <script>
+        // Load sản phẩm featured vào các modal
+        function renderFeaturedProducts() {
+            const grids = ['modalProductsGrid1', 'modalProductsGrid2'];
+            
+            grids.forEach(gridId => {
+                const grid = document.getElementById(gridId);
+                if (!grid || typeof featuredProducts === 'undefined') return;
+                
+                grid.innerHTML = featuredProducts.map(product => `
+                    <a href="${product.buyLink}" target="_blank" style="text-decoration: none; background: rgba(0,0,0,0.4); border-radius: 10px; padding: 10px; border: 1px solid rgba(255,255,255,0.1); transition: all 0.3s; display: flex; gap: 10px; align-items: center;" onmouseover="this.style.borderColor='#e50914'; this.style.transform='translateY(-2px)';" onmouseout="this.style.borderColor='rgba(255,255,255,0.1)'; this.style.transform='translateY(0)';">
+                        <img src="${product.image}" alt="${product.name}" style="width: 50px; height: 50px; object-fit: cover; border-radius: 6px; flex-shrink: 0;">
+                        <div style="text-align: left;">
+                            <p style="color: #fff; font-size: 0.95rem; font-weight: 600; margin: 0 0 4px 0; line-height: 1.3;">${product.name}</p>
+                            <p style="color: #4ade80; font-size: 0.9rem; margin: 0;">${product.priceNow} ${product.priceOriginal ? `<span style="color: #888; text-decoration: line-through; font-size: 0.85rem;">${product.priceOriginal}</span>` : ''}</p>
+                        </div>
+                    </a>
+                `).join('');
+            });
+        }
+        
+        // Chạy khi DOM ready
+        document.addEventListener('DOMContentLoaded', renderFeaturedProducts);
+    </script>
     <script src="app.js"></script>
 </body>
 </html>
