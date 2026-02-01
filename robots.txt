@@ -15,7 +15,7 @@ Disallow: /contact/
 Disallow: /privacy-policy/
 Disallow: /terms-of-service/
 Disallow: /install-guide/
-Disallow: /s3cure-panel-9mKp2Lq2025/
+Disallow: /x7Kv9mPq3nRt2025/
 Disallow: /admin/
 Disallow: /maintenance/
 Disallow: /test-extension.html

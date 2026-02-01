@@ -1,0 +1,36 @@
+// Sản phẩm hiển thị trong Modal quảng cáo - Được tạo tự động bởi product_manager.py
+// Chứa 4 sản phẩm được chọn để hiển thị trong các modal trên trang chủ
+const featuredProducts = [
+    {
+        "id": "op_lung_iphone_tpu_silicon_u4_13_6_plus_17_pro_max",
+        "name": "Ốp lưng iPhone TPU Silicon U4-13 (6 Plus –17 Pro Max)",
+        "image": "aff-data/op_lung_iphone_tpu_silicon_u4_13_6_plus_17_pro_max.webp",
+        "priceNow": "1.000đ",
+        "priceOriginal": "25.000đ",
+        "buyLink": "https://s.shopee.vn/8AP3Ghu2Jx"
+    },
+    {
+        "id": "op_lung_iphone_dau_kiem_7_16_plus_pro_pro_max",
+        "name": "Ốp lưng iPhone dấu kiểm (7–16, Plus/Pro/Pro Max)",
+        "image": "aff-data/op_lung_iphone_dau_kiem_7_16_plus_pro_pro_max.webp",
+        "priceNow": "1.000đ",
+        "priceOriginal": "25.000đ",
+        "buyLink": "https://s.shopee.vn/2qNWux0GyK"
+    },
+    {
+        "id": "cuong_luc_iphone_3d_7_17_plus_pro_pro_max",
+        "name": "Cường lực iPhone 3D (7–17, Plus/Pro/Pro Max)",
+        "image": "aff-data/cuong_luc_iphone_3d_7_17_plus_pro_pro_max.webp",
+        "priceNow": "1.000đ",
+        "priceOriginal": "25.000đ",
+        "buyLink": "https://s.shopee.vn/7pmCsFZWtQ"
+    },
+    {
+        "id": "kinh_cuong_luc_iphone_clickone_6_17_mini_plus_pro_pro_max",
+        "name": "Kính cường lực iPhone Clickone (6–17, Mini/Plus/Pro/Pro Max)",
+        "image": "aff-data/kinh_cuong_luc_iphone_clickone_6_17_mini_plus_pro_pro_max.webp",
+        "priceNow": "1.000đ",
+        "priceOriginal": "25.000đ",
+        "buyLink": "https://s.shopee.vn/7AWW53Sjdm"
+    }
+];

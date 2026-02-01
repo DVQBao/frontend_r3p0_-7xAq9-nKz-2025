@@ -742,7 +742,7 @@ function selectProPlan() {
     // Show confirmation
     const confirm = window.confirm(`🚀 Nâng cấp lên Pro Plan?
 
-💰 Giá: 20.000 VNĐ/tháng
+💰 Giá: 30.000 VNĐ/tháng
 
 Bạn sẽ được chuyển đến Zalo để liên hệ chủ trang và thanh toán.
 
@@ -1030,8 +1030,48 @@ async function readCookieFromFile() {
         console.log('📡 Backend response status:', response.status);
         
         if (!response.ok) {
-            const errorText = await response.text();
-            console.error('❌ Backend error:', response.status, errorText);
+            const errorData = await response.json().catch(() => ({}));
+            console.error('❌ Backend error:', response.status, errorData);
+            
+            // Xử lý BANNED - Tài khoản bị khóa
+            if (errorData.code === 'BANNED' || response.status === 429) {
+                const isPermanent = errorData.isPermanent;
+                const remainingTime = errorData.remainingSeconds;
+                
+                let timeMessage = '';
+                if (isPermanent) {
+                    timeMessage = 'Tài khoản của bạn đã bị khóa vĩnh viễn.';
+                } else if (remainingTime) {
+                    const hours = Math.floor(remainingTime / 3600);
+                    const minutes = Math.floor((remainingTime % 3600) / 60);
+                    if (hours > 0) {
+                        timeMessage = `Thời gian còn lại: ${hours} giờ ${minutes} phút`;
+                    } else {
+                        timeMessage = `Thời gian còn lại: ${minutes} phút`;
+                    }
+                }
+                
+                showModal({
+                    icon: '🚫',
+                    title: 'Tài khoản bị khóa',
+                    message: `Lý do: ${errorData.error || 'Tài khoản của bạn đã bị khóa do các hoạt động bất thường.'}\n\n${timeMessage}\n\nNếu bạn cho rằng đây là nhầm lẫn, vui lòng liên hệ Support.`,
+                    buttons: [
+                        {
+                            text: 'Liên hệ Support',
+                            type: 'primary',
+                            onClick: () => {
+                                window.open('https://www.facebook.com/tiembanh4k/', '_blank');
+                            }
+                        },
+                        {
+                            text: 'Đóng',
+                            type: 'secondary'
+                        }
+                    ]
+                });
+                return null;
+            }
+            
             throw new Error(`HTTP error! status: ${response.status}`);
         }
         

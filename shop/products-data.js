@@ -1,6 +1,116 @@
 // Dữ liệu sản phẩm - Được tạo tự động bởi product_manager.py
 const productsData = [
     {
+        "id": "op_lung_iphone_tpu_silicon_u4_13_6_plus_17_pro_max",
+        "name": "Ốp lưng iPhone TPU Silicon U4-13 (6 Plus –17 Pro Max)",
+        "image": "../aff-data/op_lung_iphone_tpu_silicon_u4_13_6_plus_17_pro_max.webp",
+        "qrImage": "../aff-data/op_lung_iphone_tpu_silicon_u4_13_6_plus_17_pro_max_qr.webp",
+        "priceNow": "1.000đ",
+        "priceOriginal": "25.000đ",
+        "discount": "-96%",
+        "buyLink": "https://s.shopee.vn/8AP3Ghu2Jx",
+        "description": []
+    },
+    {
+        "id": "op_lung_iphone_chong_soc_6_8_plus_x_xs_max_11_17_pro_max",
+        "name": "Ốp lưng iPhone chống sốc (6–8 Plus, X–XS Max, 11–17 Pro Max)",
+        "image": "../aff-data/op_lung_iphone_chong_soc_6_8_plus_x_xs_max_11_17_pro_max.webp",
+        "qrImage": "../aff-data/op_lung_iphone_chong_soc_6_8_plus_x_xs_max_11_17_pro_max_qr.webp",
+        "priceNow": "1.000đ",
+        "priceOriginal": "25.000đ",
+        "discount": "-96%",
+        "buyLink": "https://s.shopee.vn/5fhiI8YQhQ",
+        "description": []
+    },
+    {
+        "id": "op_lung_iphone_dau_kiem_7_16_plus_pro_pro_max",
+        "name": "Ốp lưng iPhone dấu kiểm (7–16, Plus/Pro/Pro Max)",
+        "image": "../aff-data/op_lung_iphone_dau_kiem_7_16_plus_pro_pro_max.webp",
+        "qrImage": "../aff-data/op_lung_iphone_dau_kiem_7_16_plus_pro_pro_max_qr.webp",
+        "priceNow": "1.000đ",
+        "priceOriginal": "25.000đ",
+        "discount": "-96%",
+        "buyLink": "https://s.shopee.vn/2qNWux0GyK",
+        "description": []
+    },
+    {
+        "id": "op_lung_iphone_tpu_mem_nut_kim_loai_chong_soc_bao_ve_camera_6_16_pro_max",
+        "name": "Ốp lưng iPhone TPU mềm nút kim loại, chống sốc, bảo vệ camera (6–16 Pro Max)",
+        "image": "../aff-data/op_lung_iphone_tpu_mem_nut_kim_loai_chong_soc_bao_ve_camera_6_16_pro_max.webp",
+        "qrImage": "../aff-data/op_lung_iphone_tpu_mem_nut_kim_loai_chong_soc_bao_ve_camera_6_16_pro_max_qr.webp",
+        "priceNow": "1.000đ",
+        "priceOriginal": "25.000đ",
+        "discount": "-96%",
+        "buyLink": "https://s.shopee.vn/20oPvUOAho",
+        "description": []
+    },
+    {
+        "id": "op_lung_iphone_vien_cao_chong_soc_bao_ve_camera_6_17_mini_plus_pro_max",
+        "name": "Ốp lưng iPhone viền cao chống sốc, bảo vệ camera (6–17, Mini/Plus/Pro/Max)",
+        "image": "../aff-data/op_lung_iphone_vien_cao_chong_soc_bao_ve_camera_6_17_mini_plus_pro_max.webp",
+        "qrImage": "../aff-data/op_lung_iphone_vien_cao_chong_soc_bao_ve_camera_6_17_mini_plus_pro_max_qr.webp",
+        "priceNow": "1.000đ",
+        "priceOriginal": "25.000đ",
+        "discount": "-96%",
+        "buyLink": "https://s.shopee.vn/8V1tfSC129",
+        "description": []
+    },
+    {
+        "id": "kinh_cuong_luc_iphone_kk_full_man_6_15_plus_pro_pro_max_panda_case",
+        "name": "Kính cường lực iPhone KK full màn (6–15, Plus/Pro/Pro Max) – Panda Case",
+        "image": "../aff-data/kinh_cuong_luc_iphone_kk_full_man_6_15_plus_pro_pro_max_panda_case.webp",
+        "qrImage": "../aff-data/kinh_cuong_luc_iphone_kk_full_man_6_15_plus_pro_pro_max_panda_case_qr.webp",
+        "priceNow": "1.000đ",
+        "priceOriginal": "25.000đ",
+        "discount": "-96%",
+        "buyLink": "https://s.shopee.vn/7AWW52kbI7",
+        "description": []
+    },
+    {
+        "id": "cuong_luc_iphone_3d_7_17_plus_pro_pro_max",
+        "name": "Cường lực iPhone 3D (7–17, Plus/Pro/Pro Max)",
+        "image": "../aff-data/cuong_luc_iphone_3d_7_17_plus_pro_pro_max.webp",
+        "qrImage": "../aff-data/cuong_luc_iphone_3d_7_17_plus_pro_pro_max_qr.webp",
+        "priceNow": "1.000đ",
+        "priceOriginal": "25.000đ",
+        "discount": "-96%",
+        "buyLink": "https://s.shopee.vn/7pmCsFZWtQ",
+        "description": []
+    },
+    {
+        "id": "kinh_cuong_luc_iphone_clickone_6_17_mini_plus_pro_pro_max",
+        "name": "Kính cường lực iPhone Clickone (6–17, Mini/Plus/Pro/Pro Max)",
+        "image": "../aff-data/kinh_cuong_luc_iphone_clickone_6_17_mini_plus_pro_pro_max.webp",
+        "qrImage": "../aff-data/kinh_cuong_luc_iphone_clickone_6_17_mini_plus_pro_pro_max_qr.webp",
+        "priceNow": "1.000đ",
+        "priceOriginal": "25.000đ",
+        "discount": "-96%",
+        "buyLink": "https://s.shopee.vn/7AWW53Sjdm",
+        "description": []
+    },
+    {
+        "id": "kinh_cuong_luc_iphone_khung_tu_dan_chong_nhin_trom_full_man_7_17_pro_max",
+        "name": "Kính cường lực iPhone khung tự dán, chống nhìn trộm full màn (7–17 Pro Max)",
+        "image": "../aff-data/kinh_cuong_luc_iphone_khung_tu_dan_chong_nhin_trom_full_man_7_17_pro_max.webp",
+        "qrImage": "../aff-data/kinh_cuong_luc_iphone_khung_tu_dan_chong_nhin_trom_full_man_7_17_pro_max_qr.webp",
+        "priceNow": "1.000đ",
+        "priceOriginal": "25.000đ",
+        "discount": "-96%",
+        "buyLink": "https://s.shopee.vn/805d4bKgsA",
+        "description": []
+    },
+    {
+        "id": "kinh_cuong_luc_iphone_tu_dan_chong_nhin_trom_trong_suot_full_hop_7_17_pro_max",
+        "name": "Kính cường lực iPhone tự dán chống nhìn trộm, trong suốt full hộp (7–17 Pro Max)",
+        "image": "../aff-data/kinh_cuong_luc_iphone_tu_dan_chong_nhin_trom_trong_suot_full_hop_7_17_pro_max.webp",
+        "qrImage": "../aff-data/kinh_cuong_luc_iphone_tu_dan_chong_nhin_trom_trong_suot_full_hop_7_17_pro_max_qr.webp",
+        "priceNow": "1.000đ",
+        "priceOriginal": "25.000đ",
+        "discount": "-96%",
+        "buyLink": "https://s.shopee.vn/3qG46xWA3p",
+        "description": []
+    },
+    {
         "id": "may_chieu_mini_di_dong_goojodoq",
         "name": "Máy chiếu Mini di động GOOJODOQ",
         "image": "../aff-data/may_chieu_mini_di_dong_goojodoq.webp",
