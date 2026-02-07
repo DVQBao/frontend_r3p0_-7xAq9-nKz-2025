@@ -1,36 +1,40 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="vi">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    
+
     <!-- SEO Meta Tags -->
-    <meta name="description" content="Đăng nhập hoặc đăng ký tài khoản Tiệm Bánh Netflix để trải nghiệm dịch vụ chia sẻ Netflix 4K chất lượng cao. Nhanh chóng, bảo mật, tiện lợi.">
-    <meta name="keywords" content="đăng nhập Netflix, đăng ký Netflix, tài khoản Netflix, Netflix 4K, Tiệm Bánh Netflix">
+    <meta name="description"
+        content="Đăng nhập hoặc đăng ký tài khoản Tiệm Bánh Netflix để trải nghiệm dịch vụ chia sẻ Netflix 4K chất lượng cao. Nhanh chóng, bảo mật, tiện lợi.">
+    <meta name="keywords"
+        content="đăng nhập Netflix, đăng ký Netflix, tài khoản Netflix, Netflix 4K, Tiệm Bánh Netflix">
     <meta name="author" content="Tiệm Bánh Netflix">
     <meta name="robots" content="index, follow">
     <link rel="canonical" href="/https://tiembanh4k.com/auth/">
-    
+
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://tiembanh4k.com/auth/">
     <meta property="og:title" content="Đăng nhập - Tiệm Bánh Netflix">
-    <meta property="og:description" content="Đăng nhập để quản lý tài khoản Netflix của bạn. Trải nghiệm dịch vụ chia sẻ Netflix 4K chất lượng cao.">
+    <meta property="og:description"
+        content="Đăng nhập để quản lý tài khoản Netflix của bạn. Trải nghiệm dịch vụ chia sẻ Netflix 4K chất lượng cao.">
     <meta property="og:image" content="https://tiembanh4k.com/Background.webp">
     <meta property="og:image:width" content="1920">
     <meta property="og:image:height" content="1080">
     <meta property="og:image:type" content="image/webp">
     <meta property="og:locale" content="vi_VN">
-    
+
     <!-- Google tag (gtag.js) -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-GM4CGKGZBM"></script>
     <script>
-      window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
-      gtag('config', 'G-GM4CGKGZBM');
+        window.dataLayer = window.dataLayer || [];
+        function gtag() { dataLayer.push(arguments); }
+        gtag('js', new Date());
+        gtag('config', 'G-GM4CGKGZBM');
     </script>
-    
+
     <title>Đăng nhập - Tiệm Bánh Netflix</title>
     <link rel="icon" type="image/png" sizes="48x48" href="../favicon-48.png">
     <link rel="icon" type="image/png" sizes="96x96" href="../favicon-96.png">
@@ -47,8 +51,8 @@
 
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-            background: linear-gradient(135deg, rgba(20, 20, 20, 0.95) 0%, rgba(26, 26, 26, 0.95) 100%), 
-                        url('../Background.webp') center/cover fixed;
+            background: linear-gradient(135deg, rgba(20, 20, 20, 0.95) 0%, rgba(26, 26, 26, 0.95) 100%),
+                url('../Background.webp') center/cover fixed;
             color: #fff;
             min-height: 100vh;
             padding: 20px;
@@ -85,16 +89,592 @@
 
         .logo h1 {
             font-size: 2rem;
-            background: linear-gradient(90deg, #e50914, #ff6b6b);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
+            color: #e50914;
+            font-weight: 700;
         }
 
         .logo p {
             color: #aaa;
             font-size: 0.9rem;
             margin-top: 5px;
+        }
+
+        /* ========== MOBILE RESPONSIVE - MODERN MINIMAL DESIGN ========== */
+        @media (max-width: 768px) {
+            body {
+                padding: 0;
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                min-height: 100vh;
+                background: #000 !important;
+                background-image: none !important;
+            }
+
+            .main-wrapper {
+                min-height: 100vh;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                padding: 30px 20px;
+            }
+
+            .main-content {
+                width: 100%;
+                max-width: 340px;
+            }
+
+            /* Container trong suốt hoàn toàn */
+            .auth-container {
+                background: transparent !important;
+                border: none !important;
+                box-shadow: none !important;
+                backdrop-filter: none !important;
+                padding: 0;
+                max-width: 100%;
+            }
+
+            /* Logo tối giản */
+            .logo {
+                margin-bottom: 40px;
+                text-align: center;
+            }
+
+            .logo h1 {
+                font-size: 1.5rem;
+                font-weight: 700;
+                letter-spacing: -0.5px;
+                color: #e50914;
+            }
+
+            /* Tabs hiện đại */
+            .tabs {
+                background: transparent !important;
+                padding: 0;
+                gap: 12px;
+                margin-bottom: 32px;
+                border-radius: 0;
+            }
+
+            .tab {
+                padding: 12px 0;
+                font-size: 0.875rem;
+                background: transparent !important;
+                border: none !important;
+                border-bottom: 2px solid transparent !important;
+                color: #666;
+                border-radius: 0 !important;
+                font-weight: 500;
+                letter-spacing: 0.3px;
+                transition: all 0.2s ease;
+            }
+
+            .tab.active {
+                background: transparent !important;
+                border-bottom: 2px solid #e50914 !important;
+                color: #fff !important;
+            }
+
+            /* Form groups tối giản */
+            .form-group {
+                margin-bottom: 20px;
+                position: relative;
+            }
+
+            .form-group label {
+                font-size: 0.75rem;
+                margin-bottom: 8px;
+                color: #999;
+                font-weight: 500;
+                letter-spacing: 0.3px;
+                text-transform: uppercase;
+            }
+
+            .form-group input {
+                padding: 14px 16px;
+                font-size: 0.9375rem;
+                background: transparent !important;
+                border: 1px solid rgba(255, 255, 255, 0.15) !important;
+                border-radius: 8px;
+                color: #fff;
+                transition: all 0.2s ease;
+                font-weight: 400;
+            }
+
+            .form-group input::placeholder {
+                color: #555;
+                font-size: 0.9375rem;
+            }
+
+            .form-group input:focus {
+                border-color: rgba(255, 255, 255, 0.3) !important;
+                background: rgba(255, 255, 255, 0.02) !important;
+                outline: none;
+            }
+
+            /* Password toggle */
+            .password-toggle {
+                top: 42px;
+                right: 14px;
+                font-size: 1.1rem;
+                opacity: 0.4;
+            }
+
+            .password-toggle:hover {
+                opacity: 0.7;
+            }
+
+            /* Password strength */
+            .password-strength {
+                margin-top: 8px;
+            }
+
+            .strength-bar {
+                height: 2px;
+                margin-top: 6px;
+            }
+
+            #strengthText {
+                font-size: 0.7rem;
+                margin-top: 4px;
+                display: inline-block;
+            }
+
+            /* Forgot password link */
+            div[style*="text-align: right"] a {
+                font-size: 0.8125rem !important;
+                color: #999 !important;
+                font-weight: 400 !important;
+            }
+
+            div[style*="text-align: right"] a:hover {
+                color: #fff !important;
+            }
+
+            /* Submit buttons */
+            .btn {
+                padding: 14px 0;
+                font-size: 0.9375rem;
+                background: #fff !important;
+                border: none !important;
+                color: #000 !important;
+                border-radius: 8px;
+                font-weight: 600;
+                letter-spacing: 0.3px;
+                transition: all 0.2s ease;
+                margin-bottom: 12px;
+            }
+
+            .btn:hover {
+                background: rgba(255, 255, 255, 0.9) !important;
+                transform: translateY(-1px);
+            }
+
+            .btn:active {
+                transform: translateY(0);
+            }
+
+            .btn:disabled {
+                background: rgba(255, 255, 255, 0.1) !important;
+                color: #666 !important;
+                cursor: not-allowed;
+                transform: none;
+            }
+
+            /* Divider */
+            .divider {
+                margin: 24px 0;
+            }
+
+            .divider::before {
+                background: rgba(255, 255, 255, 0.08);
+            }
+
+            .divider span {
+                font-size: 0.75rem;
+                color: #666;
+                background: #000;
+            }
+
+            /* Captcha box */
+            .captcha-box {
+                padding: 14px 16px !important;
+                margin: 20px 0 !important;
+                gap: 12px !important;
+                font-size: 0.875rem !important;
+                background: transparent !important;
+                border: 1px solid rgba(255, 255, 255, 0.15) !important;
+                border-radius: 8px !important;
+            }
+
+            .captcha-box:hover {
+                border-color: rgba(255, 255, 255, 0.25) !important;
+            }
+
+            .captcha-box.verified {
+                border-color: #4ade80 !important;
+                background: rgba(74, 222, 128, 0.05) !important;
+            }
+
+            .checkbox {
+                width: 20px !important;
+                height: 20px !important;
+                border: 2px solid rgba(255, 255, 255, 0.3);
+                border-radius: 4px;
+            }
+
+            .checkbox.checked {
+                background: #4ade80;
+                border-color: #4ade80;
+            }
+
+            /* Footer links */
+            .footer-link {
+                margin-top: 32px;
+                font-size: 0.8125rem;
+                color: #666;
+            }
+
+            .footer-link a {
+                color: #999;
+                font-weight: 400;
+            }
+
+            .footer-link a:hover {
+                color: #fff;
+            }
+
+            .footer-link span {
+                color: #333;
+            }
+
+            /* Error & Success messages */
+            .error-msg,
+            .success-msg {
+                font-size: 0.8125rem;
+                padding: 12px 16px;
+                border-radius: 8px;
+                margin-bottom: 20px;
+            }
+
+            /* reCAPTCHA badge */
+            .grecaptcha-badge {
+                transform: scale(0.7) !important;
+                transform-origin: right bottom !important;
+            }
+
+            footer {
+                display: none !important;
+            }
+
+
+            /* ========== MODAL RESPONSIVE - MOBILE ========== */
+
+            /* Verification Modal */
+            .verification-modal-overlay {
+                padding: 20px !important;
+            }
+
+            .verification-modal-dialog {
+                max-width: 100% !important;
+                width: calc(100% - 40px) !important;
+                border-radius: 16px !important;
+                border-width: 1px !important;
+            }
+
+            .verification-modal-header {
+                padding: 24px 20px 16px !important;
+                gap: 12px !important;
+            }
+
+            .verification-modal-icon {
+                font-size: 2rem !important;
+            }
+
+            .verification-modal-title {
+                font-size: 1.25rem !important;
+                font-weight: 600;
+            }
+
+            .verification-modal-close {
+                top: 12px !important;
+                right: 12px !important;
+                width: 32px !important;
+                height: 32px !important;
+                font-size: 1.5rem !important;
+            }
+
+            .verification-modal-body {
+                padding: 20px !important;
+            }
+
+            .verification-modal-body p {
+                font-size: 0.875rem !important;
+                margin-bottom: 16px !important;
+                line-height: 1.5;
+            }
+
+            .otp-input {
+                max-width: 100% !important;
+                padding: 16px 18px !important;
+                font-size: 1.75rem !important;
+                letter-spacing: 10px !important;
+            }
+
+            .otp-input::placeholder {
+                letter-spacing: 10px !important;
+            }
+
+            .btn-verify,
+            .btn-resend {
+                padding: 14px !important;
+                font-size: 0.9375rem !important;
+            }
+
+            /* Tiệm Bánh Message Modal - Mobile Fullscreen Design */
+            .tiembanh-message-overlay {
+                padding: 0 !important;
+                background: #000 !important;
+                backdrop-filter: none !important;
+            }
+
+            .tiembanh-message-overlay.active {
+                align-items: stretch !important;
+                padding: 0 !important;
+            }
+
+            .tiembanh-message-dialog {
+                max-width: 100% !important;
+                width: 100% !important;
+                height: 100% !important;
+                border-radius: 0 !important;
+                border: none !important;
+                box-shadow: none !important;
+                background: #000 !important;
+                display: flex !important;
+                flex-direction: column !important;
+                margin: 0 !important;
+                animation: none !important;
+                overflow: hidden !important;
+            }
+
+            .tiembanh-message-header {
+                padding: 24px 24px !important;
+                padding-top: calc(24px + env(safe-area-inset-top)) !important;
+                gap: 0 !important;
+                background: transparent !important;
+                border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important;
+                flex-direction: column !important;
+                text-align: center !important;
+                flex-shrink: 0 !important;
+            }
+
+            .tiembanh-message-icon {
+                display: none !important;
+            }
+
+            .tiembanh-message-title {
+                font-size: 1.1rem !important;
+                font-weight: 700 !important;
+                background: none !important;
+                -webkit-background-clip: unset !important;
+                -webkit-text-fill-color: #e50914 !important;
+                background-clip: unset !important;
+                letter-spacing: 0.5px !important;
+            }
+
+            .tiembanh-message-body {
+                padding: 24px !important;
+                font-size: 0.9rem !important;
+                line-height: 1.75 !important;
+                max-height: none !important;
+                flex: 1 !important;
+                overflow-y: auto !important;
+                color: rgba(255, 255, 255, 0.9) !important;
+                text-align: left !important;
+            }
+
+            .tiembanh-message-body p {
+                margin-bottom: 16px !important;
+            }
+
+            .tiembanh-message-body strong {
+                color: #fbbf24 !important;
+            }
+
+            .tiembanh-message-footer {
+                padding: 24px !important;
+                padding-bottom: calc(24px + env(safe-area-inset-bottom)) !important;
+                background: transparent !important;
+                border-top: 1px solid rgba(255, 255, 255, 0.1) !important;
+                flex-shrink: 0 !important;
+            }
+
+            .tiembanh-message-btn {
+                padding: 16px !important;
+                font-size: 0.95rem !important;
+                border-radius: 12px !important;
+                max-width: 100% !important;
+            }
+
+            .tiembanh-message-btn:disabled {
+                background: rgba(255, 255, 255, 0.1) !important;
+                color: rgba(255, 255, 255, 0.5) !important;
+            }
+
+            /* Referral Notification Modal */
+            .referral-notification-overlay {
+                padding: 20px !important;
+            }
+
+            .referral-notification-modal {
+                max-width: 100% !important;
+                width: calc(100% - 40px) !important;
+                border-radius: 16px !important;
+            }
+
+            .referral-notification-header {
+                padding: 20px 20px 16px !important;
+            }
+
+            .referral-notification-icon {
+                font-size: 40px !important;
+                margin-bottom: 8px !important;
+            }
+
+            .referral-notification-title {
+                font-size: 1.25rem !important;
+                margin-bottom: 6px !important;
+            }
+
+            .referral-notification-subtitle {
+                font-size: 0.8125rem !important;
+            }
+
+            .referral-notification-body {
+                padding: 16px 20px !important;
+            }
+
+            .referral-notification-item {
+                padding: 12px !important;
+                margin-bottom: 10px !important;
+                border-radius: 10px !important;
+            }
+
+            .referral-notification-email {
+                font-size: 0.8125rem !important;
+            }
+
+            .referral-notification-credits {
+                font-size: 0.75rem !important;
+                padding: 4px 10px !important;
+            }
+
+            .referral-notification-time {
+                font-size: 0.75rem !important;
+            }
+
+            .referral-notification-summary {
+                padding: 16px !important;
+                border-radius: 10px !important;
+                margin-top: 12px !important;
+            }
+
+            .referral-notification-total {
+                font-size: 1.75rem !important;
+                margin-bottom: 4px !important;
+            }
+
+            .referral-notification-total-label {
+                font-size: 0.8125rem !important;
+            }
+
+            .referral-notification-remaining {
+                font-size: 0.8125rem !important;
+                margin-top: 10px !important;
+            }
+
+            .referral-notification-cta {
+                padding: 10px !important;
+                margin-top: 12px !important;
+                font-size: 0.75rem !important;
+                border-radius: 8px !important;
+            }
+
+            .referral-notification-footer {
+                padding: 16px 20px !important;
+            }
+
+            .referral-notification-btn {
+                padding: 14px 32px !important;
+                font-size: 0.9375rem !important;
+                border-radius: 10px !important;
+            }
+
+            /* Forgot Password Modals */
+            .forgot-password-modal-dialog {
+                max-width: 100% !important;
+                width: calc(100% - 40px) !important;
+                border-radius: 16px !important;
+            }
+
+            .forgot-password-modal-header {
+                padding: 24px 20px 16px !important;
+            }
+
+            .forgot-password-modal-icon {
+                font-size: 2rem !important;
+            }
+
+            .forgot-password-modal-title {
+                font-size: 1.25rem !important;
+            }
+
+            .forgot-password-modal-body {
+                padding: 20px !important;
+            }
+
+            .forgot-password-modal-body p {
+                font-size: 0.875rem !important;
+            }
+
+            .forgot-password-modal-body input {
+                padding: 14px 16px !important;
+                font-size: 0.9375rem !important;
+            }
+
+            /* Custom Modal */
+            .custom-modal-dialog {
+                max-width: 100% !important;
+                width: calc(100% - 40px) !important;
+                border-radius: 16px !important;
+            }
+
+            .custom-modal-header {
+                padding: 20px !important;
+            }
+
+            .custom-modal-icon {
+                font-size: 24px !important;
+            }
+
+            .custom-modal-title {
+                font-size: 1.125rem !important;
+            }
+
+            .custom-modal-body {
+                padding: 20px !important;
+                font-size: 0.875rem !important;
+            }
+
+            .custom-modal-footer {
+                padding: 16px 20px !important;
+            }
+
+            .custom-modal-btn {
+                padding: 12px 20px !important;
+                font-size: 0.875rem !important;
+            }
         }
 
         .tabs {
@@ -276,9 +856,20 @@
             transition: all 0.3s;
         }
 
-        .strength-weak { background: #dc3545; width: 33%; }
-        .strength-medium { background: #ffc107; width: 66%; }
-        .strength-strong { background: #28a745; width: 100%; }
+        .strength-weak {
+            background: #dc3545;
+            width: 33%;
+        }
+
+        .strength-medium {
+            background: #ffc107;
+            width: 66%;
+        }
+
+        .strength-strong {
+            background: #28a745;
+            width: 100%;
+        }
 
         .captcha-box {
             background: rgba(255, 255, 255, 0.05);
@@ -360,7 +951,8 @@
             height: 100%;
             background: rgba(0, 0, 0, 0.8);
             backdrop-filter: blur(5px);
-            z-index: 10002; /* Cao hơn verification modal (10001) để hiển thị lỗi phía trên */
+            z-index: 10002;
+            /* Cao hơn verification modal (10001) để hiển thị lỗi phía trên */
             animation: fadeIn 0.2s ease-out;
         }
 
@@ -512,10 +1104,12 @@
                 opacity: 0;
                 transform: translateY(50px) scale(0.9);
             }
+
             60% {
                 opacity: 1;
                 transform: translateY(-10px) scale(1.02);
             }
+
             100% {
                 transform: translateY(0) scale(1);
             }
@@ -537,8 +1131,15 @@
         }
 
         @keyframes bounce {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-5px); }
+
+            0%,
+            100% {
+                transform: translateY(0);
+            }
+
+            50% {
+                transform: translateY(-5px);
+            }
         }
 
         .tiembanh-message-title {
@@ -642,8 +1243,13 @@
         }
 
         @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
+            from {
+                opacity: 0;
+            }
+
+            to {
+                opacity: 1;
+            }
         }
 
         @keyframes slideUp {
@@ -651,20 +1257,23 @@
                 opacity: 0;
                 transform: translateY(30px);
             }
+
             to {
                 opacity: 1;
                 transform: translateY(0);
             }
         }
-        
+
         @keyframes spin {
-            to { transform: rotate(360deg); }
+            to {
+                transform: rotate(360deg);
+            }
         }
-        
+
         /* ========================================
            EMAIL VERIFICATION MODAL STYLES
            ======================================== */
-        
+
         .verification-modal-overlay {
             position: fixed;
             top: 0;
@@ -679,7 +1288,7 @@
             justify-content: center;
             animation: fadeIn 0.3s ease-out;
         }
-        
+
         .verification-modal-dialog {
             background: rgba(0, 0, 0, 0.95);
             border-radius: 16px;
@@ -687,11 +1296,11 @@
             width: 90%;
             border: 2px solid rgba(251, 191, 36, 0.3);
             box-shadow: 0 20px 60px rgba(0, 0, 0, 0.8),
-                        0 0 40px rgba(251, 191, 36, 0.1);
+                0 0 40px rgba(251, 191, 36, 0.1);
             animation: slideUp 0.4s ease-out;
             overflow: hidden;
         }
-        
+
         .verification-modal-header {
             padding: 30px 32px 20px;
             background: linear-gradient(135deg, rgba(251, 191, 36, 0.1) 0%, rgba(245, 158, 11, 0.05) 100%);
@@ -701,7 +1310,7 @@
             gap: 15px;
             position: relative;
         }
-        
+
         .verification-modal-close {
             position: absolute;
             top: 15px;
@@ -720,35 +1329,35 @@
             transition: all 0.3s ease;
             line-height: 1;
         }
-        
+
         .verification-modal-close:hover {
             background: rgba(255, 255, 255, 0.1);
             color: #fff;
             transform: rotate(90deg);
         }
-        
+
         .verification-modal-icon {
             font-size: 2.5rem;
             filter: drop-shadow(0 0 10px rgba(251, 191, 36, 0.5));
         }
-        
+
         .verification-modal-title {
             font-size: 1.5rem;
             font-weight: 700;
             color: #fbbf24;
             text-shadow: 0 0 10px rgba(251, 191, 36, 0.3);
         }
-        
+
         .verification-modal-body {
             padding: 32px;
         }
-        
+
         .otp-input-container {
             display: flex;
             justify-content: center;
             margin: 25px 0;
         }
-        
+
         .otp-input {
             width: 100%;
             max-width: 280px;
@@ -765,26 +1374,26 @@
             transition: all 0.3s ease;
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
         }
-        
+
         .otp-input:focus {
             border-color: #fbbf24;
             background: rgba(251, 191, 36, 0.08);
             box-shadow: 0 0 20px rgba(251, 191, 36, 0.3),
-                        inset 0 0 10px rgba(251, 191, 36, 0.1);
+                inset 0 0 10px rgba(251, 191, 36, 0.1);
         }
-        
+
         .otp-input::placeholder {
             color: rgba(251, 191, 36, 0.3);
             letter-spacing: 12px;
         }
-        
+
         .verification-actions {
             display: flex;
             flex-direction: column;
             gap: 12px;
             margin-top: 25px;
         }
-        
+
         .btn-verify {
             padding: 16px;
             background: linear-gradient(135deg, #fbbf24, #f59e0b);
@@ -797,17 +1406,17 @@
             transition: all 0.3s ease;
             box-shadow: 0 4px 16px rgba(251, 191, 36, 0.4);
         }
-        
+
         .btn-verify:hover {
             background: linear-gradient(135deg, #f59e0b, #d97706);
             transform: translateY(-2px);
             box-shadow: 0 8px 24px rgba(251, 191, 36, 0.6);
         }
-        
+
         .btn-verify:active {
             transform: translateY(0);
         }
-        
+
         .btn-verify:disabled {
             background: #555;
             color: #999;
@@ -815,7 +1424,7 @@
             transform: none;
             box-shadow: none;
         }
-        
+
         .btn-resend {
             padding: 12px;
             background: transparent;
@@ -826,26 +1435,26 @@
             cursor: pointer;
             transition: all 0.3s ease;
         }
-        
+
         .btn-resend:hover {
             background: rgba(251, 191, 36, 0.1);
             border-color: #fbbf24;
         }
-        
+
         .btn-resend:disabled {
             color: #666;
             border-color: #444;
             cursor: not-allowed;
         }
-        
+
         .btn-resend:disabled:hover {
             background: transparent;
         }
-        
+
         /* ========================================
            PASSWORD RESET MODAL STYLES
            ======================================== */
-        
+
         .forgot-password-modal-overlay {
             position: fixed;
             top: 0;
@@ -860,7 +1469,7 @@
             justify-content: center;
             animation: fadeIn 0.3s ease-out;
         }
-        
+
         .forgot-password-modal-dialog {
             background: rgba(0, 0, 0, 0.95);
             border-radius: 16px;
@@ -868,11 +1477,11 @@
             width: 90%;
             border: 2px solid rgba(251, 191, 36, 0.3);
             box-shadow: 0 20px 60px rgba(0, 0, 0, 0.8),
-                        0 0 40px rgba(251, 191, 36, 0.1);
+                0 0 40px rgba(251, 191, 36, 0.1);
             animation: slideUp 0.4s ease-out;
             overflow: hidden;
         }
-        
+
         .forgot-password-modal-header {
             padding: 30px 32px 20px;
             background: linear-gradient(135deg, rgba(251, 191, 36, 0.1) 0%, rgba(245, 158, 11, 0.05) 100%);
@@ -882,7 +1491,7 @@
             gap: 15px;
             position: relative;
         }
-        
+
         .forgot-password-modal-close {
             position: absolute;
             top: 15px;
@@ -901,41 +1510,41 @@
             transition: all 0.3s ease;
             line-height: 1;
         }
-        
+
         .forgot-password-modal-close:hover {
             background: rgba(255, 255, 255, 0.1);
             color: #fff;
             transform: rotate(90deg);
         }
-        
+
         .forgot-password-modal-icon {
             font-size: 2.5rem;
             filter: drop-shadow(0 0 10px rgba(251, 191, 36, 0.5));
         }
-        
+
         .forgot-password-modal-title {
             font-size: 1.5rem;
             font-weight: 700;
             color: #fbbf24;
             text-shadow: 0 0 10px rgba(251, 191, 36, 0.3);
         }
-        
+
         .forgot-password-modal-body {
             padding: 32px;
         }
-        
+
         .password-input-wrapper {
             position: relative;
             margin-bottom: 20px;
         }
-        
+
         .password-input-wrapper label {
             display: block;
             color: #ddd;
             margin-bottom: 8px;
             font-size: 0.95rem;
         }
-        
+
         .password-input-wrapper input {
             width: 100%;
             padding: 14px 45px 14px 14px;
@@ -948,13 +1557,13 @@
             transition: all 0.3s ease;
             box-sizing: border-box;
         }
-        
+
         .password-input-wrapper input:focus {
             border-color: #fbbf24;
             background: rgba(251, 191, 36, 0.05);
             box-shadow: 0 0 15px rgba(251, 191, 36, 0.2);
         }
-        
+
         .toggle-password-btn {
             position: absolute;
             right: 12px;
@@ -972,12 +1581,12 @@
             height: 24px;
             width: 24px;
         }
-        
+
         .toggle-password-btn:hover {
             color: #f59e0b;
             transform: scale(1.1);
         }
-        
+
         /* Smart Loading Overlay */
         .smart-loading-overlay {
             position: fixed;
@@ -993,7 +1602,7 @@
             justify-content: center;
             z-index: 99999;
         }
-        
+
         .smart-loading-spinner {
             width: 50px;
             height: 50px;
@@ -1003,33 +1612,33 @@
             animation: spin 0.8s linear infinite;
             margin-bottom: 15px;
         }
-        
+
         .smart-loading-text {
             color: #fff;
             font-size: 1rem;
             font-weight: 500;
         }
-        
+
         /* Mobile Responsive */
         @media (max-width: 600px) {
             .verification-modal-dialog {
                 width: 95%;
             }
-            
+
             .verification-modal-header {
                 padding: 20px;
             }
-            
+
             .verification-modal-body {
                 padding: 20px;
             }
-            
+
             .otp-input {
                 font-size: 1.5rem;
                 letter-spacing: 8px;
                 padding: 14px 16px;
             }
-            
+
             .otp-input::placeholder {
                 letter-spacing: 8px;
             }
@@ -1081,10 +1690,21 @@
         }
 
         @keyframes celebrateBounce {
-            0% { transform: scale(0); }
-            50% { transform: scale(1.2); }
-            70% { transform: scale(0.9); }
-            100% { transform: scale(1); }
+            0% {
+                transform: scale(0);
+            }
+
+            50% {
+                transform: scale(1.2);
+            }
+
+            70% {
+                transform: scale(0.9);
+            }
+
+            100% {
+                transform: scale(1);
+            }
         }
 
         .referral-notification-title {
@@ -1209,97 +1829,150 @@
         }
     </style>
 </head>
+
 <body>
     <!-- Smart Loading Indicator -->
-    <div id="smartLoadingOverlay" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.85); backdrop-filter: blur(8px); display: none; align-items: center; justify-content: center; z-index: 99999;">
+    <div id="smartLoadingOverlay"
+        style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.85); backdrop-filter: blur(8px); display: none; align-items: center; justify-content: center; z-index: 99999;">
         <div style="text-align: center;">
-            <div style="width: 50px; height: 50px; border: 4px solid rgba(229, 9, 20, 0.2); border-top-color: #e50914; border-radius: 50%; animation: spin 0.8s linear infinite; margin: 0 auto 15px;"></div>
+            <div
+                style="width: 50px; height: 50px; border: 4px solid rgba(229, 9, 20, 0.2); border-top-color: #e50914; border-radius: 50%; animation: spin 0.8s linear infinite; margin: 0 auto 15px;">
+            </div>
             <div id="smartLoadingText" style="color: #fff; font-size: 1rem; font-weight: 500;">Đang xử lý...</div>
         </div>
     </div>
-    
+
     <div class="main-wrapper">
         <div class="main-content">
             <div class="auth-container">
-        <div class="logo">
-            <h1>TIỆM BÁNH NETFLIX</h1>
-            <p>Share - Support - Enjoy</p>
-        </div>
+                <div class="logo">
+                    <h1>TIỆM BÁNH NETFLIX</h1>
+                </div>
 
-        <div class="tabs">
-            <button class="tab active" onclick="switchTab('login')">Đăng nhập</button>
-            <button class="tab" onclick="switchTab('register')">Đăng ký</button>
-        </div>
+                <div class="tabs">
+                    <button class="tab active" onclick="switchTab('login')">Đăng nhập</button>
+                    <button class="tab" onclick="switchTab('register')">Đăng ký</button>
+                </div>
 
-        <div class="error-msg" id="errorMsg"></div>
-        <div class="success-msg" id="successMsg"></div>
+                <div class="error-msg" id="errorMsg"></div>
+                <div class="success-msg" id="successMsg"></div>
 
-        <!-- Login Form -->
-        <div class="form-section active" id="loginForm">
-            <form onsubmit="handleLogin(event)">
-                <div class="form-group">
-                    <label>Email</label>
-                    <input type="email" id="loginEmail" required placeholder="email@example.com">
-                </div>
-                <div class="form-group">
-                    <label>Mật khẩu</label>
-                    <input type="password" id="loginPassword" required placeholder="••••••••">
-                    <span class="password-toggle" onclick="togglePassword('loginPassword', this)">👁️</span>
-                </div>
-                <div style="text-align: right; margin: -5px 0 15px 0;">
-                    <a href="javascript:void(0)" onclick="handleForgotPassword()" style="color: #60a5fa; font-size: 0.9rem; text-decoration: none;">Quên mật khẩu?</a>
-                </div>
-                <button type="submit" class="btn">Đăng nhập</button>
-            </form>
-        </div>
-
-        <!-- Register Form -->
-        <div class="form-section" id="registerForm">
-            <form onsubmit="handleRegister(event)">
-                <div class="form-group">
-                    <label>Họ tên</label>
-                    <input type="text" id="registerName" required placeholder="Nguyễn Văn A" minlength="3">
-                </div>
-                <div class="form-group">
-                    <label>Email</label>
-                    <input type="email" id="registerEmail" required placeholder="email@example.com">
-                </div>
-                <div class="form-group">
-                    <label>Mật khẩu (tối thiểu 8 ký tự)</label>
-                    <input type="password" id="registerPassword" required minlength="8" placeholder="••••••••" oninput="checkPasswordStrength()">
-                    <span class="password-toggle" onclick="togglePassword('registerPassword', this)">👁️</span>
-                    <div class="password-strength">
-                        <div class="strength-bar">
-                            <div class="strength-fill" id="strengthFill"></div>
+                <!-- Login Form -->
+                <div class="form-section active" id="loginForm">
+                    <form onsubmit="handleLogin(event)">
+                        <div class="form-group">
+                            <label>Email</label>
+                            <input type="email" id="loginEmail" required placeholder="email@example.com">
                         </div>
-                        <span id="strengthText" style="color: #aaa; font-size: 0.8rem;"></span>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label>Xác nhận mật khẩu</label>
-                    <input type="password" id="registerConfirmPassword" required minlength="8" placeholder="••••••••">
-                    <span class="password-toggle" onclick="togglePassword('registerConfirmPassword', this)">👁️</span>
+                        <div class="form-group">
+                            <label>Mật khẩu</label>
+                            <input type="password" id="loginPassword" required placeholder="Nhập mật khẩu">
+                            <span class="password-toggle" onclick="togglePassword('loginPassword', this)"><svg
+                                    xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24"
+                                    fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                    stroke-linejoin="round">
+                                    <path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z" />
+                                    <circle cx="12" cy="12" r="3" />
+                                </svg></span>
+                        </div>
+                        <div style="text-align: right; margin: -5px 0 15px 0;">
+                            <a href="javascript:void(0)" onclick="handleForgotPassword()"
+                                style="color: #60a5fa; font-size: 0.9rem; text-decoration: none;">Quên mật khẩu?</a>
+                        </div>
+                        <button type="submit" class="btn"
+                            style="display: flex; align-items: center; justify-content: center; gap: 8px;"><svg
+                                xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"
+                                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                stroke-linejoin="round">
+                                <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4" />
+                                <polyline points="10 17 15 12 10 7" />
+                                <line x1="15" x2="3" y1="12" y2="12" />
+                            </svg>Đăng nhập</button>
+                    </form>
                 </div>
 
-                <!-- CAPTCHA -->
-                <div class="captcha-box" id="captchaBox" onclick="toggleCaptcha()">
-                    <div class="checkbox" id="captchaCheckbox"></div>
-                    <span>Tôi không phải là robot</span>
+                <!-- Register Form -->
+                <div class="form-section" id="registerForm">
+                    <form onsubmit="handleRegister(event)">
+                        <div class="form-group">
+                            <label>Họ tên</label>
+                            <input type="text" id="registerName" required placeholder="Nguyễn Văn A" minlength="3">
+                        </div>
+                        <div class="form-group">
+                            <label>Email</label>
+                            <input type="email" id="registerEmail" required placeholder="email@example.com">
+                        </div>
+                        <div class="form-group">
+                            <label>Mật khẩu (tối thiểu 8 ký tự)</label>
+                            <input type="password" id="registerPassword" required minlength="8"
+                                placeholder="Nhập mật khẩu" oninput="checkPasswordStrength()">
+                            <span class="password-toggle" onclick="togglePassword('registerPassword', this)"><svg
+                                    xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24"
+                                    fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                    stroke-linejoin="round">
+                                    <path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z" />
+                                    <circle cx="12" cy="12" r="3" />
+                                </svg></span>
+                            <div class="password-strength">
+                                <div class="strength-bar">
+                                    <div class="strength-fill" id="strengthFill"></div>
+                                </div>
+                                <span id="strengthText" style="color: #aaa; font-size: 0.8rem;"></span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>Xác nhận mật khẩu</label>
+                            <input type="password" id="registerConfirmPassword" required minlength="8"
+                                placeholder="Nhập lại mật khẩu">
+                            <span class="password-toggle" onclick="togglePassword('registerConfirmPassword', this)"><svg
+                                    xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24"
+                                    fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                    stroke-linejoin="round">
+                                    <path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z" />
+                                    <circle cx="12" cy="12" r="3" />
+                                </svg></span>
+                        </div>
+
+                        <!-- CAPTCHA -->
+                        <div class="captcha-box" id="captchaBox" onclick="toggleCaptcha()">
+                            <div class="checkbox" id="captchaCheckbox"></div>
+                            <span>Tôi không phải là robot</span>
+                        </div>
+
+                        <button type="submit" class="btn" id="registerBtn"
+                            style="display: flex; align-items: center; justify-content: center; gap: 8px;"><svg
+                                xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"
+                                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                stroke-linejoin="round">
+                                <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" />
+                                <circle cx="9" cy="7" r="4" />
+                                <line x1="19" x2="19" y1="8" y2="14" />
+                                <line x1="22" x2="16" y1="11" y2="11" />
+                            </svg>Đăng ký</button>
+                    </form>
                 </div>
 
-                <button type="submit" class="btn" id="registerBtn">Đăng ký</button>
-            </form>
-        </div>
-
-        <div class="footer-link">
-            <a href="/">← Quay lại trang chủ</a>
-            <span style="margin: 0 10px; color: #555;">|</span>
-            <a href="https://www.facebook.com/tiembanh4k/" target="_blank">Contact Support</a>
-        </div>
+                <div class="footer-link"
+                    style="display: flex; align-items: center; justify-content: center; gap: 8px; flex-wrap: wrap;">
+                    <a href="/" style="display: inline-flex; align-items: center; gap: 6px;"><svg
+                            xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="m12 19-7-7 7-7" />
+                            <path d="M19 12H5" />
+                        </svg>Quay lại trang chủ</a>
+                    <span style="margin: 0 6px; color: #555;">|</span>
+                    <a href="https://www.facebook.com/tiembanh4k/" target="_blank"
+                        style="display: inline-flex; align-items: center; gap: 6px;"><svg
+                            xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path
+                                d="M3 11h3a2 2 0 0 1 2 2v3a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-5Zm0 0a9 9 0 1 1 18 0m0 0v5a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3Z" />
+                        </svg>Contact Support</a>
+                </div>
             </div>
-        <!-- End Auth Container -->
+            <!-- End Auth Container -->
         </div>
-    <!-- End Main Content -->
+        <!-- End Main Content -->
     </div>
     <!-- End Main Wrapper -->
 
@@ -1359,26 +2032,28 @@
                     Chúng tôi đã gửi mã OTP 6 số đến email của bạn:<br>
                     <strong id="verificationEmail" style="color: #fbbf24;"></strong>
                 </p>
-                
+
                 <div class="otp-input-container">
-                    <input type="text" id="otpInput" class="otp-input" maxlength="6" placeholder="000000" autocomplete="off">
+                    <input type="text" id="otpInput" class="otp-input" maxlength="6" placeholder="000000"
+                        autocomplete="off">
                 </div>
-                
+
                 <p style="color: #aaa; font-size: 0.9rem; margin-top: 15px; text-align: center;">
                     Mã có hiệu lực trong <strong id="otpTimer" style="color: #fbbf24;">10:00</strong> phút
                 </p>
-                
+
                 <div class="verification-actions">
                     <button class="btn-verify" id="verifyBtn" onclick="handleVerifyEmail()">
                         Xác thực
                     </button>
-                    
+
                     <button class="btn-resend" id="resendBtn" onclick="handleResendOTP()">
                         <span id="resendText">Gửi lại mã</span>
-                        <span id="resendCooldown" style="display: none;">Gửi lại sau (<span id="cooldownTimer">60</span>s)</span>
+                        <span id="resendCooldown" style="display: none;">Gửi lại sau (<span
+                                id="cooldownTimer">60</span>s)</span>
                     </button>
                 </div>
-                
+
                 <p style="color: #888; font-size: 0.85rem; margin-top: 20px; text-align: center;">
                     Không nhận được email? Kiểm tra hộp thư Spam/Junk
                 </p>
@@ -1392,22 +2067,23 @@
             <div class="forgot-password-modal-header">
                 <span class="forgot-password-modal-icon">🔒</span>
                 <div class="forgot-password-modal-title">Quên Mật Khẩu</div>
-                <button class="forgot-password-modal-close" onclick="closeForgotPasswordEmailModal()" aria-label="Đóng">×</button>
+                <button class="forgot-password-modal-close" onclick="closeForgotPasswordEmailModal()"
+                    aria-label="Đóng">×</button>
             </div>
             <div class="forgot-password-modal-body">
                 <p style="color: #ddd; margin-bottom: 20px; text-align: center;">
                     Nhập email đã đăng ký để nhận mã OTP xác thực
                 </p>
-                
+
                 <div style="margin-bottom: 20px;">
-                    <input type="email" id="forgotPasswordEmail" placeholder="Email của bạn" 
-                           style="width: 100%; padding: 14px; background: rgba(255, 255, 255, 0.05); border: 2px solid rgba(251, 191, 36, 0.3); border-radius: 10px; color: #fff; font-size: 1rem; outline: none; transition: all 0.3s ease; box-sizing: border-box;">
+                    <input type="email" id="forgotPasswordEmail" placeholder="Email của bạn"
+                        style="width: 100%; padding: 14px; background: rgba(255, 255, 255, 0.05); border: 2px solid rgba(251, 191, 36, 0.3); border-radius: 10px; color: #fff; font-size: 1rem; outline: none; transition: all 0.3s ease; box-sizing: border-box;">
                 </div>
-                
+
                 <button class="btn-verify" onclick="sendForgotPasswordOTP()">
                     Gửi mã OTP
                 </button>
-                
+
                 <p style="color: #888; font-size: 0.85rem; margin-top: 20px; text-align: center;">
                     Chỉ chấp nhận email @gmail.com
                 </p>
@@ -1421,33 +2097,36 @@
             <div class="forgot-password-modal-header">
                 <span class="forgot-password-modal-icon">📧</span>
                 <div class="forgot-password-modal-title">Xác Thực OTP</div>
-                <button class="forgot-password-modal-close" onclick="closeForgotPasswordOTPModal()" aria-label="Đóng">×</button>
+                <button class="forgot-password-modal-close" onclick="closeForgotPasswordOTPModal()"
+                    aria-label="Đóng">×</button>
             </div>
             <div class="forgot-password-modal-body">
                 <p style="color: #ddd; margin-bottom: 20px; text-align: center;">
                     Chúng tôi đã gửi mã OTP 6 số đến email:<br>
                     <strong id="forgotPasswordEmailDisplay" style="color: #fbbf24;"></strong>
                 </p>
-                
+
                 <div class="otp-input-container">
-                    <input type="text" id="forgotPasswordOTPInput" class="otp-input" maxlength="6" placeholder="000000" autocomplete="off">
+                    <input type="text" id="forgotPasswordOTPInput" class="otp-input" maxlength="6" placeholder="000000"
+                        autocomplete="off">
                 </div>
-                
+
                 <p style="color: #aaa; font-size: 0.9rem; margin-top: 15px; text-align: center;">
                     Mã có hiệu lực trong <strong id="forgotPasswordOTPTimer" style="color: #fbbf24;">10:00</strong> phút
                 </p>
-                
+
                 <div class="verification-actions">
                     <button class="btn-verify" onclick="verifyForgotPasswordOTP()">
                         Xác thực
                     </button>
-                    
+
                     <button class="btn-resend" id="forgotPasswordResendBtn" onclick="resendForgotPasswordOTP()">
                         <span id="forgotPasswordResendText">Gửi lại mã</span>
-                        <span id="forgotPasswordResendCooldown" style="display: none;">Gửi lại sau (<span id="forgotPasswordCooldownTimer">60</span>s)</span>
+                        <span id="forgotPasswordResendCooldown" style="display: none;">Gửi lại sau (<span
+                                id="forgotPasswordCooldownTimer">60</span>s)</span>
                     </button>
                 </div>
-                
+
                 <p style="color: #888; font-size: 0.85rem; margin-top: 20px; text-align: center;">
                     Không nhận được email? Kiểm tra hộp thư Spam/Junk
                 </p>
@@ -1461,33 +2140,44 @@
             <div class="forgot-password-modal-header">
                 <span class="forgot-password-modal-icon">🔑</span>
                 <div class="forgot-password-modal-title">Đặt Mật Khẩu Mới</div>
-                <button class="forgot-password-modal-close" onclick="closeForgotPasswordNewPasswordModal()" aria-label="Đóng">×</button>
+                <button class="forgot-password-modal-close" onclick="closeForgotPasswordNewPasswordModal()"
+                    aria-label="Đóng">×</button>
             </div>
             <div class="forgot-password-modal-body">
                 <p style="color: #ddd; margin-bottom: 20px; text-align: center;">
                     Nhập mật khẩu mới cho tài khoản của bạn
                 </p>
-                
+
                 <div class="password-input-wrapper">
                     <label>Mật khẩu mới</label>
                     <input type="password" id="forgotPasswordNewPassword" placeholder="Nhập mật khẩu mới">
-                    <button type="button" class="toggle-password-btn" onclick="togglePasswordVisibility('forgotPasswordNewPassword')">
-                        👁️
+                    <button type="button" class="toggle-password-btn"
+                        onclick="togglePasswordVisibility('forgotPasswordNewPassword')">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z" />
+                            <circle cx="12" cy="12" r="3" />
+                        </svg>
                     </button>
                 </div>
-                
+
                 <div class="password-input-wrapper">
                     <label>Xác nhận mật khẩu</label>
                     <input type="password" id="forgotPasswordConfirmPassword" placeholder="Nhập lại mật khẩu mới">
-                    <button type="button" class="toggle-password-btn" onclick="togglePasswordVisibility('forgotPasswordConfirmPassword')">
-                        👁️
+                    <button type="button" class="toggle-password-btn"
+                        onclick="togglePasswordVisibility('forgotPasswordConfirmPassword')">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z" />
+                            <circle cx="12" cy="12" r="3" />
+                        </svg>
                     </button>
                 </div>
-                
+
                 <button class="btn-verify" onclick="resetPassword()">
                     Đổi mật khẩu
                 </button>
-                
+
                 <p style="color: #888; font-size: 0.85rem; margin-top: 20px; text-align: center;">
                     Mật khẩu phải có ít nhất 6 ký tự
                 </p>
@@ -1502,18 +2192,25 @@
     </div>
 
     <!-- Footer -->
-    <footer style="background: rgba(0, 0, 0, 0.3); padding: 30px 20px; margin-top: 40px; border-top: 1px solid rgba(255, 255, 255, 0.1);">
+    <footer
+        style="background: rgba(0, 0, 0, 0.3); padding: 30px 20px; margin-top: 40px; border-top: 1px solid rgba(255, 255, 255, 0.1);">
         <div style="max-width: 800px; margin: 0 auto; text-align: center;">
             <div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 20px; margin-bottom: 15px;">
-                <a href="/privacy-policy/" style="color: #fff; text-decoration: none; font-size: 0.9rem; transition: color 0.3s;" onmouseover="this.style.color='#fbbf24'" onmouseout="this.style.color='#fff'">
+                <a href="/privacy-policy/"
+                    style="color: #fff; text-decoration: none; font-size: 0.9rem; transition: color 0.3s;"
+                    onmouseover="this.style.color='#fbbf24'" onmouseout="this.style.color='#fff'">
                     Chính Sách Bảo Mật
                 </a>
                 <span style="color: rgba(255, 255, 255, 0.3);">|</span>
-                <a href="/terms-of-service/" style="color: #fff; text-decoration: none; font-size: 0.9rem; transition: color 0.3s;" onmouseover="this.style.color='#fbbf24'" onmouseout="this.style.color='#fff'">
+                <a href="/terms-of-service/"
+                    style="color: #fff; text-decoration: none; font-size: 0.9rem; transition: color 0.3s;"
+                    onmouseover="this.style.color='#fbbf24'" onmouseout="this.style.color='#fff'">
                     Điều Khoản Sử Dụng
                 </a>
                 <span style="color: rgba(255, 255, 255, 0.3);">|</span>
-                <a href="/contact/" style="color: #fff; text-decoration: none; font-size: 0.9rem; transition: color 0.3s;" onmouseover="this.style.color='#fbbf24'" onmouseout="this.style.color='#fff'">
+                <a href="/contact/"
+                    style="color: #fff; text-decoration: none; font-size: 0.9rem; transition: color 0.3s;"
+                    onmouseover="this.style.color='#fbbf24'" onmouseout="this.style.color='#fff'">
                     Liên Hệ
                 </a>
             </div>
@@ -1525,41 +2222,41 @@
 
     <!-- Google reCAPTCHA v3 -->
     <script src="https://www.google.com/recaptcha/api.js?render=6Ldjte8rAAAAADMBTnxvQtLBAmQq6zH6H-DLl82z"></script>
-    
+
     <!-- Console Protection -->
     <script>
-        (function() {
+        (function () {
             // DISABLE CONSOLE NGAY LẬP TỨC trong production
             const hostname = window.location.hostname;
-            const isProduction = hostname !== 'localhost' && 
-                               hostname !== '127.0.0.1' &&
-                               !hostname.includes('192.168') &&
-                               !hostname.includes('10.0');
-            
+            const isProduction = hostname !== 'localhost' &&
+                hostname !== '127.0.0.1' &&
+                !hostname.includes('192.168') &&
+                !hostname.includes('10.0');
+
             if (isProduction) {
                 // Clear existing logs first
                 try {
                     console.clear();
-                } catch(e) {}
-                
+                } catch (e) { }
+
                 // Disable all console methods
-                const noop = () => {};
+                const noop = () => { };
                 Object.keys(console).forEach(key => {
                     console[key] = noop;
                 });
             }
         })();
-        
+
         // Block DevTools shortcuts
-        document.addEventListener('keydown', function(e) {
-            if (e.key === 'F12' || (e.ctrlKey && e.shiftKey && e.key === 'I') || 
+        document.addEventListener('keydown', function (e) {
+            if (e.key === 'F12' || (e.ctrlKey && e.shiftKey && e.key === 'I') ||
                 (e.ctrlKey && e.shiftKey && e.key === 'J') || (e.ctrlKey && e.key === 'U')) {
                 e.preventDefault();
                 return false;
             }
         });
     </script>
-    
+
     <!-- Referral Notification Modal -->
     <div class="referral-notification-overlay" id="referralNotificationOverlay">
         <div class="referral-notification-modal">
@@ -1572,7 +2269,8 @@
                 <!-- Nội dung sẽ được inject bằng JS -->
             </div>
             <div class="referral-notification-footer">
-                <button class="referral-notification-btn" id="referralNotificationBtn" onclick="closeReferralNotification()">
+                <button class="referral-notification-btn" id="referralNotificationBtn"
+                    onclick="closeReferralNotification()">
                     Tuyệt vời! Tiếp tục
                 </button>
             </div>
@@ -1582,6 +2280,26 @@
     <!-- Environment Configuration - Must load first -->
     <script src="../config.js"></script>
     <script src="../auth.js"></script>
-</body>
-</html>
 
+    <!-- Auto switch tab based on query param -->
+    <script>
+        (function () {
+            const params = new URLSearchParams(window.location.search);
+            const mode = params.get('mode');
+            if (mode === 'register' || mode === 'login') {
+                // Wait for DOM and auth.js to load
+                if (typeof switchTab === 'function') {
+                    switchTab(mode);
+                } else {
+                    window.addEventListener('load', function () {
+                        if (typeof switchTab === 'function') {
+                            switchTab(mode);
+                        }
+                    });
+                }
+            }
+        })();
+    </script>
+</body>
+
+</html>
