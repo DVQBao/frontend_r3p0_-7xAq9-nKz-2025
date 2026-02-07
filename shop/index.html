@@ -1,19 +1,21 @@
 <!DOCTYPE html>
 <html lang="vi">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    
+
     <!-- SEO Meta Tags -->
-    <meta name="description" content="Quầy Lưu Niệm - Tiệm Bánh Netflix. Ủng hộ cộng đồng với những sản phẩm nhỏ xinh từ Tiệm Bánh.">
+    <meta name="description"
+        content="Quầy Lưu Niệm - Tiệm Bánh Netflix. Ủng hộ cộng đồng với những sản phẩm nhỏ xinh từ Tiệm Bánh.">
     <meta name="keywords" content="Tiệm Bánh Netflix, quầy lưu niệm, shop, sản phẩm">
     <meta name="author" content="Tiệm Bánh Netflix">
     <meta name="robots" content="index, follow">
     <link rel="canonical" href="https://tiembanh4k.com/shop/">
-    
+
     <!-- Theme Color -->
     <meta name="theme-color" content="#e50914">
-    
+
     <!-- Open Graph -->
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://tiembanh4k.com/shop/">
@@ -21,172 +23,585 @@
     <meta property="og:description" content="Ủng hộ cộng đồng với những sản phẩm nhỏ xinh từ Tiệm Bánh.">
     <meta property="og:image" content="https://tiembanh4k.com/Background.webp">
     <meta property="og:locale" content="vi_VN">
-    
+
     <title>Quầy Lưu Niệm - Tiệm Bánh Netflix</title>
-    
+
     <!-- Favicon -->
     <link rel="icon" type="image/png" sizes="48x48" href="../favicon-48.png">
     <link rel="icon" type="image/png" sizes="96x96" href="../favicon-96.png">
     <link rel="icon" type="image/png" sizes="192x192" href="../favicon.png">
     <link rel="apple-touch-icon" sizes="180x180" href="../favicon.png">
-    
+
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-            background: linear-gradient(135deg, rgba(20, 20, 20, 0.95) 0%, rgba(26, 26, 26, 0.95) 100%), 
-                        url('../Background.webp') center/cover fixed;
+            background: #000;
             color: #fff;
             min-height: 100vh;
-            padding: 20px;
         }
 
-        .main-wrapper { min-height: calc(100vh - 40px); display: flex; flex-direction: column; }
-        .container { max-width: 1200px; width: 100%; margin: 0 auto; }
+        .main-wrapper {
+            min-height: 100vh;
+            background: linear-gradient(180deg, rgba(20, 20, 20, 0.98) 0%, rgba(0, 0, 0, 1) 100%),
+                url('../Background.webp') center top/cover no-repeat fixed;
+        }
+
+        .container {
+            max-width: 1100px;
+            width: 100%;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
 
         /* Header */
-        .header { text-align: center; margin-bottom: 40px; padding-top: 20px; }
-
-        h1 {
-            font-size: 2.5rem;
-            margin-bottom: 15px;
-            background: linear-gradient(90deg, #e50914);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            font-weight: 700;
-            letter-spacing: -1px;
+        .header {
+            text-align: center;
+            padding: 40px 0 30px;
+            position: relative;
         }
 
-        .description { color: #ffffff; font-size: 1rem; line-height: 1.7; max-width: 700px; margin: 0 auto 20px; }
+        .back-btn {
+            position: absolute;
+            left: 0;
+            top: 50%;
+            transform: translateY(-50%);
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            color: #888;
+            text-decoration: none;
+            font-size: 0.9rem;
+            padding: 10px 16px;
+            border-radius: 8px;
+            transition: all 0.2s ease;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .back-btn:hover {
+            color: #fff;
+            background: rgba(255, 255, 255, 0.08);
+            border-color: rgba(255, 255, 255, 0.2);
+        }
+
+        .logo {
+            font-size: 1.8rem;
+            font-weight: 900;
+            color: #e50914;
+            letter-spacing: -1px;
+            text-transform: uppercase;
+            margin-bottom: 5px;
+        }
+
+        .slogan {
+            color: #666;
+            font-size: 0.75rem;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            margin-bottom: 25px;
+        }
+
+        .page-title {
+            font-size: 1.6rem;
+            font-weight: 700;
+            color: #fbbf24;
+            margin-bottom: 12px;
+        }
+
+        .description {
+            color: #999;
+            font-size: 0.95rem;
+            line-height: 1.6;
+            max-width: 600px;
+            margin: 0 auto;
+        }
 
         /* Products Grid */
-        .products-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 25px; margin-bottom: 50px; }
+        .products-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 24px;
+            padding: 30px 0 60px;
+        }
 
         .product-card {
-            background: rgba(0, 0, 0, 0.85);
-            backdrop-filter: blur(10px);
+            background: rgba(17, 17, 17, 0.95);
             border-radius: 16px;
             overflow: hidden;
-            box-shadow: 0 12px 48px rgba(0, 0, 0, 0.7);
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.08);
             transition: all 0.3s ease;
             display: flex;
             flex-direction: column;
         }
 
         .product-card:hover {
-            transform: translateY(-5px);
-            border-color: rgba(229, 9, 20, 0.5);
-            box-shadow: 0 16px 60px rgba(229, 9, 20, 0.2);
+            transform: translateY(-6px);
+            border-color: rgba(229, 9, 20, 0.4);
+            box-shadow: 0 20px 50px rgba(229, 9, 20, 0.15);
         }
 
         .product-image {
-            width: 100%; height: 280px;
-            background: rgba(255, 255, 255, 0.05);
-            display: flex; align-items: center; justify-content: center;
-            color: #555; font-size: 0.9rem;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            width: 100%;
+            height: 260px;
+            background: rgba(255, 255, 255, 0.02);
+            display: flex;
+            align-items: center;
+            justify-content: center;
             overflow: hidden;
+            position: relative;
         }
 
-        .product-image img { width: 100%; height: 100%; object-fit: cover; }
-        .product-info { padding: 20px; display: flex; flex-direction: column; flex: 1; }
-        .product-name { font-size: 1.2rem; font-weight: 600; margin-bottom: 8px; color: #fff; min-height: 58px; display: -webkit-box; -webkit-line-clamp: 2; line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+        .product-image::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 60px;
+            background: linear-gradient(transparent, rgba(17, 17, 17, 0.95));
+            pointer-events: none;
+        }
+
+        .product-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.4s ease;
+        }
+
+        .product-card:hover .product-image img {
+            transform: scale(1.05);
+        }
+
+        .product-info {
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            flex: 1;
+        }
+
+        .product-name {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 10px;
+            color: #fff;
+            min-height: 52px;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            line-height: 1.4;
+        }
 
         .product-desc-link {
-            display: inline-flex; align-items: center; gap: 6px;
-            font-size: 0.85rem; color: #888; cursor: pointer;
-            margin-bottom: 15px; transition: color 0.3s ease;
-        }
-        .product-desc-link:hover { color: #e50914; }
-
-        /* Modal */
-        .desc-modal {
-            display: none; position: fixed; top: 0; left: 0;
-            width: 100%; height: 100%;
-            background: rgba(0, 0, 0, 0.9);
-            z-index: 10000; align-items: center; justify-content: center;
-        }
-        .desc-modal.active { display: flex; }
-
-        .desc-modal-content {
-            background: rgba(20, 20, 20, 0.98);
-            border: 1px solid rgba(255, 255, 255, 0.15);
-            border-radius: 12px; padding: 25px;
-            max-width: 500px; width: 90%; position: relative;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 0.8rem;
+            color: #60a5fa;
+            cursor: pointer;
+            margin-bottom: 16px;
+            transition: all 0.2s ease;
+            width: fit-content;
         }
 
-        .desc-modal-close {
-            position: absolute; top: 12px; right: 12px;
-            background: none; border: none; color: #888;
-            font-size: 1.5rem; cursor: pointer; line-height: 1; transition: color 0.3s;
+        .product-desc-link:hover {
+            color: #93c5fd;
         }
-        .desc-modal-close:hover { color: #fff; }
-
-        .desc-modal-title { font-size: 1.2rem; font-weight: 600; margin-bottom: 15px; color: #fff; }
-        .desc-modal-text { font-size: 0.95rem; color: #ccc; line-height: 1.7; max-height: 60vh; overflow-y: auto; }
-        .desc-modal-text ul { list-style: none; padding: 0; margin: 0; }
-        .desc-modal-text li { padding: 8px 0; border-bottom: 1px solid rgba(255, 255, 255, 0.08); }
-        .desc-modal-text li:last-child { border-bottom: none; }
 
         /* Price */
-        .product-price { margin-bottom: 15px; }
-        .price-row { display: flex; align-items: center; gap: 10px; }
-        .price-current { font-size: 1.3rem; font-weight: 700; color: #fbbf24; }
-        .price-original { font-size: 0.95rem; color: #888; text-decoration: line-through; }
-        .price-discount { display: inline-block; font-size: 0.8rem; color: #4ade80; background: rgba(74, 222, 128, 0.1); padding: 2px 8px; border-radius: 4px; font-weight: 600; margin-top: 5px; }
+        .product-price {
+            margin-bottom: 18px;
+        }
 
-        .product-actions { display: flex; flex-direction: column; gap: 12px; margin-top: auto; }
+        .price-row {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .price-current {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: #fbbf24;
+        }
+
+        .price-original {
+            font-size: 0.9rem;
+            color: #666;
+            text-decoration: line-through;
+        }
+
+        .price-discount {
+            display: inline-block;
+            font-size: 0.75rem;
+            color: #4ade80;
+            background: rgba(74, 222, 128, 0.1);
+            padding: 3px 10px;
+            border-radius: 20px;
+            font-weight: 600;
+            margin-top: 6px;
+            border: 1px solid rgba(74, 222, 128, 0.2);
+        }
+
+        .product-actions {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-top: auto;
+        }
 
         .btn {
-            display: inline-block; width: 100%; padding: 12px 20px;
-            background: #e50914; color: #fff; text-decoration: none;
-            text-align: center; border-radius: 8px; font-weight: 600;
-            border: none; cursor: pointer; transition: all 0.3s ease; font-size: 0.95rem;
+            display: inline-block;
+            width: 100%;
+            padding: 14px 20px;
+            background: linear-gradient(135deg, #e50914 0%, #b20710 100%);
+            color: #fff;
+            text-decoration: none;
+            text-align: center;
+            border-radius: 10px;
+            font-weight: 600;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 0.95rem;
         }
-        .btn:hover { background: #f40612; transform: translateY(-1px); box-shadow: 0 4px 12px rgba(229, 9, 20, 0.4); }
+
+        .btn:hover {
+            background: linear-gradient(135deg, #f40612 0%, #c91020 100%);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(229, 9, 20, 0.4);
+        }
 
         /* QR Section */
         .qr-section {
-            display: flex; align-items: center; justify-content: flex-start; gap: 10px;
-            padding: 12px; background: rgba(255, 255, 255, 0.03);
-            border-radius: 8px; border: 1px dashed rgba(255, 255, 255, 0.15);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 14px;
+            background: rgba(74, 222, 128, 0.05);
+            border-radius: 10px;
+            border: 1px solid rgba(74, 222, 128, 0.15);
         }
+
         .qr-placeholder {
-            width: 60px; height: 60px; background: rgba(255, 255, 255, 0.1);
-            border-radius: 6px; display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+            width: 55px;
+            height: 55px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            overflow: hidden;
         }
-        .qr-placeholder img { width: 100%; height: 100%; object-fit: contain; border-radius: 6px; }
-        .qr-text { font-size: 0.85rem; color: #4ade80; text-align: left; flex: 1; }
+
+        .qr-placeholder img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+
+        .qr-text {
+            font-size: 0.8rem;
+            color: #4ade80;
+            line-height: 1.5;
+        }
+
+        /* Modal */
+        .desc-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            backdrop-filter: blur(5px);
+            z-index: 10000;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .desc-modal.active {
+            display: flex;
+        }
+
+        .desc-modal-content {
+            background: linear-gradient(135deg, #1a1a1a 0%, #111 100%);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            padding: 28px;
+            max-width: 480px;
+            width: 100%;
+            position: relative;
+            max-height: 80vh;
+            overflow-y: auto;
+            animation: modalSlideUp 0.3s ease-out;
+        }
+
+        @keyframes modalSlideUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .desc-modal-close {
+            position: absolute;
+            top: 16px;
+            right: 16px;
+            background: rgba(255, 255, 255, 0.1);
+            border: none;
+            color: #888;
+            font-size: 1.3rem;
+            cursor: pointer;
+            line-height: 1;
+            transition: all 0.2s;
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .desc-modal-close:hover {
+            background: rgba(255, 255, 255, 0.15);
+            color: #fff;
+        }
+
+        .desc-modal-title {
+            font-size: 1.15rem;
+            font-weight: 600;
+            margin-bottom: 18px;
+            color: #fff;
+            padding-right: 40px;
+        }
+
+        .desc-modal-text {
+            font-size: 0.9rem;
+            color: #bbb;
+            line-height: 1.7;
+        }
+
+        .desc-modal-text ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .desc-modal-text li {
+            padding: 10px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+        }
+
+        .desc-modal-text li::before {
+            content: '•';
+            color: #fbbf24;
+            font-weight: bold;
+            flex-shrink: 0;
+        }
+
+        .desc-modal-text li:last-child {
+            border-bottom: none;
+        }
 
         /* Footer */
-        footer { background: rgba(0, 0, 0, 0.3); padding: 40px 20px; margin-top: 60px; border-top: 1px solid rgba(255, 255, 255, 0.1); }
-        footer p { color: rgba(255, 255, 255, 0.6); font-size: 0.85rem; margin: 0; text-align: center; }
-        footer a { color: #e50914; text-decoration: none; }
-        footer a:hover { text-decoration: underline; }
+        footer {
+            background: rgba(0, 0, 0, 0.5);
+            padding: 30px 20px;
+            border-top: 1px solid rgba(255, 255, 255, 0.08);
+            text-align: center;
+        }
 
-        /* Responsive */
-        @media (max-width: 768px) {
-            h1 { font-size: 1.8rem; }
-            .description { font-size: 0.9rem; padding: 0 10px; }
-            .products-grid { grid-template-columns: 1fr; gap: 20px; }
-            .product-image { height: 240px; }
+        footer p {
+            color: rgba(255, 255, 255, 0.5);
+            font-size: 0.85rem;
+        }
+
+        footer a {
+            color: #e50914;
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+
+        footer a:hover {
+            color: #ff4d5a;
         }
 
         /* Loading */
-        .loading { text-align: center; padding: 50px; color: #888; }
+        .loading {
+            text-align: center;
+            padding: 60px 20px;
+            color: #666;
+            font-size: 0.95rem;
+        }
+
+        /* ========== MOBILE RESPONSIVE ========== */
+        @media (max-width: 768px) {
+
+            /* Bỏ background trên mobile */
+            .main-wrapper {
+                background: #000 !important;
+            }
+
+            .header {
+                padding: 20px 0 15px;
+            }
+
+            /* Ẩn nút quay lại trên mobile */
+            .back-btn {
+                display: none !important;
+            }
+
+            .logo {
+                font-size: 1.3rem;
+            }
+
+            .slogan {
+                font-size: 0.6rem;
+                letter-spacing: 2px;
+                margin-bottom: 15px;
+            }
+
+            .page-title {
+                font-size: 1.1rem;
+                margin-bottom: 10px;
+            }
+
+            .description {
+                font-size: 0.8rem;
+                padding: 0 10px;
+            }
+
+            /* Grid 2 cột trên mobile */
+            .products-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 12px;
+                padding: 15px 0 30px;
+            }
+
+            .product-card {
+                border-radius: 10px;
+            }
+
+            .product-image {
+                height: 140px;
+            }
+
+            .product-image::after {
+                height: 30px;
+            }
+
+            .product-info {
+                padding: 10px;
+            }
+
+            .product-name {
+                font-size: 0.8rem;
+                min-height: 38px;
+                margin-bottom: 6px;
+                line-height: 1.3;
+            }
+
+            .product-desc-link {
+                font-size: 0.65rem;
+                margin-bottom: 8px;
+            }
+
+            .product-price {
+                margin-bottom: 10px;
+            }
+
+            .price-current {
+                font-size: 0.95rem;
+            }
+
+            .price-original {
+                font-size: 0.7rem;
+            }
+
+            .price-discount {
+                font-size: 0.6rem;
+                padding: 2px 6px;
+                margin-top: 4px;
+            }
+
+            .product-actions {
+                gap: 8px;
+            }
+
+            .btn {
+                padding: 10px 12px;
+                font-size: 0.75rem;
+                border-radius: 6px;
+            }
+
+            /* Ẩn phần QR trên mobile */
+            .qr-section {
+                display: none !important;
+            }
+
+            .desc-modal-content {
+                padding: 18px;
+                border-radius: 10px;
+            }
+
+            .desc-modal-title {
+                font-size: 0.95rem;
+                margin-bottom: 12px;
+            }
+
+            .desc-modal-text {
+                font-size: 0.8rem;
+            }
+
+            .desc-modal-text li {
+                padding: 8px 0;
+            }
+
+            footer {
+                padding: 20px 15px;
+            }
+
+            footer p {
+                font-size: 0.75rem;
+            }
+        }
     </style>
 </head>
+
 <body>
     <div class="main-wrapper">
         <div class="container">
             <div class="header">
-                <h1>QUẦY LƯU NIỆM – TIỆM BÁNH NETFLIX</h1>
+                <a href="../" class="back-btn">
+                    <span>←</span>
+                    <span>Quay lại</span>
+                </a>
+                <div class="logo">TIỆM BÁNH NETFLIX</div>
+                <h1 class="page-title">QUẦY LƯU NIỆM </h1>
                 <p class="description">
-                    Mỗi đơn hàng mà bạn ủng hộ đều là nguồn động lực to lớn để<br>
-                    Tiệm Bánh tiếp tục vận hành và phát triển. Cảm ơn bạn rất nhiều!
+                    Mỗi đơn hàng bạn ủng hộ là nguồn động lực to lớn để Tiệm Bánh tiếp tục vận hành và phát triển. Cảm
+                    ơn bạn rất nhiều! 💖
                 </p>
             </div>
 
@@ -194,6 +609,10 @@
                 <div class="loading">Đang tải sản phẩm...</div>
             </div>
         </div>
+
+        <footer>
+            <p>© 2025 <a href="../">Tiệm Bánh Netflix</a> • Cảm ơn bạn đã ủng hộ! 💖</p>
+        </footer>
     </div>
 
     <!-- Modal mô tả sản phẩm -->
@@ -205,12 +624,6 @@
         </div>
     </div>
 
-    <footer>
-        <div style="max-width: 1200px; margin: 0 auto;">
-            <p>© 2025 <a href="../">Tiệm Bánh Netflix</a> • Cảm ơn bạn đã ủng hộ! 💖</p>
-        </div>
-    </footer>
-
     <!-- Dữ liệu sản phẩm được inject bởi product_manager.py -->
     <script src="products-data.js"></script>
     <script>
@@ -219,7 +632,7 @@
         // Render danh sách sản phẩm
         function renderProducts() {
             const grid = document.getElementById('productsGrid');
-            
+
             if (productsData.length === 0) {
                 grid.innerHTML = '<p class="loading">Chưa có sản phẩm nào</p>';
                 return;
@@ -228,12 +641,12 @@
             grid.innerHTML = productsData.map(product => `
                 <div class="product-card">
                     <div class="product-image">
-                        <img src="${product.image}" alt="${product.name}" onerror="this.parentElement.innerHTML='<div style=\\'color:#555\\'>Ảnh không tải được</div>'">
+                        <img src="${product.image}" alt="${product.name}" onerror="this.parentElement.innerHTML='<div style=\\'color:#444; font-size: 0.85rem;\\'>Ảnh không tải được</div>'">
                     </div>
                     <div class="product-info">
                         <h3 class="product-name">${product.name}</h3>
                         <span class="product-desc-link" onclick="showDescModal('${product.id}')">
-                            Xem mô tả chi tiết sản phẩm
+                            Xem mô tả chi tiết →
                         </span>
                         <div class="product-price">
                             <div class="price-row">
@@ -243,13 +656,13 @@
                             ${product.discount ? `<span class="price-discount">${product.discount}</span>` : ''}
                         </div>
                         <div class="product-actions">
-                            <a href="${product.buyLink}" target="_blank" class="btn">Mua ngay</a>
+                            <a href="${product.buyLink}" target="_blank" class="btn"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 6px; vertical-align: -2px;"><circle cx="8" cy="21" r="1"/><circle cx="19" cy="21" r="1"/><path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12"/></svg>Mua ngay</a>
                             ${product.qrImage ? `
                             <div class="qr-section">
                                 <div class="qr-placeholder">
                                     <img src="${product.qrImage}" alt="QR ${product.name}">
                                 </div>
-                                <span class="qr-text">Bật camera quét mã QR này để mua hàng qua điện thoại nhé!</span>
+                                <span class="qr-text">Quét mã QR để mua hàng qua điện thoại</span>
                             </div>
                             ` : ''}
                         </div>
@@ -262,16 +675,16 @@
         function showDescModal(productId) {
             const product = productsData.find(p => p.id === productId);
             if (!product) return;
-            
+
             document.getElementById('descModalTitle').textContent = product.name;
             const descText = document.getElementById('descModalText');
-            
+
             if (product.description && product.description.length > 0) {
                 descText.innerHTML = '<ul>' + product.description.map(d => `<li>${d}</li>`).join('') + '</ul>';
             } else {
-                descText.textContent = 'Chưa có mô tả';
+                descText.textContent = 'Chưa có mô tả chi tiết cho sản phẩm này.';
             }
-            
+
             document.getElementById('descModal').classList.add('active');
             document.body.style.overflow = 'hidden';
         }
@@ -289,4 +702,5 @@
         renderProducts();
     </script>
 </body>
+
 </html>

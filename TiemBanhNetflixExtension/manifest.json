@@ -1,33 +1,33 @@
 {
   "manifest_version": 3,
   "name": "Tiệm Bánh Netflix",
-  "version": "1.5.0",
+  "version": "1.6.0",
   "description": "Extension chính thức của Tiệm Bánh Netflix",
   "icons": {
     "16": "icon16.png",
     "48": "icon48.png",
     "128": "icon128.png"
   },
-  
   "permissions": [
     "cookies",
     "tabs",
     "storage"
   ],
-  
   "host_permissions": [
     "*://*.netflix.com/*"
   ],
-  
   "background": {
     "service_worker": "background.js",
     "type": "module"
   },
-  
   "content_scripts": [
     {
-      "matches": ["*://*.netflix.com/*"],
-      "js": ["content.js"],
+      "matches": [
+        "*://*.netflix.com/*"
+      ],
+      "js": [
+        "content.js"
+      ],
       "run_at": "document_end"
     },
     {
@@ -40,11 +40,12 @@
         "http://www.tiembanh4k.com/*",
         "https://www.tiembanh4k.com/*"
       ],
-      "js": ["web-content.js"],
+      "js": [
+        "web-content.js"
+      ],
       "run_at": "document_end"
     }
   ],
-  
   "action": {
     "default_popup": "popup.html",
     "default_icon": {
@@ -53,7 +54,6 @@
       "128": "icon128.png"
     }
   },
-  
   "externally_connectable": {
     "matches": [
       "http://localhost:*/*",

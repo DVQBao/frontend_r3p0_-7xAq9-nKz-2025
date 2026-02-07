@@ -1,24 +1,26 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="vi">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    
+
     <!-- SEO Meta Tags -->
-    <meta name="description" content="Trang quản trị viên Tiệm Bánh Netflix. Quản lý tài khoản, người dùng và dịch vụ chia sẻ Netflix 4K.">
+    <meta name="description"
+        content="Trang quản trị viên Tiệm Bánh Netflix. Quản lý tài khoản, người dùng và dịch vụ chia sẻ Netflix 4K.">
     <meta name="keywords" content="admin Netflix, quản trị Netflix, Tiệm Bánh Netflix admin">
     <meta name="author" content="Tiệm Bánh Netflix">
     <meta name="robots" content="noindex, nofollow">
-    
+
     <!-- Google tag (gtag.js) -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-GM4CGKGZBM"></script>
     <script>
-      window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
-      gtag('config', 'G-GM4CGKGZBM');
+        window.dataLayer = window.dataLayer || [];
+        function gtag() { dataLayer.push(arguments); }
+        gtag('js', new Date());
+        gtag('config', 'G-GM4CGKGZBM');
     </script>
-    
+
     <title>Admin Panel - Tiệm Bánh Netflix</title>
     <link rel="icon" type="image/png" href="../favicon.png">
     <link rel="alternate icon" href="../favicon.png">
@@ -128,7 +130,7 @@
             transform: translateY(-50%);
             height: 40px;
             width: 1px;
-            background: linear-gradient(180deg, transparent, rgba(255,255,255,0.2), transparent);
+            background: linear-gradient(180deg, transparent, rgba(255, 255, 255, 0.2), transparent);
         }
 
         .stat-value {
@@ -203,17 +205,17 @@
             color: var(--accent-green);
             border: 1px solid var(--accent-green);
         }
-        
+
         .btn-sm {
             padding: 6px 14px;
             font-size: 13px;
         }
-        
+
         /* Ensure inline styles work */
         button[style*="display: none"] {
             display: none !important;
         }
-        
+
         button[style*="display: inline-block"] {
             display: inline-block !important;
         }
@@ -223,75 +225,75 @@
             border-color: #059669;
             color: #059669;
         }
-        
+
         .btn-success {
             background: rgba(16, 185, 129, 0.1);
             color: var(--accent-green);
             border: 1px solid var(--accent-green);
         }
-        
+
         .btn-success:hover {
             background: rgba(16, 185, 129, 0.2);
             border-color: #059669;
             color: #059669;
         }
-        
+
         .btn-danger {
             background: rgba(229, 9, 20, 0.1);
             color: var(--accent-red);
             border: 1px solid var(--accent-red);
         }
-        
+
         .btn-danger:hover {
             background: rgba(229, 9, 20, 0.2);
             border-color: #b91c1c;
             color: #b91c1c;
         }
-        
+
         .btn-warning {
             background: rgba(245, 158, 11, 0.1);
             color: var(--accent-orange);
             border: 1px solid var(--accent-orange);
         }
-        
+
         .btn-warning:hover {
             background: rgba(245, 158, 11, 0.2);
             border-color: #d97706;
             color: #d97706;
         }
-        
+
         .btn-info {
             background: rgba(139, 92, 246, 0.1);
             color: var(--accent-purple);
             border: 1px solid var(--accent-purple);
         }
-        
+
         .btn-info:hover {
             background: rgba(139, 92, 246, 0.2);
             border-color: #7c3aed;
             color: #7c3aed;
         }
-        
+
         /* Scrollbar styling */
         ::-webkit-scrollbar {
             height: 12px;
             width: 12px;
         }
-        
+
         ::-webkit-scrollbar-track {
             background: #1a1a1a;
             border-radius: 10px;
         }
-        
+
         ::-webkit-scrollbar-thumb {
             background: #444;
             border-radius: 10px;
         }
-        
+
         ::-webkit-scrollbar-thumb:hover {
             background: #555;
         }
-        
+
         /* Search wrapper cho desktop */
         .search-wrapper {
             display: flex;
@@ -300,27 +302,27 @@
             min-width: 300px;
             align-items: stretch;
         }
-        
+
         .search-wrapper .search-box {
             flex: 1;
             min-width: 0;
         }
-        
+
         .search-wrapper .search-btn {
             padding: 0 20px;
             white-space: nowrap;
         }
-        
+
         /* Ẩn mobile buttons trên desktop */
         .mobile-top-buttons {
             display: none;
         }
-        
+
         /* Ẩn mobile search results trên desktop */
         .mobile-search-results {
             display: none;
         }
-        
+
         .mobile-search-title {
             display: none;
         }
@@ -416,13 +418,13 @@
             color: #34d399;
             border: 1px solid rgba(16, 185, 129, 0.3);
         }
-        
+
         .status-active {
             color: #10b981;
             font-weight: 600;
             font-size: 0.85rem;
         }
-        
+
         .status-locked {
             color: #ef4444;
             font-weight: 600;
@@ -465,16 +467,18 @@
             z-index: 9999;
             max-width: 600px;
             width: 90%;
-            pointer-events: none; /* Cho phép click qua notification */
+            pointer-events: none;
+            /* Cho phép click qua notification */
         }
 
-        #messageArea > div {
-            pointer-events: auto; /* Enable click on message itself */
+        #messageArea>div {
+            pointer-events: auto;
+            /* Enable click on message itself */
             animation: slideDown 0.3s ease-out;
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
         }
 
-        #messageArea > div.fade-out {
+        #messageArea>div.fade-out {
             animation: slideUp 0.3s ease-out forwards;
         }
 
@@ -483,6 +487,7 @@
                 opacity: 0;
                 transform: translateY(-30px);
             }
+
             to {
                 opacity: 1;
                 transform: translateY(0);
@@ -494,6 +499,7 @@
                 opacity: 1;
                 transform: translateY(0);
             }
+
             to {
                 opacity: 0;
                 transform: translateY(-30px);
@@ -613,6 +619,11 @@
             margin-top: 30px;
         }
 
+        /* Ẩn mobile-only stats trên desktop */
+        .mobile-stat-only {
+            display: none;
+        }
+
         @media (max-width: 1400px) {
             .header-stats {
                 gap: 20px;
@@ -661,7 +672,7 @@
                 border: none;
                 border-radius: 0;
             }
-            
+
             .header::before {
                 display: none;
             }
@@ -670,21 +681,39 @@
                 font-size: 1.3em;
                 margin-bottom: 3px;
             }
-            
+
             .header-left p {
                 font-size: 0.85em;
             }
 
+            /* Hiện mobile-only stats trên mobile */
+            .mobile-stat-only {
+                display: flex !important;
+            }
+
             .header-stats {
-                flex-wrap: wrap;
-                gap: 8px;
+                display: grid !important;
+                grid-template-columns: repeat(4, 1fr);
+                gap: 6px;
+                width: 100%;
+            }
+
+            /* Group A: Users & OTP - hàng 1 */
+            .stat-item[data-group="users"] {
+                order: 1;
+            }
+
+            /* Group B: Cookies - hàng 2 */
+            .stat-item[data-group="cookies"] {
+                order: 2;
             }
 
             .stat-item {
-                flex: 1 1 calc(33.33% - 8px);
-                min-width: 80px;
-                padding: 8px 5px;
-                background: rgba(0, 0, 0, 0.3);
+                flex: none;
+                min-width: 0;
+                padding: 8px 4px;
+                background: transparent;
+                border: 1px solid rgba(255, 255, 255, 0.3);
                 border-radius: 6px;
             }
 
@@ -693,12 +722,17 @@
             }
 
             .stat-value {
-                font-size: 1.2em;
+                font-size: 1.1em;
                 margin-bottom: 2px;
             }
-            
+
+            /* Label style giống button */
             .stat-label {
-                font-size: 0.6em;
+                font-size: 9px;
+                font-weight: 600;
+                color: #fff;
+                text-transform: uppercase;
+                letter-spacing: 0.5px;
             }
 
             .controls {
@@ -712,18 +746,18 @@
                 min-width: auto;
                 width: 100%;
             }
-            
+
             .search-wrapper {
                 display: flex;
                 gap: 8px;
                 width: 100%;
                 margin-top: -5px;
             }
-            
+
             .search-wrapper .search-box {
                 flex: 1;
             }
-            
+
             .search-wrapper .search-btn {
                 background: transparent !important;
                 border: 1px solid rgba(255, 255, 255, 0.3) !important;
@@ -731,20 +765,24 @@
                 font-size: 11px !important;
                 padding: 8px 12px !important;
             }
-            
+
             /* Ẩn các nút desktop-only trên mobile */
             .desktop-only {
                 display: none !important;
             }
-            
+
             /* Hiện 3 nút chính trên mobile */
             .mobile-top-buttons {
                 display: flex;
-                gap: 8px;
+                gap: 6px;
                 width: 100%;
-                margin-bottom: 8px;
+                margin-bottom: -6px;
             }
-            
+
+            .mobile-top-buttons:last-of-type {
+                margin-bottom: 0;
+            }
+
             .mobile-action-btn {
                 flex: 1;
                 background: transparent !important;
@@ -758,28 +796,33 @@
                 align-items: center;
                 justify-content: center;
             }
-            
+
             /* Font size nhỏ hơn cho search box */
             .search-box {
                 font-size: 12px !important;
                 padding: 8px 12px !important;
             }
-            
+
+            /* Khoảng cách giữa hàng nút và search wrapper */
+            .search-wrapper {
+                margin-top: 12px !important;
+            }
+
             /* Giảm khoảng cách giữa stat và controls */
             .controls {
                 margin-top: -30px;
             }
-            
+
             /* Ẩn pagination trên mobile */
             #pagination {
                 display: none !important;
             }
-            
+
             /* Ẩn bảng danh sách người dùng mặc định trên mobile */
             .users-table {
                 display: none !important;
             }
-            
+
             /* Hiện Rate Limit và Cookie Management trên mobile */
             #rateLimitManagement .users-table,
             #cookiesManagement .users-table {
@@ -789,7 +832,7 @@
                 padding: 0;
                 margin-top: -25px;
             }
-            
+
             #rateLimitManagement .table-header,
             #cookiesManagement .table-header {
                 font-size: 13px;
@@ -800,19 +843,19 @@
                 background: transparent;
                 border: none;
             }
-            
+
             /* Stats box */
             #rateLimitManagement #rateLimitStats {
                 display: none !important;
             }
-            
+
             /* Controls layout */
-            #rateLimitManagement .users-table > div[style*="grid"] {
+            #rateLimitManagement .users-table>div[style*="grid"] {
                 display: flex !important;
                 flex-direction: column;
                 gap: 8px;
             }
-            
+
             #rateLimitManagement input.search-box,
             #rateLimitManagement select.search-box {
                 width: 100% !important;
@@ -825,20 +868,20 @@
                 -webkit-appearance: none;
                 appearance: none;
             }
-            
+
             #rateLimitManagement select.search-box {
                 background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='%23fff' viewBox='0 0 16 16'%3E%3Cpath d='M8 11L3 6h10l-5 5z'/%3E%3C/svg%3E") !important;
                 background-repeat: no-repeat !important;
                 background-position: right 12px center !important;
                 padding-right: 32px !important;
             }
-            
+
             #rateLimitManagement select.search-box option {
                 background: #1a1a1a;
                 color: #fff;
                 padding: 10px;
             }
-            
+
             #rateLimitManagement .btn {
                 width: 100%;
                 padding: 8px !important;
@@ -852,7 +895,7 @@
                 align-items: center;
                 justify-content: center;
             }
-            
+
             #rateLimitManagement .btn-danger,
             #rateLimitManagement .btn-warning,
             #rateLimitManagement .btn-primary {
@@ -860,7 +903,7 @@
                 border: 1px solid rgba(255, 255, 255, 0.3) !important;
                 color: #fff !important;
             }
-            
+
             /* Layout 1 hàng cho 4 nút trên mobile */
             #rateLimitManagement .rate-limit-buttons {
                 display: grid !important;
@@ -869,56 +912,56 @@
                 width: 100%;
                 margin-top: -5px;
             }
-            
+
             #rateLimitManagement .rate-limit-controls {
                 display: flex !important;
                 flex-direction: column;
                 gap: 4px;
             }
-            
+
             /* Ẩn dropdown categories trên mobile */
             #rateLimitManagement #filterCategory {
                 display: none !important;
             }
-            
+
             /* Search wrapper với nút tìm kiếm */
             #rateLimitManagement .rate-limit-search-wrapper {
                 display: flex;
                 gap: 6px;
                 width: 100%;
             }
-            
+
             #rateLimitManagement .rate-limit-search-wrapper .search-box {
                 flex: 1;
             }
-            
+
             #rateLimitManagement .rate-limit-search-btn {
                 white-space: nowrap;
                 width: auto !important;
                 padding: 8px 12px !important;
             }
-            
+
             /* Table container */
             #rateLimitManagement #bannedIPsTableContainer {
                 max-height: 400px !important;
                 font-size: 11px;
                 overflow-x: hidden !important;
             }
-            
+
             /* Thanh cuộn mỏng trên mobile */
             #rateLimitManagement #bannedIPsTableContainer::-webkit-scrollbar {
                 width: 4px;
             }
-            
+
             #rateLimitManagement #bannedIPsTableContainer::-webkit-scrollbar-track {
                 background: transparent;
             }
-            
+
             #rateLimitManagement #bannedIPsTableContainer::-webkit-scrollbar-thumb {
                 background: rgba(255, 255, 255, 0.2);
                 border-radius: 2px;
             }
-            
+
             #rateLimitManagement .loading p,
             #rateLimitManagement #bannedIPsTableContainer p {
                 font-size: 12px;
@@ -926,16 +969,16 @@
                 text-align: center;
                 padding: 20px;
             }
-            
+
             /* Ẩn bảng mặc định, hiện dạng card trên mobile */
             #rateLimitManagement table {
                 display: none !important;
             }
-            
+
             #rateLimitManagement .mobile-banned-list {
                 display: block !important;
             }
-            
+
             .mobile-banned-card {
                 background: rgba(255, 255, 255, 0.03);
                 border: 1px solid rgba(255, 255, 255, 0.1);
@@ -943,7 +986,7 @@
                 padding: 12px;
                 margin-bottom: 10px;
             }
-            
+
             .mobile-banned-card .banned-header {
                 display: flex;
                 justify-content: space-between;
@@ -952,24 +995,24 @@
                 padding-bottom: 8px;
                 border-bottom: 1px solid rgba(255, 255, 255, 0.1);
             }
-            
+
             .mobile-banned-card .banned-ip {
                 font-weight: 600;
                 color: #ef4444;
                 font-size: 12px;
                 word-break: break-all;
             }
-            
+
             .mobile-banned-card .banned-info {
                 font-size: 11px;
                 color: #888;
                 margin-bottom: 4px;
             }
-            
+
             .mobile-banned-card .banned-info span {
                 color: #ccc;
             }
-            
+
             .mobile-banned-card .btn-unban {
                 width: 100%;
                 margin-top: 10px;
@@ -981,7 +1024,7 @@
                 border-radius: 6px;
                 cursor: pointer;
             }
-            
+
             /* Mobile search results */
             .mobile-search-title {
                 display: block;
@@ -990,19 +1033,19 @@
                 color: #fff;
                 margin: -15px 0 5px 0;
             }
-            
+
             .mobile-search-results {
                 display: block;
                 padding: 0;
             }
-            
+
             .mobile-search-placeholder {
                 text-align: center;
                 color: #666;
                 padding: 15px;
                 font-size: 13px;
             }
-            
+
             .mobile-user-card {
                 background: rgba(255, 255, 255, 0.03);
                 border: 1px solid rgba(255, 255, 255, 0.1);
@@ -1010,7 +1053,7 @@
                 padding: 15px;
                 margin-bottom: 12px;
             }
-            
+
             .mobile-user-card .user-header {
                 display: flex;
                 justify-content: space-between;
@@ -1019,13 +1062,13 @@
                 padding-bottom: 10px;
                 border-bottom: 1px solid rgba(255, 255, 255, 0.1);
             }
-            
+
             .mobile-user-card .user-name {
                 font-weight: 600;
                 font-size: 14px;
                 color: #fff;
             }
-            
+
             .mobile-user-card .user-plan {
                 padding: 3px 10px;
                 border-radius: 10px;
@@ -1033,41 +1076,41 @@
                 font-weight: 600;
                 text-transform: uppercase;
             }
-            
+
             .mobile-user-card .user-plan.free {
                 background: rgba(107, 114, 128, 0.2);
                 color: #9ca3af;
             }
-            
+
             .mobile-user-card .user-plan.pro {
                 background: rgba(16, 185, 129, 0.2);
                 color: #34d399;
             }
-            
+
             .mobile-user-card .user-info {
                 display: grid;
                 grid-template-columns: 1fr 1fr;
                 gap: 8px;
                 font-size: 11px;
             }
-            
+
             .mobile-user-card .info-item {
                 display: flex;
                 flex-direction: column;
             }
-            
+
             .mobile-user-card .info-label {
                 color: #666;
                 font-size: 10px;
                 text-transform: uppercase;
                 margin-bottom: 2px;
             }
-            
+
             .mobile-user-card .info-value {
                 color: #ccc;
                 word-break: break-all;
             }
-            
+
             .mobile-user-card .user-actions {
                 display: flex;
                 gap: 8px;
@@ -1075,7 +1118,7 @@
                 padding-top: 10px;
                 border-top: 1px solid rgba(255, 255, 255, 0.1);
             }
-            
+
             .mobile-user-card .user-actions button {
                 flex: 1;
                 padding: 8px;
@@ -1085,36 +1128,36 @@
                 border: none;
                 font-weight: 500;
             }
-            
+
             .mobile-user-card .btn-edit {
                 background: rgba(59, 130, 246, 0.2);
                 color: #3b82f6;
             }
-            
+
             .mobile-user-card .btn-upgrade {
                 background: rgba(16, 185, 129, 0.2);
                 color: #10b981;
             }
-            
+
             .mobile-user-card .btn-downgrade {
                 background: rgba(239, 68, 68, 0.2);
                 color: #ef4444;
             }
-            
+
             .mobile-user-card .btn-save {
                 background: rgba(16, 185, 129, 0.2);
                 color: #10b981;
             }
-            
+
             .mobile-user-card .btn-cancel {
                 background: rgba(107, 114, 128, 0.2);
                 color: #9ca3af;
             }
-            
+
             .mobile-user-card .hidden {
                 display: none !important;
             }
-            
+
             /* Pro Log cards */
             .mobile-pro-card {
                 background: rgba(139, 92, 246, 0.05);
@@ -1123,7 +1166,7 @@
                 padding: 12px;
                 margin-bottom: 8px;
             }
-            
+
             .mobile-pro-card .pro-card-header {
                 display: flex;
                 align-items: center;
@@ -1132,42 +1175,42 @@
                 padding-bottom: 8px;
                 border-bottom: 1px solid rgba(255, 255, 255, 0.1);
             }
-            
+
             .mobile-pro-card .pro-index {
                 color: #8b5cf6;
                 font-size: 11px;
                 font-weight: 600;
             }
-            
+
             .mobile-pro-card .pro-name {
                 color: #fff;
                 font-size: 13px;
                 font-weight: 600;
             }
-            
+
             .mobile-pro-card .pro-card-info {
                 display: flex;
                 flex-direction: column;
                 gap: 4px;
             }
-            
+
             .mobile-pro-card .pro-info-row {
                 display: flex;
                 justify-content: space-between;
                 font-size: 11px;
             }
-            
+
             .mobile-pro-card .pro-label {
                 color: #666;
             }
-            
+
             .mobile-pro-card .pro-value {
                 color: #ccc;
                 word-break: break-all;
                 text-align: right;
                 max-width: 60%;
             }
-            
+
             /* Pro Log filter controls */
             .pro-filter-controls {
                 display: flex;
@@ -1175,7 +1218,7 @@
                 margin-bottom: 12px;
                 align-items: center;
             }
-            
+
             .pro-filter-controls select {
                 flex: 0 0 60%;
                 padding: 10px 12px;
@@ -1192,19 +1235,19 @@
                 background-position: right 10px center;
                 padding-right: 30px;
             }
-            
+
             .pro-filter-controls select option {
                 background: #1a1a1a;
                 color: #fff;
             }
-            
+
             .pro-count {
                 flex: 0 0 35%;
                 font-size: 12px;
                 color: #8b5cf6;
                 text-align: right;
             }
-            
+
             .mobile-user-card .edit-input {
                 width: 100%;
                 padding: 6px 8px;
@@ -1214,11 +1257,11 @@
                 color: #fff;
                 font-size: 11px;
             }
-            
+
             .mobile-user-card .user-header .edit-input {
                 margin-right: 8px;
             }
-            
+
             .mobile-user-card select.edit-input {
                 padding: 6px 8px;
                 background: rgba(30, 30, 30, 0.95);
@@ -1230,13 +1273,13 @@
                 background-position: right 8px center;
                 padding-right: 28px;
             }
-            
+
             .mobile-user-card select.edit-input option {
                 background: #1a1a1a;
                 color: #fff;
                 padding: 8px;
             }
-            
+
             /* Modal style cho mobile - chỉ khi hiển thị */
             .modal[style*="display: block"],
             .modal[style*="display:block"] {
@@ -1244,7 +1287,7 @@
                 align-items: center;
                 justify-content: center;
             }
-            
+
             .modal-content {
                 background: #1a1a1a;
                 border: none;
@@ -1258,21 +1301,21 @@
                 left: auto;
                 transform: none;
             }
-            
+
             .modal-header {
                 border: none;
                 padding: 0 0 15px 0;
                 margin-bottom: 15px;
                 border-bottom: 1px solid rgba(255, 255, 255, 0.1);
             }
-            
+
             .modal-header h3 {
                 font-size: 16px;
                 font-weight: 600;
                 color: #fff;
                 margin: 0;
             }
-            
+
             .modal-header .close {
                 position: absolute;
                 top: 15px;
@@ -1280,18 +1323,18 @@
                 font-size: 20px;
                 color: #666;
             }
-            
+
             .modal .form-group {
                 margin-bottom: 12px;
             }
-            
+
             .modal .form-group label {
                 font-size: 11px;
                 color: #888;
                 margin-bottom: 5px;
                 display: block;
             }
-            
+
             .modal .form-group input,
             .modal .form-group select {
                 width: 100%;
@@ -1302,7 +1345,7 @@
                 color: #fff;
                 font-size: 13px;
             }
-            
+
             .modal .form-group select {
                 -webkit-appearance: none;
                 appearance: none;
@@ -1311,18 +1354,18 @@
                 background-position: right 12px center;
                 padding-right: 32px;
             }
-            
+
             .modal .form-group select option {
                 background: #1a1a1a;
                 color: #fff;
                 padding: 10px;
             }
-            
+
             .modal p {
                 font-size: 12px;
                 margin: 15px 0;
             }
-            
+
             .modal-actions {
                 display: flex;
                 gap: 10px;
@@ -1330,7 +1373,7 @@
                 padding-top: 15px;
                 border-top: 1px solid rgba(255, 255, 255, 0.1);
             }
-            
+
             .modal-actions button {
                 flex: 1;
                 padding: 10px;
@@ -1344,22 +1387,22 @@
                 align-items: center;
                 justify-content: center;
             }
-            
+
             .modal-actions .btn-secondary {
                 background: rgba(107, 114, 128, 0.2);
                 color: #9ca3af;
             }
-            
+
             .modal-actions .btn-success {
                 background: rgba(16, 185, 129, 0.2);
                 color: #10b981;
             }
-            
+
             .modal-actions .btn-danger {
                 background: rgba(239, 68, 68, 0.2);
                 color: #ef4444;
             }
-            
+
             /* Textarea trong modal */
             .modal .form-group textarea {
                 width: 100%;
@@ -1383,6 +1426,7 @@
         }
     </style>
 </head>
+
 <body>
     <div class="container">
         <div class="header">
@@ -1392,29 +1436,40 @@
                     <p>Dành riêng cho Ban Quản Lý Tiệm Bánh</p>
                 </div>
                 <div class="header-stats">
-                    <div class="stat-item">
+                    <!-- Group A: Users & OTP -->
+                    <div class="stat-item" data-group="users">
                         <div class="stat-value" id="totalUsers">-</div>
-                        <div class="stat-label">Tổng Users</div>
+                        <div class="stat-label">USERS</div>
                     </div>
-                    <div class="stat-item">
+                    <div class="stat-item" data-group="users">
                         <div class="stat-value" id="freeUsers">-</div>
-                        <div class="stat-label">Free</div>
+                        <div class="stat-label">FREE</div>
                     </div>
-                    <div class="stat-item">
+                    <div class="stat-item" data-group="users">
                         <div class="stat-value" id="proUsers">-</div>
-                        <div class="stat-label">Pro</div>
+                        <div class="stat-label">PRO</div>
                     </div>
-                    <div class="stat-item">
-                        <div class="stat-value" id="totalCookies">-</div>
-                        <div class="stat-label">Cookies</div>
-                    </div>
-                    <div class="stat-item">
-                        <div class="stat-value" id="availableCookies">-</div>
-                        <div class="stat-label">Khả dụng</div>
-                    </div>
-                    <div class="stat-item">
+                    <div class="stat-item" data-group="users">
                         <div class="stat-value" id="smsOtpLeft" style="color: #f59e0b;">-</div>
-                        <div class="stat-label">SMS OTP</div>
+                        <div class="stat-label">SMS</div>
+                    </div>
+                    <!-- Group B: Cookies (PC) -->
+                    <div class="stat-item" data-group="cookies">
+                        <div class="stat-value" id="totalCookies">-</div>
+                        <div class="stat-label">COOKIES</div>
+                    </div>
+                    <div class="stat-item" data-group="cookies">
+                        <div class="stat-value" id="availableCookies">-</div>
+                        <div class="stat-label">AVAILABLE</div>
+                    </div>
+                    <!-- Group B: Mobile Cookies (mobile-only) -->
+                    <div class="stat-item mobile-stat-only" data-group="cookies">
+                        <div class="stat-value" id="mobileCookiesTotal">-</div>
+                        <div class="stat-label">MOBILE</div>
+                    </div>
+                    <div class="stat-item mobile-stat-only" data-group="cookies">
+                        <div class="stat-value" id="mobileCookiesAvailable">-</div>
+                        <div class="stat-label">M.SLOTS</div>
                     </div>
                 </div>
             </div>
@@ -1423,34 +1478,64 @@
         <div id="messageArea"></div>
 
         <div class="controls">
-            <!-- Mobile: 3 nút chính hiển thị ngang -->
+            <!-- Mobile: Hàng 1 - Nút chính -->
             <div class="mobile-top-buttons">
                 <button class="btn btn-primary mobile-action-btn" onclick="mobileRefresh()">Làm mới</button>
                 <button class="btn btn-info mobile-action-btn" onclick="showRateLimitManagement()">Rate Limit</button>
-                <button class="btn mobile-action-btn" style="background: rgba(245, 158, 11, 0.1); color: #f59e0b; border: 1px solid #f59e0b;" onclick="setSmsOtpQuota()">SMS OTP</button>
-                <button class="btn mobile-action-btn" style="background: rgba(139, 92, 246, 0.1); color: #8b5cf6; border: 1px solid #8b5cf6;" onclick="showProLog()">Pro Log</button>
+                <button class="btn mobile-action-btn"
+                    style="background: rgba(245, 158, 11, 0.1); color: #f59e0b; border: 1px solid #f59e0b;"
+                    onclick="setSmsOtpQuota()">SMS OTP</button>
+                <button class="btn mobile-action-btn"
+                    style="background: rgba(139, 92, 246, 0.1); color: #8b5cf6; border: 1px solid #8b5cf6;"
+                    onclick="showProLog()">Pro Log</button>
             </div>
-            
+            <!-- Mobile: Hàng 2 - Quản lý Cookies -->
+            <div class="mobile-top-buttons">
+                <button class="btn mobile-action-btn"
+                    style="background: rgba(16, 185, 129, 0.1); color: #10b981; border: 1px solid #10b981;"
+                    onclick="resetAllCookies()">Reset Cookies</button>
+                <button class="btn mobile-action-btn"
+                    style="background: rgba(59, 130, 246, 0.1); color: #3b82f6; border: 1px solid #3b82f6;"
+                    onclick="syncCookiesToMobile()">Sync Mobile</button>
+                <button class="btn mobile-action-btn"
+                    style="background: rgba(139, 92, 246, 0.1); color: #8b5cf6; border: 1px solid #8b5cf6;"
+                    onclick="resetAllMobileCookies()">Reset Mobile</button>
+                <button class="btn mobile-action-btn"
+                    style="background: rgba(239, 68, 68, 0.1); color: #ef4444; border: 1px solid #ef4444;"
+                    onclick="deleteAllMobileCookies()">Delete All</button>
+            </div>
+
+
             <div class="search-wrapper">
                 <input type="text" id="searchBox" class="search-box" placeholder="Tìm kiếm theo tên hoặc email...">
-                <button class="btn btn-primary search-btn" id="searchBtn" onclick="performSearch()" style="padding: 11px 20px;">Tìm kiếm</button>
+                <button class="btn btn-primary search-btn" id="searchBtn" onclick="performSearch()"
+                    style="padding: 11px 20px;">Tìm kiếm</button>
             </div>
-            <button class="btn btn-primary desktop-only" onclick="loadUsers(1, currentSearch, currentPlanFilter)">Làm mới</button>
+            <button class="btn btn-primary desktop-only" onclick="loadUsers(1, currentSearch, currentPlanFilter)">Làm
+                mới</button>
 
             <!-- Filter buttons - desktop only -->
-            <button class="btn desktop-only" style="background: rgba(16, 185, 129, 0.1); color: #10b981; border: 1px solid #10b981;" onclick="filterByPlan('')" id="filterAll">Tất cả</button>
-            <button class="btn desktop-only" style="background: rgba(59, 130, 246, 0.1); color: #3b82f6; border: 1px solid #3b82f6;" onclick="filterByPlan('free')" id="filterFree">Free</button>
-            <button class="btn desktop-only" style="background: rgba(139, 92, 246, 0.1); color: #8b5cf6; border: 1px solid #8b5cf6;" onclick="filterByPlan('pro')" id="filterPro">Pro</button>
+            <button class="btn desktop-only"
+                style="background: rgba(16, 185, 129, 0.1); color: #10b981; border: 1px solid #10b981;"
+                onclick="filterByPlan('')" id="filterAll">Tất cả</button>
+            <button class="btn desktop-only"
+                style="background: rgba(59, 130, 246, 0.1); color: #3b82f6; border: 1px solid #3b82f6;"
+                onclick="filterByPlan('free')" id="filterFree">Free</button>
+            <button class="btn desktop-only"
+                style="background: rgba(139, 92, 246, 0.1); color: #8b5cf6; border: 1px solid #8b5cf6;"
+                onclick="filterByPlan('pro')" id="filterPro">Pro</button>
 
             <button class="btn btn-secondary desktop-only" onclick="exportUsers()">Xuất Excel</button>
             <button class="btn btn-info desktop-only" onclick="showCookieManagement()">Quản lý Cookies</button>
             <button class="btn btn-info desktop-only" onclick="showRateLimitManagement()">Rate Limit</button>
-            <button class="btn desktop-only" style="background: rgba(245, 158, 11, 0.1); color: #f59e0b; border: 1px solid #f59e0b;" onclick="setSmsOtpQuota()">Set SMS OTP</button>
+            <button class="btn desktop-only"
+                style="background: rgba(245, 158, 11, 0.1); color: #f59e0b; border: 1px solid #f59e0b;"
+                onclick="setSmsOtpQuota()">Set SMS OTP</button>
         </div>
 
         <!-- Pagination controls (top) -->
         <div id="pagination"></div>
-        
+
         <!-- Mobile search results container -->
         <div class="mobile-search-title">KẾT QUẢ TÌM KIẾM</div>
         <div id="mobileSearchResults" class="mobile-search-results">
@@ -1523,7 +1608,7 @@
             </div>
         </div>
     </div>
-    
+
     <!-- Modal sửa thông tin user (Mobile) -->
     <div id="mobileEditModal" class="modal">
         <div class="modal-content" style="max-width: 400px;">
@@ -1574,7 +1659,23 @@
         </div>
     </div>
 
+    <!-- Custom Confirm Modal for Mobile -->
+    <div id="customConfirmModal" class="modal">
+        <div class="modal-content" style="max-width: 320px;">
+            <div class="modal-header">
+                <h3 id="confirmModalTitle">Xác nhận</h3>
+                <span class="close" onclick="closeConfirmModal()">&times;</span>
+            </div>
+            <p id="confirmModalMessage" style="color: #ccc; font-size: 13px; line-height: 1.5; margin: 12px 0;"></p>
+            <div class="modal-actions">
+                <button class="btn btn-secondary" onclick="closeConfirmModal()">Hủy</button>
+                <button class="btn btn-danger" id="confirmModalBtn" onclick="executeConfirmAction()">Xác nhận</button>
+            </div>
+        </div>
+    </div>
+
     <!-- Environment Configuration - Must load first -->
+
     <script src="../config.js"></script>
 
     <script>
@@ -1598,10 +1699,36 @@
         // INITIALIZATION
         // ========================================
 
-        document.addEventListener('DOMContentLoaded', function() {
+        document.addEventListener('DOMContentLoaded', function () {
             checkAdminAuth();
             loadCookieStats();
         });
+
+        // ========================================
+        // CUSTOM CONFIRM MODAL
+        // ========================================
+
+        let confirmModalCallback = null;
+
+        function showConfirmModal(message, callback, title = 'Xác nhận', btnText = 'Xác nhận', btnClass = 'btn-danger') {
+            confirmModalCallback = callback;
+            document.getElementById('confirmModalTitle').textContent = title;
+            document.getElementById('confirmModalMessage').innerHTML = message;
+            const btn = document.getElementById('confirmModalBtn');
+            btn.textContent = btnText;
+            btn.className = 'btn ' + btnClass;
+            document.getElementById('customConfirmModal').style.display = 'block';
+        }
+
+        function closeConfirmModal() {
+            document.getElementById('customConfirmModal').style.display = 'none';
+            confirmModalCallback = null;
+        }
+
+        function executeConfirmAction() {
+            if (confirmModalCallback) confirmModalCallback();
+            closeConfirmModal();
+        }
 
         // ========================================
         // ADMIN AUTHENTICATION
@@ -1609,12 +1736,12 @@
 
         async function checkAdminAuth() {
             const adminToken = localStorage.getItem('admin_token');
-            
+
             if (!adminToken) {
                 showLoginModal();
                 return;
             }
-            
+
             try {
                 // Verify token with backend
                 const response = await fetch(`${BACKEND_URL}/api/admin-auth/verify`, {
@@ -1624,7 +1751,7 @@
                     },
                     body: JSON.stringify({ token: adminToken })
                 });
-                
+
                 if (response.ok) {
                     loadUsers(1, '', ''); // Start fresh on page 1
                     setupSearch();
@@ -1642,7 +1769,7 @@
         function showLoginModal() {
             // Ẩn container chính
             document.querySelector('.container').style.display = 'none';
-            
+
             // Tạo login overlay nếu chưa có
             let loginOverlay = document.getElementById('adminLoginOverlay');
             if (!loginOverlay) {
@@ -1680,7 +1807,7 @@
                     </div>
                 `;
                 document.body.appendChild(loginOverlay);
-                
+
                 // Thêm CSS cho login form
                 const loginStyles = document.createElement('style');
                 loginStyles.textContent = `
@@ -1911,15 +2038,15 @@
                 `;
                 document.head.appendChild(loginStyles);
             }
-            
+
             loginOverlay.style.display = 'flex';
-            
+
             // Focus vào ô username
             setTimeout(() => {
                 document.getElementById('adminUsername').focus();
             }, 100);
         }
-        
+
         function toggleAdminPassword() {
             const passwordInput = document.getElementById('adminPassword');
             const toggleBtn = document.querySelector('.toggle-password');
@@ -1931,30 +2058,30 @@
                 toggleBtn.textContent = '👁️';
             }
         }
-        
+
         async function handleAdminLogin(event) {
             event.preventDefault();
-            
+
             const username = document.getElementById('adminUsername').value.trim();
             const password = document.getElementById('adminPassword').value;
             const errorDiv = document.getElementById('adminLoginError');
             const loginBtn = document.getElementById('adminLoginBtn');
-            
+
             // Reset error
             errorDiv.classList.remove('show');
             errorDiv.textContent = '';
-            
+
             // Validate
             if (!username || !password) {
                 errorDiv.textContent = 'Vui lòng nhập đầy đủ thông tin!';
                 errorDiv.classList.add('show');
                 return;
             }
-            
+
             // Loading state
             loginBtn.classList.add('loading');
             loginBtn.disabled = true;
-            
+
             try {
                 const response = await fetch(`${BACKEND_URL}/api/admin-auth/login`, {
                     method: 'POST',
@@ -1963,23 +2090,23 @@
                     },
                     body: JSON.stringify({ username, password })
                 });
-                
+
                 const data = await response.json();
-                
+
                 if (response.ok) {
                     localStorage.setItem('admin_token', data.token);
-                    
+
                     // Ẩn login overlay, hiện container
                     document.getElementById('adminLoginOverlay').style.display = 'none';
                     document.querySelector('.container').style.display = 'block';
-                    
+
                     showMessage('Đăng nhập Admin thành công!', 'success');
                     loadUsers(1, '', '');
                     setupSearch();
                 } else {
                     errorDiv.textContent = data.error || 'Sai tên đăng nhập hoặc mật khẩu!';
                     errorDiv.classList.add('show');
-                    
+
                     // Shake animation
                     document.querySelector('.admin-login-box').style.animation = 'shake 0.5s';
                     setTimeout(() => {
@@ -2065,7 +2192,7 @@
             try {
                 // Convert ngày thành tháng (30 ngày = 1 tháng)
                 const months = Math.ceil(parseInt(duration) / 30);
-                
+
                 const response = await fetch(`${BACKEND_URL}/api/admin/users/${userId}/upgrade`, {
                     method: 'PUT',
                     headers: {
@@ -2082,13 +2209,13 @@
                 const data = await response.json();
                 showMessage(`Nâng cấp thành công! ${data.message}`, 'success');
                 loadUsers(currentPage, currentSearch, currentPlanFilter);
-                
+
                 // Refresh mobile search nếu đang trên mobile
                 const query = document.getElementById('searchBox').value;
                 if (query && window.innerWidth <= 768) {
                     mobileSearch(query);
                 }
-                
+
             } catch (error) {
                 console.error('Error upgrading user:', error);
                 showMessage('Lỗi nâng cấp: ' + error.message, 'error');
@@ -2112,13 +2239,13 @@
                 const data = await response.json();
                 showMessage(`Hạ cấp thành công! ${data.message}`, 'success');
                 loadUsers(currentPage, currentSearch, currentPlanFilter);
-                
+
                 // Refresh mobile search nếu đang trên mobile
                 const query = document.getElementById('searchBox').value;
                 if (query && window.innerWidth <= 768) {
                     mobileSearch(query);
                 }
-                
+
             } catch (error) {
                 console.error('Error downgrading user:', error);
                 showMessage('Lỗi hạ cấp: ' + error.message, 'error');
@@ -2145,7 +2272,7 @@
 
                 showMessage('Xóa người dùng thành công!', 'success');
                 loadUsers(currentPage, currentSearch, currentPlanFilter);
-                
+
             } catch (error) {
                 console.error('Error deleting user:', error);
                 showMessage('Lỗi xóa người dùng: ' + error.message, 'error');
@@ -2155,31 +2282,31 @@
         // ========================================
         // INLINE EDITING FUNCTIONS
         // ========================================
-        
+
         // Enable edit mode for a row
         function enableEditRow(userId) {
             const row = document.getElementById(`row-${userId}`);
             if (!row) return;
-            
+
             // Show edit inputs, hide view spans
             row.querySelectorAll('.view-mode').forEach(el => el.style.display = 'none');
             row.querySelectorAll('.edit-mode').forEach(el => el.style.display = 'block');
-            
+
             // Toggle buttons
             row.querySelector('.edit-btn').style.display = 'none';
             row.querySelector('.save-btn').style.display = 'inline-block';
             row.querySelector('.cancel-btn').style.display = 'inline-block';
         }
-        
+
         // Cancel edit mode
         function cancelEditRow(userId) {
             const row = document.getElementById(`row-${userId}`);
             if (!row) return;
-            
+
             // Hide edit inputs, show view spans
             row.querySelectorAll('.edit-mode').forEach(el => el.style.display = 'none');
             row.querySelectorAll('.view-mode').forEach(el => el.style.display = 'block');
-            
+
             // Toggle buttons
             row.querySelector('.edit-btn').style.display = 'inline-block';
             row.querySelector('.save-btn').style.display = 'none';
@@ -2188,12 +2315,12 @@
             // Reload current page to reset values
             loadUsers(currentPage, currentSearch, currentPlanFilter);
         }
-        
+
         // Save edited user row
         async function saveUserRow(userId) {
             const row = document.getElementById(`row-${userId}`);
             if (!row) return;
-            
+
             // Get all edit inputs
             const inputs = row.querySelectorAll('.edit-mode');
             const name = inputs[0].value.trim();
@@ -2205,47 +2332,47 @@
             const freeExpiresAt = inputs[6].value; // Free Exp. date (để tính lastCreditsReset)
             const monthlyReportLimit = parseInt(inputs[7].value); // Monthly report limit (0-5)
             const credits = parseInt(inputs[8].value); // Credits
-            
+
             console.log('Saving user row...', { name, email, plan, cookieId, proExpiresAt, freeExpiresAt, monthlyReportLimit, credits });
-            
+
             // Validate
             if (!name || !email) {
                 alert('Tên và Email không được để trống!');
                 return;
             }
-            
+
             if (newPassword && newPassword.length < 8) {
                 alert('Mật khẩu phải có ít nhất 8 ký tự!');
                 return;
             }
-            
+
             if (isNaN(monthlyReportLimit) || monthlyReportLimit < 0 || monthlyReportLimit > 5) {
                 alert('Số lần đổi TK phải từ 0 đến 5!');
                 return;
             }
-            
+
             if (isNaN(credits) || credits < 0) {
                 alert('Credits phải >= 0!');
                 return;
             }
-            
+
             try {
                 // Show loading on save button
                 const saveBtn = row.querySelector('.save-btn');
                 const originalText = saveBtn.textContent;
                 saveBtn.textContent = 'Đang lưu...';
                 saveBtn.disabled = true;
-                
+
                 // Prepare update data
                 const updateData = { name, email, plan, proExpiresAt, monthlyReportLimit, credits };
-                
+
                 // Nếu có freeExpiresAt, tính ngược lại lastCreditsReset (freeExpiresAt - 7 ngày)
                 if (freeExpiresAt && plan === 'free') {
                     const expDate = new Date(freeExpiresAt);
                     expDate.setDate(expDate.getDate() - 7);
                     updateData.lastCreditsReset = expDate.toISOString();
                 }
-                
+
                 // Update user info
                 const response = await fetch(`${BACKEND_URL}/api/admin-users/${userId}`, {
                     method: 'PUT',
@@ -2255,12 +2382,12 @@
                     },
                     body: JSON.stringify(updateData)
                 });
-                
+
                 if (!response.ok) {
                     const error = await response.json();
                     throw new Error(error.error || 'Failed to update user');
                 }
-                
+
                 // Update password if provided
                 if (newPassword) {
                     const pwdResponse = await fetch(`${BACKEND_URL}/api/admin-users/${userId}/reset-password`, {
@@ -2271,12 +2398,12 @@
                         },
                         body: JSON.stringify({ newPassword })
                     });
-                    
+
                     if (!pwdResponse.ok) {
                         throw new Error('Failed to update password');
                     }
                 }
-                
+
                 // Assign cookie if selected from dropdown
                 if (cookieId) {
                     console.log('Assigning cookie:', cookieId);
@@ -2288,7 +2415,7 @@
                         },
                         body: JSON.stringify({ cookieId })
                     });
-                    
+
                     if (!assignResponse.ok) {
                         const assignError = await assignResponse.json();
                         console.warn('Assign cookie warning:', assignError.error);
@@ -2297,17 +2424,17 @@
                         console.log('Cookie assigned:', assignData);
                     }
                 }
-                
+
                 // Show success message
                 showMessage('Cập nhật thành công!', 'success');
 
                 // Reload current page
                 await loadUsers(currentPage, currentSearch, currentPlanFilter);
-                
+
             } catch (error) {
                 console.error('Error saving user:', error);
                 showMessage('Lỗi: ' + error.message, 'error');
-                
+
                 // Reset button
                 const saveBtn = row.querySelector('.save-btn');
                 saveBtn.textContent = 'Lưu';
@@ -2323,19 +2450,43 @@
             const totalElement = document.getElementById('totalUsers');
             const freeElement = document.getElementById('freeUsers');
             const proElement = document.getElementById('proUsers');
-            
+
             if (totalElement) totalElement.textContent = stats.total || 0;
             if (freeElement) freeElement.textContent = stats.free || 0;
             if (proElement) proElement.textContent = stats.pro || 0;
-            
+
             // Load SMS OTP quota
             loadSmsOtpQuota();
+
+            // Load Mobile Cookie stats for header (mobile view)
+            loadMobileCookieStatsForHeader();
         }
-        
+
+        // Load mobile cookie stats for header display
+        async function loadMobileCookieStatsForHeader() {
+            try {
+                const response = await fetch(`${BACKEND_URL}/api/admin/cookies/mobile/stats`, {
+                    headers: { 'Authorization': `Bearer ${localStorage.getItem('admin_token')}` }
+                });
+
+                if (response.ok) {
+                    const data = await response.json();
+                    const totalEl = document.getElementById('mobileCookiesTotal');
+                    const availableEl = document.getElementById('mobileCookiesAvailable');
+
+                    if (totalEl) totalEl.textContent = data.stats.total || 0;
+                    if (availableEl) availableEl.textContent = data.stats.available || 0;
+                }
+            } catch (error) {
+                console.error('Load mobile cookie stats for header error:', error);
+            }
+        }
+
+
         // ========================================
         // SMS OTP QUOTA FUNCTIONS
         // ========================================
-        
+
         async function loadSmsOtpQuota() {
             try {
                 const response = await fetch(`${BACKEND_URL}/api/admin/sms-quota`, {
@@ -2345,17 +2496,17 @@
                         'Authorization': `Bearer ${localStorage.getItem('admin_token')}`
                     }
                 });
-                
+
                 if (!response.ok) {
                     throw new Error(`HTTP error! status: ${response.status}`);
                 }
-                
+
                 const data = await response.json();
                 const smsOtpLeftElement = document.getElementById('smsOtpLeft');
-                
+
                 if (smsOtpLeftElement) {
                     smsOtpLeftElement.textContent = data.smsOtpLeft;
-                    
+
                     // Change color based on quota
                     if (data.smsOtpLeft <= 0) {
                         smsOtpLeftElement.style.color = '#ef4444'; // Red
@@ -2365,7 +2516,7 @@
                         smsOtpLeftElement.style.color = '#22c55e'; // Green
                     }
                 }
-                
+
             } catch (error) {
                 console.error('Error loading SMS OTP quota:', error);
                 const smsOtpLeftElement = document.getElementById('smsOtpLeft');
@@ -2374,62 +2525,62 @@
                 }
             }
         }
-        
+
         async function setSmsOtpQuota() {
             const isMobile = window.innerWidth <= 768;
             const currentQuota = document.getElementById('smsOtpLeft').textContent;
-            
+
             if (isMobile) {
                 // Hiện modal input trên mobile
                 const html = '<div id="smsOtpModal" style="position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.8);display:flex;align-items:center;justify-content:center;z-index:99999;padding:20px;box-sizing:border-box;">' +
                     '<div style="background:#1a1a1a;border-radius:12px;padding:20px;max-width:300px;width:100%;border:1px solid rgba(255,255,255,0.1);">' +
-                        '<p style="color:#fff;font-size:14px;margin:0 0 5px;">Nhập số lượng SMS OTP</p>' +
-                        '<p style="color:#888;font-size:11px;margin:0 0 15px;">Hiện tại: ' + currentQuota + '</p>' +
-                        '<input type="number" id="smsOtpInput" value="' + (currentQuota !== '?' ? currentQuota : '300') + '" style="width:100%;padding:10px 12px;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);border-radius:6px;color:#fff;font-size:13px;margin-bottom:15px;box-sizing:border-box;">' +
-                        '<div style="display:flex;gap:10px;">' +
-                            '<button onclick="document.getElementById(\'smsOtpModal\').remove()" style="flex:1;background:transparent;color:#fff;border:1px solid rgba(255,255,255,0.3);padding:10px;border-radius:6px;font-size:12px;cursor:pointer;">Hủy</button>' +
-                            '<button onclick="submitSmsOtpQuota()" style="flex:1;background:rgba(16,185,129,0.2);color:#10b981;border:1px solid #10b981;padding:10px;border-radius:6px;font-size:12px;cursor:pointer;">Lưu</button>' +
-                        '</div>' +
+                    '<p style="color:#fff;font-size:14px;margin:0 0 5px;">Nhập số lượng SMS OTP</p>' +
+                    '<p style="color:#888;font-size:11px;margin:0 0 15px;">Hiện tại: ' + currentQuota + '</p>' +
+                    '<input type="number" id="smsOtpInput" value="' + (currentQuota !== '?' ? currentQuota : '300') + '" style="width:100%;padding:10px 12px;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);border-radius:6px;color:#fff;font-size:13px;margin-bottom:15px;box-sizing:border-box;">' +
+                    '<div style="display:flex;gap:10px;">' +
+                    '<button onclick="document.getElementById(\'smsOtpModal\').remove()" style="flex:1;background:transparent;color:#fff;border:1px solid rgba(255,255,255,0.3);padding:10px;border-radius:6px;font-size:12px;cursor:pointer;">Hủy</button>' +
+                    '<button onclick="submitSmsOtpQuota()" style="flex:1;background:rgba(16,185,129,0.2);color:#10b981;border:1px solid #10b981;padding:10px;border-radius:6px;font-size:12px;cursor:pointer;">Lưu</button>' +
                     '</div>' +
-                '</div>';
-                
+                    '</div>' +
+                    '</div>';
+
                 document.body.insertAdjacentHTML('beforeend', html);
                 document.getElementById('smsOtpInput').focus();
                 return;
             }
-            
+
             // Desktop dùng prompt
             const newValue = prompt(`Nhập số lượng SMS OTP LEFT mới:\n\n(Hiện tại: ${currentQuota})`, currentQuota !== '?' ? currentQuota : '300');
-            
+
             if (newValue === null) return;
-            
+
             const quota = parseInt(newValue);
-            
+
             if (isNaN(quota) || quota < 0) {
                 alert('Vui lòng nhập số nguyên không âm!');
                 return;
             }
-            
+
             await doSetSmsOtpQuota(quota);
         }
-        
+
         async function submitSmsOtpQuota() {
             const input = document.getElementById('smsOtpInput');
             const quota = parseInt(input.value);
-            
+
             if (isNaN(quota) || quota < 0) {
                 showMobileNotice('Vui lòng nhập số nguyên không âm!', 'error');
                 return;
             }
-            
+
             document.getElementById('smsOtpModal').remove();
             await doSetSmsOtpQuota(quota);
         }
-        
+
         async function doSetSmsOtpQuota(quota) {
             try {
                 showMessage('Đang cập nhật SMS OTP quota...', 'info');
-                
+
                 const response = await fetch(`${BACKEND_URL}/api/admin/sms-quota/set`, {
                     method: 'POST',
                     headers: {
@@ -2438,17 +2589,17 @@
                     },
                     body: JSON.stringify({ value: quota })
                 });
-                
+
                 if (!response.ok) {
                     throw new Error(`HTTP error! status: ${response.status}`);
                 }
-                
+
                 const data = await response.json();
-                
+
                 showMessage(`SMS OTP quota đã được set thành ${quota}`, 'success');
-                
+
                 await loadSmsOtpQuota();
-                
+
             } catch (error) {
                 console.error('Error setting SMS OTP quota:', error);
                 showMessage('Lỗi cập nhật quota: ' + error.message, 'error');
@@ -2457,12 +2608,12 @@
 
         function renderUsersTable(users) {
             const tableContainer = document.getElementById('usersTable');
-            
+
             if (!tableContainer) {
                 console.error('usersTable element not found!');
                 return;
             }
-            
+
             if (users.length === 0) {
                 tableContainer.innerHTML = `
                     <div class="loading">
@@ -2505,7 +2656,7 @@
                 const proUpgraded = user.proUpgradedAt ? new Date(user.proUpgradedAt).toLocaleDateString('vi-VN') : '-';
                 const proExpires = user.proExpiresAt ? new Date(user.proExpiresAt).toISOString().split('T')[0] : '';
                 const lastLogin = user.lastLogin ? new Date(user.lastLogin).toLocaleDateString('vi-VN') : 'No login';
-                
+
                 // Tính Free Exp. (số ngày còn lại cho Free credits - 7 ngày từ lastCreditsReset)
                 let freeExpDays = '-';
                 let freeExpColor = '#6b7280';
@@ -2515,13 +2666,13 @@
                     const now = new Date();
                     const daysSinceReset = Math.floor((now - lastReset) / (1000 * 60 * 60 * 24));
                     const daysLeft = Math.max(0, 7 - daysSinceReset);
-                    
+
                     // Tính ngày hết hạn
                     const expireDate = new Date(lastReset);
                     expireDate.setDate(expireDate.getDate() + 7);
                     freeExpDate = expireDate.toISOString().split('T')[0];
                     const expireDateStr = expireDate.toLocaleDateString('vi-VN');
-                    
+
                     // Nếu credits = 0 hoặc đã hết hạn → hiện "Expired (ngày)"
                     if (user.credits <= 0 || daysLeft <= 0) {
                         freeExpDays = `Expired (${expireDateStr})`;
@@ -2531,7 +2682,7 @@
                         freeExpColor = daysLeft <= 3 ? '#f59e0b' : '#10b981';
                     }
                 }
-                
+
                 // Cookie info
                 let cookieNumber = '-';
                 let cookieCookieId = '';
@@ -2541,7 +2692,7 @@
                     const { usersCount, maxUsers } = user.cookieInfo;
                     cookieColor = usersCount >= maxUsers ? '#f59e0b' : '#10b981';
                 }
-                
+
                 // Build cookie dropdown options
                 let cookieOptions = '<option value="">-- Chọn cookie --</option>';
                 availableCookiesForAssign.forEach(c => {
@@ -2549,16 +2700,16 @@
                     const userCount = c.currentUsers?.length || 0;
                     cookieOptions += `<option value="${c._id}" ${selected}>Cookie #${c.cookieNumber} (${userCount}/4)</option>`;
                 });
-                
+
                 // IP, Device (prioritize LATEST login IP, fallback to registration IP)
                 const ip = user.lastLoginIP || user.registrationIP || '-';
                 const device = user.lastLoginDevice || user.registrationDevice || '-';
-                
+
                 // Email verification status
                 const emailVerified = user.emailVerified;
                 const statusText = emailVerified ? 'Verified' : 'Unverified';
                 const statusColor = emailVerified ? '#22c55e' : '#f59e0b';
-                
+
                 // Monthly Invites (2 - monthlyReferralsUsed)
                 const invitesUsed = user.monthlyReferralsUsed || 0;
                 const invitesRemaining = Math.max(0, 2 - invitesUsed);
@@ -2617,24 +2768,24 @@
                         <td>${lastLogin}</td>
                         <td>
                             <span class="view-mode" style="color: ${(() => {
-                                const limit = user.monthlyReportLimit !== undefined ? user.monthlyReportLimit : (user.plan === 'pro' ? 5 : 2);
-                                const maxLimit = user.plan === 'pro' ? 5 : 2;
-                                const threshold = Math.floor(maxLimit / 2);
-                                return limit > threshold ? '#10b981' : limit > 0 ? '#fbbf24' : '#ef4444';
-                            })()}; font-weight: 600;">
+                        const limit = user.monthlyReportLimit !== undefined ? user.monthlyReportLimit : (user.plan === 'pro' ? 5 : 2);
+                        const maxLimit = user.plan === 'pro' ? 5 : 2;
+                        const threshold = Math.floor(maxLimit / 2);
+                        return limit > threshold ? '#10b981' : limit > 0 ? '#fbbf24' : '#ef4444';
+                    })()}; font-weight: 600;">
                                 ${(() => {
-                                    const limit = user.monthlyReportLimit !== undefined ? user.monthlyReportLimit : (user.plan === 'pro' ? 5 : 2);
-                                    const maxLimit = user.plan === 'pro' ? 5 : 2;
-                                    return `${limit}/${maxLimit}`;
-                                })()}
+                        const limit = user.monthlyReportLimit !== undefined ? user.monthlyReportLimit : (user.plan === 'pro' ? 5 : 2);
+                        const maxLimit = user.plan === 'pro' ? 5 : 2;
+                        return `${limit}/${maxLimit}`;
+                    })()}
                             </span>
                             <input type="number" class="edit-mode" value="${user.monthlyReportLimit !== undefined ? user.monthlyReportLimit : (user.plan === 'pro' ? 5 : 2)}" min="0" max="5" style="display: none; width: 100%; padding: 4px; border: 1px solid #ddd; border-radius: 4px; text-align: center;">
                         </td>
                         <td>
                             <span class="view-mode" style="color: ${(() => {
-                                const credits = user.credits !== undefined ? user.credits : 5;
-                                return credits <= 0 ? '#ef4444' : credits <= 5 ? '#fbbf24' : '#10b981';
-                            })()}; font-weight: 600;">
+                        const credits = user.credits !== undefined ? user.credits : 5;
+                        return credits <= 0 ? '#ef4444' : credits <= 5 ? '#fbbf24' : '#10b981';
+                    })()}; font-weight: 600;">
                                 ${user.credits !== undefined ? user.credits : 5}
                             </span>
                             <input type="number" class="edit-mode" value="${user.credits !== undefined ? user.credits : 5}" min="0" style="display: none; width: 100%; padding: 4px; border: 1px solid #ddd; border-radius: 4px; text-align: center;">
@@ -2660,14 +2811,14 @@
         function setupSearch() {
             const searchBox = document.getElementById('searchBox');
             let searchTimeout;
-            
+
             // Kiểm tra nếu là mobile thì không auto search
             const isMobile = window.innerWidth <= 768;
 
-            searchBox.addEventListener('input', function() {
+            searchBox.addEventListener('input', function () {
                 // Trên mobile: không auto search, phải bấm nút
                 if (isMobile) return;
-                
+
                 clearTimeout(searchTimeout);
                 const query = this.value;
 
@@ -2676,20 +2827,20 @@
                     loadUsers(1, query, currentPlanFilter); // Load page 1 with search
                 }, 500);
             });
-            
+
             // Cho phép Enter để tìm kiếm
-            searchBox.addEventListener('keypress', function(e) {
+            searchBox.addEventListener('keypress', function (e) {
                 if (e.key === 'Enter') {
                     performSearch();
                 }
             });
         }
-        
+
         // Function tìm kiếm khi bấm nút
         function performSearch() {
             const query = document.getElementById('searchBox').value;
             const isMobile = window.innerWidth <= 768;
-            
+
             if (isMobile) {
                 // Tìm kiếm riêng cho mobile
                 mobileSearch(query);
@@ -2697,18 +2848,18 @@
                 loadUsers(1, query, currentPlanFilter);
             }
         }
-        
+
         // Tìm kiếm cho mobile - hiển thị dạng card
         async function mobileSearch(query) {
             const container = document.getElementById('mobileSearchResults');
-            
+
             if (!query || query.trim() === '') {
                 container.innerHTML = '<div class="mobile-search-placeholder">Nhập tên hoặc email để tìm kiếm</div>';
                 return;
             }
-            
+
             container.innerHTML = '<div class="mobile-search-placeholder">Đang tìm kiếm...</div>';
-            
+
             try {
                 const adminToken = localStorage.getItem('admin_token');
                 const response = await fetch(`${BACKEND_URL}/api/admin/users?page=1&limit=20&search=${encodeURIComponent(query)}`, {
@@ -2716,24 +2867,24 @@
                         'Authorization': `Bearer ${adminToken}`
                     }
                 });
-                
+
                 if (!response.ok) throw new Error('Lỗi tìm kiếm');
-                
+
                 const data = await response.json();
                 const users = data.users || [];
-                
+
                 if (users.length === 0) {
                     container.innerHTML = '<div class="mobile-search-placeholder">Không tìm thấy kết quả</div>';
                     return;
                 }
-                
+
                 let html = '';
                 users.forEach((user, index) => {
                     const plan = user.plan || 'free';
                     const proSince = user.proUpgradedAt ? new Date(user.proUpgradedAt).toLocaleDateString('vi-VN') : '-';
                     const proExp = user.proExpiresAt ? new Date(user.proExpiresAt).toLocaleDateString('vi-VN') : '-';
                     const proExpRaw = user.proExpiresAt ? user.proExpiresAt.split('T')[0] : '';
-                    
+
                     // Tính Free Exp. từ lastCreditsReset (7 ngày từ reset)
                     let freeExp = '-';
                     let freeExpRaw = '';
@@ -2742,13 +2893,13 @@
                         const now = new Date();
                         const daysSinceReset = Math.floor((now - lastReset) / (1000 * 60 * 60 * 24));
                         const daysRemaining = 7 - daysSinceReset;
-                        
+
                         // Tính ngày hết hạn
                         const expDate = new Date(lastReset);
                         expDate.setDate(expDate.getDate() + 7);
                         freeExpRaw = expDate.toISOString().split('T')[0];
                         const expDateStr = expDate.toLocaleDateString('vi-VN');
-                        
+
                         // Nếu credits = 0 hoặc đã hết hạn → hiện "Expired (ngày)"
                         if (user.credits <= 0 || daysRemaining <= 0) {
                             freeExp = `Expired (${expDateStr})`;
@@ -2756,12 +2907,12 @@
                             freeExp = `${daysRemaining} ngày`;
                         }
                     }
-                    
+
                     const lastLogin = user.lastLogin ? new Date(user.lastLogin).toLocaleDateString('vi-VN') : '-';
                     const ip = user.lastLoginIP || '-';
                     const monthlyLimit = user.monthlyReportLimit !== undefined ? user.monthlyReportLimit : (plan === 'pro' ? 5 : 2);
                     const credits = user.credits || 0;
-                    
+
                     html += `
                         <div class="mobile-user-card" data-user-id="${user._id}" id="mobile-card-${user._id}">
                             <div class="user-header">
@@ -2823,9 +2974,9 @@
                         </div>
                     `;
                 });
-                
+
                 container.innerHTML = html;
-                
+
             } catch (error) {
                 console.error('Mobile search error:', error);
                 container.innerHTML = '<div class="mobile-search-placeholder">Lỗi tìm kiếm. Vui lòng thử lại.</div>';
@@ -2933,91 +3084,91 @@
             document.getElementById('downgradeUserEmail').value = userEmail;
             document.getElementById('downgradeModal').style.display = 'block';
         }
-        
+
         // Mobile Edit Modal Functions
-        
+
         // Hiển thị thông báo dạng modal thay vì alert
         function showMobileNotice(message, type) {
             // type: 'success', 'error', 'info'
             const color = type === 'success' ? '#10b981' : type === 'error' ? '#ef4444' : '#3b82f6';
             const icon = type === 'success' ? '✓' : type === 'error' ? '✕' : 'ℹ';
-            
+
             const html = '<div id="mobileNoticeModal" style="position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.8);display:flex;align-items:center;justify-content:center;z-index:99999;padding:20px;box-sizing:border-box;">' +
                 '<div style="background:#1a1a1a;border-radius:12px;padding:25px 20px;max-width:300px;width:100%;text-align:center;border:1px solid rgba(255,255,255,0.1);">' +
-                    '<div style="width:50px;height:50px;border-radius:50%;background:' + color + ';color:#fff;font-size:24px;display:flex;align-items:center;justify-content:center;margin:0 auto 15px;">' + icon + '</div>' +
-                    '<p style="color:#fff;font-size:14px;margin:0 0 20px;line-height:1.5;">' + message + '</p>' +
-                    '<button onclick="closeMobileNotice()" style="background:' + color + ';color:#fff;border:none;padding:10px 30px;border-radius:6px;font-size:13px;cursor:pointer;">OK</button>' +
+                '<div style="width:50px;height:50px;border-radius:50%;background:' + color + ';color:#fff;font-size:24px;display:flex;align-items:center;justify-content:center;margin:0 auto 15px;">' + icon + '</div>' +
+                '<p style="color:#fff;font-size:14px;margin:0 0 20px;line-height:1.5;">' + message + '</p>' +
+                '<button onclick="closeMobileNotice()" style="background:' + color + ';color:#fff;border:none;padding:10px 30px;border-radius:6px;font-size:13px;cursor:pointer;">OK</button>' +
                 '</div>' +
-            '</div>';
-            
+                '</div>';
+
             document.body.insertAdjacentHTML('beforeend', html);
         }
-        
+
         function closeMobileNotice() {
             var modal = document.getElementById('mobileNoticeModal');
             if (modal) modal.remove();
         }
-        
+
         // Confirm modal thay thế confirm() trên mobile
         function showConfirmModal(message, onConfirm) {
             const html = '<div id="mobileConfirmModal" style="position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.8);display:flex;align-items:center;justify-content:center;z-index:99999;padding:20px;box-sizing:border-box;">' +
                 '<div style="background:#1a1a1a;border-radius:12px;padding:20px;max-width:300px;width:100%;text-align:center;border:1px solid rgba(255,255,255,0.1);">' +
-                    '<p style="color:#fff;font-size:13px;margin:0 0 20px;line-height:1.5;">' + message + '</p>' +
-                    '<div style="display:flex;gap:10px;">' +
-                        '<button id="confirmModalCancel" style="flex:1;background:transparent;color:#fff;border:1px solid rgba(255,255,255,0.3);padding:10px;border-radius:6px;font-size:12px;cursor:pointer;">Hủy</button>' +
-                        '<button id="confirmModalOk" style="flex:1;background:rgba(239,68,68,0.2);color:#ef4444;border:1px solid #ef4444;padding:10px;border-radius:6px;font-size:12px;cursor:pointer;">Xác nhận</button>' +
-                    '</div>' +
+                '<p style="color:#fff;font-size:13px;margin:0 0 20px;line-height:1.5;">' + message + '</p>' +
+                '<div style="display:flex;gap:10px;">' +
+                '<button id="confirmModalCancel" style="flex:1;background:transparent;color:#fff;border:1px solid rgba(255,255,255,0.3);padding:10px;border-radius:6px;font-size:12px;cursor:pointer;">Hủy</button>' +
+                '<button id="confirmModalOk" style="flex:1;background:rgba(239,68,68,0.2);color:#ef4444;border:1px solid #ef4444;padding:10px;border-radius:6px;font-size:12px;cursor:pointer;">Xác nhận</button>' +
                 '</div>' +
-            '</div>';
-            
+                '</div>' +
+                '</div>';
+
             document.body.insertAdjacentHTML('beforeend', html);
-            
-            document.getElementById('confirmModalCancel').onclick = function() {
+
+            document.getElementById('confirmModalCancel').onclick = function () {
                 document.getElementById('mobileConfirmModal').remove();
             };
-            
-            document.getElementById('confirmModalOk').onclick = function() {
+
+            document.getElementById('confirmModalOk').onclick = function () {
                 document.getElementById('mobileConfirmModal').remove();
                 if (onConfirm) onConfirm();
             };
         }
-        
+
         function enableMobileEdit(userId) {
             const card = document.getElementById('mobile-card-' + userId);
             if (!card) return;
-            
+
             // Ẩn view mode, hiện edit mode
             card.querySelectorAll('.view-mode').forEach(el => el.style.display = 'none');
             card.querySelectorAll('.edit-mode').forEach(el => el.style.display = 'block');
         }
-        
+
         function cancelMobileEdit(userId) {
             const card = document.getElementById('mobile-card-' + userId);
             if (!card) return;
-            
+
             // Ẩn edit mode, hiện view mode
             card.querySelectorAll('.edit-mode').forEach(el => el.style.display = 'none');
             card.querySelectorAll('.view-mode').forEach(el => el.style.display = '');
-            
+
             // Reset lại giá trị bằng cách tìm kiếm lại
             const query = document.getElementById('searchBox').value;
             if (query) mobileSearch(query);
         }
-        
+
         // Làm mới trang trên mobile - xóa search box và kết quả
         function mobileRefresh() {
             document.getElementById('searchBox').value = '';
             document.getElementById('mobileSearchResults').innerHTML = '<div class="mobile-search-placeholder">Nhập tên hoặc email để tìm kiếm</div>';
             loadStats();
         }
-        
+
         // Hiển thị danh sách Pro users trên mobile
         let allProUsers = []; // Lưu danh sách Pro users để filter
-        
+
         async function showProLog() {
             const container = document.getElementById('mobileSearchResults');
             container.innerHTML = '<div class="mobile-search-placeholder">Đang tải danh sách Pro...</div>';
-            
+
             try {
                 const adminToken = localStorage.getItem('admin_token');
                 const response = await fetch(`${BACKEND_URL}/api/admin/users?page=1&limit=100&plan=pro`, {
@@ -3025,39 +3176,39 @@
                         'Authorization': `Bearer ${adminToken}`
                     }
                 });
-                
+
                 if (!response.ok) throw new Error('Lỗi tải dữ liệu');
-                
+
                 const data = await response.json();
                 allProUsers = data.users || [];
-                
+
                 if (allProUsers.length === 0) {
                     container.innerHTML = '<div class="mobile-search-placeholder">Không có Pro user nào</div>';
                     return;
                 }
-                
+
                 renderProLog(allProUsers);
-                
+
             } catch (error) {
                 console.error('Pro log error:', error);
                 container.innerHTML = '<div class="mobile-search-placeholder">Lỗi tải dữ liệu. Vui lòng thử lại.</div>';
             }
         }
-        
+
         // Biến lưu filter hiện tại
         let currentProFilter = '';
-        
+
         function renderProLog(users, selectedFilter) {
             const container = document.getElementById('mobileSearchResults');
-            
+
             // Lưu filter hiện tại
             if (selectedFilter !== undefined) {
                 currentProFilter = selectedFilter;
             }
-            
+
             // Tạo filter controls
             const now = new Date();
-            
+
             // Lấy danh sách các tháng thực sự có Pro user nâng cấp
             const monthsWithPro = {};
             allProUsers.forEach(user => {
@@ -3071,39 +3222,39 @@
                     monthsWithPro[key].count++;
                 }
             });
-            
+
             // Sắp xếp theo thời gian mới nhất
             const sortedMonths = Object.entries(monthsWithPro).sort((a, b) => b[0].localeCompare(a[0]));
-            
+
             let filterHtml = `
                 <div class="pro-filter-controls">
                     <select id="proMonthFilter" onchange="filterProLog()">
                         <option value="" ${currentProFilter === '' ? 'selected' : ''}>Tất cả</option>
                         <option value="expiring" ${currentProFilter === 'expiring' ? 'selected' : ''}>Sắp hết hạn</option>
             `;
-            
+
             // Chỉ hiển thị các tháng có Pro user
             sortedMonths.forEach(([value, data]) => {
                 const selected = currentProFilter === value ? 'selected' : '';
                 filterHtml += `<option value="${value}" ${selected}>${data.label}</option>`;
             });
-            
+
             filterHtml += `
                     </select>
                     <span class="pro-count">${users.length} kết quả</span>
                 </div>
             `;
-            
+
             if (users.length === 0) {
                 container.innerHTML = filterHtml + '<div class="mobile-search-placeholder">Không có kết quả</div>';
                 return;
             }
-            
+
             let html = filterHtml;
             users.forEach((user, index) => {
                 const proSince = user.proUpgradedAt ? new Date(user.proUpgradedAt).toLocaleDateString('vi-VN') : '-';
                 const proExp = user.proExpiresAt ? new Date(user.proExpiresAt).toLocaleDateString('vi-VN') : '-';
-                
+
                 // Tính số ngày còn lại
                 let daysLeft = '';
                 let expStyle = 'color: #8b5cf6;';
@@ -3118,7 +3269,7 @@
                         expStyle = 'color: #ef4444; font-weight: 600;';
                     }
                 }
-                
+
                 html += `
                     <div class="mobile-pro-card">
                         <div class="pro-card-header">
@@ -3142,58 +3293,58 @@
                     </div>
                 `;
             });
-            
+
             container.innerHTML = html;
         }
-        
+
         function filterProLog() {
             const monthFilter = document.getElementById('proMonthFilter').value;
-            
+
             if (!monthFilter) {
                 renderProLog(allProUsers, '');
                 return;
             }
-            
+
             // Filter sắp hết hạn
             if (monthFilter === 'expiring') {
                 const now = new Date();
                 const fiveDaysLater = new Date(now.getTime() + 5 * 24 * 60 * 60 * 1000);
-                
+
                 const filtered = allProUsers.filter(user => {
                     if (!user.proExpiresAt) return false;
                     const expDate = new Date(user.proExpiresAt);
                     return expDate <= fiveDaysLater && expDate >= now;
                 });
-                
+
                 renderProLog(filtered, 'expiring');
                 return;
             }
-            
+
             // Filter theo tháng
             const [year, month] = monthFilter.split('-').map(Number);
-            
+
             const filtered = allProUsers.filter(user => {
                 if (!user.proUpgradedAt) return false;
                 const d = new Date(user.proUpgradedAt);
                 return d.getFullYear() === year && d.getMonth() + 1 === month;
             });
-            
+
             renderProLog(filtered, monthFilter);
         }
-        
+
         async function saveMobileCard(userId) {
             const card = document.getElementById('mobile-card-' + userId);
             if (!card) return;
-            
+
             // Lấy dữ liệu từ các input
             const inputs = card.querySelectorAll('.edit-input');
             const updateData = {};
             let freeExpValue = null;
-            
+
             inputs.forEach(input => {
                 const field = input.dataset.field;
                 let value = input.value;
-                
+
                 if (field === 'password') {
                     if (value && value.trim()) {
                         if (value.length < 8) {
@@ -3212,20 +3363,20 @@
                     updateData[field] = value;
                 }
             });
-            
+
             // Convert freeExpiresAt thành lastCreditsReset (trừ 7 ngày) cho tài khoản Free
             if (freeExpValue && updateData.plan === 'free') {
                 const expDate = new Date(freeExpValue);
                 expDate.setDate(expDate.getDate() - 7);
                 updateData.lastCreditsReset = expDate.toISOString();
             }
-            
+
             // Validate
             if (!updateData.name || !updateData.email) {
                 showMobileNotice('Tên và Email không được để trống!', 'error');
                 return;
             }
-            
+
             try {
                 const adminToken = localStorage.getItem('admin_token');
                 const response = await fetch(BACKEND_URL + '/api/admin-users/' + userId, {
@@ -3236,7 +3387,7 @@
                     },
                     body: JSON.stringify(updateData)
                 });
-                
+
                 if (response.ok) {
                     // Refresh search results ngay lập tức, không hiện thông báo
                     const query = document.getElementById('searchBox').value;
@@ -3270,16 +3421,16 @@
         function showMessage(message, type) {
             const messageArea = document.getElementById('messageArea');
             const messageClass = type === 'error' ? 'error' : type === 'success' ? 'success' : 'info';
-            
+
             // Clear existing message first
             messageArea.innerHTML = '';
-            
+
             // Create new message with animation
             const messageDiv = document.createElement('div');
             messageDiv.className = messageClass;
             messageDiv.textContent = message;
             messageArea.appendChild(messageDiv);
-            
+
             // Auto-hide after 5 seconds with fade-out animation
             setTimeout(() => {
                 messageDiv.classList.add('fade-out');
@@ -3301,41 +3452,41 @@
             // Tạo CSV content với BOM để Excel nhận diện UTF-8
             const BOM = '\uFEFF';
             let csvContent = BOM + 'STT,Tên,Email,Gói,Cookie No.,IP,Device,Trạng thái Email,Ngày đăng ký,Pro Since,Pro Exp.,Đăng nhập cuối,Monthly Limit,Credits,Invites\n';
-            
+
             currentUsers.forEach((user, index) => {
                 // Plan
                 const plan = user.plan === 'pro' ? 'Pro' : 'Free';
-                
+
                 // Cookie number - Lấy từ cookieInfo mà backend đã cung cấp
                 const cookieNumber = user.cookieInfo ? `#${user.cookieInfo.cookieNumber}` : '-';
-                
+
                 // IP and Device (prioritize LATEST login IP, fallback to registration IP)
                 const ip = user.lastLoginIP || user.registrationIP || '-';
                 const device = user.lastLoginDevice || user.registrationDevice || '-';
-                
+
                 // Email verification status
                 const emailStatus = user.emailVerified ? 'Verified' : 'Unverified';
-                
+
                 // Dates
                 const createdAt = new Date(user.createdAt).toLocaleDateString('vi-VN');
                 const proUpgraded = user.proUpgradedAt ? new Date(user.proUpgradedAt).toLocaleDateString('vi-VN') : '-';
                 const proExpires = user.proExpiresAt ? new Date(user.proExpiresAt).toLocaleDateString('vi-VN') : '-';
                 const lastLogin = user.lastLogin ? new Date(user.lastLogin).toLocaleDateString('vi-VN') : 'No login';
-                
+
                 // Monthly Report Limit (quota)
-                const monthlyLimit = user.monthlyReportLimit !== undefined 
-                    ? user.monthlyReportLimit 
+                const monthlyLimit = user.monthlyReportLimit !== undefined
+                    ? user.monthlyReportLimit
                     : (user.plan === 'pro' ? 5 : 2);
                 const maxLimit = user.plan === 'pro' ? 5 : 2;
                 const limitDisplay = `${monthlyLimit}/${maxLimit}`;
-                
+
                 // Credits
                 const credits = user.credits !== undefined ? user.credits : 5;
-                
+
                 // Invites remaining
                 const invitesUsed = user.monthlyReferralsUsed || 0;
                 const invitesRemaining = `${Math.max(0, 2 - invitesUsed)}/2`;
-                
+
                 // Add row to CSV
                 csvContent += `${index + 1},"${user.name}","${user.email}","${plan}","${cookieNumber}","${ip}","${device}","${emailStatus}","${createdAt}","${proUpgraded}","${proExpires}","${lastLogin}","${limitDisplay}","${credits}","${invitesRemaining}"\n`;
             });
@@ -3357,7 +3508,7 @@
         async function exportCookies() {
             // Yêu cầu nhập mật khẩu trước khi export
             const password = prompt('Nhập mật khẩu để xuất danh sách cookies:');
-            
+
             // Kiểm tra mật khẩu
             const EXPORT_PASSWORD = 'Moyeudau2803@2025';
             if (password !== EXPORT_PASSWORD) {
@@ -3367,7 +3518,7 @@
 
             try {
                 showMessage('⏳ Đang tải TẤT CẢ cookies để xuất...', 'info');
-                
+
                 // Load TẤT CẢ cookies (không pagination)
                 const response = await fetch(`${BACKEND_URL}/api/admin/cookies?limit=10000&page=1`, {
                     method: 'GET',
@@ -3383,7 +3534,7 @@
 
                 const data = await response.json();
                 const allCookiesToExport = data.cookies || [];
-                
+
                 if (allCookiesToExport.length === 0) {
                     showMessage('Không có dữ liệu cookies để xuất!', 'error');
                     return;
@@ -3391,52 +3542,33 @@
 
                 // Tạo CSV content với BOM để Excel nhận diện UTF-8
                 const BOM = '\uFEFF';
-                let csvContent = BOM + 'Cookie #,Value (Toàn bộ),Ngày thêm,Hết hạn,Trạng thái,Users,Ghi chú\n';
-                
+                let csvContent = BOM + 'Cookie #,Value (Toàn bộ),SecureNetflixId,Ghi chú,Combine\n';
+
                 // Sắp xếp theo Cookie # tăng dần
                 const sortedCookies = [...allCookiesToExport].sort((a, b) => (a.cookieNumber || 0) - (b.cookieNumber || 0));
-                
+
                 // Escape quotes trong CSV
                 const escapeCsv = (str) => {
                     if (typeof str !== 'string') return str;
                     return str.replace(/"/g, '""'); // Escape double quotes
                 };
-                
+
                 sortedCookies.forEach(cookie => {
                     const cookieNum = cookie.cookieNumber || '-';
-                    
+
                     // Value: Xuất TOÀN BỘ cookie value
-                    const fullValue = cookie.value || '-';
-                    
-                    // Ngày thêm
-                    const createdAt = cookie.createdAt ? new Date(cookie.createdAt).toLocaleDateString('vi-VN') : '-';
-                    
-                    // Hết hạn
-                    const expiresAt = cookie.expiresAt ? new Date(cookie.expiresAt).toLocaleDateString('vi-VN') : '-';
-                    
-                    // Trạng thái
-                    const isExpired = cookie.expiresAt && new Date(cookie.expiresAt) < new Date();
-                    const userCount = cookie.currentUsers?.length || 0;
-                    const maxUsers = cookie.maxUsers || 1;
-                    let status = '';
-                    
-                    if (!cookie.isActive) {
-                        status = 'Die - Recheck';
-                    } else if (isExpired) {
-                        status = 'Hết hạn';
-                    } else if (userCount >= maxUsers) {
-                        status = `Đã đầy (${userCount}/${maxUsers})`;
-                    } else {
-                        status = `Còn slot (${userCount}/${maxUsers})`;
-                    }
-                    
-                    // Users count
-                    const usersInfo = `${userCount}/${maxUsers}`;
-                    
+                    const fullValue = cookie.value || '';
+
+                    // SecureNetflixId
+                    const secureNetflixId = cookie.secureNetflixId || '';
+
                     // Ghi chú
-                    const notes = cookie.notes || '-';
-                    
-                    csvContent += `"${cookieNum}","${escapeCsv(fullValue)}","${createdAt}","${expiresAt}","${escapeCsv(status)}","${usersInfo}","${escapeCsv(notes)}"\n`;
+                    const notes = cookie.notes || '';
+
+                    // Combine: Value (Toàn bộ) | SecureNetflixId
+                    const combine = fullValue && secureNetflixId ? `${fullValue} | ${secureNetflixId}` : (fullValue || secureNetflixId || '');
+
+                    csvContent += `"${cookieNum}","${escapeCsv(fullValue)}","${escapeCsv(secureNetflixId)}","${escapeCsv(notes)}","${escapeCsv(combine)}"\n`;
                 });
 
                 // Tạo và download file với UTF-8 BOM
@@ -3451,7 +3583,7 @@
                 document.body.removeChild(link);
 
                 showMessage(`✅ Xuất ${sortedCookies.length} cookies ra Excel thành công!`, 'success');
-                
+
             } catch (error) {
                 console.error('Export cookies error:', error);
                 showMessage('❌ Lỗi khi xuất cookies: ' + error.message, 'error');
@@ -3476,7 +3608,7 @@
                     const data = await response.json();
                     const totalElement = document.getElementById('totalCookies');
                     const availableElement = document.getElementById('availableCookies');
-                    
+
                     if (totalElement) {
                         totalElement.textContent = data.stats?.total || 0;
                     }
@@ -3496,7 +3628,7 @@
 
             try {
                 showMessage('Đang import cookies...', 'info');
-                
+
                 const response = await fetch(`${BACKEND_URL}/api/admin/cookies/import-sample`, {
                     method: 'POST',
                     headers: {
@@ -3524,24 +3656,47 @@
             const fileInput = document.createElement('input');
             fileInput.type = 'file';
             fileInput.accept = '.txt';
-            
+
             fileInput.onchange = async (e) => {
                 const file = e.target.files[0];
                 if (!file) return;
-                
+
                 try {
                     // Read file content
                     const cookiesText = await file.text();
-                    
+
                     if (!cookiesText || cookiesText.trim().length === 0) {
                         showMessage('File rỗng hoặc không hợp lệ!', 'error');
                         return;
                     }
-                    
-                    const clearExisting = confirm('Xóa tất cả cookies cũ trước khi import?');
-                    
-                    showMessage(`Đang import cookies từ file "${file.name}"...`, 'info');
-                    
+
+                    // Parse cookies từ text - format: NetflixId | SecureNetflixId
+                    const lines = cookiesText.split('\n')
+                        .map(line => line.trim())
+                        .filter(line => line.length > 0);
+
+                    if (lines.length === 0) {
+                        showMessage('File không chứa cookie nào!', 'error');
+                        return;
+                    }
+
+                    // Parse each line to extract NetflixId and SecureNetflixId
+                    const cookiesData = lines.map(line => {
+                        const parts = line.split(' | ');
+                        return {
+                            value: parts[0]?.trim() || '',           // NetflixId
+                            secureNetflixId: parts[1]?.trim() || ''  // SecureNetflixId (optional)
+                        };
+                    }).filter(c => c.value); // Chỉ giữ các cookie có NetflixId
+
+                    if (cookiesData.length === 0) {
+                        showMessage('Không tìm thấy cookie hợp lệ trong file!', 'error');
+                        return;
+                    }
+
+                    showMessage(`Đang import ${cookiesData.length} cookies từ file "${file.name}"...`, 'info');
+
+                    // Import cookies mới (không xóa cookies cũ)
                     const response = await fetch(`${BACKEND_URL}/api/admin/cookies/bulk-import`, {
                         method: 'POST',
                         headers: {
@@ -3549,8 +3704,8 @@
                             'Authorization': `Bearer ${localStorage.getItem('admin_token')}`
                         },
                         body: JSON.stringify({
-                            cookiesText: cookiesText.trim(),
-                            clearExisting
+                            cookiesData: cookiesData,
+                            clearExisting: false
                         })
                     });
 
@@ -3558,6 +3713,33 @@
 
                     if (response.ok) {
                         showMessage(`${data.message}`, 'success');
+
+                        // Sau khi import thành công, hỏi có muốn xóa cookies cũ không
+                        if (data.oldCookiesCount > 0) {
+                            const shouldDeleteOld = confirm(`Import thành công ${data.count} cookies mới!\n\nCó ${data.oldCookiesCount} cookies cũ. Bạn có muốn xóa các cookies cũ không?`);
+
+                            if (shouldDeleteOld) {
+                                // Gọi API xóa cookies cũ
+                                const deleteResponse = await fetch(`${BACKEND_URL}/api/admin/cookies/delete-old`, {
+                                    method: 'POST',
+                                    headers: {
+                                        'Content-Type': 'application/json',
+                                        'Authorization': `Bearer ${localStorage.getItem('admin_token')}`
+                                    },
+                                    body: JSON.stringify({
+                                        newCookieIds: data.newCookieIds || []
+                                    })
+                                });
+
+                                const deleteData = await deleteResponse.json();
+                                if (deleteResponse.ok) {
+                                    showMessage(`Đã xóa ${deleteData.deletedCount} cookies cũ!`, 'success');
+                                } else {
+                                    showMessage(`Lỗi xóa cookies cũ: ${deleteData.error}`, 'error');
+                                }
+                            }
+                        }
+
                         loadCookieStats();
                         if (window.currentCookieManagementPage) {
                             loadCookiesList(currentCookiePage, currentCookieSearch, currentCookieStatusFilter);
@@ -3570,7 +3752,7 @@
                     showMessage('Lỗi đọc file! Vui lòng thử lại.', 'error');
                 }
             };
-            
+
             // Trigger file selection
             fileInput.click();
         }
@@ -3580,13 +3762,21 @@
             const usersTable = document.querySelector('.users-table');
             const controls = document.querySelector('.controls');
             const pagination = document.getElementById('pagination');
-            
+
             if (!usersTable || !controls) return;
-            
+
+            // QUAN TRỌNG: Xóa TẤT CẢ các container hiện có trước khi tạo mới
+            const existingCookies = document.getElementById('cookiesManagement');
+            const existingMobile = document.getElementById('mobileCookiesManagement');
+
+            if (existingCookies) existingCookies.remove();
+            if (existingMobile) existingMobile.remove();
+
             // Hide users components
             if (pagination) pagination.style.display = 'none';
-            
-            // Create cookies management container
+            usersTable.style.display = 'none';
+            controls.style.display = 'none';
+
             const cookiesContainer = document.createElement('div');
             cookiesContainer.id = 'cookiesManagement';
             cookiesContainer.className = 'users-table';
@@ -3596,16 +3786,10 @@
                 </div>
                 
                 <div style="background: rgba(0,0,0,0.3); padding: 15px; border-radius: 10px; margin-bottom: 20px;">
-                    <div style="display: grid; grid-template-columns: 2fr 2fr 1fr 1fr 1fr 1fr 1fr; gap: 10px;">
-                        <input type="text" id="cookieSearchBox" class="search-box" placeholder="Tìm Cookie #, value, ghi chú..." style="margin: 0;">
-                        <select id="cookieStatusFilter" class="search-box" style="margin: 0;">
-                            <option value="">Tất cả trạng thái</option>
-                            <option value="active">Active</option>
-                            <option value="inactive">Inactive (Die)</option>
-                            <option value="available">Available (Còn slot)</option>
-                            <option value="expired">Hết hạn</option>
-                        </select>
-                        <button class="btn btn-success" onclick="showAddCookieModal()">Thêm</button>
+                    <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+                        <button class="btn btn-success" onclick="resetAllCookies()">Reset</button>
+                        <button class="btn" style="background: rgba(16, 185, 129, 0.15); color: #10b981; border: 1px solid #10b981;" onclick="syncCookiesToMobile()">Sync Mobile</button>
+                        <button class="btn" style="background: rgba(139, 92, 246, 0.15); color: #8b5cf6; border: 1px solid #8b5cf6;" onclick="showMobileCookieManagement()">Mobile Cookies</button>
                         <button class="btn btn-warning" onclick="showImportCookiesModal()">Import</button>
                         <button class="btn btn-secondary" onclick="exportCookies()">Xuất Excel</button>
                         <button class="btn btn-danger" onclick="deleteAllCookies()">Xóa hết</button>
@@ -3622,61 +3806,412 @@
                     </div>
                 </div>
             `;
-            
-            // Replace users table with cookies management
-            usersTable.style.display = 'none';
+
+            // Insert cookies container
             usersTable.parentNode.insertBefore(cookiesContainer, usersTable.nextSibling);
-            
-            // Hide user controls
-            controls.style.display = 'none';
-            
+
             // Load cookies list
             window.currentCookieManagementPage = true;
             await loadCookiesList(1, '', '');
-            
+
             // Setup filters with debounce
             let cookieSearchTimeout;
-            document.getElementById('cookieSearchBox')?.addEventListener('input', function() {
+            document.getElementById('cookieSearchBox')?.addEventListener('input', function () {
                 clearTimeout(cookieSearchTimeout);
                 const query = this.value;
-                
+
                 // Debounce: Chờ 500ms sau khi user ngừng gõ
                 cookieSearchTimeout = setTimeout(() => {
                     loadCookiesList(1, query, currentCookieStatusFilter); // Reset to page 1
                 }, 500);
             });
-            
-            document.getElementById('cookieStatusFilter')?.addEventListener('change', function() {
+
+            document.getElementById('cookieStatusFilter')?.addEventListener('change', function () {
                 const status = this.value;
                 loadCookiesList(1, currentCookieSearch, status); // Reset to page 1
             });
         }
-        
+
         function backToUsers() {
             const cookiesContainer = document.getElementById('cookiesManagement');
+            const mobileCookiesContainer = document.getElementById('mobileCookiesManagement');
             const usersTable = document.querySelector('.users-table');
             const controls = document.querySelector('.controls');
             const pagination = document.getElementById('pagination');
-            
+
             if (cookiesContainer) cookiesContainer.remove();
+            if (mobileCookiesContainer) mobileCookiesContainer.remove();
             if (usersTable) usersTable.style.display = 'block';
             if (controls) controls.style.display = 'flex';
             if (pagination) pagination.style.display = 'block';
 
             window.currentCookieManagementPage = false;
+            window.currentMobileCookieManagementPage = false;
             loadUsers(currentPage, currentSearch, currentPlanFilter);
         }
-        
+
+        // ========================================
+        // MOBILE COOKIE MANAGEMENT
+        // ========================================
+
+        let currentMobileCookiePage = 1;
+        let currentMobileCookieStatusFilter = '';
+
+        async function showMobileCookieManagement() {
+            // Hide users table, show mobile cookies management
+            const usersTable = document.querySelector('.users-table');
+            const controls = document.querySelector('.controls');
+            const pagination = document.getElementById('pagination');
+            const existingCookies = document.getElementById('cookiesManagement');
+            const existingMobile = document.getElementById('mobileCookiesManagement');
+
+            if (!usersTable || !controls) return;
+
+            // Remove existing containers
+            if (existingCookies) existingCookies.remove();
+            if (existingMobile) existingMobile.remove();
+            if (pagination) pagination.style.display = 'none';
+
+            // Create mobile cookies management container
+            const container = document.createElement('div');
+            container.id = 'mobileCookiesManagement';
+            container.className = 'users-table';
+            container.innerHTML = `
+                <div class="table-header" style="background: linear-gradient(135deg, rgba(139, 92, 246, 0.1), rgba(139, 92, 246, 0.05)); border-left: 3px solid #8b5cf6;">
+                    <span>Mobile Cookies (TV Activation)</span>
+                </div>
+                
+                <div style="background: rgba(0,0,0,0.3); padding: 15px; border-radius: 10px; margin-bottom: 20px;">
+                    <!-- Stats -->
+                    <div id="mobileCookieStats" style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 15px; margin-bottom: 15px;">
+                        <div style="background: rgba(139, 92, 246, 0.1); padding: 12px; border-radius: 8px; text-align: center; border: 1px solid rgba(139, 92, 246, 0.3);">
+                            <div style="font-size: 1.5rem; font-weight: 700; color: #8b5cf6;" id="mobileTotalStat">-</div>
+                            <div style="font-size: 0.75rem; color: #aaa;">Tổng</div>
+                        </div>
+                        <div style="background: rgba(16, 185, 129, 0.1); padding: 12px; border-radius: 8px; text-align: center; border: 1px solid rgba(16, 185, 129, 0.3);">
+                            <div style="font-size: 1.5rem; font-weight: 700; color: #10b981;" id="mobileAvailableStat">-</div>
+                            <div style="font-size: 0.75rem; color: #aaa;">Còn trống</div>
+                        </div>
+                        <div style="background: rgba(59, 130, 246, 0.1); padding: 12px; border-radius: 8px; text-align: center; border: 1px solid rgba(59, 130, 246, 0.3);">
+                            <div style="font-size: 1.5rem; font-weight: 700; color: #3b82f6;" id="mobileUsedStat">-</div>
+                            <div style="font-size: 0.75rem; color: #aaa;">Đã dùng</div>
+                        </div>
+                        <div style="background: rgba(239, 68, 68, 0.1); padding: 12px; border-radius: 8px; text-align: center; border: 1px solid rgba(239, 68, 68, 0.3);">
+                            <div style="font-size: 1.5rem; font-weight: 700; color: #ef4444;" id="mobileInactiveStat">-</div>
+                            <div style="font-size: 0.75rem; color: #aaa;">Inactive</div>
+                        </div>
+                    </div>
+                    
+                    <!-- Controls -->
+                    <div style="display: flex; gap: 10px; flex-wrap: wrap; align-items: center;">
+                        <select id="mobileCookieStatusFilter" style="padding: 8px 12px; background: #2a2a2a; border: 1px solid #444; border-radius: 6px; color: #fff; font-size: 14px;">
+                            <option value="">Tất cả trạng thái</option>
+                            <option value="available">Còn trống</option>
+                            <option value="used">Đã dùng</option>
+                            <option value="inactive">Inactive</option>
+                        </select>
+                        <button class="btn btn-secondary" onclick="resetAllMobileCookies()" style="font-size: 13px; padding: 8px 12px;">Reset tất cả</button>
+                        <button class="btn" onclick="deleteAllMobileCookies()" style="font-size: 13px; padding: 8px 12px; background: rgba(239, 68, 68, 0.1); color: #ef4444; border: 1px solid #ef4444;">Xóa tất cả</button>
+                        <button class="btn btn-secondary" onclick="showCookieManagement()" style="font-size: 13px; padding: 8px 12px;">← Quay lại Cookies</button>
+                    </div>
+                </div>
+                
+                <div id="mobileCookiesList" style="min-height: 200px;">
+                    <p style="text-align: center; color: #888;">Đang tải...</p>
+                </div>
+                
+                <div id="mobileCookiePagination" style="margin-top: 15px; display: flex; justify-content: center; gap: 10px;"></div>
+            `;
+
+            // Replace users table
+            usersTable.style.display = 'none';
+            usersTable.parentNode.insertBefore(container, usersTable.nextSibling);
+
+            // Hide user controls
+            controls.style.display = 'none';
+
+            // Load data
+            window.currentMobileCookieManagementPage = true;
+            await loadMobileCookieStats();
+            await loadMobileCookiesList(1, '');
+
+            // Setup filter
+            document.getElementById('mobileCookieStatusFilter')?.addEventListener('change', function () {
+                currentMobileCookieStatusFilter = this.value;
+                loadMobileCookiesList(1, this.value);
+            });
+        }
+
+        async function loadMobileCookieStats() {
+            try {
+                const response = await fetch(`${BACKEND_URL}/api/admin/cookies/mobile/stats`, {
+                    headers: { 'Authorization': `Bearer ${localStorage.getItem('admin_token')}` }
+                });
+
+                if (response.ok) {
+                    const data = await response.json();
+                    document.getElementById('mobileTotalStat').textContent = data.stats.total;
+                    document.getElementById('mobileAvailableStat').textContent = data.stats.available;
+                    document.getElementById('mobileUsedStat').textContent = data.stats.used;
+                    document.getElementById('mobileInactiveStat').textContent = data.stats.inactive;
+                }
+            } catch (error) {
+                console.error('Load mobile cookie stats error:', error);
+            }
+        }
+
+        async function loadMobileCookiesList(page = 1, status = '') {
+            currentMobileCookiePage = page;
+
+            try {
+                let url = `${BACKEND_URL}/api/admin/cookies/mobile?page=${page}&limit=50`;
+                if (status) url += `&status=${status}`;
+
+                const response = await fetch(url, {
+                    headers: { 'Authorization': `Bearer ${localStorage.getItem('admin_token')}` }
+                });
+
+                if (!response.ok) throw new Error('Failed to load');
+
+                const data = await response.json();
+                const listContainer = document.getElementById('mobileCookiesList');
+
+                if (!data.mobileCookies || data.mobileCookies.length === 0) {
+                    listContainer.innerHTML = '<p style="text-align: center; color: #888; padding: 40px;">Chưa có Mobile Cookie nào. Mobile Cookies được tạo tự động khi user sync SecureNetflixId từ Extension.</p>';
+                    return;
+                }
+
+                let html = `
+                    <table class="table" style="width: 100%;">
+                        <thead>
+                            <tr>
+                                <th style="width: 60px;">#</th>
+                                <th style="width: 150px;">NetflixId</th>
+                                <th style="width: 150px;">SecureNetflixId</th>
+                                <th style="width: 80px;">Slot</th>
+                                <th style="width: 200px;">Assigned User</th>
+                                <th style="width: 100px;">Trạng thái</th>
+                                <th style="width: 140px;">Cập nhật</th>
+                                <th style="width: 120px;">Hành động</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                `;
+
+                for (const mc of data.mobileCookies) {
+                    const statusBadge = mc.isActive
+                        ? (mc.currentSlots >= 1
+                            ? '<span style="background: rgba(59, 130, 246, 0.2); color: #3b82f6; padding: 3px 8px; border-radius: 4px; font-size: 11px;">Đã dùng</span>'
+                            : '<span style="background: rgba(16, 185, 129, 0.2); color: #10b981; padding: 3px 8px; border-radius: 4px; font-size: 11px;">Trống</span>')
+                        : '<span style="background: rgba(239, 68, 68, 0.2); color: #ef4444; padding: 3px 8px; border-radius: 4px; font-size: 11px;">Inactive</span>';
+
+                    const userEmail = mc.assignedUser?.email || '-';
+                    const updatedAt = mc.updatedAt ? new Date(mc.updatedAt).toLocaleString('vi-VN') : '-';
+
+                    html += `
+                        <tr style="border-bottom: 1px solid #333;">
+                            <td style="font-weight: 600; color: #8b5cf6; font-size: 14px;">${mc.cookieNumber}</td>
+                            <td style="font-family: monospace; font-size: 14px; color: #fff;">${mc.netflixId?.substring(0, 20)}...</td>
+                            <td style="font-family: monospace; font-size: 14px; color: #fff;">${mc.secureNetflixId?.substring(0, 20)}...</td>
+                            <td style="text-align: center; font-size: 14px; color: #fff;">${mc.currentSlots}/${mc.maxSlots}</td>
+                            <td style="font-size: 14px; color: #fff;">${userEmail === '-' ? '-' : userEmail}</td>
+                            <td>${statusBadge}</td>
+                            <td style="font-size: 14px; color: #fff;">${updatedAt}</td>
+                            <td>
+                                <button onclick="resetMobileCookie('${mc._id}')" class="btn btn-secondary" style="font-size: 12px; padding: 5px 10px; margin-right: 4px;">Reset</button>
+                                <button onclick="deleteMobileCookie('${mc._id}')" class="btn" style="font-size: 12px; padding: 5px 10px; background: rgba(239, 68, 68, 0.1); color: #ef4444; border: 1px solid #ef4444;">Xóa</button>
+                            </td>
+                        </tr>
+                    `;
+                }
+
+                html += '</tbody></table>';
+                listContainer.innerHTML = html;
+
+                // Pagination
+                renderMobileCookiePagination(data.pagination);
+
+            } catch (error) {
+                console.error('Load mobile cookies error:', error);
+                document.getElementById('mobileCookiesList').innerHTML = '<p style="text-align: center; color: #ef4444;">Lỗi tải dữ liệu</p>';
+            }
+        }
+
+        function renderMobileCookiePagination(pagination) {
+            const container = document.getElementById('mobileCookiePagination');
+            if (!container || !pagination) return;
+
+            if (pagination.totalPages <= 1) {
+                container.innerHTML = '';
+                return;
+            }
+
+            let html = '';
+            const { page, totalPages } = pagination;
+
+            if (page > 1) {
+                html += `<button onclick="loadMobileCookiesList(${page - 1}, currentMobileCookieStatusFilter)" class="btn btn-secondary" style="padding: 6px 12px;">←</button>`;
+            }
+
+            html += `<span style="color: #888; padding: 6px 12px;">Trang ${page}/${totalPages}</span>`;
+
+            if (page < totalPages) {
+                html += `<button onclick="loadMobileCookiesList(${page + 1}, currentMobileCookieStatusFilter)" class="btn btn-secondary" style="padding: 6px 12px;">→</button>`;
+            }
+
+            container.innerHTML = html;
+        }
+
+        async function resetMobileCookie(id) {
+            if (!confirm('Reset Mobile Cookie này? User sẽ bị gỡ khỏi cookie.')) return;
+
+            try {
+                const response = await fetch(`${BACKEND_URL}/api/admin/cookies/mobile/${id}/reset`, {
+                    method: 'POST',
+                    headers: { 'Authorization': `Bearer ${localStorage.getItem('admin_token')}` }
+                });
+
+                const data = await response.json();
+                if (data.success) {
+                    showMessage(data.message, 'success');
+                    loadMobileCookieStats();
+                    loadMobileCookiesList(currentMobileCookiePage, currentMobileCookieStatusFilter);
+                } else {
+                    showMessage(data.error, 'error');
+                }
+            } catch (error) {
+                showMessage('Lỗi: ' + error.message, 'error');
+            }
+        }
+
+        async function deleteMobileCookie(id) {
+            if (!confirm('Xóa Mobile Cookie này?')) return;
+
+            try {
+                const response = await fetch(`${BACKEND_URL}/api/admin/cookies/mobile/${id}`, {
+                    method: 'DELETE',
+                    headers: { 'Authorization': `Bearer ${localStorage.getItem('admin_token')}` }
+                });
+
+                const data = await response.json();
+                if (data.success) {
+                    showMessage(data.message, 'success');
+                    loadMobileCookieStats();
+                    loadMobileCookiesList(currentMobileCookiePage, currentMobileCookieStatusFilter);
+                } else {
+                    showMessage(data.error, 'error');
+                }
+            } catch (error) {
+                showMessage('Lỗi: ' + error.message, 'error');
+            }
+        }
+
+        async function resetAllMobileCookies() {
+            const isMobile = window.innerWidth <= 768;
+            const doReset = async () => {
+                try {
+                    showMessage('Đang reset Mobile Cookies...', 'info');
+                    const response = await fetch(`${BACKEND_URL}/api/admin/cookies/mobile/reset-all`, {
+                        method: 'POST',
+                        headers: { 'Authorization': `Bearer ${localStorage.getItem('admin_token')}` }
+                    });
+                    const data = await response.json();
+                    if (data.success) {
+                        showMessage(data.message, 'success');
+                        loadMobileCookieStats();
+                        loadMobileCookieStatsForHeader();
+                        if (window.currentMobileCookieManagementPage) loadMobileCookiesList(currentMobileCookiePage, currentMobileCookieStatusFilter);
+                    } else {
+                        showMessage(data.error, 'error');
+                    }
+                } catch (error) {
+                    showMessage('Lỗi: ' + error.message, 'error');
+                }
+            };
+            if (isMobile) {
+                showConfirmModal('Reset TẤT CẢ Mobile Cookies?<br><br>Tất cả users sẽ bị gỡ khỏi cookies.', doReset, 'Reset Mobile', 'Reset', 'btn-warning');
+            } else {
+                if (!confirm('Reset TẤT CẢ Mobile Cookies? Tất cả users sẽ bị gỡ khỏi cookies.')) return;
+                doReset();
+            }
+        }
+
+        async function deleteAllMobileCookies() {
+            const isMobile = window.innerWidth <= 768;
+            const doDelete = async () => {
+                try {
+                    showMessage('Đang xóa Mobile Cookies...', 'info');
+                    const response = await fetch(`${BACKEND_URL}/api/admin/cookies/mobile/delete-all`, {
+                        method: 'DELETE',
+                        headers: { 'Authorization': `Bearer ${localStorage.getItem('admin_token')}` }
+                    });
+                    const data = await response.json();
+                    if (data.success) {
+                        showMessage(data.message, 'success');
+                        loadMobileCookieStats();
+                        loadMobileCookieStatsForHeader();
+                        if (window.currentMobileCookieManagementPage) loadMobileCookiesList(1, '');
+                    } else {
+                        showMessage(data.error, 'error');
+                    }
+                } catch (error) {
+                    showMessage('Lỗi: ' + error.message, 'error');
+                }
+            };
+            if (isMobile) {
+                showConfirmModal('<strong style="color:#ef4444">XÓA TẤT CẢ Mobile Cookies?</strong><br><br>Hành động này không thể hoàn tác!', doDelete, 'Xóa Mobile', 'Xóa tất cả', 'btn-danger');
+            } else {
+                if (!confirm('XÓA TẤT CẢ Mobile Cookies? Hành động này không thể hoàn tác!')) return;
+                if (!confirm('Bạn chắc chắn chứ? Tất cả sẽ bị xóa vĩnh viễn!')) return;
+                doDelete();
+            }
+        }
+
+        // Sync cookies từ PC sang Mobile
+        async function syncCookiesToMobile() {
+            const isMobile = window.innerWidth <= 768;
+            const doSync = async () => {
+                showMessage('Đang sync...', 'info');
+                try {
+                    const response = await fetch(`${BACKEND_URL}/api/admin/cookies/mobile/sync`, {
+                        method: 'POST',
+                        headers: { 'Authorization': `Bearer ${localStorage.getItem('admin_token')}` }
+                    });
+                    const data = await response.json();
+                    if (data.success) {
+                        let message = data.message;
+                        if (data.errors && data.errors.length > 0) message += ` (${data.errors.length} lỗi)`;
+                        showMessage(message, 'success');
+                        loadMobileCookieStatsForHeader();
+                        if (window.currentMobileCookieManagementPage) {
+                            loadMobileCookieStats();
+                            loadMobileCookiesList(currentMobileCookiePage, currentMobileCookieStatusFilter);
+                        }
+                    } else {
+                        showMessage(data.error || 'Sync thất bại', 'error');
+                    }
+                } catch (error) {
+                    showMessage('Lỗi: ' + error.message, 'error');
+                }
+            };
+            if (isMobile) {
+                showConfirmModal('Sync tất cả PC cookies sang Mobile?<br><br>Điều này sẽ tạo mới hoặc cập nhật các Mobile cookies.', doSync, 'Sync Mobile', 'Sync', 'btn-success');
+            } else {
+                if (!confirm('Sync tất cả PC cookies (có SecureNetflixId) sang Mobile cookies?\n\nĐiều này sẽ tạo mới hoặc cập nhật các Mobile cookies.')) return;
+                doSync();
+            }
+        }
+
         let allCookies = [];
         let availableCookiesForAssign = []; // Cookies có thể assign (isActive=true, slot<1)
-        
+
         // Cookie pagination state
         let currentCookiePage = 1;
         const cookiePageLimit = 50;
         let totalCookiePages = 1;
         let currentCookieSearch = '';
         let currentCookieStatusFilter = '';
-        
+
         async function loadAvailableCookiesForDropdown() {
             try {
                 const response = await fetch(`${BACKEND_URL}/api/admin/cookies?limit=1000`, {
@@ -3684,30 +4219,30 @@
                         'Authorization': `Bearer ${localStorage.getItem('admin_token')}`
                     }
                 });
-                
+
                 if (response.ok) {
                     const data = await response.json();
                     // Lọc cookies: isActive=true và còn slot
                     availableCookiesForAssign = (data.cookies || [])
                         .filter(c => c.isActive && (c.currentUsers?.length || 0) < (c.maxUsers || 1))
                         .sort((a, b) => (a.cookieNumber || 0) - (b.cookieNumber || 0));
-                    
+
                     console.log(`Loaded ${availableCookiesForAssign.length} available cookies for assignment`);
                 }
             } catch (error) {
                 console.error('Load available cookies error:', error);
             }
         }
-        
+
         async function loadCookiesList(page = 1, search = '', statusFilter = '') {
             try {
                 // Save current state
                 currentCookiePage = page;
                 currentCookieSearch = search;
                 currentCookieStatusFilter = statusFilter;
-                
+
                 showMessage(`⏳ Đang tải cookies trang ${page}...`, 'info');
-                
+
                 // Build query params
                 const params = new URLSearchParams({
                     page: page,
@@ -3715,7 +4250,7 @@
                     search: search,
                     status: statusFilter
                 });
-                
+
                 const response = await fetch(`${BACKEND_URL}/api/admin/cookies?${params}`, {
                     method: 'GET',
                     headers: {
@@ -3729,10 +4264,10 @@
                     allCookies = data.cookies || [];
                     currentCookiePage = data.pagination.page;
                     totalCookiePages = data.pagination.pages;
-                    
+
                     renderCookiesTable(allCookies);
                     renderCookiesPagination(data.pagination);
-                    
+
                     const searchInfo = search ? ` | Tìm kiếm: "${search}"` : '';
                     const filterInfo = statusFilter ? ` | Lọc: ${statusFilter}` : '';
                     showMessage(`✅ Tải thành công ${allCookies.length} cookies (Trang ${currentCookiePage}/${totalCookiePages})${searchInfo}${filterInfo}`, 'success');
@@ -3748,76 +4283,76 @@
                 renderCookiesPagination({ page: 1, pages: 0, total: 0 });
             }
         }
-        
+
         function renderCookiesPagination(pagination) {
             const paginationDiv = document.getElementById('cookiePagination');
-            
+
             if (!paginationDiv) {
                 console.warn('Cookie pagination div not found');
                 return;
             }
-            
+
             const { page, pages, total } = pagination;
-            
+
             if (pages === 0 || total === 0) {
                 paginationDiv.innerHTML = '<div style="text-align: center; padding: 20px; color: var(--text-secondary);">📭 Không có cookies</div>';
                 return;
             }
-            
+
             let html = '<div style="display: flex; gap: 12px; align-items: center; justify-content: center; margin: 25px 0; flex-wrap: wrap; padding: 20px; background: rgba(255, 255, 255, 0.02); border-radius: 12px; border: 1px solid var(--border-color);">';
-            
+
             // Previous button
             const prevDisabled = page === 1;
             html += `<button class="btn btn-primary" onclick="goToCookiePage(${page - 1})" ${prevDisabled ? 'disabled style="opacity: 0.5; cursor: not-allowed;"' : ''}>← Trước</button>`;
-            
+
             // Page info
             html += `<span style="color: var(--text-primary); font-weight: 600; font-size: 15px; padding: 0 10px;">Trang <span style="color: var(--accent-red);">${page}</span> / ${pages}</span>`;
-            
+
             // Jump to page input
             html += `<input type="number" id="jumpToCookiePageInput" min="1" max="${pages}" placeholder="Nhập trang" value="${page}" style="width: 100px; padding: 10px 12px; border-radius: 8px; border: 1px solid var(--border-color); background: var(--bg-tertiary); color: var(--text-primary); text-align: center; font-weight: 600;">`;
             html += `<button class="btn btn-secondary" onclick="jumpToCookiePage()" style="background: rgba(139, 92, 246, 0.1); color: var(--accent-purple); border: 1px solid var(--accent-purple);">Đi tới</button>`;
-            
+
             // Next button
             const nextDisabled = page === pages;
             html += `<button class="btn btn-primary" onclick="goToCookiePage(${page + 1})" ${nextDisabled ? 'disabled style="opacity: 0.5; cursor: not-allowed;"' : ''}>Tiếp →</button>`;
-            
+
             // Total info
             html += `<span style="color: var(--text-secondary); font-size: 14px; margin-left: 10px;">| Tổng: <strong style="color: var(--text-primary);">${total}</strong> cookies</span>`;
-            
+
             html += '</div>';
-            
+
             paginationDiv.innerHTML = html;
         }
-        
+
         function goToCookiePage(page) {
             if (page < 1 || page > totalCookiePages) {
                 return;
             }
             loadCookiesList(page, currentCookieSearch, currentCookieStatusFilter);
         }
-        
+
         function jumpToCookiePage() {
             const input = document.getElementById('jumpToCookiePageInput');
             const page = parseInt(input.value);
-            
+
             if (isNaN(page) || page < 1 || page > totalCookiePages) {
                 showMessage(`⚠️ Số trang phải từ 1 đến ${totalCookiePages}!`, 'error');
                 input.value = currentCookiePage;
                 return;
             }
-            
+
             goToCookiePage(page);
         }
-        
+
         function renderCookiesTable(cookies) {
             const container = document.getElementById('cookiesTableContainer');
             if (!container) return;
-            
+
             if (cookies.length === 0) {
                 container.innerHTML = '<div class="loading"><p>Chưa có cookies nào</p></div>';
                 return;
             }
-            
+
             // Backend đã sort theo cookieNumber, không cần sort lại
             let html = `
                 <table class="table">
@@ -3826,7 +4361,7 @@
                             <th>Cookie #</th>
                             <th>Value (Preview)</th>
                             <th>Ngày thêm</th>
-                            <th>Hết hạn</th>
+                            <th>SecureNetflixId</th>
                             <th>Trạng thái</th>
                             <th>Users (${cookies.reduce((sum, c) => sum + (c.currentUsers?.length || 0), 0)})</th>
                             <th>Ghi chú</th>
@@ -3835,35 +4370,35 @@
                     </thead>
                     <tbody>
             `;
-            
+
             cookies.forEach(cookie => {
                 const createdAt = new Date(cookie.createdAt).toLocaleDateString('vi-VN');
-                const expiresAt = cookie.expiresAt ? new Date(cookie.expiresAt).toLocaleDateString('vi-VN') : '-';
-                const isExpired = cookie.expiresAt && new Date(cookie.expiresAt) < new Date();
                 const userCount = cookie.currentUsers?.length || 0;
                 const isFull = userCount >= (cookie.maxUsers || 1);
                 const isDead = !cookie.isActive; // Cookie bị mark die
-                
+
                 let statusBadge = '';
                 if (isDead) {
                     // Ưu tiên: Cookie die/recheck (màu đỏ)
                     statusBadge = '<span style="background: #dc2626; color: white; padding: 4px 10px; border-radius: 5px; font-size: 0.85rem; font-weight: 600;">🔴 Die - Recheck</span>';
-                } else if (isExpired) {
-                    statusBadge = '<span style="background: #dc2626; color: white; padding: 4px 10px; border-radius: 5px; font-size: 0.85rem;">Hết hạn</span>';
                 } else if (isFull) {
                     statusBadge = '<span style="background: #f59e0b; color: white; padding: 4px 10px; border-radius: 5px; font-size: 0.85rem;">Đầy</span>';
                 } else {
                     statusBadge = '<span style="background: #10b981; color: white; padding: 4px 10px; border-radius: 5px; font-size: 0.85rem;">Khả dụng</span>';
                 }
-                
+
                 const valuePreview = cookie.value.substring(0, 30) + '...';
-                
+                // SecureNetflixId preview - hiển thị có/không có và preview
+                const securePreview = cookie.secureNetflixId
+                    ? '<span style="color: #10b981;"></span> ' + cookie.secureNetflixId.substring(0, 20) + '...'
+                    : '<span style="color: #dc2626;">Chưa có</span>';
+
                 html += `
                     <tr>
                         <td><strong>#${cookie.cookieNumber || '-'}</strong></td>
                         <td style="font-size: 0.85rem; max-width: 200px; overflow: hidden; text-overflow: ellipsis;">${valuePreview}</td>
                         <td>${createdAt}</td>
-                        <td>${expiresAt}</td>
+                        <td style="font-size: 0.8rem; max-width: 150px; overflow: hidden; text-overflow: ellipsis;" title="${cookie.secureNetflixId || ''}">${securePreview}</td>
                         <td>${statusBadge}</td>
                         <td><span style="color: ${isFull ? '#f59e0b' : '#10b981'}; font-weight: 600;">${userCount}/${cookie.maxUsers || 1}</span></td>
                         <td style="max-width: 150px; overflow: hidden; text-overflow: ellipsis;" title="${cookie.notes || ''}">${cookie.notes || '-'}</td>
@@ -3877,70 +4412,67 @@
                     </tr>
                 `;
             });
-            
+
             html += '</tbody></table>';
             container.innerHTML = html;
         }
-        
+
         function viewCookieDetails(cookie) {
-            const usersList = cookie.currentUsers?.length > 0 ? 
-                `<p><strong>Đang sử dụng (${cookie.currentUsers.length}):</strong></p><ul>${cookie.currentUsers.map(u => `<li>User ID: ${u}</li>`).join('')}</ul>` : 
+            const usersList = cookie.currentUsers?.length > 0 ?
+                `<p><strong>Đang sử dụng (${cookie.currentUsers.length}):</strong></p><ul>${cookie.currentUsers.map(u => `<li>User ID: ${u}</li>`).join('')}</ul>` :
                 '<p><em>Chưa có user nào sử dụng</em></p>';
-            
+
             alert(`Chi tiết Cookie #${cookie.cookieNumber}\n\n` +
-                  `Value: ${cookie.value}\n\n` +
-                  `Ngày tạo: ${new Date(cookie.createdAt).toLocaleString('vi-VN')}\n` +
-                  `Hết hạn: ${cookie.expiresAt ? new Date(cookie.expiresAt).toLocaleString('vi-VN') : 'Không giới hạn'}\n` +
-                  `Users: ${cookie.currentUsers?.length || 0}/${cookie.maxUsers || 1}\n` +
-                  `Source: ${cookie.source}\n` +
-                  `Ghi chú: ${cookie.notes || 'Không có'}`
+                `Value: ${cookie.value}\n\n` +
+                `Ngày tạo: ${new Date(cookie.createdAt).toLocaleString('vi-VN')}\n` +
+                `Hết hạn: ${cookie.expiresAt ? new Date(cookie.expiresAt).toLocaleString('vi-VN') : 'Không giới hạn'}\n` +
+                `Users: ${cookie.currentUsers?.length || 0}/${cookie.maxUsers || 1}\n` +
+                `Source: ${cookie.source}\n` +
+                `Ghi chú: ${cookie.notes || 'Không có'}`
             );
         }
-        
-        async function showAddCookieModal() {
-            const value = prompt('Nhập cookie value:');
-            if (!value || value.trim().length === 0) return;
-            
-            const notes = prompt('Ghi chú (tùy chọn):');
-            
-            try {
-                showMessage('Đang thêm cookie...', 'info');
-                
-                const response = await fetch(`${BACKEND_URL}/api/admin/cookies`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Authorization': `Bearer ${localStorage.getItem('admin_token')}`
-                    },
-                    body: JSON.stringify({
-                        value: value.trim(),
-                        notes: notes || '',
-                        expiresAt: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString()
-                    })
-                });
 
-                const data = await response.json();
-
-                if (response.ok) {
-                    showMessage('Thêm cookie thành công!', 'success');
-                    loadCookiesList(1, currentCookieSearch, currentCookieStatusFilter); // Reset to page 1 for new cookie
-                    loadCookieStats();
-                } else {
-                    showMessage(`${data.error}`, 'error');
+        async function resetAllCookies() {
+            const isMobile = window.innerWidth <= 768;
+            const doReset = async () => {
+                try {
+                    showMessage('Đang reset tất cả cookies...', 'info');
+                    const response = await fetch(`${BACKEND_URL}/api/admin/cookies/reset-all`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Authorization': `Bearer ${localStorage.getItem('admin_token')}`
+                        }
+                    });
+                    const data = await response.json();
+                    if (response.ok) {
+                        showMessage(`Reset thành công ${data.modifiedCount} cookies!`, 'success');
+                        loadCookieStats();
+                        if (window.currentCookieManagementPage) loadCookiesList(currentCookiePage, currentCookieSearch, currentCookieStatusFilter);
+                    } else {
+                        showMessage(`${data.error}`, 'error');
+                    }
+                } catch (error) {
+                    console.error('Reset cookies error:', error);
+                    showMessage('Lỗi kết nối!', 'error');
                 }
-            } catch (error) {
-                console.error('Add cookie error:', error);
-                showMessage('Lỗi kết nối!', 'error');
+            };
+            if (isMobile) {
+                showConfirmModal('Reset TẤT CẢ PC Cookies?<br><br>• Trạng thái → Active<br>• Users → Xóa hết (0/1)', doReset, 'Reset Cookies', 'Reset', 'btn-warning');
+            } else {
+                if (!confirm('Bạn có chắc muốn reset TẤT CẢ cookies về trạng thái ban đầu?\n\n- Trạng thái → Active\n- Users → Xóa hết (0/1)\n- Ghi chú → Giữ nguyên ghi chú gốc khi import')) return;
+                doReset();
             }
         }
-        
+
+
         async function editCookie(cookieId) {
             const notes = prompt('✏️ Cập nhật ghi chú:');
             if (notes === null) return;
-            
+
             try {
                 showMessage('Đang cập nhật...', 'info');
-                
+
                 const response = await fetch(`${BACKEND_URL}/api/admin/cookies/${cookieId}`, {
                     method: 'PUT',
                     headers: {
@@ -3963,13 +4495,13 @@
                 showMessage('Lỗi kết nối!', 'error');
             }
         }
-        
+
         async function deleteCookie(cookieId) {
             if (!confirm('Bạn có chắc muốn xóa cookie này?')) return;
-            
+
             try {
                 showMessage('Đang xóa...', 'info');
-                
+
                 const response = await fetch(`${BACKEND_URL}/api/admin/cookies/${cookieId}`, {
                     method: 'DELETE',
                     headers: {
@@ -3992,18 +4524,18 @@
                 showMessage('Lỗi kết nối!', 'error');
             }
         }
-        
+
         // ========================================
         // Auto-Assign Cookies Function
         // ========================================
-        
+
         async function deleteAllCookies() {
             if (!confirm('BẠN CÓ CHẮC CHẮN MUỐN XÓA TẤT CẢ COOKIES?\n\nHành động này KHÔNG THỂ HOÀN TÁC!')) return;
             if (!confirm('⚠️XÁC NHẬN LẦN CUỐI: Xóa tất cả cookies?')) return;
-            
+
             try {
                 showMessage('Đang xóa tất cả cookies...', 'info');
-                
+
                 // Call API to delete all cookies
                 const response = await fetch(`${BACKEND_URL}/api/admin/cookies/delete-all`, {
                     method: 'DELETE',
@@ -4029,10 +4561,10 @@
         }
 
         // Close modal when clicking outside
-        window.onclick = function(event) {
+        window.onclick = function (event) {
             const upgradeModal = document.getElementById('upgradeModal');
             const downgradeModal = document.getElementById('downgradeModal');
-            
+
             if (event.target === upgradeModal) {
                 closeModal('upgradeModal');
             }
@@ -4040,30 +4572,30 @@
                 closeModal('downgradeModal');
             }
         }
-        
+
         // RATE LIMIT MANAGEMENT
         let allBannedIPs = []; // Store all banned IPs for filtering
-        
+
         async function showRateLimitManagement() {
             // Hide users table and controls
             const usersTable = document.querySelector('.users-table');
             const userControls = document.querySelector('.controls');
             const pagination = document.getElementById('pagination');
-            
+
             // Ẩn mobile search results và title
             const mobileSearchResults = document.getElementById('mobileSearchResults');
             const mobileSearchTitle = document.querySelector('.mobile-search-title');
             if (mobileSearchResults) mobileSearchResults.style.display = 'none';
             if (mobileSearchTitle) mobileSearchTitle.style.display = 'none';
-            
+
             if (usersTable) usersTable.style.display = 'none';
             if (userControls) userControls.style.display = 'none';
             if (pagination) pagination.style.display = 'none';
-            
+
             // Remove existing rate limit container if any
             const existingContainer = document.getElementById('rateLimitManagement');
             if (existingContainer) existingContainer.remove();
-            
+
             // Create rate limit management container
             const rateLimitContainer = document.createElement('div');
             rateLimitContainer.id = 'rateLimitManagement';
@@ -4105,18 +4637,18 @@
                     </div>
                 </div>
             `;
-            
+
             // Replace users table with rate limit management
             usersTable.insertAdjacentElement('afterend', rateLimitContainer);
-            
+
             // Load banned IPs
             loadBannedIPs();
         }
-        
+
         async function loadBannedIPs() {
             try {
                 showMessage('Đang tải danh sách banned IPs...', 'info');
-                
+
                 const response = await fetch(`${BACKEND_URL}/api/admin/rate-limit/banned`, {
                     method: 'GET',
                     headers: {
@@ -4124,13 +4656,13 @@
                         'Authorization': `Bearer ${localStorage.getItem('admin_token')}`
                     }
                 });
-                
+
                 const result = await response.json();
-                
+
                 if (!response.ok) {
                     throw new Error(result.error || 'Failed to load banned IPs');
                 }
-                
+
                 // Flatten data into array
                 allBannedIPs = [];
                 const categories = {
@@ -4139,7 +4671,7 @@
                     cookieReport: { name: 'Cookie Report', color: '#8b5cf6' },
                     general: { name: 'General API', color: '#10b981' }
                 };
-                
+
                 Object.keys(categories).forEach(type => {
                     const ips = result.data[type] || [];
                     ips.forEach(data => {
@@ -4153,7 +4685,7 @@
                         });
                     });
                 });
-                
+
                 // Update stats
                 const statsDiv = document.getElementById('rateLimitStats');
                 if (allBannedIPs.length === 0) {
@@ -4167,12 +4699,12 @@
                     const cookieGetCount = result.data.cookieGet?.length || 0;
                     const cookieReportCount = result.data.cookieReport?.length || 0;
                     const generalCount = result.data.general?.length || 0;
-                    
+
                     // Tính thời gian trung bình còn lại
                     const avgTimeLeft = Math.floor(allBannedIPs.reduce((sum, ip) => sum + ip.remainingSeconds, 0) / allBannedIPs.length);
                     const avgMinutes = Math.floor(avgTimeLeft / 60);
                     const avgSeconds = avgTimeLeft % 60;
-                    
+
                     statsDiv.innerHTML = `
                         <div style="display: grid; grid-template-columns: repeat(6, 1fr); gap: 20px;">
                             <div style="text-align: center; padding: 12px; background: rgba(229, 9, 20, 0.1); border-radius: 8px; border: 1px solid rgba(229, 9, 20, 0.3);">
@@ -4202,21 +4734,21 @@
                         </div>
                     `;
                 }
-                
+
                 // Render table
                 renderBannedIPsTable(allBannedIPs);
                 showMessage(`Đã tải ${allBannedIPs.length} banned IPs`, 'success');
-                
+
             } catch (error) {
                 console.error('Load banned IPs error:', error);
                 showMessage('Lỗi khi tải banned IPs: ' + error.message, 'error');
             }
         }
-        
+
         function renderBannedIPsTable(ips) {
             const container = document.getElementById('bannedIPsTableContainer');
             const isMobile = window.innerWidth <= 768;
-            
+
             if (ips.length === 0) {
                 container.innerHTML = `
                     <div style="text-align: center; padding: 40px; color: var(--text-secondary);">
@@ -4225,7 +4757,7 @@
                 `;
                 return;
             }
-            
+
             // Mobile view - dạng card
             if (isMobile) {
                 let mobileHtml = '<div class="mobile-banned-list">';
@@ -4236,7 +4768,7 @@
                     const timeLeft = isPermanent ? 'Vĩnh viễn' : (minutes > 0 ? `${minutes}m ${seconds}s` : `${seconds}s`);
                     const reason = data.reason || (data.isManual ? 'Manual ban' : 'Rate limit exceeded');
                     const bannedAt = new Date(data.bannedAt).toLocaleString('vi-VN', { hour: '2-digit', minute: '2-digit', day: '2-digit', month: '2-digit' });
-                    
+
                     mobileHtml += `
                         <div class="mobile-banned-card">
                             <div class="banned-header">
@@ -4254,7 +4786,7 @@
                 container.innerHTML = mobileHtml;
                 return;
             }
-            
+
             // Desktop view - bảng
             let html = `
                 <table style="width: 100%; border-collapse: collapse; background: var(--bg-elevated); border-radius: 8px; overflow: hidden; font-size: 0.95em;">
@@ -4272,17 +4804,17 @@
                     </thead>
                     <tbody>
             `;
-            
+
             ips.forEach((data, index) => {
                 const minutes = Math.floor(data.remainingSeconds / 60);
                 const seconds = data.remainingSeconds % 60;
                 const isPermanent = data.isPermanent || data.remainingSeconds > 365 * 24 * 60 * 60; // > 1 năm = vĩnh viễn
                 const timeLeft = isPermanent ? '♾️ Vĩnh viễn' : (minutes > 0 ? `${minutes}m ${seconds}s` : `${seconds}s`);
                 const timeLeftColor = isPermanent ? '#ef4444' : 'var(--accent-orange)';
-                
+
                 const reason = data.reason || (data.isManual ? 'Manual ban' : 'Rate limit exceeded');
                 const isManual = data.isManual ? '🚫' : '⚡';
-                
+
                 html += `
                     <tr style="border-bottom: 1px solid var(--border-color); transition: background 0.2s;" onmouseover="this.style.background='var(--bg-tertiary)'" onmouseout="this.style.background='transparent'">
                         <td style="padding: 14px; text-align: center; color: var(--text-secondary); font-size: 0.95em;">${index + 1}</td>
@@ -4312,46 +4844,46 @@
                     </tr>
                 `;
             });
-            
+
             html += `
                     </tbody>
                 </table>
             `;
-            
+
             container.innerHTML = html;
         }
-        
+
         function filterBannedIPs() {
             const searchBox = document.getElementById('searchRateLimitBox');
             const categoryFilter = document.getElementById('filterCategory');
             const searchTerm = searchBox ? searchBox.value.toLowerCase().trim() : '';
             const categoryValue = categoryFilter ? categoryFilter.value : '';
-            
+
             let filtered = allBannedIPs;
-            
+
             // Filter by search term (IP or Email)
             if (searchTerm) {
-                filtered = filtered.filter(item => 
-                    item.ip.toLowerCase().includes(searchTerm) || 
+                filtered = filtered.filter(item =>
+                    item.ip.toLowerCase().includes(searchTerm) ||
                     item.userEmail.toLowerCase().includes(searchTerm)
                 );
             }
-            
+
             // Filter by category
             if (categoryValue) {
                 filtered = filtered.filter(item => item.type === categoryValue);
             }
-            
+
             renderBannedIPsTable(filtered);
         }
-        
+
         async function unbanIP(type, ip) {
             const isMobile = window.innerWidth <= 768;
-            
+
             const doUnban = async () => {
                 try {
                     showMessage(`Đang unban ${ip}...`, 'info');
-                    
+
                     const response = await fetch(`${BACKEND_URL}/api/admin/rate-limit/unban`, {
                         method: 'POST',
                         headers: {
@@ -4360,22 +4892,22 @@
                         },
                         body: JSON.stringify({ type, ip })
                     });
-                    
+
                     const result = await response.json();
-                    
+
                     if (response.ok) {
                         showMessage(result.message, 'success');
                         loadBannedIPs();
                     } else {
                         showMessage(result.error || 'Lỗi khi unban', 'error');
                     }
-                    
+
                 } catch (error) {
                     console.error('Unban IP error:', error);
                     showMessage('Lỗi kết nối!', 'error');
                 }
             };
-            
+
             if (isMobile) {
                 showConfirmModal(`Unban ${ip}?`, doUnban);
             } else {
@@ -4383,23 +4915,23 @@
                 doUnban();
             }
         }
-        
+
         async function unbanAllCategories() {
             const totalBanned = allBannedIPs.length;
             if (totalBanned === 0) {
                 showMessage('Không có IP nào để unban', 'info');
                 return;
             }
-            
+
             const isMobile = window.innerWidth <= 768;
-            
+
             const doUnbanAll = async () => {
                 try {
                     showMessage(`Đang unban ${totalBanned} IPs...`, 'info');
-                    
+
                     const categories = ['auth', 'cookieGet', 'cookieReport', 'general'];
                     let totalUnbanned = 0;
-                    
+
                     for (const type of categories) {
                         const response = await fetch(`${BACKEND_URL}/api/admin/rate-limit/unban-all`, {
                             method: 'POST',
@@ -4409,22 +4941,22 @@
                             },
                             body: JSON.stringify({ type })
                         });
-                        
+
                         const result = await response.json();
                         if (response.ok && result.unbanned) {
                             totalUnbanned += result.unbanned;
                         }
                     }
-                    
+
                     showMessage(`Đã unban ${totalUnbanned} IPs`, 'success');
                     loadBannedIPs();
-                    
+
                 } catch (error) {
                     console.error('Unban all error:', error);
                     showMessage('Lỗi kết nối!', 'error');
                 }
             };
-            
+
             if (isMobile) {
                 showConfirmModal(`Unban TẤT CẢ ${totalBanned} IPs?`, doUnbanAll);
             } else {
@@ -4432,7 +4964,7 @@
                 doUnbanAll();
             }
         }
-        
+
         function showUsersTable() {
             // Hide rate limit/cookie management, show users table and controls
             const usersTable = document.querySelector('.users-table');
@@ -4440,7 +4972,8 @@
             const pagination = document.getElementById('pagination');
             const rateLimitContainer = document.getElementById('rateLimitManagement');
             const cookiesContainer = document.getElementById('cookiesManagement');
-            
+            const mobileCookiesContainer = document.getElementById('mobileCookiesManagement');
+
             // Khôi phục mobile search results và title
             const mobileSearchResults = document.getElementById('mobileSearchResults');
             const mobileSearchTitle = document.querySelector('.mobile-search-title');
@@ -4448,18 +4981,21 @@
                 if (mobileSearchResults) mobileSearchResults.style.display = 'block';
                 if (mobileSearchTitle) mobileSearchTitle.style.display = 'block';
             }
-            
+
             if (rateLimitContainer) rateLimitContainer.remove();
             if (cookiesContainer) cookiesContainer.remove();
+            if (mobileCookiesContainer) mobileCookiesContainer.remove();
             if (usersTable) usersTable.style.display = 'block';
             if (userControls) userControls.style.display = 'flex'; // controls dùng display: flex
             if (pagination) pagination.style.display = 'block';
+
+            window.currentMobileCookieManagementPage = false;
         }
-        
+
         // ========================================
         // MANUAL BAN FUNCTIONS
         // ========================================
-        
+
         function showManualBanModal() {
             // Tạo modal nếu chưa có
             let modal = document.getElementById('manualBanModal');
@@ -4501,56 +5037,56 @@
                 `;
                 document.body.appendChild(modal);
             }
-            
+
             // Reset form
             document.getElementById('banIdentifier').value = '';
             document.getElementById('banReason').value = '';
             document.getElementById('banDuration').value = '1440';
-            
+
             modal.style.display = 'block';
         }
-        
+
         function closeManualBanModal() {
             const modal = document.getElementById('manualBanModal');
             if (modal) modal.style.display = 'none';
         }
-        
+
         async function confirmManualBan() {
             const identifier = document.getElementById('banIdentifier').value.trim();
             const reason = document.getElementById('banReason').value.trim();
             const durationMinutes = parseInt(document.getElementById('banDuration').value);
-            
+
             if (!identifier) {
                 showMessage('Vui lòng nhập IP hoặc Email!', 'error');
                 return;
             }
-            
+
             // Bỏ confirm trên mobile, ban luôn
             const isMobile = window.innerWidth <= 768;
             if (!isMobile) {
                 const durationText = durationMinutes === 0 ? 'vĩnh viễn' : `${durationMinutes} phút`;
                 if (!confirm(`Ban ${identifier} trong ${durationText}?\n\nLưu ý: Sẽ chặn TẤT CẢ hoạt động của IP/Email này.`)) return;
             }
-            
+
             try {
                 showMessage(`Đang ban ${identifier}...`, 'info');
-                
+
                 const response = await fetch(`${BACKEND_URL}/api/admin/rate-limit/manual-ban`, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
                         'Authorization': `Bearer ${localStorage.getItem('admin_token')}`
                     },
-                    body: JSON.stringify({ 
+                    body: JSON.stringify({
                         type: 'auth', // Backend sẽ tự ban tất cả categories
-                        identifier, 
+                        identifier,
                         reason: reason || 'Manual ban by admin',
-                        durationMinutes 
+                        durationMinutes
                     })
                 });
-                
+
                 const result = await response.json();
-                
+
                 if (response.ok) {
                     showMessage(`${result.message} - Đã chặn TẤT CẢ hoạt động (${result.duration})`, 'success');
                     closeManualBanModal();
@@ -4558,7 +5094,7 @@
                 } else {
                     showMessage(result.error || 'Lỗi khi ban', 'error');
                 }
-                
+
             } catch (error) {
                 console.error('Manual ban error:', error);
                 showMessage('Lỗi kết nối!', 'error');
@@ -4566,4 +5102,5 @@
         }
     </script>
 </body>
+
 </html>

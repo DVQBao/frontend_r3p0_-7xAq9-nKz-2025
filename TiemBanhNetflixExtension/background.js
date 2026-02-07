@@ -113,6 +113,10 @@ chrome.runtime.onMessageExternal.addListener(
                 // Bước 5: Monitor tab để phát hiện /browse
                 monitorNetflixTab(netflixTab.id);
                 
+                // NOTE: SecureNetflixId chỉ xuất hiện SAU KHI user chọn profile
+                // Nên không đọc ở đây, sẽ có action riêng getSecureNetflixId
+                // được gọi sau khi verify login thành công (đã vào /browse)
+                
                 sendResponse({ success: true });
                 
             } catch (error) {
@@ -248,6 +252,64 @@ chrome.runtime.onMessageExternal.addListener(
                     sendResponse({ 
                         success: false, 
                         error: error.message 
+                    });
+                }
+            })();
+            
+            return true;
+        }
+        
+        // NEW: Get Netflix Cookies - Lấy CẢ HAI: NetflixId + SecureNetflixId
+        // Gọi sau khi đã verify login thành công (đã vào /browse và chọn profile)
+        if (request.action === 'getSecureNetflixId' || request.action === 'getNetflixCookies') {
+            (async () => {
+                try {
+                    console.log('🔐 Reading Netflix cookies from browser...');
+                    
+                    // Lấy tất cả cookies của Netflix
+                    const allNetflixCookies = await chrome.cookies.getAll({
+                        domain: '.netflix.com'
+                    });
+                    
+                    // Tìm NetflixId và SecureNetflixId
+                    const netflixIdCookie = allNetflixCookies.find(c => c.name === 'NetflixId');
+                    const secureCookie = allNetflixCookies.find(c => c.name === 'SecureNetflixId');
+                    
+                    const result = {
+                        success: false,
+                        netflixId: null,
+                        secureNetflixId: null,
+                        availableCookies: allNetflixCookies.map(c => c.name)
+                    };
+                    
+                    if (netflixIdCookie && netflixIdCookie.value) {
+                        result.netflixId = netflixIdCookie.value;
+                        console.log('✅ NetflixId found:', netflixIdCookie.value.substring(0, 50) + '...');
+                    }
+                    
+                    if (secureCookie && secureCookie.value) {
+                        result.secureNetflixId = secureCookie.value;
+                        console.log('✅ SecureNetflixId found:', secureCookie.value.substring(0, 50) + '...');
+                    }
+                    
+                    // Success nếu có CẢ HAI cookies
+                    if (result.netflixId && result.secureNetflixId) {
+                        result.success = true;
+                        console.log('✅ Both cookies found!');
+                    } else {
+                        console.warn('⚠️ Missing cookies:', 
+                            !result.netflixId ? 'NetflixId' : '',
+                            !result.secureNetflixId ? 'SecureNetflixId' : ''
+                        );
+                    }
+                    
+                    sendResponse(result);
+                    
+                } catch (error) {
+                    console.error('❌ Get Netflix cookies error:', error);
+                    sendResponse({
+                        success: false,
+                        error: error.message
                     });
                 }
             })();

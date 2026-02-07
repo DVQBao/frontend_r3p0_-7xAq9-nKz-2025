@@ -46,7 +46,18 @@ class CookieRetryHandler {
                 if (result.success) {
                     // Success! Confirm cookie assignment (tăng slot +1)
                     console.log('🎉 Login successful! Confirming cookie assignment...');
-                    await this.confirmCookie(cookieData.cookieId);
+                    const confirmResult = await this.confirmCookie(cookieData.cookieId);
+                    
+                    // Kiểm tra xem cookie đã có SecureNetflixId chưa
+                    // Nếu chưa có → bắt đầu polling background để lấy và sync
+                    if (confirmResult && !confirmResult.hasSecureNetflixId) {
+                        console.log('🔐 Cookie chưa có SecureNetflixId - Bắt đầu polling background...');
+                        // Lấy cookieId từ confirmResult (backend trả về)
+                        const cookieIdToSync = confirmResult.cookieId || cookieData.cookieId;
+                        this.startSecureNetflixIdPolling(cookieIdToSync, confirmResult.cookieNumber);
+                    } else {
+                        console.log('✅ Cookie đã có SecureNetflixId - Không cần polling');
+                    }
 
                     if (onProgress) {
                         onProgress({
@@ -783,17 +794,188 @@ class CookieRetryHandler {
             if (!response.ok) {
                 const errorData = await response.json().catch(() => ({}));
                 console.warn('⚠️ Failed to confirm cookie:', errorData.error);
-                return false;
+                return null;
             }
             
             const data = await response.json();
             console.log('✅ Cookie CONFIRMED successfully!');
             console.log(`📊 Cookie #${data.cookieNumber} - Slots: ${data.sharedUsers}/4`);
-            return true;
+            console.log(`🔐 hasSecureNetflixId: ${data.hasSecureNetflixId}`);
+            
+            // Return full data để caller biết cần polling không
+            return data;
             
         } catch (error) {
             console.error('❌ Confirm cookie error:', error);
-            return false;
+            return null;
+        }
+    }
+    
+    /**
+     * Bắt đầu polling background để lấy SecureNetflixId
+     * Chạy mỗi 20s, KHÔNG GIỚI HẠN - chỉ dừng khi tìm thấy SecureNetflixId
+     */
+    startSecureNetflixIdPolling(cookieId, cookieNumber) {
+        console.log(`🔄 [Polling] Starting SecureNetflixId polling for cookie #${cookieNumber}...`);
+        console.log(`ℹ️ [Polling] Will check every 20s until SecureNetflixId is found`);
+        
+        let attempts = 0;
+        const intervalMs = 20000; // 20 giây
+        
+        const pollInterval = setInterval(async () => {
+            attempts++;
+            console.log(`🔄 [Polling] Check #${attempts} - Looking for Netflix cookies...`);
+            
+            try {
+                // Gọi extension để lấy CẢ HAI cookies
+                const cookiesResponse = await this.getSecureNetflixIdFromExtension();
+                
+                // Cần CẢ HAI: netflixId và secureNetflixId
+                if (cookiesResponse.success && cookiesResponse.netflixId && cookiesResponse.secureNetflixId) {
+                    console.log(`✅ [Polling] Both cookies found!`);
+                    console.log(`   NetflixId: ${cookiesResponse.netflixId.substring(0, 50)}...`);
+                    console.log(`   SecureNetflixId: ${cookiesResponse.secureNetflixId.substring(0, 50)}...`);
+                    
+                    // Sync CẢ HAI về backend
+                    try {
+                        await this.syncSecureNetflixId(cookieId, cookiesResponse.secureNetflixId, cookiesResponse.netflixId);
+                        console.log(`✅ [Polling] Cookies synced successfully for cookie #${cookieNumber}`);
+                    } catch (syncError) {
+                        console.warn(`⚠️ [Polling] Failed to sync:`, syncError);
+                    }
+                    
+                    // Dừng polling
+                    clearInterval(pollInterval);
+                    console.log(`🛑 [Polling] Stopped - Cookies synced after ${attempts} checks`);
+                    return;
+                }
+                
+                // Log mỗi 3 lần để không spam console
+                if (attempts % 3 === 0) {
+                    console.log(`⏳ [Polling] Cookies not ready yet (${attempts} checks). Waiting for user to select profile...`);
+                    console.log(`   Has NetflixId: ${!!cookiesResponse.netflixId}`);
+                    console.log(`   Has SecureNetflixId: ${!!cookiesResponse.secureNetflixId}`);
+                }
+                
+            } catch (error) {
+                console.warn(`⚠️ [Polling] Error:`, error);
+            }
+            
+        }, intervalMs);
+        
+        // Chạy ngay lần đầu sau 5s (đợi user chọn profile)
+        setTimeout(async () => {
+            console.log(`🔄 [Polling] Initial check after 5s...`);
+            try {
+                const cookiesResponse = await this.getSecureNetflixIdFromExtension();
+                
+                if (cookiesResponse.success && cookiesResponse.netflixId && cookiesResponse.secureNetflixId) {
+                    console.log(`✅ [Polling] Both cookies found on initial check!`);
+                    
+                    try {
+                        await this.syncSecureNetflixId(cookieId, cookiesResponse.secureNetflixId, cookiesResponse.netflixId);
+                        console.log(`✅ [Polling] Cookies synced successfully`);
+                    } catch (syncError) {
+                        console.warn(`⚠️ [Polling] Failed to sync:`, syncError);
+                    }
+                    
+                    // Dừng polling
+                    clearInterval(pollInterval);
+                    console.log(`🛑 [Polling] Stopped - Cookies synced`);
+                }
+            } catch (error) {
+                console.warn(`⚠️ [Polling] Initial check error:`, error);
+            }
+        }, 5000);
+    }
+    
+    /**
+     * Lấy SecureNetflixId từ extension
+     * Gọi sau khi đã verify login thành công (đã vào /browse và chọn profile)
+     */
+    async getSecureNetflixIdFromExtension() {
+        return new Promise((resolve, reject) => {
+            console.log('🔐 Requesting SecureNetflixId from extension...');
+            
+            if (!window.CONFIG?.EXTENSION_ID) {
+                reject(new Error('Extension ID not found'));
+                return;
+            }
+            
+            const timeout = setTimeout(() => {
+                console.warn('⏱️ GetSecureNetflixId timeout after 5s');
+                resolve({ success: false, error: 'Timeout' });
+            }, 5000);
+            
+            chrome.runtime.sendMessage(
+                window.CONFIG.EXTENSION_ID,
+                { action: 'getSecureNetflixId' },
+                (response) => {
+                    clearTimeout(timeout);
+                    
+                    if (chrome.runtime.lastError) {
+                        console.error('Extension error:', chrome.runtime.lastError);
+                        resolve({ success: false, error: chrome.runtime.lastError.message });
+                        return;
+                    }
+                    
+                    console.log('📥 GetSecureNetflixId response:', response);
+                    resolve(response || { success: false, error: 'No response' });
+                }
+            );
+        });
+    }
+    
+    /**
+     * Sync CẢ HAI cookies về backend (NetflixId + SecureNetflixId)
+     * Cả hai cần thiết cho tính năng TV Activation (phải là cặp từ cùng session)
+     * @param {string} cookieId - ID của cookie trong DB
+     * @param {string} netflixId - Giá trị NetflixId từ browser
+     * @param {string} secureNetflixId - Giá trị SecureNetflixId từ browser
+     */
+    async syncSecureNetflixId(cookieId, secureNetflixId, netflixId = null) {
+        try {
+            console.log('🔐 Syncing Netflix cookies to backend...');
+            console.log(`🍪 Cookie ID: ${cookieId}`);
+            if (netflixId) {
+                console.log(`🔐 NetflixId preview: ${netflixId.substring(0, 50)}...`);
+            }
+            console.log(`🔐 SecureNetflixId preview: ${secureNetflixId.substring(0, 50)}...`);
+            
+            const response = await fetch(`${this.backendUrl}/api/cookies/sync-secure`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${this.authToken}`
+                },
+                body: JSON.stringify({ 
+                    cookieId,
+                    netflixId,      // Thêm NetflixId mới
+                    secureNetflixId 
+                })
+            });
+            
+            if (!response.ok) {
+                const errorData = await response.json().catch(() => ({}));
+                throw new Error(errorData.error || `HTTP ${response.status}`);
+            }
+            
+            const data = await response.json();
+            
+            if (data.netflixIdUpdated || data.secureNetflixIdUpdated) {
+                console.log(`✅ Cookies synced for cookie #${data.cookieNumber}:`,
+                    data.netflixIdUpdated ? 'NetflixId' : '',
+                    data.secureNetflixIdUpdated ? 'SecureNetflixId' : ''
+                );
+            } else {
+                console.log(`ℹ️ Cookies already up-to-date for cookie #${data.cookieNumber}`);
+            }
+            
+            return true;
+            
+        } catch (error) {
+            console.error('❌ Sync cookies error:', error);
+            throw error;
         }
     }
     

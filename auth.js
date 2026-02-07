@@ -33,7 +33,7 @@ function showSmartLoading(text = 'Đang xử lý...', delayMs = 500) {
     // Clear any existing timeouts
     if (loadingTimeout) clearTimeout(loadingTimeout);
     clearProgressiveMessages();
-    
+
     // Show loading after initial delay
     loadingTimeout = setTimeout(() => {
         const overlay = document.getElementById('smartLoadingOverlay');
@@ -41,7 +41,7 @@ function showSmartLoading(text = 'Đang xử lý...', delayMs = 500) {
         if (overlay && textEl) {
             textEl.textContent = text;
             overlay.style.display = 'flex';
-            
+
             // Setup progressive messages for long waits
             setupProgressiveMessages(textEl);
         }
@@ -55,31 +55,31 @@ function showSmartLoading(text = 'Đang xử lý...', delayMs = 500) {
  */
 function setupProgressiveMessages(textEl) {
     if (!textEl) return;
-    
+
     // Clear previous timeouts
     clearProgressiveMessages();
-    
+
     // 2 seconds: Gentle reassurance
     progressiveMessageTimeouts.push(setTimeout(() => {
         if (textEl && textEl.parentElement && textEl.parentElement.style.display === 'flex') {
             textEl.textContent = 'Đang xử lý yêu cầu của bạn, chờ tí nhé...';
         }
     }, 2000));
-    
+
     // 5 seconds: Inform about server load (Pool = 50 may be busy)
     progressiveMessageTimeouts.push(setTimeout(() => {
         if (textEl && textEl.parentElement && textEl.parentElement.style.display === 'flex') {
             textEl.textContent = 'Tiệm Bánh nay hơi đông khách, bọn mình đang cố gắng xử lý, sắp đến lượt bạn rồi...';
         }
     }, 5000));
-    
+
     // 10 seconds: Connection message (likely queued in connection pool)
     progressiveMessageTimeouts.push(setTimeout(() => {
         if (textEl && textEl.parentElement && textEl.parentElement.style.display === 'flex') {
             textEl.textContent = 'Cảm ơn bạn đã kiên nhẫn, bọn mình đã order cho bạn rồi nè...';
         }
     }, 10000));
-    
+
     // 15 seconds: Strong reassurance (definitely in queue)
     progressiveMessageTimeouts.push(setTimeout(() => {
         if (textEl && textEl.parentElement && textEl.parentElement.style.display === 'flex') {
@@ -104,9 +104,9 @@ function hideSmartLoading() {
         clearTimeout(loadingTimeout);
         loadingTimeout = null;
     }
-    
+
     clearProgressiveMessages();
-    
+
     const overlay = document.getElementById('smartLoadingOverlay');
     if (overlay) {
         overlay.style.display = 'none';
@@ -128,7 +128,7 @@ async function getRecaptchaToken(action) {
             console.warn('⚠️ reCAPTCHA not loaded');
             return null;
         }
-        
+
         const token = await grecaptcha.execute(RECAPTCHA_SITE_KEY, { action });
         console.log(`✅ reCAPTCHA token generated for action: ${action}`);
         return token;
@@ -148,33 +148,33 @@ async function getRecaptchaToken(action) {
  */
 async function generateDeviceFingerprint() {
     const components = [];
-    
+
     try {
         // 1. Screen information
         components.push(`screen:${screen.width}x${screen.height}x${screen.colorDepth}`);
         components.push(`avail:${screen.availWidth}x${screen.availHeight}`);
-        
+
         // 2. Timezone
         components.push(`tz:${Intl.DateTimeFormat().resolvedOptions().timeZone}`);
         components.push(`tzOffset:${new Date().getTimezoneOffset()}`);
-        
+
         // 3. Language
         components.push(`lang:${navigator.language}`);
         components.push(`langs:${navigator.languages?.join(',') || ''}`);
-        
+
         // 4. Platform & User Agent
         components.push(`platform:${navigator.platform}`);
         components.push(`ua:${navigator.userAgent}`);
-        
+
         // 5. Hardware concurrency (CPU cores)
         components.push(`cores:${navigator.hardwareConcurrency || 'unknown'}`);
-        
+
         // 6. Device memory (if available)
         components.push(`memory:${navigator.deviceMemory || 'unknown'}`);
-        
+
         // 7. Touch support
         components.push(`touch:${navigator.maxTouchPoints || 0}`);
-        
+
         // 8. Canvas fingerprint
         const canvas = document.createElement('canvas');
         const ctx = canvas.getContext('2d');
@@ -187,7 +187,7 @@ async function generateDeviceFingerprint() {
         ctx.fillStyle = '#069';
         ctx.fillText('Device Fingerprint 🎬', 2, 2);
         components.push(`canvas:${canvas.toDataURL().substring(0, 100)}`);
-        
+
         // 9. WebGL fingerprint
         const gl = canvas.getContext('webgl') || canvas.getContext('experimental-webgl');
         if (gl) {
@@ -197,7 +197,7 @@ async function generateDeviceFingerprint() {
                 components.push(`renderer:${gl.getParameter(debugInfo.UNMASKED_RENDERER_WEBGL)}`);
             }
         }
-        
+
         // 10. Plugins (deprecated but still useful)
         if (navigator.plugins && navigator.plugins.length > 0) {
             const plugins = Array.from(navigator.plugins)
@@ -206,16 +206,16 @@ async function generateDeviceFingerprint() {
                 .join(',');
             components.push(`plugins:${plugins.substring(0, 100)}`);
         }
-        
+
         // Combine all components
         const fingerprintString = components.join('|');
-        
+
         // Generate hash using simple but effective algorithm
         const hash = await simpleHash(fingerprintString);
-        
+
         console.log('🔐 Device fingerprint generated:', hash.substring(0, 16) + '...');
         return hash;
-        
+
     } catch (error) {
         console.error('❌ Error generating fingerprint:', error);
         // Fallback to basic fingerprint
@@ -263,18 +263,18 @@ function switchTab(tab) {
             btn.classList.add('active');
         }
     });
-    
+
     // Update forms
     document.querySelectorAll('.form-section').forEach(section => {
         section.classList.remove('active');
     });
-    
+
     if (tab === 'login') {
         document.getElementById('loginForm').classList.add('active');
     } else {
         document.getElementById('registerForm').classList.add('active');
     }
-    
+
     // Clear messages
     clearMessages();
 }
@@ -287,7 +287,7 @@ function showError(message) {
     const errorMsg = document.getElementById('errorMsg');
     errorMsg.textContent = message;
     errorMsg.classList.add('show');
-    
+
     setTimeout(() => {
         errorMsg.classList.remove('show');
     }, 5000);
@@ -297,7 +297,7 @@ function showSuccess(message) {
     const successMsg = document.getElementById('successMsg');
     successMsg.textContent = message;
     successMsg.classList.add('show');
-    
+
     setTimeout(() => {
         successMsg.classList.remove('show');
     }, 3000);
@@ -328,7 +328,7 @@ function showCustomModal(options) {
 
     modalIcon.textContent = icon;
     modalTitle.textContent = title;
-    
+
     // Support both plain text and pre-formatted text
     if (message.includes('\n')) {
         modalBody.innerHTML = `<pre style="white-space: pre-wrap; font-family: inherit; margin: 0;">${message}</pre>`;
@@ -388,7 +388,7 @@ function setCurrentUser(user) {
     // Remove password before storing
     const safeUser = { ...user };
     delete safeUser.password;
-    
+
     localStorage.setItem('current_user', JSON.stringify(safeUser));
     sessionStorage.setItem('logged_in', 'true');
 }
@@ -443,39 +443,39 @@ function closeForgotPasswordNewPasswordModal() {
 
 async function sendForgotPasswordOTP() {
     const email = document.getElementById('forgotPasswordEmail').value.trim();
-    
+
     if (!email) {
         showModal({
             icon: '⚠️',
             title: 'Lỗi',
             message: 'Vui lòng nhập email',
-            buttons: [{ text: 'OK', type: 'primary', onClick: () => {} }]
+            buttons: [{ text: 'OK', type: 'primary', onClick: () => { } }]
         });
         return;
     }
-    
+
     if (!email.toLowerCase().endsWith('@gmail.com')) {
         showModal({
             icon: '⚠️',
             title: 'Email không hợp lệ',
             message: 'Chỉ chấp nhận email @gmail.com',
-            buttons: [{ text: 'OK', type: 'primary', onClick: () => {} }]
+            buttons: [{ text: 'OK', type: 'primary', onClick: () => { } }]
         });
         return;
     }
-    
+
     try {
         showSmartLoading('Đang gửi OTP...');
-        
+
         const response = await fetch(`${BACKEND_URL}/api/auth/forgot-password`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ email })
         });
-        
+
         const data = await response.json();
         hideSmartLoading();
-        
+
         if (!response.ok) {
             // Check if quota exhausted
             if (data.error === 'QUOTA_EXHAUSTED') {
@@ -487,7 +487,7 @@ async function sendForgotPasswordOTP() {
                         {
                             text: 'Hủy',
                             type: 'secondary',
-                            onClick: () => {}
+                            onClick: () => { }
                         },
                         {
                             text: 'Liên hệ Support',
@@ -501,30 +501,30 @@ async function sendForgotPasswordOTP() {
                 closeForgotPasswordEmailModal();
                 return;
             }
-            
+
             showModal({
                 icon: '❌',
                 title: 'Lỗi',
                 message: data.error || 'Có lỗi xảy ra. Vui lòng thử lại.',
-                buttons: [{ text: 'OK', type: 'primary', onClick: () => {} }]
+                buttons: [{ text: 'OK', type: 'primary', onClick: () => { } }]
             });
             return;
         }
-        
+
         // Success - show OTP modal
         console.log('✅ Forgot password OTP sent to:', email);
         sessionStorage.setItem('forgot_password_email', email);
-        
+
         closeForgotPasswordEmailModal();
         showForgotPasswordOTPModal(email);
-        
+
         showModal({
             icon: '✅',
             title: 'OTP đã được gửi',
             message: `Mã OTP đã được gửi đến ${email}\n\nVui lòng kiểm tra email (bao gồm cả thư mục Spam).`,
-            buttons: [{ text: 'OK', type: 'primary', onClick: () => {} }]
+            buttons: [{ text: 'OK', type: 'primary', onClick: () => { } }]
         });
-        
+
     } catch (error) {
         hideSmartLoading();
         console.error('❌ Send forgot password OTP error:', error);
@@ -532,7 +532,7 @@ async function sendForgotPasswordOTP() {
             icon: '❌',
             title: 'Lỗi kết nối',
             message: 'Không thể kết nối đến server. Vui lòng thử lại sau.',
-            buttons: [{ text: 'OK', type: 'primary', onClick: () => {} }]
+            buttons: [{ text: 'OK', type: 'primary', onClick: () => { } }]
         });
     }
 }
@@ -542,29 +542,31 @@ function showForgotPasswordOTPModal(email) {
     document.getElementById('forgotPasswordOTPInput').value = '';
     document.getElementById('forgotPasswordOTPModal').style.display = 'flex';
     document.getElementById('forgotPasswordOTPInput').focus();
-    
+
     // Start OTP timer (10 minutes)
     let timeLeft = 600;
     forgotPasswordTimerInterval = setInterval(() => {
         timeLeft--;
         const minutes = Math.floor(timeLeft / 60);
         const seconds = timeLeft % 60;
-        document.getElementById('forgotPasswordOTPTimer').textContent = 
+        document.getElementById('forgotPasswordOTPTimer').textContent =
             `${minutes}:${seconds.toString().padStart(2, '0')}`;
-        
+
         if (timeLeft <= 0) {
             clearInterval(forgotPasswordTimerInterval);
             showModal({
                 icon: '⏰',
                 title: 'OTP đã hết hạn',
                 message: 'Mã OTP đã hết hiệu lực. Vui lòng yêu cầu mã mới.',
-                buttons: [{ text: 'OK', type: 'primary', onClick: () => {
-                    closeForgotPasswordOTPModal();
-                }}]
+                buttons: [{
+                    text: 'OK', type: 'primary', onClick: () => {
+                        closeForgotPasswordOTPModal();
+                    }
+                }]
             });
         }
     }, 1000);
-    
+
     // Start resend cooldown (60 seconds)
     startForgotPasswordResendCooldown();
 }
@@ -574,18 +576,18 @@ function startForgotPasswordResendCooldown() {
     const resendText = document.getElementById('forgotPasswordResendText');
     const resendCooldown = document.getElementById('forgotPasswordResendCooldown');
     const cooldownTimer = document.getElementById('forgotPasswordCooldownTimer');
-    
+
     resendBtn.disabled = true;
     resendText.style.display = 'none';
     resendCooldown.style.display = 'inline';
-    
+
     let cooldown = 60;
     cooldownTimer.textContent = cooldown;
-    
+
     forgotPasswordResendCooldownInterval = setInterval(() => {
         cooldown--;
         cooldownTimer.textContent = cooldown;
-        
+
         if (cooldown <= 0) {
             clearInterval(forgotPasswordResendCooldownInterval);
             resendBtn.disabled = false;
@@ -602,25 +604,27 @@ async function resendForgotPasswordOTP() {
             icon: '❌',
             title: 'Lỗi',
             message: 'Không tìm thấy email. Vui lòng thử lại.',
-            buttons: [{ text: 'OK', type: 'primary', onClick: () => {
-                closeForgotPasswordOTPModal();
-            }}]
+            buttons: [{
+                text: 'OK', type: 'primary', onClick: () => {
+                    closeForgotPasswordOTPModal();
+                }
+            }]
         });
         return;
     }
-    
+
     try {
         showSmartLoading('Đang gửi lại OTP...');
-        
+
         const response = await fetch(`${BACKEND_URL}/api/auth/forgot-password`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ email })
         });
-        
+
         const data = await response.json();
         hideSmartLoading();
-        
+
         if (!response.ok) {
             if (data.error === 'QUOTA_EXHAUSTED') {
                 showModal({
@@ -640,19 +644,19 @@ async function resendForgotPasswordOTP() {
                 closeForgotPasswordOTPModal();
                 return;
             }
-            
+
             showModal({
                 icon: '❌',
                 title: 'Lỗi',
                 message: data.error || 'Không thể gửi lại OTP',
-                buttons: [{ text: 'OK', type: 'primary', onClick: () => {} }]
+                buttons: [{ text: 'OK', type: 'primary', onClick: () => { } }]
             });
             return;
         }
-        
+
         console.log('✅ Resent forgot password OTP to:', email);
         startForgotPasswordResendCooldown();
-        
+
         // Reset main OTP timer
         if (forgotPasswordTimerInterval) {
             clearInterval(forgotPasswordTimerInterval);
@@ -662,21 +666,21 @@ async function resendForgotPasswordOTP() {
             timeLeft--;
             const minutes = Math.floor(timeLeft / 60);
             const seconds = timeLeft % 60;
-            document.getElementById('forgotPasswordOTPTimer').textContent = 
+            document.getElementById('forgotPasswordOTPTimer').textContent =
                 `${minutes}:${seconds.toString().padStart(2, '0')}`;
-            
+
             if (timeLeft <= 0) {
                 clearInterval(forgotPasswordTimerInterval);
             }
         }, 1000);
-        
+
         showModal({
             icon: '✅',
             title: 'OTP đã được gửi lại',
             message: `Mã OTP mới đã được gửi đến ${email}`,
-            buttons: [{ text: 'OK', type: 'primary', onClick: () => {} }]
+            buttons: [{ text: 'OK', type: 'primary', onClick: () => { } }]
         });
-        
+
     } catch (error) {
         hideSmartLoading();
         console.error('❌ Resend forgot password OTP error:', error);
@@ -684,7 +688,7 @@ async function resendForgotPasswordOTP() {
             icon: '❌',
             title: 'Lỗi kết nối',
             message: 'Không thể kết nối đến server',
-            buttons: [{ text: 'OK', type: 'primary', onClick: () => {} }]
+            buttons: [{ text: 'OK', type: 'primary', onClick: () => { } }]
         });
     }
 }
@@ -692,49 +696,49 @@ async function resendForgotPasswordOTP() {
 async function verifyForgotPasswordOTP() {
     const email = sessionStorage.getItem('forgot_password_email');
     const otp = document.getElementById('forgotPasswordOTPInput').value.trim();
-    
+
     if (!otp || otp.length !== 6) {
         showModal({
             icon: '⚠️',
             title: 'OTP không hợp lệ',
             message: 'Vui lòng nhập đầy đủ 6 số OTP',
-            buttons: [{ text: 'OK', type: 'primary', onClick: () => {} }]
+            buttons: [{ text: 'OK', type: 'primary', onClick: () => { } }]
         });
         return;
     }
-    
+
     try {
         showSmartLoading('Đang xác thực OTP...');
-        
+
         const response = await fetch(`${BACKEND_URL}/api/auth/verify-reset-otp`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ email, otp })
         });
-        
+
         const data = await response.json();
         hideSmartLoading();
-        
+
         if (!response.ok) {
             showModal({
                 icon: '❌',
                 title: 'Xác thực thất bại',
                 message: data.error || 'OTP không chính xác',
-                buttons: [{ text: 'OK', type: 'primary', onClick: () => {} }]
+                buttons: [{ text: 'OK', type: 'primary', onClick: () => { } }]
             });
             return;
         }
-        
+
         // Success - save reset token and show new password modal
         console.log('✅ Forgot password OTP verified');
         forgotPasswordResetToken = data.resetToken;
-        
+
         closeForgotPasswordOTPModal();
         document.getElementById('forgotPasswordNewPasswordModal').style.display = 'flex';
         document.getElementById('forgotPasswordNewPassword').value = '';
         document.getElementById('forgotPasswordConfirmPassword').value = '';
         document.getElementById('forgotPasswordNewPassword').focus();
-        
+
     } catch (error) {
         hideSmartLoading();
         console.error('❌ Verify forgot password OTP error:', error);
@@ -742,7 +746,7 @@ async function verifyForgotPasswordOTP() {
             icon: '❌',
             title: 'Lỗi kết nối',
             message: 'Không thể kết nối đến server',
-            buttons: [{ text: 'OK', type: 'primary', onClick: () => {} }]
+            buttons: [{ text: 'OK', type: 'primary', onClick: () => { } }]
         });
     }
 }
@@ -750,96 +754,100 @@ async function verifyForgotPasswordOTP() {
 async function resetPassword() {
     const newPassword = document.getElementById('forgotPasswordNewPassword').value;
     const confirmPassword = document.getElementById('forgotPasswordConfirmPassword').value;
-    
+
     // Validate passwords
     if (!newPassword || !confirmPassword) {
         showModal({
             icon: '⚠️',
             title: 'Lỗi',
             message: 'Vui lòng nhập đầy đủ thông tin',
-            buttons: [{ text: 'OK', type: 'primary', onClick: () => {} }]
+            buttons: [{ text: 'OK', type: 'primary', onClick: () => { } }]
         });
         return;
     }
-    
+
     if (newPassword.length < 6) {
         showModal({
             icon: '⚠️',
             title: 'Mật khẩu yếu',
             message: 'Mật khẩu phải có ít nhất 6 ký tự',
-            buttons: [{ text: 'OK', type: 'primary', onClick: () => {} }]
+            buttons: [{ text: 'OK', type: 'primary', onClick: () => { } }]
         });
         return;
     }
-    
+
     if (newPassword !== confirmPassword) {
         showModal({
             icon: '⚠️',
             title: 'Mật khẩu không khớp',
             message: 'Xác nhận mật khẩu không trùng khớp',
-            buttons: [{ text: 'OK', type: 'primary', onClick: () => {} }]
+            buttons: [{ text: 'OK', type: 'primary', onClick: () => { } }]
         });
         return;
     }
-    
+
     if (!forgotPasswordResetToken) {
         showModal({
             icon: '❌',
             title: 'Lỗi',
             message: 'Token không hợp lệ. Vui lòng thử lại.',
-            buttons: [{ text: 'OK', type: 'primary', onClick: () => {
-                closeForgotPasswordNewPasswordModal();
-            }}]
+            buttons: [{
+                text: 'OK', type: 'primary', onClick: () => {
+                    closeForgotPasswordNewPasswordModal();
+                }
+            }]
         });
         return;
     }
-    
+
     try {
         showSmartLoading('Đang đổi mật khẩu...');
-        
+
         const response = await fetch(`${BACKEND_URL}/api/auth/reset-password`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ 
+            body: JSON.stringify({
                 resetToken: forgotPasswordResetToken,
-                newPassword 
+                newPassword
             })
         });
-        
+
         const data = await response.json();
         hideSmartLoading();
-        
+
         if (!response.ok) {
             showModal({
                 icon: '❌',
                 title: 'Lỗi',
                 message: data.error || 'Không thể đổi mật khẩu',
-                buttons: [{ text: 'OK', type: 'primary', onClick: () => {} }]
+                buttons: [{ text: 'OK', type: 'primary', onClick: () => { } }]
             });
             return;
         }
-        
+
         // Success
         console.log('✅ Password reset successful');
         sessionStorage.removeItem('forgot_password_email');
         forgotPasswordResetToken = null;
-        
+
         closeForgotPasswordNewPasswordModal();
-        
+
         showModal({
             icon: '✅',
             title: 'Đổi mật khẩu thành công',
             message: 'Mật khẩu của bạn đã được đổi thành công!\n\nVui lòng đăng nhập lại với mật khẩu mới.',
-            buttons: [{ text: 'Đăng nhập', type: 'primary', onClick: () => {
-                // Switch to login form
-                document.getElementById('loginForm').style.display = 'block';
-                document.getElementById('registerForm').style.display = 'none';
-                document.getElementById('loginEmail').value = sessionStorage.getItem('forgot_password_email') || '';
-                document.getElementById('loginPassword').value = '';
-                document.getElementById('loginPassword').focus();
-            }}]
+            buttons: [{
+                text: 'Đăng nhập', type: 'primary', onClick: () => {
+                    // Switch to login form
+                    document.getElementById('loginForm').style.display = 'block';
+                    document.getElementById('registerForm').style.display = 'none';
+                    document.getElementById('loginEmail').value = sessionStorage.getItem('forgot_password_email') || '';
+                    document.getElementById('loginPassword').value = '';
+                    document.getElementById('loginPassword').focus();
+                }
+            }]
         });
-        
+
     } catch (error) {
         hideSmartLoading();
         console.error('❌ Reset password error:', error);
@@ -847,7 +855,7 @@ async function resetPassword() {
             icon: '❌',
             title: 'Lỗi kết nối',
             message: 'Không thể kết nối đến server',
-            buttons: [{ text: 'OK', type: 'primary', onClick: () => {} }]
+            buttons: [{ text: 'OK', type: 'primary', onClick: () => { } }]
         });
     }
 }
@@ -856,13 +864,15 @@ async function resetPassword() {
 function togglePasswordVisibility(inputId) {
     const input = document.getElementById(inputId);
     const button = input.nextElementSibling;
-    
+
     if (input.type === 'password') {
         input.type = 'text';
-        button.textContent = '🙈';
+        // Eye-off icon (hide password)
+        button.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9.88 9.88a3 3 0 1 0 4.24 4.24"/><path d="M10.73 5.08A10.43 10.43 0 0 1 12 5c7 0 10 7 10 7a13.16 13.16 0 0 1-1.67 2.68"/><path d="M6.61 6.61A13.526 13.526 0 0 0 2 12s3 7 10 7a9.74 9.74 0 0 0 5.39-1.61"/><line x1="2" x2="22" y1="2" y2="22"/></svg>';
     } else {
         input.type = 'password';
-        button.textContent = '👁️';
+        // Eye icon (show password)
+        button.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg>';
     }
 }
 
@@ -873,15 +883,15 @@ function togglePasswordVisibility(inputId) {
 async function handleLogin(event) {
     event.preventDefault();
     clearMessages();
-    
+
     const email = document.getElementById('loginEmail').value;
     const password = document.getElementById('loginPassword').value;
-    
+
     console.log('🔐 Login attempt:', email);
-    
+
     try {
         showSmartLoading('Đang đăng nhập...', 500);
-        
+
         // Call backend API
         const response = await fetch(`${BACKEND_URL}/api/auth/login`, {
             method: 'POST',
@@ -890,35 +900,35 @@ async function handleLogin(event) {
             },
             body: JSON.stringify({ email, password })
         });
-        
+
         const data = await response.json();
         hideSmartLoading();
-        
+
         if (response.ok) {
             // Login successful
             console.log('✅ Login successful:', data.user.email);
-            
+
             showSuccess('Đăng nhập thành công! Đang chuyển hướng...');
-            
+
             // Lưu token tạm để dùng cho các modal
             sessionStorage.setItem('pending_tiembanh_token', data.token);
             sessionStorage.setItem('pending_tiembanh_user', JSON.stringify(data.user));
-            
+
             // Flow: Referral Notification → Tiệm bánh Message → Redirect
             setTimeout(async () => {
                 // Bước 1: Kiểm tra referral notification trước
                 const hasReferralNotification = await checkReferralNotifications(data.token);
-                
+
                 if (hasReferralNotification) {
                     // Có referral notification → hiển thị modal
                     // Sau khi đóng modal, closeReferralNotification() sẽ tự động kiểm tra thông điệp Tiệm bánh
                     console.log('📢 Hiển thị referral notification modal');
                     return;
                 }
-                
+
                 // Bước 2: Không có referral notification → kiểm tra thông điệp Tiệm bánh
                 const hasMessage = await checkTiembanhMessage(data.token, data.user);
-                
+
                 if (!hasMessage) {
                     // Không có thông điệp → lưu token và redirect ngay
                     localStorage.setItem('auth_token', data.token);
@@ -934,10 +944,10 @@ async function handleLogin(event) {
             // ✅ Handle EMAIL_NOT_VERIFIED - CÓ QUOTA → BLOCK, bắt buộc verify
             if (data.error === 'EMAIL_NOT_VERIFIED' && data.canSendOtp) {
                 console.log('🔒 Email not verified, có quota → BLOCK login, bắt buộc verify');
-                
+
                 // Store temporary token
                 sessionStorage.setItem('pending_verification_token', data.token);
-                
+
                 // Show modal BẮT BUỘC verify
                 showCustomModal({
                     icon: '📧',
@@ -949,7 +959,7 @@ async function handleLogin(event) {
                             type: 'primary',
                             onClick: async () => {
                                 showSmartLoading('Đang gửi OTP...', 100);
-                                
+
                                 try {
                                     const sendResponse = await fetch(`${BACKEND_URL}/api/auth/send-verification-for-existing-user`, {
                                         method: 'POST',
@@ -958,10 +968,10 @@ async function handleLogin(event) {
                                             'Authorization': `Bearer ${data.token}`
                                         }
                                     });
-                                    
+
                                     const sendData = await sendResponse.json();
                                     hideSmartLoading();
-                                    
+
                                     if (sendResponse.ok) {
                                         // Save to sessionStorage for verify flow
                                         sessionStorage.setItem('pending_registration', JSON.stringify({
@@ -969,7 +979,7 @@ async function handleLogin(event) {
                                             name: data.user.name,
                                             deviceFingerprint: data.user.deviceFingerprint
                                         }));
-                                        
+
                                         showSuccess('Mã OTP đã được gửi!');
                                         setTimeout(() => {
                                             showVerificationModal(data.user.email);
@@ -1005,12 +1015,12 @@ async function handleLogin(event) {
                 });
                 return;
             }
-            
+
             // ✅ Handle BANNED - Tài khoản/IP bị khóa
             if (data.code === 'BANNED') {
                 const isPermanent = data.isPermanent;
                 const remainingTime = data.remainingSeconds;
-                
+
                 let timeMessage = '';
                 if (isPermanent) {
                     timeMessage = 'Tài khoản của bạn đã bị khóa vĩnh viễn.';
@@ -1023,7 +1033,7 @@ async function handleLogin(event) {
                         timeMessage = `Thời gian còn lại: ${minutes} phút`;
                     }
                 }
-                
+
                 showCustomModal({
                     icon: '🚫',
                     title: 'Tài khoản bị khóa',
@@ -1044,12 +1054,12 @@ async function handleLogin(event) {
                 });
                 return;
             }
-            
+
             // ✅ Handle RATE_LIMIT_EXCEEDED - Bị rate limit tự động
             if (data.code === 'RATE_LIMIT_EXCEEDED') {
                 const retryAfter = data.retryAfter || 60;
                 const minutes = Math.ceil(retryAfter / 60);
-                
+
                 showCustomModal({
                     icon: '⏳',
                     title: 'Tạm khóa do hoạt động bất thường',
@@ -1070,7 +1080,7 @@ async function handleLogin(event) {
                 });
                 return;
             }
-            
+
             // ✅ Handle other errors (wrong password, account locked, etc)
             showCustomModal({
                 icon: '❌',
@@ -1098,14 +1108,14 @@ async function handleLogin(event) {
 async function handleRegister(event) {
     event.preventDefault();
     clearMessages();
-    
+
     const name = document.getElementById('registerName').value;
     const email = document.getElementById('registerEmail').value;
     const password = document.getElementById('registerPassword').value;
     const confirmPassword = document.getElementById('registerConfirmPassword').value;
-    
+
     console.log('📝 Register attempt:', email);
-    
+
     // Anti-Spam Check 1: CAPTCHA
     if (!antiSpam.captchaVerified) {
         showCustomModal({
@@ -1120,11 +1130,11 @@ async function handleRegister(event) {
         }, 500);
         return;
     }
-    
+
     // Anti-Spam Check 2: Rate Limiting (Cooldown)
     const now = Date.now();
     const timeSinceLastRegister = now - antiSpam.lastRegisterTime;
-    
+
     if (timeSinceLastRegister < antiSpam.COOLDOWN_MS) {
         const remainingSeconds = Math.ceil((antiSpam.COOLDOWN_MS - timeSinceLastRegister) / 1000);
         showCustomModal({
@@ -1135,12 +1145,12 @@ async function handleRegister(event) {
         });
         return;
     }
-    
+
     // Anti-Spam Check 3: Max Attempts per Hour
     const registerHistory = JSON.parse(localStorage.getItem('register_history') || '[]');
     const oneHourAgo = now - (60 * 60 * 1000);
     const recentAttempts = registerHistory.filter(time => time > oneHourAgo);
-    
+
     if (recentAttempts.length >= antiSpam.MAX_ATTEMPTS_PER_HOUR) {
         showCustomModal({
             icon: '🚫',
@@ -1150,7 +1160,7 @@ async function handleRegister(event) {
         });
         return;
     }
-    
+
     // Validate Name
     if (name.length < 3) {
         showCustomModal({
@@ -1161,7 +1171,7 @@ async function handleRegister(event) {
         });
         return;
     }
-    
+
     // Validate Password Match
     if (password !== confirmPassword) {
         showCustomModal({
@@ -1172,7 +1182,7 @@ async function handleRegister(event) {
         });
         return;
     }
-    
+
     // Validate Password Strength
     if (password.length < 8) {
         showCustomModal({
@@ -1183,7 +1193,7 @@ async function handleRegister(event) {
         });
         return;
     }
-    
+
     const strength = calculatePasswordStrength(password);
     if (strength < 2) {
         showCustomModal({
@@ -1194,7 +1204,7 @@ async function handleRegister(event) {
         });
         return;
     }
-    
+
     // Validate Email Format
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(email)) {
@@ -1206,15 +1216,15 @@ async function handleRegister(event) {
         });
         return;
     }
-    
+
     try {
         // Generate device fingerprint
         const deviceFingerprint = await generateDeviceFingerprint();
         console.log('🔐 Fingerprint for registration:', deviceFingerprint.substring(0, 16) + '...');
-        
+
         // Get reCAPTCHA token
         const recaptchaToken = await getRecaptchaToken('register');
-        
+
         // ✅ NEW FLOW: Lưu form data vào sessionStorage, CHƯA gửi lên server
         sessionStorage.setItem('pending_registration', JSON.stringify({
             name,
@@ -1222,41 +1232,41 @@ async function handleRegister(event) {
             password,
             deviceFingerprint
         }));
-        
+
         showSmartLoading('Đang gửi mã xác thực...', 500);
-        
+
         // ✅ Call backend API: CHỈ GỬI EMAIL + FINGERPRINT + RECAPTCHA
         const response = await fetch(`${BACKEND_URL}/api/auth/register`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify({ 
+            body: JSON.stringify({
                 email,
                 recaptchaToken,
                 deviceFingerprint
             })
         });
-        
+
         const data = await response.json();
         hideSmartLoading();
-        
+
         if (response.ok) {
             // Update anti-spam tracking
             antiSpam.lastRegisterTime = now;
             registerHistory.push(now);
             localStorage.setItem('register_history', JSON.stringify(registerHistory));
-            
+
             // Check if OTP was skipped due to quota exhaustion
             if (data.requiresEmailVerification === false && data.skipOtpReason === 'QUOTA_EXHAUSTED') {
                 // ✅ Hết quota → Tạo User ngay (không cần OTP)
                 console.warn('⚠️ SMS OTP quota exhausted. Registering without verification...');
-                
+
                 showSmartLoading('Đang tạo tài khoản...', 100);
-                
+
                 // Call register-without-otp API
                 const { name, email, password, deviceFingerprint } = JSON.parse(sessionStorage.getItem('pending_registration'));
-                
+
                 const registerResponse = await fetch(`${BACKEND_URL}/api/auth/register-without-otp`, {
                     method: 'POST',
                     headers: {
@@ -1264,23 +1274,23 @@ async function handleRegister(event) {
                     },
                     body: JSON.stringify({ name, email, password, deviceFingerprint })
                 });
-                
+
                 const registerData = await registerResponse.json();
                 hideSmartLoading();
-                
+
                 if (registerResponse.ok) {
                     console.log('✅ User created without OTP verification');
-                    
+
                     // Clear pending registration
                     sessionStorage.removeItem('pending_registration');
-                    
+
                     // Login immediately
                     localStorage.setItem('auth_token', registerData.token);
                     localStorage.setItem('current_user', JSON.stringify(registerData.user));
                     sessionStorage.setItem('logged_in', 'true');
-                    
+
                     showSuccess('Đăng ký thành công!');
-                    
+
                     // ✅ Hiện modal nhập mã giới thiệu (giống như khi verify OTP thành công)
                     console.log('🎁 New user (no OTP) - showing referral modal');
                     showReferralModal();
@@ -1294,11 +1304,11 @@ async function handleRegister(event) {
                 }
                 return;
             }
-            
+
             // ✅ Có quota → Gửi OTP như bình thường
             console.log('✅ OTP sent to:', email);
             showSuccess('Mã OTP đã được gửi đến email của bạn!');
-            
+
             // Show OTP verification modal
             setTimeout(() => {
                 showVerificationModal(email);
@@ -1308,7 +1318,7 @@ async function handleRegister(event) {
             if (data.code === 'BANNED') {
                 const isPermanent = data.isPermanent;
                 const remainingTime = data.remainingSeconds;
-                
+
                 let timeMessage = '';
                 if (isPermanent) {
                     timeMessage = 'Thiết bị của bạn đã bị khóa vĩnh viễn.';
@@ -1321,7 +1331,7 @@ async function handleRegister(event) {
                         timeMessage = `Thời gian còn lại: ${minutes} phút`;
                     }
                 }
-                
+
                 showCustomModal({
                     icon: '🚫',
                     title: 'Không thể đăng ký',
@@ -1342,12 +1352,12 @@ async function handleRegister(event) {
                 });
                 return;
             }
-            
+
             // ✅ Handle RATE_LIMIT_EXCEEDED - Bị rate limit tự động
             if (data.code === 'RATE_LIMIT_EXCEEDED') {
                 const retryAfter = data.retryAfter || 60;
                 const minutes = Math.ceil(retryAfter / 60);
-                
+
                 showCustomModal({
                     icon: '⏳',
                     title: 'Tạm khóa do hoạt động bất thường',
@@ -1368,35 +1378,35 @@ async function handleRegister(event) {
                 });
                 return;
             }
-            
+
             // Handle invalid email domain
             if (data.error === 'INVALID_EMAIL_DOMAIN') {
                 showCustomModal({
                     icon: '⚠️',
                     title: 'Email không hợp lệ',
                     message: 'Hiện tại hệ thống chỉ chấp nhận đăng ký bằng Gmail (@gmail.com).\n\nEmail của bạn không được hỗ trợ.',
-                    buttons: [{ 
-                        text: 'Đã hiểu', 
+                    buttons: [{
+                        text: 'Đã hiểu',
                         type: 'primary'
                     }]
                 });
                 return;
             }
-            
+
             // Handle missing device fingerprint
             if (data.error === 'NO_DEVICE_FINGERPRINT') {
                 showCustomModal({
                     icon: '🔒',
                     title: 'Không thể xác định thiết bị',
                     message: 'Hệ thống không thể xác định thiết bị của bạn vì lý do bảo mật.\n\nVui lòng thử lại, nếu vẫn gặp lỗi, vui lòng liên hệ support.',
-                    buttons: [{ 
-                        text: 'Đã hiểu', 
+                    buttons: [{
+                        text: 'Đã hiểu',
                         type: 'primary'
                     }]
                 });
                 return;
             }
-            
+
             // Handle duplicate device/IP registration with detailed message
             if ((data.error === 'DUPLICATE_IP_REGISTRATION' || data.error === 'DUPLICATE_DEVICE_REGISTRATION') && data.existingAccount) {
                 const account = data.existingAccount;
@@ -1413,13 +1423,13 @@ Email: ${account.email}
 • Dùng tài khoản này để đăng nhập
 • Nếu quên mật khẩu, click "Quên mật khẩu?" để được hỗ trợ
                 `.trim();
-                
+
                 showCustomModal({
                     icon: '🚫',
                     title: 'Thiết bị đã được đăng ký',
                     message: message,
-                    buttons: [{ 
-                        text: 'Đăng nhập ngay', 
+                    buttons: [{
+                        text: 'Đăng nhập ngay',
                         type: 'primary',
                         onClick: () => {
                             // Switch to login tab
@@ -1460,12 +1470,12 @@ Email: ${account.email}
 
 function handleGoogleLogin() {
     console.log('🔐 Google login clicked');
-    
+
     // Simulate Google OAuth popup
     const confirmLogin = confirm('Demo: Đăng nhập với Google?\n\nTrong production, đây sẽ mở Google OAuth popup.');
-    
+
     if (!confirmLogin) return;
-    
+
     // Simulate Google user data
     const googleUser = {
         id: 'google_' + Date.now(),
@@ -1475,10 +1485,10 @@ function handleGoogleLogin() {
         picture: 'https://via.placeholder.com/150',
         createdAt: new Date().toISOString()
     };
-    
+
     // Check if user exists
     let user = findUserByEmail(googleUser.email);
-    
+
     if (!user) {
         // Create new user
         createUser(googleUser);
@@ -1487,10 +1497,10 @@ function handleGoogleLogin() {
     } else {
         console.log('✅ Existing Google user found');
     }
-    
+
     setCurrentUser(user);
     showSuccess('✅ Đăng nhập Google thành công! Đang chuyển hướng...');
-    
+
     setTimeout(() => {
         window.location.href = '/';
     }, 1000);
@@ -1507,13 +1517,15 @@ function handleGoogleRegister() {
 
 function togglePassword(inputId, iconElement) {
     const input = document.getElementById(inputId);
-    
+
     if (input.type === 'password') {
         input.type = 'text';
-        iconElement.textContent = '🙈'; // Hide icon
+        // Eye-off icon (hide password)
+        iconElement.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9.88 9.88a3 3 0 1 0 4.24 4.24"/><path d="M10.73 5.08A10.43 10.43 0 0 1 12 5c7 0 10 7 10 7a13.16 13.16 0 0 1-1.67 2.68"/><path d="M6.61 6.61A13.526 13.526 0 0 0 2 12s3 7 10 7a9.74 9.74 0 0 0 5.39-1.61"/><line x1="2" x2="22" y1="2" y2="22"/></svg>';
     } else {
         input.type = 'password';
-        iconElement.textContent = '👁️'; // Show icon
+        // Eye icon (show password)
+        iconElement.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg>';
     }
 }
 
@@ -1524,7 +1536,7 @@ function togglePassword(inputId, iconElement) {
 function toggleCaptcha() {
     const checkbox = document.getElementById('captchaCheckbox');
     const box = document.getElementById('captchaBox');
-    
+
     if (antiSpam.captchaVerified) {
         // Uncheck
         antiSpam.captchaVerified = false;
@@ -1550,13 +1562,13 @@ function toggleCaptcha() {
 
 function calculatePasswordStrength(password) {
     let strength = 0;
-    
+
     if (password.length >= 8) strength++;
     if (password.length >= 12) strength++;
     if (/[a-z]/.test(password) && /[A-Z]/.test(password)) strength++;
     if (/\d/.test(password)) strength++;
     if (/[^a-zA-Z0-9]/.test(password)) strength++;
-    
+
     return Math.min(strength, 3); // 0=weak, 1=weak, 2=medium, 3=strong
 }
 
@@ -1564,17 +1576,17 @@ function checkPasswordStrength() {
     const password = document.getElementById('registerPassword').value;
     const strengthFill = document.getElementById('strengthFill');
     const strengthText = document.getElementById('strengthText');
-    
+
     if (!password) {
         strengthFill.className = 'strength-fill';
         strengthText.textContent = '';
         return;
     }
-    
+
     const strength = calculatePasswordStrength(password);
-    
+
     strengthFill.className = 'strength-fill';
-    
+
     if (strength <= 1) {
         strengthFill.classList.add('strength-weak');
         strengthText.textContent = 'Yếu';
@@ -1596,7 +1608,7 @@ function checkPasswordStrength() {
 
 document.addEventListener('DOMContentLoaded', () => {
     console.log('🔐 Auth page initialized');
-    
+
     // Check if already logged in
     if (sessionStorage.getItem('logged_in') === 'true') {
         const currentUser = getCurrentUser();
@@ -1608,7 +1620,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }, 1000);
         }
     }
-    
+
     // Add shake animation CSS
     const style = document.createElement('style');
     style.textContent = `
@@ -1641,7 +1653,7 @@ async function checkTiembanhMessage(token, user) {
     try {
         const response = await fetch(`${BACKEND_URL}/api/message`);
         const data = await response.json();
-        
+
         if (data.hasMessage) {
             console.log('📢 Tiệm bánh has a message');
             showTiembanhMessage(data, token, user);
@@ -1664,12 +1676,12 @@ async function checkTiembanhMessage(token, user) {
  */
 function parseMessageToHTML(text) {
     if (!text) return '';
-    
+
     const lines = text.split('\n');
     let html = '';
     let inOrderedList = false;
     let listItems = [];
-    
+
     /**
      * Parse formatting tags from end of line (e.g., *bold/yellow/underline)
      * @param {string} line - Line of text
@@ -1678,22 +1690,22 @@ function parseMessageToHTML(text) {
     function parseLineFormatting(line) {
         // Check if line ends with *formatting
         const formatMatch = line.match(/^(.+?)\s*\*([a-z/]+)$/i);
-        
+
         if (!formatMatch) {
             return { content: line, styles: '' };
         }
-        
+
         const content = formatMatch[1].trim();
         const formats = formatMatch[2].toLowerCase().split('/');
-        
+
         let styles = [];
         let fontWeight = 'normal';
         let fontStyle = 'normal';
         let textDecoration = 'none';
         let color = '#e5e7eb'; // default color
-        
+
         formats.forEach(format => {
-            switch(format) {
+            switch (format) {
                 case 'bold':
                 case 'b':
                     fontWeight = '600';
@@ -1787,22 +1799,22 @@ function parseMessageToHTML(text) {
                     break;
             }
         });
-        
+
         // Build style string
         if (fontWeight !== 'normal') styles.push(`font-weight: ${fontWeight}`);
         if (fontStyle !== 'normal') styles.push(`font-style: ${fontStyle}`);
         if (textDecoration !== 'none') styles.push(`text-decoration: ${textDecoration}`);
         styles.push(`color: ${color}`);
-        
+
         return {
             content: content,
             styles: styles.join('; ')
         };
     }
-    
+
     for (let i = 0; i < lines.length; i++) {
         const line = lines[i].trim();
-        
+
         // Empty line - close list if open, add spacing
         if (line === '') {
             if (inOrderedList) {
@@ -1817,23 +1829,23 @@ function parseMessageToHTML(text) {
             html += '<br>';
             continue;
         }
-        
+
         // Numbered list item (1., 2., 3., etc.)
         const numberedMatch = line.match(/^(\d+)\.\s+(.+)$/);
         if (numberedMatch) {
             const itemText = numberedMatch[2];
-            
+
             // Parse formatting for list items too
             const parsed = parseLineFormatting(itemText);
-            const styledItem = parsed.styles 
+            const styledItem = parsed.styles
                 ? `<span style="${parsed.styles}">${parsed.content}</span>`
                 : parsed.content;
-            
+
             listItems.push(styledItem);
             inOrderedList = true;
             continue;
         }
-        
+
         // Close list if we were in one
         if (inOrderedList) {
             html += '<ol style="margin: 15px 0; padding-left: 25px; color: #e5e7eb; line-height: 1.8; text-align: justify;">';
@@ -1844,18 +1856,18 @@ function parseMessageToHTML(text) {
             inOrderedList = false;
             listItems = [];
         }
-        
+
         // Parse formatting for this line
         const parsed = parseLineFormatting(line);
         let content = parsed.content;
-        
+
         // Check if line is a URL
         const urlRegex = /(https?:\/\/[^\s]+)/g;
         if (urlRegex.test(content)) {
             content = content.replace(urlRegex, (url) => {
                 return `<a href="${url}" target="_blank" style="color: #60a5fa; text-decoration: underline; word-break: break-all;">${url}</a>`;
             });
-            
+
             // Apply additional formatting if any
             const baseStyle = 'margin: 12px 0; line-height: 1.8; text-align: justify;';
             const fullStyle = parsed.styles ? `${baseStyle} ${parsed.styles}` : baseStyle;
@@ -1863,10 +1875,10 @@ function parseMessageToHTML(text) {
         } else {
             // Regular text - check for **bold** markdown syntax
             content = content.replace(/\*\*(.+?)\*\*/g, '<strong style="color: #fbbf24; font-weight: 600;">$1</strong>');
-            
+
             // Determine paragraph style based on formatting
             let paragraphStyle = 'margin: 12px 0; line-height: 1.8; text-align: justify;';
-            
+
             // If line ends with : (and no custom formatting), treat as heading
             if (parsed.content.endsWith(':') && !parsed.styles) {
                 paragraphStyle = 'margin: 18px 0 8px 0; font-weight: 600; font-size: 1.05rem; line-height: 1.8; color: #fbbf24; text-align: left;';
@@ -1877,11 +1889,11 @@ function parseMessageToHTML(text) {
                 // Default color for regular text
                 paragraphStyle += ' color: #e5e7eb;';
             }
-            
+
             html += `<p style="${paragraphStyle}">${content}</p>`;
         }
     }
-    
+
     // Close list if still open at end
     if (inOrderedList) {
         html += '<ol style="margin: 15px 0; padding-left: 25px; color: #e5e7eb; line-height: 1.8; text-align: justify;">';
@@ -1890,7 +1902,7 @@ function parseMessageToHTML(text) {
         });
         html += '</ol>';
     }
-    
+
     return html;
 }
 
@@ -1906,20 +1918,26 @@ function showTiembanhMessage(data, token, user) {
         showTiembanhVideo(data.videoUrl, token, user);
         return;
     }
-    
+
+    // 🎉 If celebration, show special celebration modal
+    if (data.type === 'celebration' && data.celebrationData) {
+        showCelebrationModal(data.celebrationData, token, user);
+        return;
+    }
+
     // Otherwise, show modal with image or text
     const overlay = document.getElementById('tiembanhMessageOverlay');
     const messageBody = document.getElementById('tiembanhMessageBody');
     const btn = document.getElementById('tiembanhMessageBtn');
-    
+
     if (!overlay || !messageBody || !btn) {
         console.error('❌ Tiệm bánh message modal elements not found');
         return;
     }
-    
+
     // Set message content (text or image)
     messageBody.innerHTML = ''; // Clear previous content
-    
+
     if (data.type === 'image' && data.imageUrl) {
         // Display image
         const img = document.createElement('img');
@@ -1931,11 +1949,11 @@ function showTiembanhMessage(data, token, user) {
         // Display text with auto-formatting
         messageBody.innerHTML = parseMessageToHTML(data.message);
     }
-    
+
     // Reset button
     btn.disabled = true;
     let countdown = 15;
-    
+
     // Start countdown
     updateButtonText();
     tiembanhCountdownInterval = setInterval(() => {
@@ -1944,26 +1962,26 @@ function showTiembanhMessage(data, token, user) {
             clearInterval(tiembanhCountdownInterval);
             btn.disabled = false;
             btn.textContent = 'Được rồi! Gọi món thôiii...';
-            
+
             // ✅ Save token to localStorage after countdown finishes
             localStorage.setItem('auth_token', token);
             localStorage.setItem('current_user', JSON.stringify(user));
             sessionStorage.setItem('logged_in', 'true');
-            
+
             // Clear temporary storage
             sessionStorage.removeItem('pending_tiembanh_token');
             sessionStorage.removeItem('pending_tiembanh_user');
-            
+
             console.log('✅ Token saved after countdown finished');
         } else {
             updateButtonText();
         }
     }, 1000);
-    
+
     function updateButtonText() {
         btn.textContent = `Đợi một chút, chúng ta sẽ tiếp tục sau ${countdown}s...`;
     }
-    
+
     // Button click handler - Close modal and redirect
     btn.onclick = () => {
         if (!btn.disabled) {
@@ -1972,16 +1990,529 @@ function showTiembanhMessage(data, token, user) {
             window.location.href = '/';
         }
     };
-    
+
     // Prevent closing by clicking outside or ESC
     overlay.onclick = (e) => {
         // Do nothing - cannot close by clicking outside
         e.stopPropagation();
     };
-    
+
     // Show modal
     overlay.classList.add('active');
     document.body.style.overflow = 'hidden'; // Ẩn scroll body khi modal mở
+}
+
+/**
+ * Show Celebration Modal for Big Updates
+ * @param {Object} celebrationData - Data from backend
+ * @param {string} token - Auth token
+ * @param {Object} user - User data
+ */
+function showCelebrationModal(celebrationData, token, user) {
+    console.log('Showing celebration modal');
+
+    // SVG Icons
+    const svgIcons = {
+        smartphone: `<svg xmlns="http://www.w3.org/2000/svg" width="80" height="80" viewBox="0 0 24 24" fill="none" stroke="url(#phoneGradient)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <defs>
+                <linearGradient id="phoneGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                    <stop offset="0%" style="stop-color:#e50914"/>
+                    <stop offset="100%" style="stop-color:#ff6b6b"/>
+                </linearGradient>
+            </defs>
+            <rect width="14" height="20" x="5" y="2" rx="2" ry="2"/>
+            <path d="M12 18h.01"/>
+        </svg>`,
+        tv: `<svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <rect width="20" height="15" x="2" y="7" rx="2" ry="2"/>
+            <polyline points="17 2 12 7 7 2"/>
+        </svg>`,
+        puzzle: `<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M19.439 7.85c-.049.322.059.648.289.878l1.568 1.568c.47.47.706 1.087.706 1.704s-.235 1.233-.706 1.704l-1.611 1.611a.98.98 0 0 1-.837.276c-.47-.07-.802-.48-.968-.925a2.501 2.501 0 1 0-3.214 3.214c.446.166.855.497.925.968a.979.979 0 0 1-.276.837l-1.61 1.61a2.404 2.404 0 0 1-1.705.707 2.402 2.402 0 0 1-1.704-.706l-1.568-1.568a1.026 1.026 0 0 0-.877-.29c-.493.074-.84.504-1.02.968a2.5 2.5 0 1 1-3.237-3.237c.464-.18.894-.527.967-1.02a1.026 1.026 0 0 0-.289-.877l-1.568-1.568A2.402 2.402 0 0 1 1.998 12c0-.617.236-1.234.706-1.704L4.23 8.77c.24-.24.581-.353.917-.303.515.077.877.528 1.073 1.01a2.5 2.5 0 1 0 3.259-3.259c-.482-.196-.933-.558-1.01-1.073-.05-.336.062-.676.303-.917l1.525-1.525A2.402 2.402 0 0 1 12 1.998c.617 0 1.234.236 1.704.706l1.568 1.568c.23.23.556.338.877.29.493-.074.84-.504 1.02-.968a2.5 2.5 0 1 1 3.237 3.237c-.464.18-.894.527-.967 1.02Z"/>
+        </svg>`,
+        bell: `<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/>
+            <path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/>
+        </svg>`,
+        download: `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>`,
+        check: `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>`,
+        sparkles: `<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z"/>
+            <path d="M5 3v4"/><path d="M3 5h4"/><path d="M19 17v4"/><path d="M17 19h4"/>
+        </svg>`,
+        arrowRight: `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>`
+    };
+
+    // Create celebration modal HTML - Fullscreen, no container
+    const modalHTML = `
+        <div id="celebrationOverlay" class="celeb-overlay">
+            <!-- Animated Background -->
+            <div class="celeb-bg">
+                <div class="celeb-gradient"></div>
+                <div class="celeb-grid"></div>
+                ${Array(30).fill().map((_, i) => `<div class="celeb-particle" style="--i: ${i}; --x: ${Math.random() * 100}%; --y: ${Math.random() * 100}%; --size: ${Math.random() * 4 + 2}px; --duration: ${Math.random() * 3 + 2}s; --delay: ${Math.random() * 2}s;"></div>`).join('')}
+            </div>
+            
+            <!-- Content -->
+            <div class="celeb-content">
+                <!-- Hero Section -->
+                <div class="celeb-hero">
+                    <div class="celeb-icon-wrap">
+                        <div class="celeb-icon-glow"></div>
+                        ${svgIcons.smartphone}
+                        <div class="celeb-sparkle celeb-sparkle-1">${svgIcons.sparkles}</div>
+                        <div class="celeb-sparkle celeb-sparkle-2">${svgIcons.sparkles}</div>
+                    </div>
+                    <h1 class="celeb-title">BIG UPDATE</h1>
+                    <p class="celeb-subtitle">Tiệm Bánh Netflix đã có trên điện thoại!</p>
+                </div>
+                
+                <!-- Main Description -->
+                <p class="celeb-desc">${celebrationData.mainDescription}</p>
+                
+                <!-- Feature Highlight -->
+                <div class="celeb-feature">
+                    <div class="celeb-feature-icon">${svgIcons.tv}</div>
+                    <div class="celeb-feature-content">
+                        <h3>${celebrationData.highlightFeature}</h3>
+                        <p>${celebrationData.highlightDescription}</p>
+                    </div>
+                </div>
+                
+                <!-- Info Grid -->
+                <div class="celeb-grid-info">
+                    <!-- Extension -->
+                    <div class="celeb-info-card">
+                        <div class="celeb-info-header">
+                            <span class="celeb-info-icon">${svgIcons.puzzle}</span>
+                            <span>Extension v${celebrationData.extensionVersion}<span class="celeb-mobile-only"> (cho phiên bản PC)</span></span>
+                        </div>
+                        <ul class="celeb-list">
+                            ${celebrationData.extensionChanges.map(c => `<li><span class="celeb-check">${svgIcons.check}</span>${c}</li>`).join('')}
+                        </ul>
+                        <a href="${celebrationData.extensionDownloadUrl}" target="_blank" class="celeb-download">
+                            ${svgIcons.download}
+                            <span>Tải Extension</span>
+                        </a>
+                    </div>
+                    
+                    <!-- Free Plan -->
+                    <div class="celeb-info-card">
+                        <div class="celeb-info-header">
+                            <span class="celeb-info-icon celeb-info-icon-amber">${svgIcons.bell}</span>
+                            <span>Thay đổi gói Free</span>
+                        </div>
+                        <ul class="celeb-list celeb-list-compact">
+                            ${celebrationData.freePlanChanges.map(c => `<li><span class="celeb-check">${svgIcons.check}</span>${c}</li>`).join('')}
+                        </ul>
+                    </div>
+                </div>
+                
+                <!-- CTA Button -->
+                <button id="celebrationBtn" class="celeb-btn" disabled>
+                    <span class="celeb-btn-text">Đợi một chút...</span>
+                    <span class="celeb-btn-countdown"></span>
+                </button>
+            </div>
+        </div>
+        
+        <style>
+            .celeb-overlay {
+                position: fixed;
+                inset: 0;
+                z-index: 10000;
+                display: flex;
+                align-items: flex-start;
+                justify-content: center;
+                overflow-y: auto;
+                overflow-x: hidden;
+                padding: 40px 20px;
+                -webkit-overflow-scrolling: touch;
+            }
+            
+            /* Animated Background */
+            .celeb-bg {
+                position: fixed;
+                inset: 0;
+                background: #0a0a0f;
+                overflow: hidden;
+                pointer-events: none;
+            }
+            
+            .celeb-gradient {
+                position: absolute;
+                inset: 0;
+                background: 
+                    radial-gradient(ellipse 80% 50% at 50% -20%, rgba(229, 9, 20, 0.15) 0%, transparent 50%),
+                    radial-gradient(ellipse 60% 40% at 80% 50%, rgba(138, 43, 226, 0.1) 0%, transparent 50%),
+                    radial-gradient(ellipse 60% 40% at 20% 80%, rgba(0, 200, 255, 0.08) 0%, transparent 50%);
+            }
+            
+            .celeb-grid {
+                position: absolute;
+                inset: 0;
+                background-image: 
+                    linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px),
+                    linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px);
+                background-size: 60px 60px;
+                mask-image: radial-gradient(ellipse 80% 60% at 50% 50%, black 20%, transparent 70%);
+            }
+            
+            .celeb-particle {
+                position: absolute;
+                width: var(--size);
+                height: var(--size);
+                left: var(--x);
+                top: var(--y);
+                background: rgba(255, 255, 255, 0.3);
+                border-radius: 50%;
+                animation: celeb-float var(--duration) ease-in-out infinite;
+                animation-delay: var(--delay);
+            }
+            
+            @keyframes celeb-float {
+                0%, 100% { transform: translateY(0) scale(1); opacity: 0.3; }
+                50% { transform: translateY(-20px) scale(1.2); opacity: 0.6; }
+            }
+            
+            /* Content */
+            .celeb-content {
+                position: relative;
+                z-index: 1;
+                max-width: 600px;
+                width: 100%;
+                margin: auto 0;
+                animation: celeb-fadeIn 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+            }
+            
+            @keyframes celeb-fadeIn {
+                from { opacity: 0; transform: translateY(30px); }
+                to { opacity: 1; transform: translateY(0); }
+            }
+            
+            /* Hero */
+            .celeb-hero {
+                text-align: center;
+                margin-bottom: 32px;
+            }
+            
+            .celeb-icon-wrap {
+                position: relative;
+                display: inline-block;
+                margin-bottom: 24px;
+            }
+            
+            .celeb-icon-glow {
+                position: absolute;
+                inset: -20px;
+                background: radial-gradient(circle, rgba(229, 9, 20, 0.3) 0%, transparent 70%);
+                animation: celeb-pulse 2s ease-in-out infinite;
+            }
+            
+            @keyframes celeb-pulse {
+                0%, 100% { transform: scale(1); opacity: 0.5; }
+                50% { transform: scale(1.2); opacity: 0.8; }
+            }
+            
+            .celeb-sparkle {
+                position: absolute;
+                color: #ffd700;
+                animation: celeb-sparkle 2s ease-in-out infinite;
+            }
+            
+            .celeb-sparkle-1 { top: -15px; right: -25px; animation-delay: 0s; }
+            .celeb-sparkle-2 { bottom: 0; left: -30px; animation-delay: 1s; }
+            
+            @keyframes celeb-sparkle {
+                0%, 100% { opacity: 0.3; transform: scale(0.8) rotate(0deg); }
+                50% { opacity: 1; transform: scale(1.1) rotate(10deg); }
+            }
+            
+            .celeb-title {
+                font-size: clamp(2.5rem, 8vw, 4rem);
+                font-weight: 900;
+                letter-spacing: -0.02em;
+                margin: 0 0 8px 0;
+                background: linear-gradient(135deg, #fff 0%, #e50914 50%, #ff6b6b 100%);
+                -webkit-background-clip: text;
+                -webkit-text-fill-color: transparent;
+                background-clip: text;
+            }
+            
+            .celeb-subtitle {
+                font-size: clamp(1.1rem, 3vw, 1.4rem);
+                font-weight: 500;
+                color: rgba(255, 255, 255, 0.9);
+                margin: 0;
+            }
+            
+            .celeb-desc {
+                text-align: center;
+                font-size: 1rem;
+                color: rgba(255, 255, 255, 0.6);
+                margin: 0 0 32px 0;
+                line-height: 1.6;
+            }
+            
+            /* Feature Highlight */
+            .celeb-feature {
+                display: flex;
+                align-items: flex-start;
+                gap: 16px;
+                padding: 24px;
+                background: linear-gradient(135deg, rgba(0, 200, 255, 0.08) 0%, rgba(138, 43, 226, 0.08) 100%);
+                border: 1px solid rgba(0, 200, 255, 0.2);
+                border-radius: 16px;
+                margin-bottom: 24px;
+            }
+            
+            .celeb-feature-icon {
+                flex-shrink: 0;
+                width: 48px;
+                height: 48px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                background: linear-gradient(135deg, #00c8ff 0%, #8b5cf6 100%);
+                border-radius: 12px;
+                color: white;
+            }
+            
+            .celeb-feature-content h3 {
+                font-size: 1.1rem;
+                font-weight: 600;
+                color: #00d4ff;
+                margin: 0 0 6px 0;
+            }
+            
+            .celeb-feature-content p {
+                font-size: 0.9rem;
+                color: rgba(255, 255, 255, 0.7);
+                margin: 0;
+                line-height: 1.5;
+            }
+            
+            /* Info Grid */
+            .celeb-grid-info {
+                display: grid;
+                grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+                gap: 16px;
+                margin-bottom: 32px;
+            }
+            
+            .celeb-info-card {
+                padding: 20px;
+                background: rgba(255, 255, 255, 0.03);
+                border: 1px solid rgba(255, 255, 255, 0.06);
+                border-radius: 12px;
+            }
+            
+            .celeb-info-header {
+                display: flex;
+                align-items: center;
+                gap: 10px;
+                font-size: 0.95rem;
+                font-weight: 600;
+                color: #a5b4fc;
+                margin-bottom: 14px;
+            }
+            
+            .celeb-info-icon {
+                width: 32px;
+                height: 32px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                background: rgba(165, 180, 252, 0.1);
+                border-radius: 8px;
+                color: #a5b4fc;
+            }
+            
+            .celeb-info-icon-amber {
+                background: rgba(251, 191, 36, 0.1);
+                color: #fbbf24;
+            }
+            
+            .celeb-list {
+                list-style: none;
+                padding: 0;
+                margin: 0 0 14px 0;
+            }
+            
+            .celeb-list li {
+                display: flex;
+                align-items: center;
+                gap: 8px;
+                font-size: 0.85rem;
+                color: rgba(255, 255, 255, 0.7);
+                padding: 6px 0;
+            }
+            
+            .celeb-list-compact li {
+                font-size: 0.8rem;
+                padding: 4px 0;
+            }
+            
+            .celeb-check {
+                flex-shrink: 0;
+                width: 18px;
+                height: 18px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                background: rgba(16, 185, 129, 0.15);
+                border-radius: 50%;
+                color: #10b981;
+            }
+            
+            .celeb-download {
+                display: inline-flex;
+                align-items: center;
+                gap: 8px;
+                padding: 10px 18px;
+                background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+                color: white;
+                text-decoration: none;
+                border-radius: 8px;
+                font-size: 0.85rem;
+                font-weight: 500;
+                transition: all 0.2s ease;
+            }
+            
+            .celeb-download:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 6px 20px rgba(16, 185, 129, 0.35);
+            }
+            
+            /* CTA Button */
+            .celeb-btn {
+                width: 100%;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                gap: 8px;
+                padding: 18px 32px;
+                font-size: 1.1rem;
+                font-weight: 600;
+                color: white;
+                background: linear-gradient(135deg, #e50914 0%, #b20710 100%);
+                border: none;
+                border-radius: 12px;
+                cursor: pointer;
+                transition: all 0.3s ease;
+                position: relative;
+                overflow: hidden;
+            }
+            
+            .celeb-btn:disabled {
+                background: linear-gradient(135deg, #3a3a3a 0%, #2a2a2a 100%);
+                cursor: not-allowed;
+            }
+            
+            .celeb-btn:not(:disabled):hover {
+                transform: translateY(-2px);
+                box-shadow: 0 10px 30px rgba(229, 9, 20, 0.4);
+            }
+            
+            .celeb-btn:not(:disabled)::before {
+                content: '';
+                position: absolute;
+                top: 0;
+                left: -100%;
+                width: 100%;
+                height: 100%;
+                background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+                animation: celeb-shimmer 2s infinite;
+            }
+            
+            @keyframes celeb-shimmer {
+                100% { left: 100%; }
+            }
+            
+            .celeb-btn-countdown {
+                font-weight: 400;
+                opacity: 0.8;
+            }
+            
+            /* Mobile only text - hidden on desktop */
+            .celeb-mobile-only {
+                display: none;
+            }
+            
+            /* Responsive */
+            @media (max-width: 600px) {
+                .celeb-overlay {
+                    padding: 24px 16px;
+                }
+                
+                .celeb-feature {
+                    flex-direction: column;
+                    text-align: center;
+                }
+                
+                .celeb-feature-icon {
+                    margin: 0 auto;
+                }
+                
+                .celeb-grid-info {
+                    grid-template-columns: 1fr;
+                }
+                
+                .celeb-mobile-only {
+                    display: inline;
+                }
+            }
+        </style>
+    `;
+
+    // Insert modal into DOM
+    document.body.insertAdjacentHTML('beforeend', modalHTML);
+
+    const btn = document.getElementById('celebrationBtn');
+    let countdown = 10;
+
+    // Update button text
+    function updateBtnText() {
+        if (countdown > 0) {
+            btn.innerHTML = `<span class="celeb-btn-text">Đợi một chút...</span><span class="celeb-btn-countdown">${countdown}s</span>`;
+        } else {
+            btn.innerHTML = `<span class="celeb-btn-text">Vào Tiệm Bánh ngay</span>${svgIcons.arrowRight}`;
+            btn.disabled = false;
+        }
+    }
+
+    updateBtnText();
+
+    // Countdown
+    const countdownInterval = setInterval(() => {
+        countdown--;
+        if (countdown <= 0) {
+            clearInterval(countdownInterval);
+
+            // Save token after countdown
+            localStorage.setItem('auth_token', token);
+            localStorage.setItem('current_user', JSON.stringify(user));
+            sessionStorage.setItem('logged_in', 'true');
+
+            sessionStorage.removeItem('pending_tiembanh_token');
+            sessionStorage.removeItem('pending_tiembanh_user');
+
+            console.log('Token saved after celebration countdown');
+        }
+        updateBtnText();
+    }, 1000);
+
+    // Button click
+    btn.onclick = () => {
+        if (!btn.disabled) {
+            const overlay = document.getElementById('celebrationOverlay');
+            if (overlay) overlay.remove();
+            document.body.style.overflow = '';
+            window.location.href = '/';
+        }
+    };
+
+    document.body.style.overflow = 'hidden';
 }
 
 /**
@@ -1994,53 +2525,53 @@ function showTiembanhVideo(videoUrl, token, user) {
     const overlay = document.getElementById('tiembanhVideoOverlay');
     const video = document.getElementById('tiembanhVideo');
     const videoSource = document.getElementById('tiembanhVideoSource');
-    
+
     if (!overlay || !video || !videoSource) {
         console.error('❌ Tiệm bánh video player elements not found');
         return;
     }
-    
+
     // Set video source
     videoSource.src = `${BACKEND_URL}${videoUrl}`;
     video.load(); // Reload video with new source
-    
+
     // Auto-play video
     video.play().catch(err => {
         console.error('❌ Video autoplay failed:', err);
     });
-    
+
     // When video ends, save token and redirect to homepage
     video.onended = () => {
         // ✅ Save token to localStorage after video ends
         localStorage.setItem('auth_token', token);
         localStorage.setItem('current_user', JSON.stringify(user));
         sessionStorage.setItem('logged_in', 'true');
-        
+
         // Clear temporary storage
         sessionStorage.removeItem('pending_tiembanh_token');
         sessionStorage.removeItem('pending_tiembanh_user');
-        
+
         console.log('✅ Token saved after video finished');
-        
+
         closeTiembanhVideo();
         window.location.href = '/';
     };
-    
+
     // Prevent right-click on video
     video.oncontextmenu = (e) => {
         e.preventDefault();
         return false;
     };
-    
+
     // Prevent keyboard shortcuts (space, arrow keys, etc.)
     video.onkeydown = (e) => {
         e.preventDefault();
         return false;
     };
-    
+
     // Show video overlay
     overlay.classList.add('active');
-    
+
     console.log('🎬 Playing video message from Tiệm bánh');
 }
 
@@ -2050,16 +2581,16 @@ function showTiembanhVideo(videoUrl, token, user) {
 function closeTiembanhVideo() {
     const overlay = document.getElementById('tiembanhVideoOverlay');
     const video = document.getElementById('tiembanhVideo');
-    
+
     if (overlay) {
         overlay.classList.remove('active');
     }
-    
+
     if (video) {
         video.pause();
         video.currentTime = 0;
     }
-    
+
     console.log('✅ Video message closed');
 }
 
@@ -2072,7 +2603,7 @@ function closeTiembanhMessage() {
         overlay.classList.remove('active');
     }
     document.body.style.overflow = ''; // Khôi phục scroll body khi đóng modal
-    
+
     // Clear countdown interval
     if (tiembanhCountdownInterval) {
         clearInterval(tiembanhCountdownInterval);
@@ -2108,7 +2639,7 @@ function showModal({ icon = 'ℹ️', title = 'Thông báo', message = '', butto
 
     // Clear and add buttons
     modalFooter.innerHTML = '';
-    
+
     if (buttons.length === 0) {
         // Default OK button
         const okBtn = document.createElement('button');
@@ -2191,28 +2722,28 @@ function showVerificationModal(email) {
     const overlay = document.getElementById('verificationModalOverlay');
     const emailDisplay = document.getElementById('verificationEmail');
     const otpInput = document.getElementById('otpInput');
-    
+
     if (!overlay || !emailDisplay || !otpInput) {
         console.error('❌ Verification modal elements not found');
         return;
     }
-    
+
     // Set email
     emailDisplay.textContent = email;
-    
+
     // Clear OTP input
     otpInput.value = '';
     otpInput.focus();
-    
+
     // Show modal
     overlay.style.display = 'flex';
-    
+
     // Start OTP timer (10 minutes)
     startOTPTimer(600); // 600 seconds = 10 minutes
-    
+
     // Enable resend button after cooldown
     startResendCooldown(60); // 60 seconds cooldown
-    
+
     console.log('📧 Email verification modal opened');
 }
 
@@ -2224,18 +2755,18 @@ function closeVerificationModal() {
     if (overlay) {
         overlay.style.display = 'none';
     }
-    
+
     // Clear timers
     if (otpTimerInterval) {
         clearInterval(otpTimerInterval);
         otpTimerInterval = null;
     }
-    
+
     if (resendCooldownInterval) {
         clearInterval(resendCooldownInterval);
         resendCooldownInterval = null;
     }
-    
+
     // ⚠️ If user closes modal without verifying, keep pending token
     // User can return later to verify (email already sent)
     const hasPendingVerification = sessionStorage.getItem('pending_verification_token');
@@ -2243,7 +2774,7 @@ function closeVerificationModal() {
         console.log('⚠️ User closed verification modal without verifying');
         console.log('   Pending token kept - User can verify later');
     }
-    
+
     console.log('✅ Email verification modal closed');
 }
 
@@ -2254,32 +2785,32 @@ function closeVerificationModal() {
 function startOTPTimer(seconds) {
     const timerDisplay = document.getElementById('otpTimer');
     if (!timerDisplay) return;
-    
+
     let timeLeft = seconds;
-    
+
     // Clear existing timer
     if (otpTimerInterval) {
         clearInterval(otpTimerInterval);
     }
-    
+
     // Update display immediately
     updateTimerDisplay(timerDisplay, timeLeft);
-    
+
     // Start countdown
     otpTimerInterval = setInterval(() => {
         timeLeft--;
-        
+
         if (timeLeft <= 0) {
             clearInterval(otpTimerInterval);
             timerDisplay.textContent = 'Hết hạn';
             timerDisplay.style.color = '#ef4444';
-            
+
             // Disable verify button
             const verifyBtn = document.getElementById('verifyBtn');
             if (verifyBtn) {
                 verifyBtn.disabled = true;
             }
-            
+
             showCustomModal({
                 icon: '⏰',
                 title: 'Mã OTP đã hết hạn',
@@ -2301,7 +2832,7 @@ function updateTimerDisplay(display, seconds) {
     const minutes = Math.floor(seconds / 60);
     const secs = seconds % 60;
     display.textContent = `${minutes}:${secs.toString().padStart(2, '0')}`;
-    
+
     // Change color based on time left
     if (seconds <= 60) {
         display.style.color = '#ef4444'; // Red
@@ -2321,30 +2852,30 @@ function startResendCooldown(seconds) {
     const resendText = document.getElementById('resendText');
     const resendCooldown = document.getElementById('resendCooldown');
     const cooldownTimer = document.getElementById('cooldownTimer');
-    
+
     if (!resendBtn || !resendText || !resendCooldown || !cooldownTimer) return;
-    
+
     let timeLeft = seconds;
-    
+
     // Clear existing interval
     if (resendCooldownInterval) {
         clearInterval(resendCooldownInterval);
     }
-    
+
     // Disable button and show cooldown
     resendBtn.disabled = true;
     resendText.style.display = 'none';
     resendCooldown.style.display = 'inline';
     cooldownTimer.textContent = timeLeft;
-    
+
     // Start countdown
     resendCooldownInterval = setInterval(() => {
         timeLeft--;
-        
+
         if (timeLeft <= 0) {
             clearInterval(resendCooldownInterval);
             resendCooldownInterval = null;
-            
+
             // Enable button
             resendBtn.disabled = false;
             resendText.style.display = 'inline';
@@ -2361,11 +2892,11 @@ function startResendCooldown(seconds) {
 async function handleVerifyEmail() {
     const otpInput = document.getElementById('otpInput');
     const verifyBtn = document.getElementById('verifyBtn');
-    
+
     if (!otpInput) return;
-    
+
     const otp = otpInput.value.trim();
-    
+
     // Validate OTP
     if (!otp || otp.length !== 6) {
         showCustomModal({
@@ -2377,7 +2908,7 @@ async function handleVerifyEmail() {
         otpInput.focus();
         return;
     }
-    
+
     // Check if OTP contains only numbers
     if (!/^\d{6}$/.test(otp)) {
         showCustomModal({
@@ -2389,16 +2920,16 @@ async function handleVerifyEmail() {
         otpInput.focus();
         return;
     }
-    
+
     try {
         // Disable button
         if (verifyBtn) verifyBtn.disabled = true;
-        
+
         showSmartLoading('Đang xác thực...', 100);
-        
+
         // ✅ Get registration data from sessionStorage
         const pendingRegistration = sessionStorage.getItem('pending_registration');
-        
+
         if (!pendingRegistration) {
             hideSmartLoading();
             showCustomModal({
@@ -2413,12 +2944,12 @@ async function handleVerifyEmail() {
             });
             return;
         }
-        
+
         const regData = JSON.parse(pendingRegistration);
         const { name, email, password, deviceFingerprint } = regData;
-        
+
         let response, apiUrl, requestBody;
-        
+
         // Check if this is NEW user (has password) or EXISTING user (no password)
         if (password) {
             // ✅ NEW USER: Call verify-and-create to CREATE user
@@ -2429,7 +2960,7 @@ async function handleVerifyEmail() {
             // ✅ EXISTING USER: Call verify-email to UPDATE emailVerified
             console.log('👤 Verifying EXISTING user');
             const authToken = sessionStorage.getItem('pending_verification_token');
-            
+
             if (!authToken) {
                 hideSmartLoading();
                 showCustomModal({
@@ -2444,11 +2975,11 @@ async function handleVerifyEmail() {
                 });
                 return;
             }
-            
+
             apiUrl = `${BACKEND_URL}/api/auth/verify-email`;
             requestBody = { otp };
         }
-        
+
         // ✅ Call appropriate API
         response = await fetch(apiUrl, {
             method: 'POST',
@@ -2458,27 +2989,27 @@ async function handleVerifyEmail() {
             },
             body: JSON.stringify(requestBody)
         });
-        
+
         const data = await response.json();
         hideSmartLoading();
-        
+
         if (response.ok && data.success) {
             // ✅ User created and verified successfully!
             console.log('✅ User created successfully:', email);
-            
+
             // ✅ Login the user immediately
             localStorage.setItem('auth_token', data.token);
             localStorage.setItem('current_user', JSON.stringify(data.user));
             sessionStorage.setItem('logged_in', 'true');
-            
+
             // ✅ Clear pending registration data
             sessionStorage.removeItem('pending_registration');
-            
+
             console.log('✅ User logged in after registration');
-            
+
             // Close verification modal
             closeVerificationModal();
-            
+
             // ✅ Check nếu là user mới → hiện modal nhập mã giới thiệu
             if (data.isNewUser && data.showReferralModal) {
                 console.log('🎁 New user - showing referral modal');
@@ -2487,30 +3018,30 @@ async function handleVerifyEmail() {
                 // Show success modal (cho existing user verify email)
                 showWelcomeModal();
             }
-            
+
         } else {
             // ❌ Verification failed
             const errorCode = data.code;
             let errorTitle = 'Xác thực thất bại';
             let errorMessage = data.error || 'Có lỗi xảy ra. Vui lòng thử lại.';
-            
+
             // Handle specific error codes
             if (errorCode === 'INVALID_OTP') {
                 errorTitle = 'Mã OTP không đúng';
                 errorMessage = data.error + '\n\nVui lòng kiểm tra lại mã trong email.';
-                
+
                 // Clear input and focus
                 otpInput.value = '';
                 otpInput.focus();
-                
+
             } else if (errorCode === 'TOKEN_EXPIRED') {
                 errorTitle = 'Mã OTP đã hết hạn';
                 errorMessage = 'Mã xác thực đã hết hiệu lực (10 phút).\n\nVui lòng click "Gửi lại mã" để nhận mã mới.';
-                
+
             } else if (errorCode === 'TOO_MANY_ATTEMPTS') {
                 errorTitle = 'Quá nhiều lần thử';
                 errorMessage = 'Bạn đã nhập sai quá nhiều lần.\n\nVui lòng yêu cầu gửi lại mã mới.';
-                
+
             } else if (errorCode === 'ALREADY_VERIFIED') {
                 // Already verified - redirect to home
                 closeVerificationModal();
@@ -2518,7 +3049,7 @@ async function handleVerifyEmail() {
                 setTimeout(() => window.location.href = '/', 1500);
                 return;
             }
-            
+
             showCustomModal({
                 icon: '❌',
                 title: errorTitle,
@@ -2526,11 +3057,11 @@ async function handleVerifyEmail() {
                 buttons: [{ text: 'Thử lại', type: 'primary' }]
             });
         }
-        
+
     } catch (error) {
         hideSmartLoading();
         console.error('❌ Verify email error:', error);
-        
+
         showCustomModal({
             icon: '⚠️',
             title: 'Lỗi kết nối',
@@ -2549,10 +3080,10 @@ async function handleVerifyEmail() {
 async function handleResendOTP() {
     try {
         showSmartLoading('Đang gửi lại mã...', 100);
-        
+
         // ✅ Get email from pending registration
         const pendingRegistration = sessionStorage.getItem('pending_registration');
-        
+
         if (!pendingRegistration) {
             hideSmartLoading();
             showCustomModal({
@@ -2567,9 +3098,9 @@ async function handleResendOTP() {
             });
             return;
         }
-        
+
         const { email } = JSON.parse(pendingRegistration);
-        
+
         // ✅ Call resend-otp API (no auth token needed)
         const response = await fetch(`${BACKEND_URL}/api/auth/resend-otp`, {
             method: 'POST',
@@ -2578,53 +3109,53 @@ async function handleResendOTP() {
             },
             body: JSON.stringify({ email })
         });
-        
+
         const data = await response.json();
         hideSmartLoading();
-        
+
         if (response.ok && data.success) {
             // ✅ Resend successful
             console.log('✅ OTP resent to:', email);
-            
+
             // Clear OTP input
             const otpInput = document.getElementById('otpInput');
             if (otpInput) {
                 otpInput.value = '';
                 otpInput.focus();
             }
-            
+
             // Restart timers
             startOTPTimer(600); // 10 minutes
             startResendCooldown(60); // 60 seconds
-            
+
             // Re-enable verify button
             const verifyBtn = document.getElementById('verifyBtn');
             if (verifyBtn) {
                 verifyBtn.disabled = false;
             }
-            
+
             showCustomModal({
                 icon: '✅',
                 title: 'Đã gửi lại mã',
                 message: 'Mã OTP mới đã được gửi đến email của bạn.\n\nVui lòng kiểm tra hộp thư (có thể ở Spam).',
                 buttons: [{ text: 'Đã hiểu', type: 'primary' }]
             });
-            
+
         } else {
             // ❌ Resend failed
             const errorCode = data.code;
             let errorTitle = 'Không thể gửi lại';
             let errorMessage = data.error || 'Có lỗi xảy ra. Vui lòng thử lại sau.';
-            
+
             // Handle specific error codes
             if (errorCode === 'RESEND_COOLDOWN') {
                 errorTitle = 'Vui lòng đợi';
                 errorMessage = `Bạn cần đợi ${data.waitSeconds} giây nữa mới có thể gửi lại mã.`;
-                
+
             } else if (errorCode === 'NO_PENDING_VERIFICATION') {
                 errorTitle = 'Phiên đã hết hạn';
                 errorMessage = 'Yêu cầu đăng ký đã hết hạn.\n\nVui lòng đăng ký lại từ đầu.';
-                
+
                 // Clear pending data and close modal
                 sessionStorage.removeItem('pending_registration');
                 setTimeout(() => {
@@ -2632,7 +3163,7 @@ async function handleResendOTP() {
                     window.location.reload();
                 }, 2000);
             }
-            
+
             showCustomModal({
                 icon: '❌',
                 title: errorTitle,
@@ -2640,11 +3171,11 @@ async function handleResendOTP() {
                 buttons: [{ text: 'Đã hiểu', type: 'primary' }]
             });
         }
-        
+
     } catch (error) {
         hideSmartLoading();
         console.error('❌ Resend OTP error:', error);
-        
+
         showCustomModal({
             icon: '⚠️',
             title: 'Lỗi kết nối',
@@ -2668,7 +3199,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 handleVerifyEmail();
             }
         });
-        
+
         // Only allow numbers in OTP input
         otpInput.addEventListener('input', (e) => {
             e.target.value = e.target.value.replace(/[^0-9]/g, '');
@@ -2683,7 +3214,7 @@ document.addEventListener('DOMContentLoaded', () => {
 /**
  * Open Purchase Credits Modal
  */
-window.openPurchaseCreditsModal = function() {
+window.openPurchaseCreditsModal = function () {
     const modal = document.getElementById('purchaseCreditsModal');
     if (modal) {
         modal.style.display = 'flex';
@@ -2697,7 +3228,7 @@ window.openPurchaseCreditsModal = function() {
 /**
  * Close Purchase Credits Modal
  */
-window.closePurchaseCreditsModal = function() {
+window.closePurchaseCreditsModal = function () {
     const modal = document.getElementById('purchaseCreditsModal');
     if (modal) {
         modal.style.display = 'none';
@@ -2707,35 +3238,35 @@ window.closePurchaseCreditsModal = function() {
 /**
  * Calculate credits from amount
  */
-window.calculateCredits = function(amount) {
+window.calculateCredits = function (amount) {
     const numAmount = parseInt(amount);
     const preview = document.getElementById('creditsPreview');
     const creditsAmount = document.getElementById('creditsAmount');
     const confirmBtn = document.getElementById('confirmPurchaseBtn');
-    
+
     if (!amount || isNaN(numAmount)) {
         preview.style.display = 'none';
         confirmBtn.disabled = true;
         return;
     }
-    
+
     // Check minimum
     if (numAmount < 30000) {
         preview.style.display = 'none';
         confirmBtn.disabled = true;
         return;
     }
-    
+
     // Check if round number (multiple of 1000)
     if (numAmount % 1000 !== 0) {
         preview.style.display = 'none';
         confirmBtn.disabled = true;
         return;
     }
-    
+
     // Calculate credits: 500 VNĐ = 1 credit (30.000 = 60 credits)
     const credits = Math.floor(numAmount / 500);
-    
+
     creditsAmount.textContent = `${credits} Credits`;
     preview.style.display = 'block';
     confirmBtn.disabled = false;
@@ -2744,17 +3275,17 @@ window.calculateCredits = function(amount) {
 /**
  * Confirm purchase credits
  */
-window.confirmPurchaseCredits = async function() {
+window.confirmPurchaseCredits = async function () {
     const amount = parseInt(document.getElementById('purchaseAmount').value);
-    
+
     if (!amount || amount < 30000 || amount % 1000 !== 0) {
         alert('⚠️ Vui lòng nhập số tiền hợp lệ (tối thiểu 30.000 VNĐ, số tròn nghìn)');
         return;
     }
-    
+
     try {
         showSmartLoading('Đang xử lý yêu cầu mua credits...');
-        
+
         const response = await fetch(`${BACKEND_URL}/api/credits/purchase`, {
             method: 'POST',
             headers: {
@@ -2763,30 +3294,30 @@ window.confirmPurchaseCredits = async function() {
             },
             body: JSON.stringify({ amount })
         });
-        
+
         const data = await response.json();
-        
+
         hideSmartLoading();
-        
+
         if (response.ok && data.success) {
             // Success!
             closePurchaseCreditsModal();
-            
+
             // Show success message
             alert(`✅ ${data.message}\n\nSố credits hiện tại: ${data.credits}\n\n💡 Vui lòng chuyển khoản ${amount.toLocaleString('vi-VN')} VNĐ cho Admin để kích hoạt credits!`);
-            
+
             // Refresh user info
             if (typeof loadCookieInfo === 'function') {
                 await loadCookieInfo();
             }
-            
+
             // Open Facebook contact
             window.open('https://www.facebook.com/tiembanh4k/', '_blank');
-            
+
         } else {
             alert(`❌ Lỗi: ${data.message || data.error || 'Có lỗi xảy ra'}`);
         }
-        
+
     } catch (error) {
         hideSmartLoading();
         console.error('Purchase credits error:', error);
@@ -2797,11 +3328,11 @@ window.confirmPurchaseCredits = async function() {
 /**
  * Update credits display trong Account Overview
  */
-window.updateCreditsDisplay = function(credits) {
+window.updateCreditsDisplay = function (credits) {
     const creditsElement = document.getElementById('userCredits');
     if (creditsElement) {
         creditsElement.textContent = credits || 0;
-        
+
         // Change color based on credits
         if (credits <= 0) {
             creditsElement.style.color = '#ef4444'; // Red
@@ -2829,15 +3360,15 @@ function showReferralModal() {
     if (!document.getElementById('referralModalOverlay')) {
         createReferralModalHTML();
     }
-    
+
     // Reset state
     referralAttempts = 0;
     const input = document.getElementById('referralCodeInput');
     if (input) input.value = '';
-    
+
     // Update attempts display
     updateReferralAttemptsDisplay();
-    
+
     // Show modal
     document.getElementById('referralModalOverlay').style.display = 'flex';
 }
@@ -2888,7 +3419,7 @@ function createReferralModalHTML() {
         </div>
     </div>
     `;
-    
+
     document.body.insertAdjacentHTML('beforeend', modalHTML);
 }
 
@@ -2898,7 +3429,7 @@ function createReferralModalHTML() {
 function updateReferralAttemptsDisplay() {
     const attemptsText = document.getElementById('referralAttemptsText');
     const remaining = MAX_REFERRAL_ATTEMPTS - referralAttempts;
-    
+
     if (attemptsText) {
         attemptsText.innerHTML = `Còn <strong style="color: #fbbf24;">${remaining}</strong> lần thử`;
     }
@@ -2932,18 +3463,18 @@ async function handleApplyReferral() {
     const input = document.getElementById('referralCodeInput');
     const applyBtn = document.getElementById('applyReferralBtn');
     const referralCode = input?.value?.trim();
-    
+
     hideReferralError();
-    
+
     if (!referralCode) {
         showReferralError('Vui lòng nhập mã giới thiệu');
         return;
     }
-    
+
     try {
         if (applyBtn) applyBtn.disabled = true;
         showSmartLoading('Đang xác thực mã...', 100);
-        
+
         const token = localStorage.getItem('auth_token');
         const response = await fetch(`${BACKEND_URL}/api/referral/apply`, {
             method: 'POST',
@@ -2953,23 +3484,23 @@ async function handleApplyReferral() {
             },
             body: JSON.stringify({ referralCode })
         });
-        
+
         const data = await response.json();
         hideSmartLoading();
-        
+
         if (response.ok && data.success) {
             // ✅ Thành công!
             console.log('✅ Referral applied successfully!');
-            
+
             // Cập nhật user trong localStorage
             const currentUser = JSON.parse(localStorage.getItem('current_user') || '{}');
             currentUser.credits = data.totalCredits;
             currentUser.referralUsed = true;
             localStorage.setItem('current_user', JSON.stringify(currentUser));
-            
+
             // Đóng modal giới thiệu
             closeReferralModal();
-            
+
             // Hiện modal chào mừng với thông báo bonus
             showCustomModal({
                 icon: '🎉',
@@ -2983,12 +3514,12 @@ async function handleApplyReferral() {
                     }
                 }]
             });
-            
+
         } else {
             // ❌ Thất bại
             referralAttempts++;
             updateReferralAttemptsDisplay();
-            
+
             // Check nếu hết lượt
             if (data.code === 'MAX_ATTEMPTS' || referralAttempts >= MAX_REFERRAL_ATTEMPTS) {
                 closeReferralModal();
@@ -3006,18 +3537,18 @@ async function handleApplyReferral() {
                 });
                 return;
             }
-            
+
             // Hiện lỗi
             const errorMsg = data.error || 'Mã giới thiệu không hợp lệ';
             showReferralError(errorMsg);
-            
+
             // Clear input
             if (input) {
                 input.value = '';
                 input.focus();
             }
         }
-        
+
     } catch (error) {
         hideSmartLoading();
         console.error('❌ Apply referral error:', error);
@@ -3033,7 +3564,7 @@ async function handleApplyReferral() {
 async function handleSkipReferral() {
     try {
         showSmartLoading('Đang xử lý...', 100);
-        
+
         const token = localStorage.getItem('auth_token');
         await fetch(`${BACKEND_URL}/api/referral/skip`, {
             method: 'POST',
@@ -3042,14 +3573,14 @@ async function handleSkipReferral() {
                 'Authorization': `Bearer ${token}`
             }
         });
-        
+
         hideSmartLoading();
-        
+
     } catch (error) {
         hideSmartLoading();
         console.error('Skip referral error:', error);
     }
-    
+
     // Đóng modal giới thiệu và hiện modal chào mừng
     closeReferralModal();
     showWelcomeModal();
@@ -3109,12 +3640,12 @@ async function checkReferralNotifications(token) {
                 'Authorization': `Bearer ${token}`
             }
         });
-        
+
         const data = await response.json();
-        
+
         if (data.success && data.hasUnread && data.unreadCount > 0) {
             console.log(`🎉 Có ${data.unreadCount} thông báo referral chưa đọc`);
-            
+
             // Lấy thông tin lượt mời còn lại
             const infoResponse = await fetch(`${BACKEND_URL}/api/referral/info`, {
                 method: 'GET',
@@ -3124,14 +3655,14 @@ async function checkReferralNotifications(token) {
                 }
             });
             const infoData = await infoResponse.json();
-            
+
             showReferralNotificationModal(data, infoData, token);
             return true;
         }
-        
+
         console.log('ℹ️ Không có thông báo referral mới');
         return false;
-        
+
     } catch (error) {
         console.error('❌ Lỗi kiểm tra referral notifications:', error);
         return false;
@@ -3147,15 +3678,15 @@ async function checkReferralNotifications(token) {
 function showReferralNotificationModal(data, infoData, token) {
     const overlay = document.getElementById('referralNotificationOverlay');
     const body = document.getElementById('referralNotificationBody');
-    
+
     if (!overlay || !body) {
         console.error('❌ Không tìm thấy modal referral notification');
         return;
     }
-    
+
     // Tạo nội dung modal
     let itemsHTML = '';
-    
+
     // Hiển thị từng referral chưa đọc
     data.unreadReferrals.forEach(ref => {
         const time = new Date(ref.timestamp).toLocaleString('vi-VN', {
@@ -3165,10 +3696,10 @@ function showReferralNotificationModal(data, infoData, token) {
             hour: '2-digit',
             minute: '2-digit'
         });
-        
+
         // Hiển thị email đầy đủ
         const email = ref.referredEmail || 'Người dùng mới';
-        
+
         itemsHTML += `
             <div class="referral-notification-item">
                 <div class="referral-notification-item-header">
@@ -3179,18 +3710,18 @@ function showReferralNotificationModal(data, infoData, token) {
             </div>
         `;
     });
-    
+
     // Tính lượt mời còn lại
     const referralsRemaining = infoData.success ? infoData.referralsRemaining : 0;
-    
+
     // Tổng credits nhận được
     const totalCredits = data.totalCreditsEarned || 0;
-    
+
     // Tạo CTA phù hợp với số lượt mời còn lại
     const ctaMessage = referralsRemaining > 0
         ? '💡 Tiếp tục mời bạn bè để nhận thêm credits miễn phí!'
         : '🎉 Bạn đã dùng hết lượt mời tháng này. Lượt mời sẽ được reset vào tháng sau!';
-    
+
     // Tạo summary
     const summaryHTML = `
         <div class="referral-notification-summary">
@@ -3204,12 +3735,12 @@ function showReferralNotificationModal(data, infoData, token) {
             ${ctaMessage}
         </div>
     `;
-    
+
     body.innerHTML = itemsHTML + summaryHTML;
-    
+
     // Lưu token để đánh dấu đã đọc khi đóng modal
     overlay.dataset.token = token;
-    
+
     // Hiển thị modal
     overlay.classList.add('active');
 }
@@ -3221,12 +3752,12 @@ function showReferralNotificationModal(data, infoData, token) {
  */
 function maskEmail(email) {
     if (!email || !email.includes('@')) return email;
-    
+
     const [localPart, domain] = email.split('@');
     if (localPart.length <= 3) {
         return localPart[0] + '***@' + domain;
     }
-    
+
     const visibleStart = localPart.substring(0, 2);
     const visibleEnd = localPart.substring(localPart.length - 1);
     return visibleStart + '***' + visibleEnd + '@' + domain;
@@ -3237,14 +3768,14 @@ function maskEmail(email) {
  */
 async function closeReferralNotification() {
     const overlay = document.getElementById('referralNotificationOverlay');
-    
+
     if (!overlay) return;
-    
+
     const token = overlay.dataset.token;
-    
+
     // Đóng modal
     overlay.classList.remove('active');
-    
+
     // Đánh dấu đã đọc
     if (token) {
         try {
@@ -3260,15 +3791,15 @@ async function closeReferralNotification() {
             console.error('❌ Lỗi đánh dấu đã đọc:', error);
         }
     }
-    
+
     // Sau khi đóng referral notification, kiểm tra thông điệp Tiệm bánh
     const pendingToken = sessionStorage.getItem('pending_tiembanh_token');
     const pendingUser = sessionStorage.getItem('pending_tiembanh_user');
-    
+
     if (pendingToken && pendingUser) {
         const user = JSON.parse(pendingUser);
         const hasMessage = await checkTiembanhMessage(pendingToken, user);
-        
+
         if (!hasMessage) {
             // Không có thông điệp, lưu token và redirect
             localStorage.setItem('auth_token', pendingToken);
