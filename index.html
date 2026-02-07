@@ -266,9 +266,10 @@
                 font-weight: 700;
             }
 
-            /* Mobile TV Activation Form */
             #mobileTvForm {
                 display: block !important;
+                width: 100%;
+                box-sizing: border-box;
                 margin-bottom: 15px;
                 padding: 12px;
                 border: 1px solid rgba(255, 255, 255, 0.1);
@@ -286,10 +287,12 @@
             #mobileTvForm .tv-input-row {
                 display: flex;
                 gap: 8px;
+                align-items: center;
             }
 
             #mobileTvForm input {
                 flex: 1;
+                min-width: 0;
                 padding: 10px;
                 font-size: 0.8rem;
                 background: transparent;
@@ -315,6 +318,7 @@
                 cursor: pointer;
                 font-weight: 600;
                 min-width: 85px;
+                flex-shrink: 0;
                 /* Giữ chiều rộng cố định để không giật UI khi loading */
             }
 
@@ -2616,10 +2620,10 @@
                                             <div onclick="toggleAccordion('tvGuideAccordion')"
                                                 style="padding: 14px 16px; cursor: pointer; display: flex; justify-content: space-between; align-items: center; transition: all 0.2s;">
                                                 <span
-                                                    style="font-size: 0.75rem; color: #fff; font-weight: 600; letter-spacing: 0.5px;">HƯỚNG
+                                                    style="font-size: 0.6rem; color: #fff; font-weight: 600; letter-spacing: 0.5px;">HƯỚNG
                                                     DẪN KÍCH HOẠT NETFLIX TV</span>
                                                 <span id="tvGuideAccordionIcon"
-                                                    style="font-size: 0.9rem; color: #60a5fa; transition: transform 0.3s; flex-shrink: 0;">▼</span>
+                                                    style="font-size: 0.8rem; color: #60a5fa; transition: transform 0.3s; flex-shrink: 0;">▼</span>
                                             </div>
                                             <div id="tvGuideAccordion"
                                                 style="max-height: 0; overflow: hidden; transition: max-height 0.3s ease-out;">
@@ -2658,10 +2662,10 @@
                                             <div onclick="toggleAccordion('tvTipsAccordion')"
                                                 style="padding: 14px 16px; cursor: pointer; display: flex; justify-content: space-between; align-items: center; transition: all 0.2s;">
                                                 <span
-                                                    style="font-size: 0.75rem; color: #fff; font-weight: 600; letter-spacing: 0.5px;">MẸO
+                                                    style="font-size: 0.6rem; color: #fff; font-weight: 600; letter-spacing: 0.5px;">MẸO
                                                     ĐĂNG XUẤT, ĐỔI NGÔN NGỮ</span>
                                                 <span id="tvTipsAccordionIcon"
-                                                    style="font-size: 0.9rem; color: #60a5fa; transition: transform 0.3s; flex-shrink: 0;">▼</span>
+                                                    style="font-size: 0.8rem; color: #60a5fa; transition: transform 0.3s; flex-shrink: 0;">▼</span>
                                             </div>
                                             <div id="tvTipsAccordion"
                                                 style="max-height: 0; overflow: hidden; transition: max-height 0.3s ease-out;">
