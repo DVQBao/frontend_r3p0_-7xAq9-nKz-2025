@@ -22,7 +22,7 @@ const CONFIG = {
     // Extension ID sẽ được cập nhật tự động khi detect
     EXTENSION_ID: null,
     // Extension version requirement
-    REQUIRED_EXTENSION_VERSION: '1.6.0',
+    REQUIRED_EXTENSION_VERSION: '1.6.1',
     EXTENSION_DOWNLOAD_LINK: 'https://drive.google.com/drive/folders/1eozcbA4q54f8Ox46d2HlptSD92tDFHCl?usp=sharing'
 };
 
