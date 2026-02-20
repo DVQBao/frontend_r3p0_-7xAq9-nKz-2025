@@ -73,7 +73,7 @@ class CookieRetryHandler {
                 // PHÂN BIỆT: LỖI EXTENSION/NETWORK vs LỖI COOKIE
                 // ========================================
                 // TIMEOUT_SLOW_NETWORK removed - đây là lỗi COOKIE không phải extension!
-                const extensionErrors = ['NO_RESPONSE', 'CHECK_FAILED', 'NO_EXTENSION', 'EXTENSION_OFFLINE'];
+                const extensionErrors = ['NO_RESPONSE', 'CHECK_FAILED', 'NO_EXTENSION', 'EXTENSION_OFFLINE', 'INJECTION_FAILED'];
 
                 if (extensionErrors.includes(result.errorCode)) {
                     // ❌ LỖI EXTENSION/NETWORK - KHÔNG MARK COOKIE DIE

@@ -1,5 +1,5 @@
 // ========================================
-// Netflix Guest Helper - Content Script v1.5
+// Netflix Guest Helper - Content Script v1.6.1
 // Chạy trên tất cả trang Netflix
 // Features: Auto F5 support, Login detection, Error detection
 // ========================================

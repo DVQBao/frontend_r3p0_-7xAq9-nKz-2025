@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "Tiệm Bánh Netflix",
-  "version": "1.6.0",
+  "version": "1.6.1",
   "description": "Extension chính thức của Tiệm Bánh Netflix",
   "icons": {
     "16": "icon16.png",
@@ -17,8 +17,7 @@
     "*://*.netflix.com/*"
   ],
   "background": {
-    "service_worker": "background.js",
-    "type": "module"
+    "service_worker": "background.js"
   },
   "content_scripts": [
     {

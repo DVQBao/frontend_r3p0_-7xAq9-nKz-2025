@@ -1,6 +1,6 @@
 // ========================================
 // Netflix Guest Helper - Background Service Worker
-// Manifest V3 compatible - v1.5 with Auto F5
+// Manifest V3 compatible - v1.6.1 with Auto F5
 // Features: Auto cleanup + Auto F5 when stuck (900ms detection)
 // ========================================
 
@@ -21,11 +21,10 @@
 // ========================================
 
 chrome.runtime.onMessageExternal.addListener(
-    async (request, sender, sendResponse) => {
+    (request, sender, sendResponse) => {
         console.log('📨 Received external message:', request);
         
         if (request.action === 'ping') {
-            // Lấy version từ manifest.json tự động
             const version = chrome.runtime.getManifest().version;
             console.log('📤 Ping response - Extension version:', version);
             sendResponse({ status: 'ok', version: version });
@@ -33,27 +32,31 @@ chrome.runtime.onMessageExternal.addListener(
         }
         
         if (request.action === 'testCookieAPI') {
-            try {
-                const cookies = await chrome.cookies.getAll({ domain: '.netflix.com' });
-                sendResponse({ success: true, count: cookies.length });
-            } catch (error) {
-                sendResponse({ success: false, error: error.message });
-            }
+            (async () => {
+                try {
+                    const cookies = await chrome.cookies.getAll({ domain: '.netflix.com' });
+                    sendResponse({ success: true, count: cookies.length });
+                } catch (error) {
+                    sendResponse({ success: false, error: error.message });
+                }
+            })();
             return true;
         }
         
         if (request.action === 'testTabsAPI') {
-            try {
-                const allTabs = await chrome.tabs.query({});
-                const netflixTabs = await chrome.tabs.query({ url: '*://*.netflix.com/*' });
-                sendResponse({ 
-                    success: true, 
-                    totalTabs: allTabs.length,
-                    netflixTabs: netflixTabs.length
-                });
-            } catch (error) {
-                sendResponse({ success: false, error: error.message });
-            }
+            (async () => {
+                try {
+                    const allTabs = await chrome.tabs.query({});
+                    const netflixTabs = await chrome.tabs.query({ url: '*://*.netflix.com/*' });
+                    sendResponse({ 
+                        success: true, 
+                        totalTabs: allTabs.length,
+                        netflixTabs: netflixTabs.length
+                    });
+                } catch (error) {
+                    sendResponse({ success: false, error: error.message });
+                }
+            })();
             return true;
         }
         
@@ -68,65 +71,60 @@ chrome.runtime.onMessageExternal.addListener(
         
         // IMPROVED: Inject cookie - chức năng chính
         if (request.action === 'injectCookie') {
-            try {
-                console.log('🚀 Starting cookie injection process...');
-                
-                const netflixTab = await findNetflixTab(request.tabName);
-                
-                if (!netflixTab) {
-                    console.error('❌ Netflix tab not found');
+            (async () => {
+                try {
+                    console.log('🚀 Starting cookie injection process...');
+                    
+                    const netflixTab = await findNetflixTab(request.tabName);
+                    
+                    if (!netflixTab) {
+                        console.error('❌ Netflix tab not found');
+                        sendResponse({ 
+                            success: false, 
+                            error: 'Netflix tab not found. Please open Netflix first.' 
+                        });
+                        return;
+                    }
+                    
+                    console.log(`✅ Found Netflix tab: ${netflixTab.id}`, netflixTab);
+                    console.log(`📍 Current URL: ${netflixTab.url}`);
+                    
+                    // Bước 1: Xóa toàn bộ cookies Netflix cũ
+                    await clearNetflixCookies();
+                    console.log('🗑️ Cleared existing Netflix cookies');
+                    
+                    // Bước 2: Inject cookie mới NGAY (không navigate trước)
+                    await injectCookiesImproved(request.cookieData, 'https://www.netflix.com/');
+                    console.log('✅ Injected new cookies');
+                    
+                    // Bước 3: Đợi một chút để cookies được set
+                    await sleep(500);
+                    
+                    // Bước 4: Navigate với AUTO F5 
+                    console.log('🏠 Navigating to Netflix homepage with auto F5 support...');
+                    const navSuccess = await navigateTabWithAutoRetry(
+                        netflixTab.id, 
+                        'https://www.netflix.com/',
+                        10000
+                    );
+                    
+                    if (!navSuccess) {
+                        console.warn('⚠️ Navigation timeout after auto retry');
+                    }
+                    
+                    // Bước 5: Monitor tab để phát hiện /browse
+                    monitorNetflixTab(netflixTab.id);
+                    
+                    sendResponse({ success: true });
+                    
+                } catch (error) {
+                    console.error('❌ Cookie injection error:', error);
                     sendResponse({ 
                         success: false, 
-                        error: 'Netflix tab not found. Please open Netflix first.' 
+                        error: error.message 
                     });
-                    return true;
                 }
-                
-                console.log(`✅ Found Netflix tab: ${netflixTab.id}`, netflixTab);
-                console.log(`📍 Current URL: ${netflixTab.url}`);
-                
-                // Bước 1: Xóa toàn bộ cookies Netflix cũ
-                await clearNetflixCookies();
-                console.log('🗑️ Cleared existing Netflix cookies');
-                
-                // Bước 2: Inject cookie mới NGAY (không navigate trước)
-                await injectCookiesImproved(request.cookieData, 'https://www.netflix.com/');
-                console.log('✅ Injected new cookies');
-                
-                // Bước 3: Đợi một chút để cookies được set
-                await sleep(500);
-                
-                // Bước 4: Navigate với AUTO F5 
-                // Điều này đảm bảo mọi URL (account, settings...) đều reset về homepage
-                // NHƯNG cookies đã được inject sẵn rồi
-                console.log('🏠 Navigating to Netflix homepage with auto F5 support...');
-                const navSuccess = await navigateTabWithAutoRetry(
-                    netflixTab.id, 
-                    'https://www.netflix.com/',
-                    10000  // 10s timeout
-                );
-                
-                if (!navSuccess) {
-                    console.warn('⚠️ Navigation timeout after auto retry');
-                }
-                
-                // Bước 5: Monitor tab để phát hiện /browse
-                monitorNetflixTab(netflixTab.id);
-                
-                // NOTE: SecureNetflixId chỉ xuất hiện SAU KHI user chọn profile
-                // Nên không đọc ở đây, sẽ có action riêng getSecureNetflixId
-                // được gọi sau khi verify login thành công (đã vào /browse)
-                
-                sendResponse({ success: true });
-                
-            } catch (error) {
-                console.error('❌ Cookie injection error:', error);
-                sendResponse({ 
-                    success: false, 
-                    error: error.message 
-                });
-            }
-            
+            })();
             return true;
         }
         

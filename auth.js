@@ -2008,6 +2008,9 @@ function showTiembanhMessage(data, token, user) {
  * @param {string} token - Auth token
  * @param {Object} user - User data
  */
+// Extension version hiển thị trên celebration modal (fallback nếu backend chưa trả)
+const CELEBRATION_EXTENSION_VERSION = '1.6.1';
+
 function showCelebrationModal(celebrationData, token, user) {
     console.log('Showing celebration modal');
 
@@ -2085,7 +2088,7 @@ function showCelebrationModal(celebrationData, token, user) {
                     <div class="celeb-info-card">
                         <div class="celeb-info-header">
                             <span class="celeb-info-icon">${svgIcons.puzzle}</span>
-                            <span>Extension v${celebrationData.extensionVersion}<span class="celeb-mobile-only"> (cho phiên bản PC)</span></span>
+                            <span>Extension v${celebrationData.extensionVersion || CELEBRATION_EXTENSION_VERSION}<span class="celeb-mobile-only"> (cho phiên bản PC)</span></span>
                         </div>
                         <ul class="celeb-list">
                             ${celebrationData.extensionChanges.map(c => `<li><span class="celeb-check">${svgIcons.check}</span>${c}</li>`).join('')}
