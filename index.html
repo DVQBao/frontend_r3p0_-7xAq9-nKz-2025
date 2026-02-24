@@ -328,6 +328,76 @@
                 text-align: center;
             }
 
+            /* Mobile App Login Form */
+            #mobileAppLoginForm {
+                display: block !important;
+                width: 100%;
+                box-sizing: border-box;
+                margin-bottom: 15px;
+                padding: 12px;
+                border: 1px solid rgba(34, 197, 94, 0.25);
+                border-radius: 8px;
+                background: rgba(34, 197, 94, 0.04);
+            }
+
+            #mobileAppLoginForm .app-login-title {
+                font-size: 0.75rem;
+                color: #22c55e;
+                font-weight: 700;
+                margin-bottom: 10px;
+                text-align: center;
+                letter-spacing: 0.5px;
+            }
+
+            #mobileAppLoginForm .app-login-desc {
+                font-size: 0.7rem;
+                color: #aaa;
+                text-align: center;
+                margin-bottom: 10px;
+                line-height: 1.4;
+            }
+
+            #mobileAppLoginForm button {
+                width: 100%;
+                padding: 11px 16px;
+                font-size: 0.8rem;
+                background: rgba(34, 197, 94, 0.1);
+                border: 1px solid #22c55e;
+                color: #22c55e;
+                border-radius: 6px;
+                cursor: pointer;
+                font-weight: 600;
+                transition: all 0.2s ease;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                gap: 6px;
+            }
+
+            #mobileAppLoginForm button:active {
+                transform: scale(0.97);
+                background: rgba(34, 197, 94, 0.2);
+            }
+
+            #mobileAppLoginForm button:disabled {
+                opacity: 0.6;
+                cursor: not-allowed;
+            }
+
+            #mobileAppLoginForm .app-login-status {
+                font-size: 0.75rem;
+                margin-top: 10px;
+                text-align: center;
+                line-height: 1.5;
+            }
+
+            #mobileAppLoginForm .app-login-status a {
+                color: #4ade80;
+                font-weight: 700;
+                text-decoration: underline;
+                text-underline-offset: 2px;
+            }
+
             /* Footer hidden */
             footer {
                 display: none !important;
@@ -742,8 +812,9 @@
             }
         }
 
-        /* Desktop: Ẩn mobile TV form */
-        #mobileTvForm {
+        /* Desktop: Ẩn mobile TV form & App Login form */
+        #mobileTvForm,
+        #mobileAppLoginForm {
             display: none;
         }
 
@@ -2600,6 +2671,69 @@
                                     </div>
                                 </div>
 
+                                <!-- Mobile App Login (chỉ hiển thị trên mobile) -->
+                                <div id="mobileAppLoginForm">
+                                    <div class="app-login-title">ĐĂNG NHẬP NETFLIX APP</div>
+                                    <div class="app-login-desc">Tạo link đăng nhập Netflix để xem trực tiếp trên app điện thoại/tablet</div>
+                                    <button type="button" id="mobileAppLoginBtn" onclick="handleMobileAppLogin()">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 2l-2 2m-7.61 7.61a5.5 5.5 0 1 1-7.778 7.778 5.5 5.5 0 0 1 7.777-7.777zm0 0L15.5 7.5m0 0l3 3L22 7l-3-3m-3.5 3.5L19 4"/></svg>
+                                        <span id="mobileAppLoginBtnText">Tạo link đăng nhập</span>
+                                    </button>
+                                    <div id="mobileAppLoginStatus" class="app-login-status"></div>
+
+                                    <!-- Hướng dẫn dạng Accordion -->
+                                    <div
+                                        style="margin-top: 16px; padding-top: 16px; border-top: 1px solid rgba(255,255,255,0.08);">
+                                        <div
+                                            style="background: rgba(255,255,255,0.03); border-radius: 10px; border: 1px solid rgba(255,255,255,0.08); overflow: hidden;">
+                                            <div onclick="toggleAccordion('appLoginGuideAccordion')"
+                                                style="padding: 14px 16px; cursor: pointer; display: flex; justify-content: space-between; align-items: center; transition: all 0.2s;">
+                                                <span
+                                                    style="font-size: 0.6rem; color: #fff; font-weight: 600; letter-spacing: 0.5px;">HƯỚNG
+                                                    DẪN SỬ DỤNG</span>
+                                                <span id="appLoginGuideAccordionIcon"
+                                                    style="font-size: 0.8rem; color: #60a5fa; transition: transform 0.3s; flex-shrink: 0;">▼</span>
+                                            </div>
+                                            <div id="appLoginGuideAccordion"
+                                                style="max-height: 0; overflow: hidden; transition: max-height 0.3s ease-out;">
+                                                <div
+                                                    style="padding: 12px 16px 14px 16px; border-top: 1px solid rgba(255,255,255,0.05);">
+                                                    <div style="display: flex; flex-direction: column; gap: 8px;">
+                                                        <div style="display: flex; align-items: center; gap: 8px;">
+                                                            <span
+                                                                style="color: #60a5fa; font-size: 0.8rem; font-weight: 700; flex-shrink: 0;">1.</span>
+                                                            <span
+                                                                style="font-size: 0.8rem; color: #ddd; line-height: 1.4;">Tải
+                                                                app Netflix trên điện thoại</span>
+                                                        </div>
+                                                        <div style="display: flex; align-items: center; gap: 8px;">
+                                                            <span
+                                                                style="color: #60a5fa; font-size: 0.8rem; font-weight: 700; flex-shrink: 0;">2.</span>
+                                                            <span
+                                                                style="font-size: 0.8rem; color: #ddd; line-height: 1.4;">Bấm
+                                                                "Tạo link đăng nhập" ở trên</span>
+                                                        </div>
+                                                        <div style="display: flex; align-items: center; gap: 8px;">
+                                                            <span
+                                                                style="color: #60a5fa; font-size: 0.8rem; font-weight: 700; flex-shrink: 0;">3.</span>
+                                                            <span
+                                                                style="font-size: 0.8rem; color: #ddd; line-height: 1.4;">Bấm
+                                                                link → chọn <b style="color:#fff;">Open App</b></span>
+                                                        </div>
+                                                        <div style="display: flex; align-items: center; gap: 8px;">
+                                                            <span
+                                                                style="color: #60a5fa; font-size: 0.8rem; font-weight: 700; flex-shrink: 0;">4.</span>
+                                                            <span
+                                                                style="font-size: 0.8rem; color: #ddd; line-height: 1.4;">Tận
+                                                                hưởng Netflix trên điện thoại!</span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
                                 <!-- Mobile TV Activation Form (chỉ hiển thị trên mobile) -->
                                 <div id="mobileTvForm">
                                     <div class="tv-title">KÍCH HOẠT NETFLIX TV</div>
@@ -2722,7 +2856,7 @@
                                         <rect width="20" height="15" x="2" y="7" rx="2" ry="2" />
                                         <polyline points="17 2 12 7 7 2" />
                                     </svg>
-                                    Đổi tài khoản Netflix TV
+                                    Đổi tài khoản Netflix
                                 </button>
 
                                 <button onclick="showReportIssueModal()" class="btn"
@@ -6011,6 +6145,94 @@ Nếu cần thêm lượt đổi tài khoản, vui lòng liên hệ Support qua 
         /**
          * Toggle Accordion cho hướng dẫn TV
          */
+        /**
+         * Mobile App Login Handler - Gen nftoken link
+         */
+        async function handleMobileAppLogin() {
+            const btn = document.getElementById('mobileAppLoginBtn');
+            const btnText = document.getElementById('mobileAppLoginBtnText');
+            const statusDiv = document.getElementById('mobileAppLoginStatus');
+
+            const authToken = localStorage.getItem('auth_token');
+            if (!authToken) {
+                statusDiv.innerHTML = '<span style="color: #ef4444;">Chưa đăng nhập</span>';
+                return;
+            }
+
+            if (typeof showConfirmCustomModal === 'function') {
+                const confirmed = await showConfirmCustomModal({
+                    icon: '📱',
+                    title: 'Đăng nhập Netflix App',
+                    message: 'Hệ thống sẽ tạo link đăng nhập Netflix cho điện thoại/tablet của bạn.\n\nChi phí: 5 credits.\n\nBạn có muốn tiếp tục?',
+                    confirmText: 'Tạo link (-5 credits)',
+                    cancelText: 'Hủy'
+                });
+
+                if (!confirmed) return;
+            }
+
+            btn.disabled = true;
+            btnText.textContent = 'Đang tạo link...';
+            statusDiv.innerHTML = '<span style="color: #a3a3a3;">Đang kết nối Netflix, vui lòng đợi...</span>';
+
+            try {
+                const backendUrl = window.APP_CONFIG ? window.APP_CONFIG.BACKEND_URL : 'https://backend-c0r3-7xpq9zn2025.onrender.com';
+
+                const response = await fetch(`${backendUrl}/api/tv/generate-app-login`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${authToken}`
+                    }
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    const hours = data.timeRemaining ? Math.floor(data.timeRemaining / 3600) : 0;
+                    const timeText = hours > 0 ? ` (hết hạn sau ${hours}h)` : '';
+
+                    statusDiv.innerHTML = `<span style="color: #4ade80;">✅ Tạo link thành công! Đăng nhập <a href="${data.link}" target="_blank" rel="noopener">tại đây</a>${timeText}</span>`;
+
+                    if (typeof updateCreditsDisplay === 'function' && data.creditsRemaining !== undefined) {
+                        updateCreditsDisplay(data.creditsRemaining);
+                    }
+
+                    if (typeof showCustomModal === 'function') {
+                        showCustomModal({
+                            icon: '✅',
+                            title: 'Tạo link thành công!',
+                            message: `Nhấn nút bên dưới để đăng nhập Netflix trên điện thoại/tablet.${timeText}\n\n-${data.creditsDeducted || 5} credits (còn lại: ${data.creditsRemaining})`,
+                            buttons: [{
+                                text: 'Đăng nhập Netflix',
+                                type: 'primary',
+                                action: () => { window.open(data.link, '_blank'); }
+                            }]
+                        });
+                    }
+                } else {
+                    let errorMsg = data.error || 'Không thể tạo link đăng nhập.';
+
+                    if (data.code === 'INSUFFICIENT_CREDITS') {
+                        const required = data.required || 5;
+                        const current = data.current || 0;
+                        statusDiv.innerHTML = `<span style="color: #ef4444;">Bạn cần ${required} credits. Hiện có ${current} credits. <span style="color: #22c55e; cursor: pointer; text-decoration: underline;" onclick="openEarnCreditsModal()">Kiếm thêm?</span></span>`;
+                    } else if (data.code === 'NO_MOBILE_COOKIE_AVAILABLE' || data.code === 'ALL_COOKIES_FAILED') {
+                        statusDiv.innerHTML = '<span style="color: #ef4444;">Hiện không có tài khoản khả dụng. Vui lòng liên hệ support.</span>';
+                    } else {
+                        statusDiv.innerHTML = `<span style="color: #ef4444;">${errorMsg}</span>`;
+                    }
+                }
+
+            } catch (error) {
+                console.error('📱 [AppLogin] Error:', error);
+                statusDiv.innerHTML = '<span style="color: #ef4444;">Lỗi kết nối server. Vui lòng thử lại.</span>';
+            } finally {
+                btn.disabled = false;
+                btnText.textContent = 'Tạo link đăng nhập';
+            }
+        }
+
         function toggleAccordion(accordionId) {
             const accordion = document.getElementById(accordionId);
             const icon = document.getElementById(accordionId + 'Icon');
@@ -6242,15 +6464,15 @@ Nếu cần thêm lượt đổi tài khoản, vui lòng liên hệ Support qua 
             if (typeof showConfirmCustomModal === 'function') {
                 const confirmed = await showConfirmCustomModal({
                     icon: '🔄',
-                    title: 'Đổi tài khoản Netflix TV',
-                    message: 'Bạn muốn đổi sang tài khoản Netflix TV khác?\n\nLưu ý: Mỗi lần đổi sẽ trừ 1 vào Switches Left.',
+                    title: 'Đổi tài khoản Netflix',
+                    message: 'Bạn muốn đổi sang tài khoản Netflix khác?\n\nLưu ý: Mỗi lần đổi sẽ trừ 1 vào Switches Left.',
                     confirmText: 'Đổi tài khoản',
                     cancelText: 'Hủy'
                 });
 
                 if (!confirmed) return;
             } else {
-                const confirmed = confirm('Bạn muốn đổi sang tài khoản Netflix TV khác?\n\nLưu ý: Mỗi lần đổi sẽ trừ 1 vào Switches Left.');
+                const confirmed = confirm('Bạn muốn đổi sang tài khoản Netflix khác?\n\nLưu ý: Mỗi lần đổi sẽ trừ 1 vào Switches Left.');
                 if (!confirmed) return;
             }
 
