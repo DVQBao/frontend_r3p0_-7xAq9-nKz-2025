@@ -2043,7 +2043,8 @@ function showCelebrationModal(celebrationData, token, user) {
             <path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z"/>
             <path d="M5 3v4"/><path d="M3 5h4"/><path d="M19 17v4"/><path d="M17 19h4"/>
         </svg>`,
-        arrowRight: `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>`
+        arrowRight: `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>`,
+        keyRound: `<svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 2l-2 2m-7.61 7.61a5.5 5.5 0 1 1-7.778 7.778 5.5 5.5 0 0 1 7.777-7.777zm0 0L15.5 7.5m0 0l3 3L22 7l-3-3m-3.5 3.5L19 4"/></svg>`
     };
 
     // Create celebration modal HTML - Fullscreen, no container
@@ -2072,6 +2073,14 @@ function showCelebrationModal(celebrationData, token, user) {
                 
                 <!-- Main Description -->
                 <p class="celeb-desc">${celebrationData.mainDescription}</p>
+
+                <!-- NEW: App Login Hero Feature -->
+                <div class="celeb-app-login-hero">
+                    <div class="celeb-app-login-badge">MỚI</div>
+                    <div class="celeb-app-login-icon">${svgIcons.keyRound}</div>
+                    <h3 class="celeb-app-login-title">Xem Netflix trên App điện thoại</h3>
+                    <p class="celeb-app-login-desc">Giờ đây bạn có thể tạo link đăng nhập Netflix ngay trên web Tiệm Bánh và mở thẳng app Netflix trên điện thoại/tablet để xem phim!</p>
+                </div>
                 
                 <!-- Feature Highlight -->
                 <div class="celeb-feature">
@@ -2257,6 +2266,113 @@ function showCelebrationModal(celebrationData, token, user) {
                 line-height: 1.6;
             }
             
+            /* App Login Hero Feature - nổi bật nhất */
+            .celeb-app-login-hero {
+                position: relative;
+                text-align: center;
+                padding: 28px 24px;
+                margin-bottom: 24px;
+                border-radius: 16px;
+                background: linear-gradient(135deg, rgba(34, 197, 94, 0.12) 0%, rgba(16, 185, 129, 0.06) 100%);
+                border: 1px solid rgba(34, 197, 94, 0.35);
+                overflow: hidden;
+            }
+
+            .celeb-app-login-hero::before {
+                content: '';
+                position: absolute;
+                inset: 0;
+                background: radial-gradient(ellipse 80% 60% at 50% 0%, rgba(34, 197, 94, 0.15) 0%, transparent 60%);
+                pointer-events: none;
+            }
+
+            .celeb-app-login-badge {
+                display: inline-block;
+                padding: 3px 12px;
+                border-radius: 20px;
+                font-size: 0.65rem;
+                font-weight: 800;
+                letter-spacing: 1.5px;
+                color: #fff;
+                background: linear-gradient(135deg, #22c55e, #16a34a);
+                margin-bottom: 16px;
+                animation: celeb-badge-pulse 2s ease-in-out infinite;
+            }
+
+            @keyframes celeb-badge-pulse {
+                0%, 100% { box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.4); }
+                50% { box-shadow: 0 0 0 8px rgba(34, 197, 94, 0); }
+            }
+
+            .celeb-app-login-icon {
+                color: #22c55e;
+                margin-bottom: 12px;
+            }
+
+            .celeb-app-login-title {
+                font-size: 1.25rem;
+                font-weight: 700;
+                color: #4ade80;
+                margin: 0 0 10px 0;
+            }
+
+            .celeb-app-login-desc {
+                font-size: 0.88rem;
+                color: rgba(255, 255, 255, 0.7);
+                line-height: 1.6;
+                margin: 0 0 20px 0;
+                max-width: 420px;
+                margin-left: auto;
+                margin-right: auto;
+            }
+
+            .celeb-app-login-steps {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                gap: 8px;
+                flex-wrap: wrap;
+            }
+
+            .celeb-app-login-step {
+                display: flex;
+                align-items: center;
+                gap: 6px;
+                padding: 6px 14px;
+                border-radius: 20px;
+                background: rgba(34, 197, 94, 0.1);
+                border: 1px solid rgba(34, 197, 94, 0.25);
+                font-size: 0.8rem;
+                color: #d1d5db;
+                font-weight: 500;
+                white-space: nowrap;
+            }
+
+            .celeb-app-login-step span {
+                display: inline-flex;
+                align-items: center;
+                justify-content: center;
+                width: 20px;
+                height: 20px;
+                border-radius: 50%;
+                background: #22c55e;
+                color: #fff;
+                font-size: 0.7rem;
+                font-weight: 700;
+                flex-shrink: 0;
+            }
+
+            .celeb-app-login-arrow {
+                color: rgba(255, 255, 255, 0.25);
+                display: flex;
+                flex-shrink: 0;
+            }
+
+            .celeb-app-login-arrow svg {
+                width: 16px;
+                height: 16px;
+            }
+
             /* Feature Highlight */
             .celeb-feature {
                 display: flex;
@@ -2463,6 +2579,32 @@ function showCelebrationModal(celebrationData, token, user) {
                 
                 .celeb-mobile-only {
                     display: inline;
+                }
+
+                .celeb-app-login-hero {
+                    padding: 22px 16px;
+                }
+
+                .celeb-app-login-title {
+                    font-size: 1.1rem;
+                }
+
+                .celeb-app-login-desc {
+                    font-size: 0.82rem;
+                }
+
+                .celeb-app-login-steps {
+                    gap: 6px;
+                }
+
+                .celeb-app-login-step {
+                    padding: 5px 10px;
+                    font-size: 0.72rem;
+                }
+
+                .celeb-app-login-arrow svg {
+                    width: 12px;
+                    height: 12px;
                 }
             }
         </style>
