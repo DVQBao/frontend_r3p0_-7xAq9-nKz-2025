@@ -6198,11 +6198,15 @@ Nếu cần thêm lượt đổi tài khoản, vui lòng liên hệ Support qua 
                         updateCreditsDisplay(data.creditsRemaining);
                     }
 
+                    const creditsLine = data.creditsDeducted > 0
+                        ? `\n\n-${data.creditsDeducted} credits (còn lại: ${data.creditsRemaining})`
+                        : `\n\nMiễn phí (đổi tài khoản gần đây)`;
+
                     if (typeof showCustomModal === 'function') {
                         showCustomModal({
                             icon: '✅',
                             title: 'Tạo link thành công!',
-                            message: `Nhấn nút bên dưới để đăng nhập Netflix trên điện thoại/tablet.${timeText}\n\n-${data.creditsDeducted || 5} credits (còn lại: ${data.creditsRemaining})`,
+                            message: `Nhấn nút bên dưới để đăng nhập Netflix trên điện thoại/tablet.${timeText}${creditsLine}`,
                             buttons: [{
                                 text: 'Đăng nhập Netflix',
                                 type: 'primary',
