@@ -2674,9 +2674,15 @@
                                 <!-- Mobile App Login (chỉ hiển thị trên mobile) -->
                                 <div id="mobileAppLoginForm">
                                     <div class="app-login-title">ĐĂNG NHẬP NETFLIX APP</div>
-                                    <div class="app-login-desc">Tạo link đăng nhập Netflix để xem trực tiếp trên app điện thoại/tablet</div>
+                                    <div class="app-login-desc">Tạo link đăng nhập Netflix để xem trực tiếp trên app
+                                        điện thoại/tablet</div>
                                     <button type="button" id="mobileAppLoginBtn" onclick="handleMobileAppLogin()">
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 2l-2 2m-7.61 7.61a5.5 5.5 0 1 1-7.778 7.778 5.5 5.5 0 0 1 7.777-7.777zm0 0L15.5 7.5m0 0l3 3L22 7l-3-3m-3.5 3.5L19 4"/></svg>
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14"
+                                            viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                            stroke-linecap="round" stroke-linejoin="round">
+                                            <path
+                                                d="M21 2l-2 2m-7.61 7.61a5.5 5.5 0 1 1-7.778 7.778 5.5 5.5 0 0 1 7.777-7.777zm0 0L15.5 7.5m0 0l3 3L22 7l-3-3m-3.5 3.5L19 4" />
+                                        </svg>
                                         <span id="mobileAppLoginBtnText">Tạo link đăng nhập</span>
                                     </button>
                                     <div id="mobileAppLoginStatus" class="app-login-status"></div>
@@ -3821,7 +3827,7 @@
                 const token = localStorage.getItem('auth_token');
                 if (!token) return;
 
-                const backendUrl = window.APP_CONFIG ? window.APP_CONFIG.BACKEND_URL : 'https://backend-c0r3-7xpq9zn2025.onrender.com';
+                const backendUrl = window.APP_CONFIG ? window.APP_CONFIG.BACKEND_URL : 'https://api.tiembanh4k.com';
                 const response = await fetch(`${backendUrl}/api/auth/me`, {
                     method: 'GET',
                     headers: {
@@ -3892,7 +3898,7 @@
                 const token = localStorage.getItem('auth_token');
                 if (!token) return;
 
-                const backendUrl = window.APP_CONFIG ? window.APP_CONFIG.BACKEND_URL : 'https://backend-c0r3-7xpq9zn2025.onrender.com';
+                const backendUrl = window.APP_CONFIG ? window.APP_CONFIG.BACKEND_URL : 'https://api.tiembanh4k.com';
                 const response = await fetch(`${backendUrl}/api/referral/info`, {
                     method: 'GET',
                     headers: {
@@ -3975,7 +3981,7 @@
                 const token = localStorage.getItem('auth_token');
                 if (!token) return;
 
-                const backendUrl = window.APP_CONFIG ? window.APP_CONFIG.BACKEND_URL : 'https://backend-c0r3-7xpq9zn2025.onrender.com';
+                const backendUrl = window.APP_CONFIG ? window.APP_CONFIG.BACKEND_URL : 'https://api.tiembanh4k.com';
                 await fetch(`${backendUrl}/api/referral/mark-read`, {
                     method: 'POST',
                     headers: {
@@ -4028,7 +4034,7 @@
                     showSmartLoading('Đang tải lịch sử...', 300);
                 }
 
-                const backendUrl = window.APP_CONFIG ? window.APP_CONFIG.BACKEND_URL : 'https://backend-c0r3-7xpq9zn2025.onrender.com';
+                const backendUrl = window.APP_CONFIG ? window.APP_CONFIG.BACKEND_URL : 'https://api.tiembanh4k.com';
                 const response = await fetch(`${backendUrl}/api/referral/history`, {
                     method: 'GET',
                     headers: {
@@ -4381,7 +4387,7 @@ Bạn đã thử 3 cách trên và vẫn không được?`,
                 showSmartLoading('Đang xử lý...', 500);
 
                 // Call API to report issue
-                const backendUrl = window.APP_CONFIG ? window.APP_CONFIG.BACKEND_URL : 'https://backend-c0r3-7xpq9zn2025.onrender.com';
+                const backendUrl = window.APP_CONFIG ? window.APP_CONFIG.BACKEND_URL : 'https://api.tiembanh4k.com';
                 const response = await fetch(`${backendUrl}/api/cookies/report-issue`, {
                     method: 'POST',
                     headers: {
@@ -4616,7 +4622,7 @@ Nếu cần thêm lượt đổi tài khoản, vui lòng liên hệ Support qua 
 
                 if (token) {
                     try {
-                        const backendUrl = window.APP_CONFIG ? window.APP_CONFIG.BACKEND_URL : 'https://backend-c0r3-7xpq9zn2025.onrender.com';
+                        const backendUrl = window.APP_CONFIG ? window.APP_CONFIG.BACKEND_URL : 'https://api.tiembanh4k.com';
                         const response = await fetch(`${backendUrl}/api/auth/me`, {
                             method: 'GET',
                             headers: {
@@ -5979,7 +5985,7 @@ Nếu cần thêm lượt đổi tài khoản, vui lòng liên hệ Support qua 
 
             try {
                 // Lấy BACKEND_URL từ config
-                const backendUrl = window.APP_CONFIG ? window.APP_CONFIG.BACKEND_URL : 'https://backend-c0r3-7xpq9zn2025.onrender.com';
+                const backendUrl = window.APP_CONFIG ? window.APP_CONFIG.BACKEND_URL : 'https://api.tiembanh4k.com';
 
                 const response = await fetch(`${backendUrl}/api/tv/activate`, {
                     method: 'POST',
@@ -6176,7 +6182,7 @@ Nếu cần thêm lượt đổi tài khoản, vui lòng liên hệ Support qua 
             statusDiv.innerHTML = '<span style="color: #a3a3a3;">Đang kết nối Netflix, vui lòng đợi...</span>';
 
             try {
-                const backendUrl = window.APP_CONFIG ? window.APP_CONFIG.BACKEND_URL : 'https://backend-c0r3-7xpq9zn2025.onrender.com';
+                const backendUrl = window.APP_CONFIG ? window.APP_CONFIG.BACKEND_URL : 'https://api.tiembanh4k.com';
 
                 const response = await fetch(`${backendUrl}/api/tv/generate-app-login`, {
                     method: 'POST',
@@ -6303,7 +6309,7 @@ Nếu cần thêm lượt đổi tài khoản, vui lòng liên hệ Support qua 
             statusDiv.innerHTML = '<span style="color: #a78bfa;">Đang kích hoạt Netflix TV...</span>';
 
             try {
-                const backendUrl = window.APP_CONFIG ? window.APP_CONFIG.BACKEND_URL : 'https://backend-c0r3-7xpq9zn2025.onrender.com';
+                const backendUrl = window.APP_CONFIG ? window.APP_CONFIG.BACKEND_URL : 'https://api.tiembanh4k.com';
 
                 const response = await fetch(`${backendUrl}/api/tv/activate`, {
                     method: 'POST',
@@ -6426,7 +6432,7 @@ Nếu cần thêm lượt đổi tài khoản, vui lòng liên hệ Support qua 
                 const authToken = localStorage.getItem('auth_token');
                 if (!authToken) return;
 
-                const backendUrl = window.APP_CONFIG ? window.APP_CONFIG.BACKEND_URL : 'https://backend-c0r3-7xpq9zn2025.onrender.com';
+                const backendUrl = window.APP_CONFIG ? window.APP_CONFIG.BACKEND_URL : 'https://api.tiembanh4k.com';
 
                 const response = await fetch(`${backendUrl}/api/cookies/assigned`, {
                     method: 'GET',
@@ -6501,7 +6507,7 @@ Nếu cần thêm lượt đổi tài khoản, vui lòng liên hệ Support qua 
             btn.innerHTML = '⏳ Đang đổi...';
 
             try {
-                const backendUrl = window.APP_CONFIG ? window.APP_CONFIG.BACKEND_URL : 'https://backend-c0r3-7xpq9zn2025.onrender.com';
+                const backendUrl = window.APP_CONFIG ? window.APP_CONFIG.BACKEND_URL : 'https://api.tiembanh4k.com';
 
                 const response = await fetch(`${backendUrl}/api/cookies/switch-mobile`, {
                     method: 'POST',
@@ -6535,7 +6541,7 @@ Nếu cần thêm lượt đổi tài khoản, vui lòng liên hệ Support qua 
                     if (typeof showCustomModal === 'function') {
                         showCustomModal({
                             icon: '✅',
-                            title: 'Đổi tài khoản TV thành công!',
+                            title: 'Đổi tài khoản Netflix thành công!',
                             message: data.message,
                             buttons: [{ text: 'OK', type: 'primary' }]
                         });

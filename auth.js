@@ -8,7 +8,7 @@
 // ========================================
 
 // Use dynamic configuration from config.js
-const BACKEND_URL = window.APP_CONFIG ? window.APP_CONFIG.BACKEND_URL : 'https://backend-c0r3-7xpq9zn2025.onrender.com';
+const BACKEND_URL = window.APP_CONFIG ? window.APP_CONFIG.BACKEND_URL : 'https://api.tiembanh4k.com';
 
 // ========================================
 // reCAPTCHA CONFIGURATION
