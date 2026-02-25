@@ -3,15 +3,15 @@
 // ========================================
 // Auto-detect environment based on hostname
 
-(function() {
+(function () {
     // Detect if running on localhost
-    const isLocalhost = window.location.hostname === 'localhost' || 
-                       window.location.hostname === '127.0.0.1';
+    const isLocalhost = window.location.hostname === 'localhost' ||
+        window.location.hostname === '127.0.0.1';
 
     // Backend URLs
     const BACKEND_URLS = {
         dev: 'http://localhost:3000',
-        prod: 'https://backend-c0r3-7xpq9zn2025.onrender.com'
+        prod: 'https://api.tiembanh4k.com'
     };
 
     // Auto-select based on environment
