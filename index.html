@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="vi">
 
 <head>
@@ -141,8 +141,8 @@
             height: fit-content;
         }
 
-        /* ========== MOBILE RESPONSIVE ========== */
-        @media (max-width: 768px) {
+        /* ========== MOBILE RESPONSIVE (Phone + Tablet/iPad) ========== */
+        @media (max-width: 1024px) {
             body {
                 padding: 20px;
                 background: #000 !important;
@@ -181,8 +181,9 @@
                 border: none !important;
                 box-shadow: none !important;
                 backdrop-filter: none !important;
-                padding: 0;
-                max-width: 300px;
+                padding: 0 20px;
+                max-width: 500px;
+                width: 100%;
                 margin: 0 auto;
             }
 
@@ -410,7 +411,7 @@
             }
 
             .custom-modal-dialog {
-                max-width: 280px !important;
+                max-width: 500px !important;
                 width: 100% !important;
                 margin: 0 auto !important;
                 border-radius: 10px !important;
@@ -466,7 +467,7 @@
             }
 
             .referral-notification-modal {
-                max-width: 280px !important;
+                max-width: 500px !important;
                 width: 100% !important;
                 border-radius: 12px !important;
             }
@@ -812,20 +813,20 @@
             }
         }
 
-        /* Desktop: Ẩn mobile TV form & App Login form */
+        /* Desktop (>1024px): Ẩn mobile TV form & App Login form */
         #mobileTvForm,
         #mobileAppLoginForm {
             display: none;
         }
 
-        /* Desktop: Ẩn hamburger menu */
+        /* Desktop (>1024px): Ẩn hamburger menu */
         .mobile-hamburger-btn,
         .mobile-slide-menu,
         .mobile-menu-overlay {
             display: none;
         }
 
-        @media (max-width: 968px) {
+        @media (max-width: 1024px) {
             .main-layout {
                 grid-template-columns: 1fr;
             }
@@ -1110,7 +1111,7 @@
         }
 
         /* Desktop: Hide mobile button inside package, show outside button */
-        @media (min-width: 969px) {
+        @media (min-width: 1025px) {
             #officialPackageModal .mobile-only-home-btn {
                 display: none !important;
             }
@@ -1121,7 +1122,7 @@
         }
 
         /* Tablet/Medium screens: 2 columns grid */
-        @media (min-width: 969px) and (max-width: 1250px) {
+        @media (min-width: 1025px) and (max-width: 1250px) {
             #officialPackageModal div[style*="grid-template-columns: repeat(4, 1fr)"] {
                 grid-template-columns: repeat(2, 1fr) !important;
                 gap: 20px !important;
@@ -1967,9 +1968,11 @@
                 const isAndroid = /Android/.test(userAgent);
                 const isTouchDevice = ('ontouchstart' in window) || (navigator.maxTouchPoints > 0);
                 const screenWidth = window.innerWidth || screen.width;
-                const isSmallScreen = screenWidth <= 768;
+                const isTabletScreen = screenWidth <= 1024;
+                // iPadOS 13+ reports as Macintosh but has touch support
+                const isIPadOS = /Macintosh/i.test(userAgent) && isTouchDevice && navigator.maxTouchPoints > 1;
 
-                return isIOS || isAndroid || mobileRegex.test(userAgent) || (isTouchDevice && isSmallScreen);
+                return isIOS || isIPadOS || isAndroid || mobileRegex.test(userAgent) || (isTouchDevice && isTabletScreen);
             }
 
             function isLoggedIn() {
@@ -2030,7 +2033,7 @@
         </div>
 
         <!-- Main Buttons -->
-        <div style="width: 100%; max-width: 280px; display: flex; flex-direction: column; gap: 12px;">
+        <div style="width: 100%; max-width: 500px; display: flex; flex-direction: column; gap: 12px;">
             <button onclick="showMobileOfficialPackage()"
                 style="width: 100%; padding: 14px 0; background: rgba(251, 191, 36, 0.1); border: 1px solid #fbbf24; color: #fbbf24; border-radius: 8px; font-size: 0.9em; font-weight: 600; cursor: pointer; transition: all 0.3s; display: flex; align-items: center; justify-content: center; gap: 8px;">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
@@ -2064,7 +2067,7 @@
         </div>
 
         <!-- Separator -->
-        <div style="width: 100%; max-width: 280px; height: 1px; background: rgba(255, 255, 255, 0.1); margin: 25px 0;">
+        <div style="width: 100%; max-width: 500px; height: 1px; background: rgba(255, 255, 255, 0.1); margin: 25px 0;">
         </div>
 
         <!-- Login Section -->
@@ -2074,7 +2077,7 @@
         </div>
 
         <!-- Auth Buttons -->
-        <div style="width: 100%; max-width: 280px; display: flex; flex-direction: column; gap: 12px;">
+        <div style="width: 100%; max-width: 500px; display: flex; flex-direction: column; gap: 12px;">
             <button onclick="showMobileRegister()"
                 style="width: 100%; padding: 14px 0; background: rgba(229, 9, 20, 0.1); border: 1px solid #e50914; color: #e50914; border-radius: 8px; font-size: 0.9em; font-weight: 600; cursor: pointer; transition: all 0.3s; display: flex; align-items: center; justify-content: center; gap: 8px;">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
@@ -2102,7 +2105,7 @@
         <div id="mobileOfficialModal"
             style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); align-items: center; justify-content: center; z-index: 9999999; padding: 20px; box-sizing: border-box;">
             <div
-                style="background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%); border-radius: 12px; padding: 25px 20px; max-width: 300px; width: 100%; text-align: center; box-shadow: 0 20px 60px rgba(0,0,0,0.5); border: 1px solid rgba(255,255,255,0.1);">
+                style="background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%); border-radius: 12px; padding: 25px 20px; max-width: 500px; width: 100%; text-align: center; box-shadow: 0 20px 60px rgba(0,0,0,0.5); border: 1px solid rgba(255,255,255,0.1);">
                 <div style="font-size: 2.2rem; margin-bottom: 12px;">⚠️</div>
                 <h2 style="color: #fbbf24; margin: 0 0 10px 0; font-size: 1rem;">Tạm ngưng phát hành</h2>
                 <p style="color: #ccc; line-height: 1.5; margin: 0 0 12px 0; font-size: 0.8rem;">
@@ -2519,7 +2522,7 @@
 
                                 <!-- Responsive: Stack on mobile -->
                                 <style>
-                                    @media (max-width: 968px) {
+                                    @media (max-width: 1024px) {
                                         .option-card>div[style*="grid-template-columns"] {
                                             grid-template-columns: 1fr !important;
                                         }
@@ -2674,9 +2677,15 @@
                                 <!-- Mobile App Login (chỉ hiển thị trên mobile) -->
                                 <div id="mobileAppLoginForm">
                                     <div class="app-login-title">ĐĂNG NHẬP NETFLIX APP</div>
-                                    <div class="app-login-desc">Tạo link đăng nhập Netflix để xem trực tiếp trên app điện thoại/tablet</div>
+                                    <div class="app-login-desc">Tạo link đăng nhập Netflix để xem trực tiếp trên app
+                                        điện thoại/tablet</div>
                                     <button type="button" id="mobileAppLoginBtn" onclick="handleMobileAppLogin()">
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 2l-2 2m-7.61 7.61a5.5 5.5 0 1 1-7.778 7.778 5.5 5.5 0 0 1 7.777-7.777zm0 0L15.5 7.5m0 0l3 3L22 7l-3-3m-3.5 3.5L19 4"/></svg>
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14"
+                                            viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                            stroke-linecap="round" stroke-linejoin="round">
+                                            <path
+                                                d="M21 2l-2 2m-7.61 7.61a5.5 5.5 0 1 1-7.778 7.778 5.5 5.5 0 0 1 7.777-7.777zm0 0L15.5 7.5m0 0l3 3L22 7l-3-3m-3.5 3.5L19 4" />
+                                        </svg>
                                         <span id="mobileAppLoginBtnText">Tạo link đăng nhập</span>
                                     </button>
                                     <div id="mobileAppLoginStatus" class="app-login-status"></div>
@@ -3740,7 +3749,7 @@
             const modalBody = document.getElementById('customModalBody');
             const modalFooter = document.getElementById('customModalFooter');
 
-            modalIcon.textContent = icon;
+            modalIcon.innerHTML = icon;
             modalTitle.textContent = title;
 
             if (message.includes('\n') || message.includes('•')) {
@@ -4053,7 +4062,7 @@
                 const userEmail = currentUser.email || '';
 
                 // Kiểm tra mobile
-                const isMobile = window.__isMobile || window.innerWidth <= 768;
+                const isMobile = window.__isMobile || window.innerWidth <= 1024;
 
                 if (!data.success || !data.history || data.history.length === 0) {
                     if (isMobile) {
@@ -4147,7 +4156,7 @@
             modal.id = 'mobileReferralHistoryModal';
             modal.innerHTML = `
                 <div style="position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.85);z-index:9999999;display:flex;align-items:center;justify-content:center;padding:20px;box-sizing:border-box;">
-                    <div style="background:#1a1a1a;border-radius:12px;width:100%;max-width:280px;overflow:hidden;border:1px solid rgba(255,255,255,0.1);">
+                    <div style="background:#1a1a1a;border-radius:12px;width:100%;max-width:500px;overflow:hidden;border:1px solid rgba(255,255,255,0.1);">
                         <!-- Header -->
                         <div style="background:linear-gradient(135deg,rgba(34,197,94,0.15),rgba(34,197,94,0.05));padding:12px;text-align:center;border-bottom:1px solid rgba(255,255,255,0.08);">
                             <div style="font-size:1.2rem;margin-bottom:4px;">🎁</div>
@@ -6192,7 +6201,7 @@ Nếu cần thêm lượt đổi tài khoản, vui lòng liên hệ Support qua 
                     const hours = data.timeRemaining ? Math.floor(data.timeRemaining / 3600) : 0;
                     const timeText = hours > 0 ? ` (hết hạn sau ${hours}h)` : '';
 
-                    statusDiv.innerHTML = `<span style="color: #4ade80;">✅ Tạo link thành công! Đăng nhập <a href="${data.link}" target="_blank" rel="noopener">tại đây</a>${timeText}</span>`;
+                    statusDiv.innerHTML = `<span style="color: #4ade80; display: inline-flex; align-items: center; gap: 6px;"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#4ade80" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg> Tạo link thành công! Đăng nhập <a href="${data.link}" target="_blank" rel="noopener">tại đây</a>${timeText}</span>`;
 
                     if (typeof updateCreditsDisplay === 'function' && data.creditsRemaining !== undefined) {
                         updateCreditsDisplay(data.creditsRemaining);
@@ -6204,11 +6213,11 @@ Nếu cần thêm lượt đổi tài khoản, vui lòng liên hệ Support qua 
 
                     if (typeof showCustomModal === 'function') {
                         showCustomModal({
-                            icon: '✅',
+                            icon: '<svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#4ade80" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>',
                             title: 'Tạo link thành công!',
-                            message: `Nhấn nút bên dưới để đăng nhập Netflix trên điện thoại/tablet.${timeText}${creditsLine}`,
+                            message: `Link đăng nhập Netflix Mobile App của bạn đã được tạo thành công. Đóng thông báo này và Netflix and Chill thôi! ${timeText}${creditsLine}`,
                             buttons: [{
-                                text: 'Đăng nhập Netflix',
+                                text: 'Đã hiểu',
                                 type: 'primary',
                                 action: () => { window.open(data.link, '_blank'); }
                             }]
@@ -6535,7 +6544,7 @@ Nếu cần thêm lượt đổi tài khoản, vui lòng liên hệ Support qua 
                     if (typeof showCustomModal === 'function') {
                         showCustomModal({
                             icon: '✅',
-                            title: 'Đổi tài khoản TV thành công!',
+                            title: 'Đổi tài khoản Netflix thành công!',
                             message: data.message,
                             buttons: [{ text: 'OK', type: 'primary' }]
                         });
