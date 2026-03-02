@@ -2653,6 +2653,7 @@ function showCelebrationModal(celebrationData, token, user) {
             const overlay = document.getElementById('celebrationOverlay');
             if (overlay) overlay.remove();
             document.body.style.overflow = '';
+            window.open('https://s.shopee.vn/6pvewnQbSk', '_blank');
             window.location.href = '/';
         }
     };

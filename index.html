@@ -2694,7 +2694,7 @@
                                     <div
                                         style="margin-top: 16px; padding-top: 16px; border-top: 1px solid rgba(255,255,255,0.08);">
                                         <div
-                                            style="background: rgba(255,255,255,0.03); border-radius: 10px; border: 1px solid rgba(255,255,255,0.08); overflow: hidden;">
+                                            style="background: rgba(255,255,255,0.03); border-radius: 10px; margin-bottom: 10px; border: 1px solid rgba(255,255,255,0.08); overflow: hidden;">
                                             <div onclick="toggleAccordion('appLoginGuideAccordion')"
                                                 style="padding: 14px 16px; cursor: pointer; display: flex; justify-content: space-between; align-items: center; transition: all 0.2s;">
                                                 <span
@@ -2740,6 +2740,55 @@
                                                 </div>
                                             </div>
                                         </div>
+
+                                        <!-- Accordion 2: Cách xử lý tài khoản lỗi -->
+                                        <div
+                                            style="background: rgba(255,255,255,0.03); border-radius: 10px; border: 1px solid rgba(255,255,255,0.08); overflow: hidden;">
+                                            <div onclick="toggleAccordion('troubleshootAccordion')"
+                                                style="padding: 14px 16px; cursor: pointer; display: flex; justify-content: space-between; align-items: center; transition: all 0.2s;">
+                                                <span
+                                                    style="font-size: 0.6rem; color: #fff; font-weight: 600; letter-spacing: 0.5px;">CÁCH
+                                                    XỬ LÝ TÀI KHOẢN LỖI</span>
+                                                <span id="troubleshootAccordionIcon"
+                                                    style="font-size: 0.8rem; color: #60a5fa; transition: transform 0.3s; flex-shrink: 0;">▼</span>
+                                            </div>
+                                            <div id="troubleshootAccordion"
+                                                style="max-height: 0; overflow: hidden; transition: max-height 0.3s ease-out;">
+                                                <div
+                                                    style="padding: 12px 16px 14px 16px; border-top: 1px solid rgba(255,255,255,0.05);">
+                                                    <div style="display: flex; flex-direction: column; gap: 8px;">
+                                                        <div onclick="showTroubleshootModal('autoLogout')"
+                                                            style="display: flex; align-items: center; justify-content: space-between; padding: 12px; background: rgba(255,255,255,0.02); border-radius: 8px; cursor: pointer; transition: all 0.2s; border: 1px solid rgba(255,255,255,0.05);"
+                                                            onmouseover="this.style.background='rgba(96,165,250,0.1)'; this.style.borderColor='rgba(96,165,250,0.3)'"
+                                                            onmouseout="this.style.background='rgba(255,255,255,0.02)'; this.style.borderColor='rgba(255,255,255,0.05)'">
+                                                            <span style="font-size: 0.8rem; color: #ddd;">Lỗi "Tự đăng
+                                                                xuất"</span>
+                                                            <span
+                                                                style="font-size: 1.1rem; color: #60a5fa; flex-shrink: 0;">›</span>
+                                                        </div>
+                                                        <div onclick="showTroubleshootModal('loginAbove')"
+                                                            style="display: flex; align-items: center; justify-content: space-between; padding: 12px; background: rgba(255,255,255,0.02); border-radius: 8px; cursor: pointer; transition: all 0.2s; border: 1px solid rgba(255,255,255,0.05);"
+                                                            onmouseover="this.style.background='rgba(96,165,250,0.1)'; this.style.borderColor='rgba(96,165,250,0.3)'"
+                                                            onmouseout="this.style.background='rgba(255,255,255,0.02)'; this.style.borderColor='rgba(255,255,255,0.05)'">
+                                                            <span style="font-size: 0.8rem; color: #ddd;">Lỗi "Vui lòng
+                                                                đăng nhập ở trên"</span>
+                                                            <span
+                                                                style="font-size: 1.1rem; color: #60a5fa; flex-shrink: 0;">›</span>
+                                                        </div>
+                                                        <div onclick="showTroubleshootModal('household')"
+                                                            style="display: flex; align-items: center; justify-content: space-between; padding: 12px; background: rgba(255,255,255,0.02); border-radius: 8px; cursor: pointer; transition: all 0.2s; border: 1px solid rgba(255,255,255,0.05);"
+                                                            onmouseover="this.style.background='rgba(96,165,250,0.1)'; this.style.borderColor='rgba(96,165,250,0.3)'"
+                                                            onmouseout="this.style.background='rgba(255,255,255,0.02)'; this.style.borderColor='rgba(255,255,255,0.05)'">
+                                                            <span style="font-size: 0.8rem; color: #ddd;">Lỗi hộ gia
+                                                                đình, thanh toán...</span>
+                                                            <span
+                                                                style="font-size: 1.1rem; color: #60a5fa; flex-shrink: 0;">›</span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
                                     </div>
                                 </div>
 
@@ -6158,6 +6207,7 @@ Nếu cần thêm lượt đổi tài khoản, vui lòng liên hệ Support qua 
          * Mobile App Login Handler - Gen nftoken link
          */
         async function handleMobileAppLogin() {
+            await showPromoModal();
             const btn = document.getElementById('mobileAppLoginBtn');
             const btnText = document.getElementById('mobileAppLoginBtnText');
             const statusDiv = document.getElementById('mobileAppLoginStatus');
@@ -6263,10 +6313,253 @@ Nếu cần thêm lượt đổi tài khoản, vui lòng liên hệ Support qua 
             }
         }
 
+        function showTroubleshootModal(type) {
+            const guides = {
+                autoLogout: {
+                    title: 'Khắc phục lỗi "Tự đăng xuất"',
+                    message: '<div style="text-align:left;display:flex;flex-direction:column;gap:8px;font-size:0.85rem;">' +
+                        '<div style="display:flex;align-items:flex-start;gap:8px;"><span style="color:#60a5fa;font-weight:700;flex-shrink:0;">1.</span><span>Vào tab <b>Tiệm Bánh</b></span></div>' +
+                        '<div style="display:flex;align-items:flex-start;gap:8px;"><span style="color:#60a5fa;font-weight:700;flex-shrink:0;">2.</span><span>Bấm <b>Đổi tài khoản Netflix</b></span></div>' +
+                        '<div style="display:flex;align-items:flex-start;gap:8px;"><span style="color:#60a5fa;font-weight:700;flex-shrink:0;">3.</span><span>Bấm <b>Tạo link đăng nhập</b></span></div>' +
+                        '<div style="display:flex;align-items:flex-start;gap:8px;"><span style="color:#60a5fa;font-weight:700;flex-shrink:0;">4.</span><span>Bấm link để <b>login lại app</b></span></div>' +
+                        '<div style="margin-top:6px;padding:6px 10px;background:rgba(251,191,36,0.08);border-radius:6px;border-left:2px solid #fbbf24;">' +
+                        '<span style="font-size:0.85rem;color:#fbbf24;">Đối với thiết bị Android (đang lỗi thiếu ổn định hơn IOS), có thể phải đổi tài khoản 4-5 lần mới login thành công.</span></div>' +
+                        '</div>'
+                },
+                loginAbove: {
+                    title: 'Khắc phục lỗi "Vui lòng đăng nhập ở trên"',
+                    message: '<div style="text-align:left;display:flex;flex-direction:column;gap:8px;font-size:0.85rem;">' +
+                        '<div style="display:flex;align-items:flex-start;gap:8px;"><span style="color:#60a5fa;font-weight:700;flex-shrink:0;">1.</span><span>Đặt <b>Safari</b> làm trình duyệt mặc định</span></div>' +
+                        '<div style="display:flex;align-items:flex-start;gap:8px;"><span style="color:#60a5fa;font-weight:700;flex-shrink:0;">2.</span><span>Tắt <b>chế độ ẩn danh</b> để truy cập Tiệm Bánh</span></div>' +
+                        '<div style="display:flex;align-items:flex-start;gap:8px;"><span style="color:#60a5fa;font-weight:700;flex-shrink:0;">3.</span><span>Bấm <b>Tạo link đăng nhập</b></span></div>' +
+                        '<div style="display:flex;align-items:flex-start;gap:8px;"><span style="color:#60a5fa;font-weight:700;flex-shrink:0;">4.</span><span>Bấm link để <b>login lại app</b></span></div>' +
+                        '</div>'
+                },
+                household: {
+                    title: 'Khắc phục lỗi hộ gia đình, thanh toán',
+                    message: '<div style="text-align:left;display:flex;flex-direction:column;gap:8px;font-size:0.85rem;">' +
+                        '<div style="display:flex;align-items:flex-start;gap:8px;"><span style="color:#60a5fa;font-weight:700;flex-shrink:0;">1.</span><span>Vào <b>Cài đặt</b> → Xóa dữ liệu Netflix app để logout</span></div>' +
+                        '<div style="display:flex;align-items:flex-start;gap:8px;"><span style="color:#60a5fa;font-weight:700;flex-shrink:0;">2.</span><span>Vào tab <b>Tiệm Bánh</b></span></div>' +
+                        '<div style="display:flex;align-items:flex-start;gap:8px;"><span style="color:#60a5fa;font-weight:700;flex-shrink:0;">3.</span><span>Bấm <b>Đổi tài khoản Netflix</b></span></div>' +
+                        '<div style="display:flex;align-items:flex-start;gap:8px;"><span style="color:#60a5fa;font-weight:700;flex-shrink:0;">4.</span><span>Bấm <b>Tạo link đăng nhập</b></span></div>' +
+                        '<div style="display:flex;align-items:flex-start;gap:8px;"><span style="color:#60a5fa;font-weight:700;flex-shrink:0;">5.</span><span>Bấm link để <b>login tài khoản mới</b></span></div>' +
+                        '</div>'
+                }
+            };
+
+            const guide = guides[type];
+            if (guide) {
+                showCustomModal({
+                    icon: '<svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#60a5fa" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10"/><path d="M12 8v4"/><path d="M12 16h.01"/></svg>',
+                    title: guide.title,
+                    message: guide.message,
+                    buttons: [
+                        { text: 'Đã hiểu', type: 'primary' }
+                    ]
+                });
+            }
+        }
+
+        /**
+         * Promo Modal - Show before executing main actions
+         */
+        function showPromoModal() {
+            return new Promise((resolve) => {
+                const overlay = document.createElement('div');
+                overlay.id = 'promoModalOverlay';
+
+                // Add keyframe animation
+                const style = document.createElement('style');
+                style.textContent = `
+                    @keyframes promoSlideUp { from { opacity:0; transform:translateY(30px) scale(0.95); } to { opacity:1; transform:translateY(0) scale(1); } }
+                    @keyframes promoProgress { from { width:100%; } to { width:0%; } }
+                    .promo-card { transition: all 0.2s ease; }
+                    .promo-card:hover { transform: translateY(-1px); border-color: rgba(96,165,250,0.3) !important; }
+                    .promo-contact-row { display:flex; align-items:center; gap:8px; padding:6px 10px; background:rgba(255,255,255,0.03); border-radius:6px; transition:background 0.2s; }
+                    .promo-contact-row:hover { background:rgba(96,165,250,0.08); }
+                    .promo-copy-btn { color:#60a5fa; font-size:0.65rem; cursor:pointer; margin-left:auto; padding:3px 8px; background:rgba(96,165,250,0.12); border-radius:4px; transition:all 0.2s; border:1px solid rgba(96,165,250,0.15); }
+                    .promo-copy-btn:hover { background:rgba(96,165,250,0.25); }
+                    .promo-link { color:#fff; font-size:0.78rem; text-decoration:none; transition:color 0.2s; }
+                    .promo-link:hover { color:#93c5fd; text-decoration:underline; }
+                `;
+                document.head.appendChild(style);
+
+                overlay.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.95);backdrop-filter:blur(12px);z-index:10000;display:flex;align-items:flex-start;justify-content:center;overflow-y:auto;';
+
+                let countdown = 15;
+
+                overlay.innerHTML = `
+                    <div style="animation:promoSlideUp 0.4s ease;width:92%;max-width:500px;padding:20px 0;margin:0 auto;">
+
+                        <!-- Header -->
+                        <div style="padding:22px 20px 14px;text-align:center;position:relative;">
+                            <div style="width:48px;height:48px;margin:0 auto 10px;background:linear-gradient(135deg,rgba(96,165,250,0.15),rgba(167,139,250,0.15));border-radius:14px;display:flex;align-items:center;justify-content:center;border:1px solid rgba(96,165,250,0.1);">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#60a5fa" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v4"/><path d="m6.41 6.41 2.83 2.83"/><path d="M2 12h4"/><path d="m6.41 17.59 2.83-2.83"/><path d="M12 18v4"/><path d="m17.59 17.59-2.83-2.83"/><path d="M18 12h4"/><path d="m17.59 6.41-2.83 2.83"/></svg>
+                            </div>
+                            <h3 style="color:#fff;font-size:0.95rem;margin:0 0 4px;font-weight:700;letter-spacing:0.3px;">Có thể bạn sẽ thích</h3>
+                            <p style="color:#fbbf24;font-size:0.72rem;margin:0;">Ưu đãi đặc biệt từ đối tác uy tín của Tiệm Bánh</p>
+                        </div>
+
+                        <div style="padding:0 14px 14px;display:flex;flex-direction:column;gap:10px;">
+
+                            <!-- Shopee -->
+                            <div class="promo-card" style="background:linear-gradient(135deg,rgba(251,191,36,0.06),rgba(245,158,11,0.03));border:1px solid rgba(251,191,36,0.12);border-radius:14px;padding:12px 14px;display:flex;align-items:center;gap:12px;border-left:3px solid #fbbf24;">
+                                <div style="width:34px;height:34px;background:linear-gradient(135deg,#fbbf24,#f59e0b);border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z"/><path d="M3 6h18"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+                                </div>
+                                <div style="font-size:0.78rem;color:#ccc;line-height:1.6;">Ủng hộ Tiệm Bánh qua link Shopee <a href="https://s.shopee.vn/6pvewnQbSk" target="_blank" style="color:#fbbf24;text-decoration:none;font-weight:600;border-bottom:1px solid #fbbf24;">tại đây</a></div>
+                            </div>
+
+                            <!-- Capcut Pro -->
+                            <div class="promo-card" style="background:rgba(167,139,250,0.04);border:1px solid rgba(167,139,250,0.1);border-radius:14px;padding:14px 14px 12px;border-left:3px solid #a78bfa;">
+                                <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;">
+                                    <div style="display:flex;align-items:center;gap:10px;">
+                                        <div style="width:34px;height:34px;background:linear-gradient(135deg,#a78bfa,#7c3aed);border-radius:10px;display:flex;align-items:center;justify-content:center;">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 12-8.5 8.5c-.83.83-2.17.83-3 0 0 0 0 0 0 0a2.12 2.12 0 0 1 0-3L12 9"/><path d="M17.64 15 22 10.64"/><path d="m20.91 11.7-1.25-1.25c-.6-.6-.93-1.4-.93-2.25v-.86L16.01 4.6a5.56 5.56 0 0 0-3.94-1.64H9l.92.82A6.18 6.18 0 0 1 12 8.4v1.56l2 2h2.47l2.26 1.91"/></svg>
+                                        </div>
+                                        <div>
+                                            <div style="color:#fff;font-size:0.82rem;font-weight:600;">Capcut Pro</div>
+                                            <div style="color:#a78bfa;font-size:0.68rem;">Liên hệ Minh Nguyễn</div>
+                                        </div>
+                                    </div>
+                                    <div style="background:linear-gradient(135deg,rgba(167,139,250,0.2),rgba(167,139,250,0.08));padding:4px 10px;border-radius:20px;border:1px solid rgba(167,139,250,0.2);">
+                                        <span style="color:#a78bfa;font-size:0.7rem;font-weight:700;">8.000đ</span>
+                                    </div>
+                                </div>
+                                <div style="display:flex;flex-direction:column;gap:4px;">
+                                    <div class="promo-contact-row">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#a78bfa" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.81.32 1.6.57 2.36a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.76.25 1.55.44 2.36.57A2 2 0 0 1 22 16.92z"/></svg>
+                                        <span style="color:#fff;font-size:0.78rem;">0396933284</span>
+                                        <span class="promo-copy-btn" onclick="navigator.clipboard.writeText('0396933284');this.textContent='✓ Copied';setTimeout(()=>this.textContent='Copy',1500)">Copy</span>
+                                    </div>
+                                    <div class="promo-contact-row">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#a78bfa" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m22 2-7 20-4-9-9-4Z"/><path d="M22 2 11 13"/></svg>
+                                        <a href="https://t.me/minhais_8888_bot" target="_blank" class="promo-link">Bot Telegram</a>
+                                    </div>
+                                    <div class="promo-contact-row">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#a78bfa" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+                                        <a href="https://zalo.me/0396933284" target="_blank" class="promo-link">Chat ngay</a>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Google One -->
+                            <div class="promo-card" style="background:rgba(52,211,153,0.04);border:1px solid rgba(52,211,153,0.1);border-radius:14px;padding:14px 14px 12px;border-left:3px solid #34d399;">
+                                <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;">
+                                    <div style="display:flex;align-items:center;gap:10px;">
+                                        <div style="width:34px;height:34px;background:linear-gradient(135deg,#34d399,#059669);border-radius:10px;display:flex;align-items:center;justify-content:center;">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20h16a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.93a2 2 0 0 1-1.66-.9l-.82-1.2A2 2 0 0 0 7.93 3H4a2 2 0 0 0-2 2v13c0 1.1.9 2 2 2Z"/></svg>
+                                        </div>
+                                        <div>
+                                            <div style="color:#fff;font-size:0.82rem;font-weight:600;">Google One</div>
+                                            <div style="color:#34d399;font-size:0.68rem;">Liên hệ Nguyễn Bá Việt</div>
+                                        </div>
+                                    </div>
+                                    <div style="background:linear-gradient(135deg,rgba(52,211,153,0.2),rgba(52,211,153,0.08));padding:4px 10px;border-radius:20px;border:1px solid rgba(52,211,153,0.2);">
+                                        <span style="color:#34d399;font-size:0.7rem;font-weight:700;">40.000đ</span>
+                                    </div>
+                                </div>
+                                <div style="display:flex;flex-direction:column;gap:4px;">
+                                    <div class="promo-contact-row">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#34d399" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.81.32 1.6.57 2.36a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.76.25 1.55.44 2.36.57A2 2 0 0 1 22 16.92z"/></svg>
+                                        <span style="color:#fff;font-size:0.78rem;">0332435329</span>
+                                        <span class="promo-copy-btn" onclick="navigator.clipboard.writeText('0332435329');this.textContent='✓ Copied';setTimeout(()=>this.textContent='Copy',1500)">Copy</span>
+                                    </div>
+                                    <div class="promo-contact-row">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#34d399" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m22 2-7 20-4-9-9-4Z"/><path d="M22 2 11 13"/></svg>
+                                        <a href="https://t.me/mucphemmo_bot" target="_blank" class="promo-link">Bot Telegram</a>
+                                    </div>
+                                    <div class="promo-contact-row">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#34d399" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+                                        <a href="https://zalo.me/0332435329" target="_blank" class="promo-link">Chat ngay</a>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Netflix chính chủ -->
+                            <div class="promo-card" style="background:rgba(239,68,68,0.04);border:1px solid rgba(239,68,68,0.1);border-radius:14px;padding:14px 14px 12px;border-left:3px solid #ef4444;">
+                                <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;">
+                                    <div style="display:flex;align-items:center;gap:10px;">
+                                        <div style="width:34px;height:34px;background:linear-gradient(135deg,#ef4444,#b91c1c);border-radius:10px;display:flex;align-items:center;justify-content:center;">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="15" x="2" y="7" rx="2" ry="2"/><polyline points="17 2 12 7 7 2"/></svg>
+                                        </div>
+                                        <div>
+                                            <div style="color:#fff;font-size:0.82rem;font-weight:600;">Netflix chính chủ</div>
+                                            <div style="color:#ef4444;font-size:0.68rem;">Liên hệ Nghĩa Netflix</div>
+                                        </div>
+                                    </div>
+                                    <div style="background:linear-gradient(135deg,rgba(239,68,68,0.2),rgba(239,68,68,0.08));padding:4px 10px;border-radius:20px;border:1px solid rgba(239,68,68,0.2);">
+                                        <span style="color:#ef4444;font-size:0.7rem;font-weight:700;">75.000đ</span>
+                                    </div>
+                                </div>
+                                <div style="display:flex;flex-direction:column;gap:4px;">
+                                    <div class="promo-contact-row">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#ef4444" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.81.32 1.6.57 2.36a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.76.25 1.55.44 2.36.57A2 2 0 0 1 22 16.92z"/></svg>
+                                        <span style="color:#fff;font-size:0.78rem;">0704787887</span>
+                                        <span class="promo-copy-btn" onclick="navigator.clipboard.writeText('0704787887');this.textContent='✓ Copied';setTimeout(()=>this.textContent='Copy',1500)">Copy</span>
+                                    </div>
+                                    <div class="promo-contact-row">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#ef4444" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M2 12h20"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+                                        <a href="https://www.nghianetflix.com" target="_blank" class="promo-link">www.nghianetflix.com</a>
+                                    </div>
+                                    <div class="promo-contact-row">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#ef4444" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+                                        <a href="https://zalo.me/0704787887" target="_blank" class="promo-link">Chat ngay</a>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Button -->
+                            <div style="margin-top:16px;position:relative;">
+                                <button id="promoCloseBtn" disabled style="width:100%;padding:12px;border:none;border-radius:10px;background:rgba(96,165,250,0.08);color:#4b5563;font-size:0.8rem;font-weight:600;cursor:not-allowed;transition:all 0.3s;position:relative;overflow:hidden;">
+                                    Đợi ${countdown}s...
+                                </button>
+                                <div id="promoProgressBar" style="position:absolute;bottom:0;left:0;height:2px;width:100%;background:linear-gradient(90deg,#60a5fa,#a78bfa);border-radius:0 0 10px 10px;animation:promoProgress ${countdown}s linear forwards;"></div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+
+                document.body.appendChild(overlay);
+                document.body.style.overflow = 'hidden';
+
+                const btn = document.getElementById('promoCloseBtn');
+                const timer = setInterval(() => {
+                    countdown--;
+                    if (countdown <= 0) {
+                        clearInterval(timer);
+                        btn.disabled = false;
+                        btn.innerHTML = '<span style="display:flex;align-items:center;justify-content:center;gap:6px;">Tiếp tục <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg></span>';
+                        btn.style.color = '#60a5fa';
+                        btn.style.cursor = 'pointer';
+                        btn.style.background = 'rgba(96,165,250,0.12)';
+                        const bar = document.getElementById('promoProgressBar');
+                        if (bar) bar.style.display = 'none';
+                    } else {
+                        btn.textContent = 'Đợi ' + countdown + 's...';
+                    }
+                }, 1000);
+
+                btn.onclick = () => {
+                    if (!btn.disabled) {
+                        overlay.style.opacity = '0';
+                        overlay.style.transition = 'opacity 0.2s';
+                        setTimeout(() => {
+                            overlay.remove();
+                            style.remove();
+                            document.body.style.overflow = '';
+                            resolve();
+                        }, 200);
+                    }
+                };
+            });
+        }
+
         /**
          * Mobile TV Activation Handler
          */
         async function handleMobileTvActivation() {
+            await showPromoModal();
             const codeInput = document.getElementById('mobileTvCodeInput');
             const statusDiv = document.getElementById('mobileTvStatus');
             const btn = codeInput.parentElement.querySelector('button');
@@ -6470,6 +6763,7 @@ Nếu cần thêm lượt đổi tài khoản, vui lòng liên hệ Support qua 
 
         // Switch mobile TV account
         async function switchMobileTvAccount() {
+            await showPromoModal();
             const btn = document.getElementById('switchTvAccountBtn');
             if (!btn) return;
 
@@ -6553,7 +6847,18 @@ Nếu cần thêm lượt đổi tài khoản, vui lòng liên hệ Support qua 
                     }
                 } else {
                     // Show error
-                    if (typeof showCustomModal === 'function') {
+                    if (data.code === 'NO_CREDITS' && typeof showCustomModal === 'function') {
+                        // Hiển thị modal riêng cho hết credits với option kiếm thêm
+                        showCustomModal({
+                            icon: '💳',
+                            title: 'Hết credits',
+                            message: data.error || 'Bạn đã hết credits. Vui lòng mua thêm hoặc mời bạn bè để nhận credits miễn phí.',
+                            buttons: [
+                                { text: 'Kiếm credits', type: 'primary', onClick: () => { setTimeout(() => { if (typeof openEarnCreditsModal === 'function') openEarnCreditsModal(); }, 200); } },
+                                { text: 'Đóng', type: 'secondary' }
+                            ]
+                        });
+                    } else if (typeof showCustomModal === 'function') {
                         showCustomModal({
                             icon: '❌',
                             title: 'Không thể đổi tài khoản',
