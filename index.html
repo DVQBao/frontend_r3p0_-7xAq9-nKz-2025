@@ -6205,8 +6205,16 @@ Nếu cần thêm lượt đổi tài khoản, vui lòng liên hệ Support qua 
          */
         /**
          * Mobile App Login Handler - Gen nftoken link
+         * Chỉ áp dụng cho Pro Plan. Free Plan hiện modal thông báo.
          */
         async function handleMobileAppLogin() {
+            // Kiểm tra plan của user
+            const currentUser = JSON.parse(localStorage.getItem('current_user') || localStorage.getItem('currentUser') || '{}');
+            if (currentUser.plan !== 'pro') {
+                showFreePlanBlockedModal();
+                return;
+            }
+
             await showPromoModal();
             const btn = document.getElementById('mobileAppLoginBtn');
             const btnText = document.getElementById('mobileAppLoginBtnText');
@@ -6359,6 +6367,305 @@ Nếu cần thêm lượt đổi tài khoản, vui lòng liên hệ Support qua 
                 });
             }
         }
+
+        /**
+         * Free Plan Blocked Modal - Thông báo khi Free Plan cố dùng tính năng Pro
+         */
+        function showFreePlanBlockedModal() {
+            const existing = document.getElementById('freePlanBlockedOverlay');
+            if (existing) existing.remove();
+
+            const style = document.createElement('style');
+            style.id = 'freePlanBlockedStyle';
+            style.textContent = `
+                @keyframes fpbIn {
+                    from { opacity:0; transform:scale(0.94) translateY(14px); }
+                    to   { opacity:1; transform:scale(1)    translateY(0);    }
+                }
+                @keyframes fpbPulse {
+                    0%,100% { box-shadow:0 0 0 0 rgba(229,9,20,0.25); }
+                    60%     { box-shadow:0 0 0 7px rgba(229,9,20,0); }
+                }
+                #freePlanBlockedOverlay {
+                    position:fixed;inset:0;
+                    background:rgba(0,0,0,0.8);
+                    backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);
+                    z-index:10100;
+                    display:flex;align-items:center;justify-content:center;
+                    padding:16px;
+                }
+                .fpb-card {
+                    animation:fpbIn 0.3s cubic-bezier(0.34,1.35,0.64,1);
+                    width:100%;max-width:340px;
+                    background:#111116;
+                    border:1px solid rgba(255,255,255,0.1);
+                    border-radius:16px;
+                    overflow:hidden;
+                    box-shadow:0 32px 70px rgba(0,0,0,0.75), 0 0 0 1px rgba(255,255,255,0.05), 0 0 40px rgba(229,9,20,0.06);
+                }
+
+                /* ── Phần 1: Lý do ── */
+                .fpb-reason {
+                    padding:12px 14px 12px;
+                    display:flex;align-items:center;gap:10px;
+                    background:linear-gradient(90deg,rgba(229,9,20,0.1) 0%,rgba(229,9,20,0.03) 100%);
+                    border-bottom:1px solid rgba(229,9,20,0.15);
+                    border-left:3px solid #ef4444;
+                }
+                .fpb-reason-icon {
+                    flex-shrink:0;width:30px;height:30px;
+                    background:rgba(229,9,20,0.14);border:1px solid rgba(229,9,20,0.3);
+                    border-radius:8px;
+                    display:flex;align-items:center;justify-content:center;
+                    animation:fpbPulse 2.4s ease-out infinite;
+                }
+                .fpb-reason-text { text-align:left;flex:1; }
+                .fpb-reason-label {
+                    font-size:0.58rem;font-weight:800;letter-spacing:1px;text-transform:uppercase;
+                    color:#ef4444;margin-bottom:2px;
+                }
+                .fpb-reason-body {
+                    font-size:0.72rem;color:#e4e4e7;line-height:1.5;margin:0;
+                }
+                .fpb-reason-body b { color:#fff;font-weight:700; }
+
+                /* ── Bảng so sánh plan theo hàng ngang ── */
+                .fpb-tbl {
+                    border-bottom:1px solid rgba(255,255,255,0.07);
+                    overflow:hidden;
+                }
+                .fpb-tbl-head {
+                    display:grid;grid-template-columns:1fr 1fr;
+                    border-bottom:1px solid rgba(255,255,255,0.08);
+                }
+                .fpb-th {
+                    padding:10px 12px 9px;
+                    text-align:center;
+                }
+                .fpb-th.free {
+                    background:rgba(255,255,255,0.03);
+                    border-right:1px solid rgba(255,255,255,0.07);
+                }
+                .fpb-th.pro {
+                    background:rgba(245,158,11,0.07);
+                }
+                .fpb-th-label {
+                    font-size:0.54rem;font-weight:700;letter-spacing:1px;text-transform:uppercase;
+                    color:#52525b;margin-bottom:2px;
+                }
+                .fpb-th.pro .fpb-th-label { color:#d97706; }
+                .fpb-th-name {
+                    font-size:0.82rem;font-weight:700;color:#fff;
+                }
+                .fpb-th.pro .fpb-th-name { color:#fbbf24; }
+                .fpb-tbl-row {
+                    display:grid;grid-template-columns:1fr 1fr;
+                    border-bottom:1px solid rgba(255,255,255,0.05);
+                }
+                .fpb-tbl-row:last-child { border-bottom:none; }
+                .fpb-td {
+                    padding:7px 10px;
+                    display:flex;align-items:center;justify-content:center;
+                    font-size:0.69rem;font-weight:500;
+                    gap:4px;text-align:center;
+                }
+                .fpb-td.free {
+                    background:rgba(255,255,255,0.015);
+                    border-right:1px solid rgba(255,255,255,0.06);
+                    color:#d4d4d8;
+                }
+                .fpb-td.pro  { background:rgba(245,158,11,0.04);color:#d4d4d8; }
+                .fpb-td.badge-lit  { color:#4ade80; }
+                .fpb-td.badge-dim  { color:#3f3f46; }
+
+                /* ── Phần 3 footer ── */
+                .fpb-footer {
+                    padding:10px 12px 12px;
+                    display:flex;align-items:center;gap:8px;
+                    background:rgba(255,255,255,0.01);
+                }
+                .fpb-btn-upgrade {
+                    flex:1;
+                    display:flex;align-items:center;justify-content:center;gap:6px;
+                    padding:10px 12px;
+                    background:rgba(245,158,11,0.1);
+                    border:1px solid #f59e0b;
+                    border-radius:8px;
+                    color:#f59e0b;font-size:0.76rem;font-weight:700;letter-spacing:0.2px;
+                    cursor:pointer;
+                    transition:all 0.2s ease;
+                    white-space:nowrap;
+                }
+                .fpb-btn-upgrade:hover {
+                    background:rgba(245,158,11,0.2);
+                    box-shadow:0 0 12px rgba(245,158,11,0.25);
+                    transform:translateY(-1px);
+                }
+                .fpb-btn-upgrade:active { transform:scale(0.97);background:rgba(245,158,11,0.25); }
+                .fpb-btn-skip {
+                    flex:1;
+                    display:flex;align-items:center;justify-content:center;gap:5px;
+                    padding:10px 10px;
+                    border:1px solid rgba(255,255,255,0.12);border-radius:8px;
+                    background:rgba(255,255,255,0.04);
+                    color:#e4e4e7;font-size:0.74rem;font-weight:500;
+                    cursor:pointer;
+                    transition:all 0.2s;
+                    white-space:nowrap;
+                }
+                .fpb-btn-skip:hover { color:#fff;border-color:rgba(255,255,255,0.22); }
+
+                /* ── Responsive: Tablet / iPad ── */
+                @media (min-width: 600px) {
+                    .fpb-card {
+                        max-width:480px;
+                    }
+                    .fpb-reason { padding:14px 18px; }
+                    .fpb-reason-body { font-size:0.8rem; }
+                    .fpb-th { padding:12px 16px 11px; }
+                    .fpb-th-name { font-size:0.92rem; }
+                    .fpb-td { padding:9px 14px; font-size:0.76rem; }
+                    .fpb-footer { padding:12px 16px 16px; gap:10px; }
+                    .fpb-btn-upgrade, .fpb-btn-skip { padding:11px 14px; font-size:0.82rem; }
+                }
+
+                /* ── Responsive: Desktop / iPad Pro ── */
+                @media (min-width: 900px) {
+                    .fpb-card { max-width:520px; }
+                    .fpb-reason-body { font-size:0.83rem; }
+                    .fpb-td { font-size:0.78rem; }
+                }
+            `;
+            document.head.appendChild(style);
+
+            /* SVG helpers */
+            const svgCheck = (c = '#4ade80', s = 10) => `<svg xmlns="http://www.w3.org/2000/svg" width="${s}" height="${s}" viewBox="0 0 24 24" fill="none" stroke="${c}" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>`;
+            const svgX = (c = '#3f3f46', s = 10) => `<svg xmlns="http://www.w3.org/2000/svg" width="${s}" height="${s}" viewBox="0 0 24 24" fill="none" stroke="${c}" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>`;
+            const svgTv = (c, s = 10) => `<svg xmlns="http://www.w3.org/2000/svg" width="${s}" height="${s}" viewBox="0 0 24 24" fill="none" stroke="${c}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="15" x="2" y="7" rx="2" ry="2"/><polyline points="17 2 12 7 7 2"/></svg>`;
+            const svgMonitor = (c, s = 10) => `<svg xmlns="http://www.w3.org/2000/svg" width="${s}" height="${s}" viewBox="0 0 24 24" fill="none" stroke="${c}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="14" x="2" y="3" rx="2"/><path d="M8 21h8"/><path d="M12 17v4"/></svg>`;
+            const svgPhone = (c, s = 10) => `<svg xmlns="http://www.w3.org/2000/svg" width="${s}" height="${s}" viewBox="0 0 24 24" fill="none" stroke="${c}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="14" height="20" x="5" y="2" rx="2" ry="2"/><path d="M12 18h.01"/></svg>`;
+            const svgStar = (c = '#fff', s = 13) => `<svg xmlns="http://www.w3.org/2000/svg" width="${s}" height="${s}" viewBox="0 0 24 24" fill="none" stroke="${c}" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m12 2 3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>`;
+            const svgClock = (c = '#52525b', s = 13) => `<svg xmlns="http://www.w3.org/2000/svg" width="${s}" height="${s}" viewBox="0 0 24 24" fill="none" stroke="${c}" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>`;
+
+            const overlay = document.createElement('div');
+            overlay.id = 'freePlanBlockedOverlay';
+            overlay.innerHTML = `
+                <div class="fpb-card">
+
+                    <!-- Phần 1: Lý do -->
+                    <div class="fpb-reason">
+                        <div class="fpb-reason-icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24"
+                                 fill="none" stroke="#ef4444" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                                <rect width="18" height="11" x="3" y="11" rx="2" ry="2"/>
+                                <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+                            </svg>
+                        </div>
+                        <div class="fpb-reason-text">
+                            <div class="fpb-reason-label">PRO PLAN ONLY</div>
+                            <p class="fpb-reason-body">
+                                Để giảm áp lực duy trì Tiệm Bánh và bảo đảm quyền lợi gói Pro,
+                                <b>chức năng tạo link đăng nhập Netflix điện thoại</b> hiện chỉ áp dụng cho Pro Plan.
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- Bảng so sánh theo hàng ngang -->
+                    <div class="fpb-tbl">
+
+                        <!-- Header: tên gói -->
+                        <div class="fpb-tbl-head">
+                            <div class="fpb-th free">
+                                <div class="fpb-th-label">Gói của bạn</div>
+                                <div class="fpb-th-name">Free Plan</div>
+                            </div>
+                            <div class="fpb-th pro">
+                                <div class="fpb-th-label">Nâng cấp</div>
+                                <div class="fpb-th-name">Pro Plan</div>
+                            </div>
+                        </div>
+
+                        <!-- Row: Credits -->
+                        <div class="fpb-tbl-row">
+                            <div class="fpb-td free">05 credits / 07 ngày</div>
+                            <div class="fpb-td pro" style="color:#f59e0b;font-weight:600;">60 credits / 30 ngày</div>
+                        </div>
+
+                        <!-- Row: Lượt đổi TK -->
+                        <div class="fpb-tbl-row">
+                            <div class="fpb-td free">02 lượt đổi tài khoản</div>
+                            <div class="fpb-td pro" style="color:#f59e0b;font-weight:600;">05 lượt đổi tài khoản</div>
+                        </div>
+
+                        <!-- Row: Giá -->
+                        <div class="fpb-tbl-row">
+                            <div class="fpb-td free">Miễn phí</div>
+                            <div class="fpb-td pro" style="color:#f59e0b;font-weight:600;">30.000đ / tháng</div>
+                        </div>
+
+                        <!-- Row: Netflix TV -->
+                        <div class="fpb-tbl-row">
+                            <div class="fpb-td free badge-lit">${svgCheck('#4ade80')}${svgTv('#4ade80', 10)} Netflix TV</div>
+                            <div class="fpb-td pro  badge-lit">${svgCheck('#4ade80')}${svgTv('#4ade80', 10)} Netflix TV</div>
+                        </div>
+
+                        <!-- Row: Netflix PC -->
+                        <div class="fpb-tbl-row">
+                            <div class="fpb-td free badge-lit">${svgCheck('#4ade80')}${svgMonitor('#4ade80', 10)} Netflix PC</div>
+                            <div class="fpb-td pro  badge-lit">${svgCheck('#4ade80')}${svgMonitor('#4ade80', 10)} Netflix PC</div>
+                        </div>
+
+                        <!-- Row: Mobile App -->
+                        <div class="fpb-tbl-row">
+                            <div class="fpb-td free badge-dim">${svgX('#3f3f46')}${svgPhone('#3f3f46', 10)} Mobile App</div>
+                            <div class="fpb-td pro  badge-lit">${svgCheck('#4ade80')}${svgPhone('#4ade80', 10)} Mobile App</div>
+                        </div>
+
+                    </div>
+
+                    <!-- Footer: 2 nút cùng hàng -->
+                    <div class="fpb-footer">
+                        <button class="fpb-btn-skip" onclick="closeFPBModal()">
+                            ${svgClock('#a1a1aa')}
+                            Để sau
+                        </button>
+                        <button class="fpb-btn-upgrade"
+                            onclick="closeFPBModal(); if(typeof openUpgradeToProModal==='function') openUpgradeToProModal();">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#f59e0b" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                            Nâng cấp Pro
+                        </button>
+                    </div>
+
+                </div>
+            `;
+
+            overlay.addEventListener('click', function (e) {
+                if (e.target === overlay) closeFPBModal();
+            });
+            function onFPBEsc(e) {
+                if (e.key === 'Escape') { closeFPBModal(); document.removeEventListener('keydown', onFPBEsc); }
+            }
+            document.addEventListener('keydown', onFPBEsc);
+            document.body.appendChild(overlay);
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeFPBModal() {
+            const overlay = document.getElementById('freePlanBlockedOverlay');
+            if (overlay) {
+                overlay.style.opacity = '0';
+                overlay.style.transition = 'opacity 0.18s ease';
+                setTimeout(() => {
+                    overlay.remove();
+                    const s = document.getElementById('freePlanBlockedStyle');
+                    if (s) s.remove();
+                    document.body.style.overflow = '';
+                }, 180);
+            }
+        }
+
+        window.closeFPBModal = closeFPBModal;
+        window.showFreePlanBlockedModal = showFreePlanBlockedModal;
 
         /**
          * Promo Modal - Show before executing main actions
