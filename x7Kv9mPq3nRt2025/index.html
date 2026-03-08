@@ -825,12 +825,17 @@
 
             /* Hiện Rate Limit và Cookie Management trên mobile */
             #rateLimitManagement .users-table,
-            #cookiesManagement .users-table {
+            #cookiesManagement .users-table,
+            #ctvManagement.users-table {
                 display: block !important;
                 background: transparent;
                 border: none;
                 padding: 0;
                 margin-top: -25px;
+            }
+
+            #ctvManagement.users-table {
+                margin-top: 0;
             }
 
             #rateLimitManagement .table-header,
@@ -842,6 +847,18 @@
                 margin-bottom: 5px;
                 background: transparent;
                 border: none;
+            }
+
+            #ctvManagement .table-header {
+                font-size: 14px;
+                font-weight: 700;
+                color: #fff;
+                padding: 12px 14px;
+                margin-bottom: 0;
+                background: rgba(255,255,255,0.04);
+                border: none;
+                border-bottom: 1px solid #2a2a2a;
+                border-radius: 0;
             }
 
             /* Stats box */
@@ -1156,6 +1173,43 @@
 
             .mobile-user-card .hidden {
                 display: none !important;
+            }
+
+            /* CTV status badges */
+            .mobile-user-card .user-plan.active {
+                background: rgba(16, 185, 129, 0.2);
+                color: #10b981;
+            }
+
+            .mobile-user-card .user-plan.suspended {
+                background: rgba(245, 158, 11, 0.2);
+                color: #f59e0b;
+            }
+
+            .mobile-user-card .user-plan.expired {
+                background: rgba(239, 68, 68, 0.2);
+                color: #ef4444;
+            }
+
+            /* CTV action buttons */
+            .mobile-user-card .btn-logs {
+                background: rgba(139, 92, 246, 0.2);
+                color: #8b5cf6;
+            }
+
+            .mobile-user-card .btn-suspend {
+                background: rgba(245, 158, 11, 0.2);
+                color: #f59e0b;
+            }
+
+            .mobile-user-card .btn-activate {
+                background: rgba(16, 185, 129, 0.2);
+                color: #10b981;
+            }
+
+            .mobile-user-card .btn-delete {
+                background: rgba(239, 68, 68, 0.2);
+                color: #ef4444;
             }
 
             /* Pro Log cards */
@@ -1488,6 +1542,9 @@
                 <button class="btn mobile-action-btn"
                     style="background: rgba(139, 92, 246, 0.1); color: #8b5cf6; border: 1px solid #8b5cf6;"
                     onclick="showProLog()">Pro Log</button>
+                <button class="btn mobile-action-btn"
+                    style="background: rgba(16, 185, 129, 0.1); color: #10b981; border: 1px solid #10b981;"
+                    onclick="showCtvManagement()">CTV</button>
             </div>
             <!-- Mobile: Hàng 2 - Quản lý Cookies -->
             <div class="mobile-top-buttons">
@@ -1531,6 +1588,9 @@
             <button class="btn desktop-only"
                 style="background: rgba(245, 158, 11, 0.1); color: #f59e0b; border: 1px solid #f59e0b;"
                 onclick="setSmsOtpQuota()">Set SMS OTP</button>
+            <button class="btn desktop-only"
+                style="background: rgba(16, 185, 129, 0.1); color: #10b981; border: 1px solid #10b981;"
+                onclick="showCtvManagement()">CTV Management</button>
         </div>
 
         <!-- Pagination controls (top) -->
@@ -3835,15 +3895,25 @@
         function backToUsers() {
             const cookiesContainer = document.getElementById('cookiesManagement');
             const mobileCookiesContainer = document.getElementById('mobileCookiesManagement');
+            const ctvContainer = document.getElementById('ctvManagement');
             const usersTable = document.querySelector('.users-table');
             const controls = document.querySelector('.controls');
             const pagination = document.getElementById('pagination');
 
             if (cookiesContainer) cookiesContainer.remove();
             if (mobileCookiesContainer) mobileCookiesContainer.remove();
+            if (ctvContainer) ctvContainer.remove();
             if (usersTable) usersTable.style.display = 'block';
             if (controls) controls.style.display = 'flex';
             if (pagination) pagination.style.display = 'block';
+
+            // Restore mobile search area
+            if (window.innerWidth <= 768) {
+                const mobileSearchResults = document.getElementById('mobileSearchResults');
+                const mobileSearchTitle = document.querySelector('.mobile-search-title');
+                if (mobileSearchResults) mobileSearchResults.style.display = 'block';
+                if (mobileSearchTitle) mobileSearchTitle.style.display = 'block';
+            }
 
             window.currentCookieManagementPage = false;
             window.currentMobileCookieManagementPage = false;
@@ -4985,6 +5055,8 @@
             if (rateLimitContainer) rateLimitContainer.remove();
             if (cookiesContainer) cookiesContainer.remove();
             if (mobileCookiesContainer) mobileCookiesContainer.remove();
+            const ctvMgmt = document.getElementById('ctvManagement');
+            if (ctvMgmt) ctvMgmt.remove();
             if (usersTable) usersTable.style.display = 'block';
             if (userControls) userControls.style.display = 'flex'; // controls dùng display: flex
             if (pagination) pagination.style.display = 'block';
@@ -5099,6 +5171,671 @@
                 console.error('Manual ban error:', error);
                 showMessage('Lỗi kết nối!', 'error');
             }
+        }
+        // ========================================
+        // CTV MANAGEMENT
+        // ========================================
+
+        let ctvCurrentPage = 1;
+        let ctvStatusFilter = 'all';
+        let ctvSearchQuery = '';
+
+        async function showCtvManagement() {
+            const usersTable = document.querySelector('.users-table');
+            const controls = document.querySelector('.controls');
+            const pagination = document.getElementById('pagination');
+
+            if (!usersTable || !controls) return;
+
+            // Remove any existing management containers
+            const existing = document.getElementById('ctvManagement');
+            const existingCookies = document.getElementById('cookiesManagement');
+            const existingMobile = document.getElementById('mobileCookiesManagement');
+            const existingRateLimit = document.getElementById('rateLimitManagement');
+            if (existing) existing.remove();
+            if (existingCookies) existingCookies.remove();
+            if (existingMobile) existingMobile.remove();
+            if (existingRateLimit) existingRateLimit.remove();
+
+            // Hide main views
+            if (pagination) pagination.style.display = 'none';
+            usersTable.style.display = 'none';
+            controls.style.display = 'none';
+
+            // Hide mobile search
+            const mobileSearchResults = document.getElementById('mobileSearchResults');
+            const mobileSearchTitle = document.querySelector('.mobile-search-title');
+            if (mobileSearchResults) mobileSearchResults.style.display = 'none';
+            if (mobileSearchTitle) mobileSearchTitle.style.display = 'none';
+
+            const container = document.createElement('div');
+            container.id = 'ctvManagement';
+            container.className = 'users-table';
+            container.innerHTML = `
+                <div class="table-header">
+                    <span>CTV Management</span>
+                </div>
+
+                <div style="padding:12px;">
+                    <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px;">
+                        <button class="btn btn-success btn-sm" onclick="showCreateCtvModal()" style="display:inline-flex;align-items:center;gap:6px;">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                            New CTV
+                        </button>
+                        <button class="btn btn-primary btn-sm" onclick="loadCtvList()" style="display:inline-flex;align-items:center;gap:6px;">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>
+                            Refresh
+                        </button>
+                        <button class="btn btn-secondary btn-sm" onclick="backToUsers()" style="display:inline-flex;align-items:center;gap:6px;">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+                            Back
+                        </button>
+                        <div style="display:flex;gap:8px;flex:1;min-width:200px;">
+                            <select id="ctvStatusFilter" onchange="ctvStatusFilter=this.value; ctvCurrentPage=1; loadCtvList();"
+                                style="background:#1a1a1a;color:#fff;border:1px solid #333;padding:7px 10px;border-radius:8px;font-size:0.82em;flex:0 0 auto;">
+                                <option value="all">All</option>
+                                <option value="active">Active</option>
+                                <option value="suspended">Suspended</option>
+                                <option value="expired">Expired</option>
+                            </select>
+                            <input type="text" id="ctvSearchBox" placeholder="Search CTV..." onkeydown="if(event.key==='Enter'){ctvSearchQuery=this.value;ctvCurrentPage=1;loadCtvList();}"
+                                style="background:#1a1a1a;color:#fff;border:1px solid #333;padding:7px 10px;border-radius:8px;font-size:0.82em;flex:1;min-width:0;">
+                        </div>
+                    </div>
+
+                    <div id="ctvStats" style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:14px;"></div>
+
+                    <div id="ctvTableContainer"></div>
+
+                    <div id="ctvPagination" style="display:flex;justify-content:center;gap:8px;padding:12px 0;"></div>
+                </div>
+            `;
+
+            usersTable.parentNode.insertBefore(container, usersTable.nextSibling);
+            await loadCtvStats();
+            await loadCtvList();
+        }
+
+        async function loadCtvStats() {
+            try {
+                const admin_token = localStorage.getItem('admin_token');
+                const res = await fetch(`${BACKEND_URL}/api/admin/ctv/stats`, {
+                    headers: { 'Authorization': `Bearer ${admin_token}` }
+                });
+                const data = await res.json();
+                if (!data.success) return;
+                const s = data.stats;
+                document.getElementById('ctvStats').innerHTML = `
+                    <div style="background:rgba(16,185,129,0.1);border:1px solid rgba(16,185,129,0.3);border-radius:8px;padding:10px 6px;text-align:center;">
+                        <div style="font-size:1.2em;font-weight:800;color:#10b981;">${s.active}</div>
+                        <div style="font-size:0.62em;color:#aaa;margin-top:2px;">Active</div>
+                    </div>
+                    <div style="background:rgba(245,158,11,0.1);border:1px solid rgba(245,158,11,0.3);border-radius:8px;padding:10px 6px;text-align:center;">
+                        <div style="font-size:1.2em;font-weight:800;color:#f59e0b;">${s.suspended}</div>
+                        <div style="font-size:0.62em;color:#aaa;margin-top:2px;">Suspended</div>
+                    </div>
+                    <div style="background:rgba(239,68,68,0.1);border:1px solid rgba(239,68,68,0.3);border-radius:8px;padding:10px 6px;text-align:center;">
+                        <div style="font-size:1.2em;font-weight:800;color:#ef4444;">${s.expired}</div>
+                        <div style="font-size:0.62em;color:#aaa;margin-top:2px;">Expired</div>
+                    </div>
+                    <div style="background:rgba(59,130,246,0.1);border:1px solid rgba(59,130,246,0.3);border-radius:8px;padding:10px 6px;text-align:center;">
+                        <div style="font-size:1.2em;font-weight:800;color:#3b82f6;">${s.totalCookiesTaken}</div>
+                        <div style="font-size:0.62em;color:#aaa;margin-top:2px;">Taken</div>
+                    </div>
+                `;
+            } catch (err) {
+                console.error('CTV stats error:', err);
+            }
+        }
+
+        async function loadCtvList() {
+            try {
+                const admin_token = localStorage.getItem('admin_token');
+                const params = new URLSearchParams({
+                    page: ctvCurrentPage,
+                    limit: 20,
+                    status: ctvStatusFilter,
+                    search: ctvSearchQuery
+                });
+                const res = await fetch(`${BACKEND_URL}/api/admin/ctv?${params}`, {
+                    headers: { 'Authorization': `Bearer ${admin_token}` }
+                });
+                const data = await res.json();
+                if (!data.success) return;
+
+                const tableContainer = document.getElementById('ctvTableContainer');
+                const isMobileView = window.innerWidth <= 768;
+
+                if (data.collaborators.length === 0) {
+                    tableContainer.innerHTML = '<div style="text-align:center;padding:30px;color:#666;">No collaborators found.</div>';
+                } else if (isMobileView) {
+                    // ---- MOBILE: card layout ----
+                    tableContainer.innerHTML = data.collaborators.map(c => {
+                        const endDate = new Date(c.endDate).toLocaleDateString('vi-VN');
+                        const startDate = new Date(c.startDate).toLocaleDateString('vi-VN');
+                        const remaining = c.maxCookies - c.cookiesUsed;
+                        const toggleBtn = c.effectiveStatus === 'active'
+                            ? `<button class="btn-suspend" onclick="suspendCtv('${c._id}')">Suspend</button>`
+                            : `<button class="btn-activate" onclick="activateCtv('${c._id}')">Activate</button>`;
+                        return `
+                        <div class="mobile-user-card">
+                            <div class="user-header">
+                                <div style="flex:1;min-width:0;">
+                                    <span class="user-name" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;display:block;">${escHtml(c.username)}</span>
+                                    <span style="font-size:10px;color:#666;">${escHtml(c.displayName)}</span>
+                                </div>
+                                <span class="user-plan ${c.effectiveStatus}">${c.effectiveStatus.toUpperCase()}</span>
+                            </div>
+                            <div class="user-info">
+                                <div class="info-item">
+                                    <span class="info-label">Cookies Used</span>
+                                    <span class="info-value" style="color:#60a5fa;font-weight:600;">${c.cookiesUsed} / ${c.maxCookies}</span>
+                                </div>
+                                <div class="info-item">
+                                    <span class="info-label">Remaining</span>
+                                    <span class="info-value" style="color:${remaining > 0 ? '#10b981' : '#ef4444'};font-weight:600;">${remaining}</span>
+                                </div>
+                                <div class="info-item">
+                                    <span class="info-label">Start Date</span>
+                                    <span class="info-value">${startDate}</span>
+                                </div>
+                                <div class="info-item">
+                                    <span class="info-label">End Date</span>
+                                    <span class="info-value">${endDate}</span>
+                                </div>
+                            </div>
+                            ${c.notes ? `<div style="margin-top:8px;padding:8px 10px;background:rgba(245,158,11,0.08);border-left:2px solid rgba(245,158,11,0.4);border-radius:0 6px 6px 0;font-size:10px;color:#ccc;word-break:break-word;">${escHtml(c.notes)}</div>` : ''}
+                            <div class="user-actions">
+                                <button class="btn-edit" onclick="showEditCtvModal('${c._id}')">Edit</button>
+                                <button class="btn-logs" onclick="showCtvLogs('${c._id}','${escHtml(c.username)}')">Logs</button>
+                                ${toggleBtn}
+                                <button class="btn-delete" onclick="deleteCtv('${c._id}','${escHtml(c.username)}')">Del</button>
+                            </div>
+                        </div>`;
+                    }).join('');
+                } else {
+                    // ---- DESKTOP: table layout ----
+                    const rows = data.collaborators.map(c => {
+                        const statusColor = c.effectiveStatus === 'active' ? '#10b981' : c.effectiveStatus === 'suspended' ? '#f59e0b' : '#ef4444';
+                        const statusBg = c.effectiveStatus === 'active' ? 'rgba(16,185,129,0.12)' : c.effectiveStatus === 'suspended' ? 'rgba(245,158,11,0.12)' : 'rgba(239,68,68,0.12)';
+                        const endDate = new Date(c.endDate).toLocaleDateString('vi-VN');
+                        const startDate = new Date(c.startDate).toLocaleDateString('vi-VN');
+                        const remaining = c.maxCookies - c.cookiesUsed;
+                        const toggleBtn = c.effectiveStatus === 'active'
+                            ? `<button class="btn btn-warning btn-sm" onclick="suspendCtv('${c._id}')">Suspend</button>`
+                            : `<button class="btn btn-success btn-sm" onclick="activateCtv('${c._id}')">Activate</button>`;
+                        return `
+                        <tr style="border-bottom:1px solid #1e1e1e;">
+                            <td style="padding:10px 12px;">
+                                <div style="font-weight:600;font-size:0.88em;">${escHtml(c.username)}</div>
+                                <div style="font-size:0.75em;color:#666;">${escHtml(c.displayName)}</div>
+                                ${c.notes ? `<div style="font-size:0.72em;color:#888;margin-top:3px;font-style:italic;">${escHtml(c.notes)}</div>` : ''}
+                            </td>
+                            <td style="padding:10px 12px;text-align:center;">
+                                <span style="background:${statusBg};color:${statusColor};padding:3px 10px;border-radius:12px;font-size:0.75em;font-weight:700;">${c.effectiveStatus}</span>
+                            </td>
+                            <td style="padding:10px 12px;text-align:center;font-size:0.85em;">
+                                <span style="color:#60a5fa;font-weight:600;">${c.cookiesUsed}/${c.maxCookies}</span>
+                                <span style="color:#555;font-size:0.85em;"> (${remaining} left)</span>
+                            </td>
+                            <td style="padding:10px 12px;text-align:center;font-size:0.82em;color:#aaa;">${startDate}</td>
+                            <td style="padding:10px 12px;text-align:center;font-size:0.82em;color:#aaa;">${endDate}</td>
+                            <td style="padding:10px 12px;">
+                                <div style="display:flex;gap:4px;flex-wrap:wrap;">
+                                    <button class="btn btn-primary btn-sm" onclick="showEditCtvModal('${c._id}')">Edit</button>
+                                    <button class="btn btn-info btn-sm" onclick="showCtvLogs('${c._id}','${escHtml(c.username)}')">Logs</button>
+                                    ${toggleBtn}
+                                    <button class="btn btn-danger btn-sm" onclick="deleteCtv('${c._id}','${escHtml(c.username)}')">Del</button>
+                                </div>
+                            </td>
+                        </tr>`;
+                    }).join('');
+                    tableContainer.innerHTML = `
+                        <div style="overflow-x:auto;">
+                            <table style="width:100%;border-collapse:collapse;">
+                                <thead>
+                                    <tr style="background:rgba(255,255,255,0.04);border-bottom:1px solid #2a2a2a;">
+                                        <th style="padding:10px 12px;text-align:left;font-size:0.78em;color:#888;font-weight:600;text-transform:uppercase;">Username</th>
+                                        <th style="padding:10px 12px;text-align:center;font-size:0.78em;color:#888;font-weight:600;text-transform:uppercase;">Status</th>
+                                        <th style="padding:10px 12px;text-align:center;font-size:0.78em;color:#888;font-weight:600;text-transform:uppercase;">Cookies</th>
+                                        <th style="padding:10px 12px;text-align:center;font-size:0.78em;color:#888;font-weight:600;text-transform:uppercase;">Start</th>
+                                        <th style="padding:10px 12px;text-align:center;font-size:0.78em;color:#888;font-weight:600;text-transform:uppercase;">End</th>
+                                        <th style="padding:10px 12px;text-align:left;font-size:0.78em;color:#888;font-weight:600;text-transform:uppercase;">Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>${rows}</tbody>
+                            </table>
+                        </div>`;
+                }
+
+                // Pagination
+                const pag = data.pagination;
+                let pagHtml = '';
+                if (pag.totalPages > 1) {
+                    for (let i = 1; i <= pag.totalPages; i++) {
+                        pagHtml += `<button class="btn ${i === pag.page ? 'btn-primary' : 'btn-secondary'}" style="padding:6px 12px;font-size:0.8em;" onclick="ctvCurrentPage=${i};loadCtvList();">${i}</button>`;
+                    }
+                }
+                document.getElementById('ctvPagination').innerHTML = pagHtml;
+            } catch (err) {
+                console.error('CTV list error:', err);
+            }
+        }
+
+        function escHtml(s) {
+            if (!s) return '';
+            const d = document.createElement('div');
+            d.textContent = s;
+            return d.innerHTML;
+        }
+
+        function showCreateCtvModal() {
+            // Remove existing modal
+            const existing = document.getElementById('ctvModal');
+            if (existing) existing.remove();
+
+            const modal = document.createElement('div');
+            modal.id = 'ctvModal';
+            modal.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,0.7);display:flex;align-items:center;justify-content:center;z-index:10000;padding:20px;';
+            const ctvFS = 'font-family:Inter,Segoe UI,sans-serif;font-size:13px;';
+            const ctvLbl = 'display:block;font-size:12px;color:#aaa;margin-bottom:5px;font-weight:500;';
+            const ctvInp = `width:100%;padding:10px 12px;background:#0f0f0f;border:1px solid #333;border-radius:8px;color:#fff;${ctvFS}`;
+            modal.innerHTML = `
+                <div style="background:#1a1a1a;border:1px solid #333;border-radius:16px;padding:24px;width:100%;max-width:420px;max-height:90vh;overflow-y:auto;${ctvFS}">
+                    <h3 style="margin-bottom:20px;font-size:16px;font-weight:700;">Create New CTV</h3>
+                    <div style="margin-bottom:12px;">
+                        <label style="${ctvLbl}">Username *</label>
+                        <input type="text" id="ctvFormUsername" style="${ctvInp}" placeholder="e.g. ctv_name">
+                    </div>
+                    <div style="margin-bottom:12px;">
+                        <label style="${ctvLbl}">Display Name *</label>
+                        <input type="text" id="ctvFormDisplayName" style="${ctvInp}" placeholder="Full name">
+                    </div>
+                    <div style="margin-bottom:12px;">
+                        <label style="${ctvLbl}">Password (leave empty to auto-generate)</label>
+                        <input type="text" id="ctvFormPassword" style="${ctvInp}" placeholder="Auto-generate if empty">
+                    </div>
+                    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px;">
+                        <div>
+                            <label style="${ctvLbl}">Start Date</label>
+                            <input type="date" id="ctvFormStartDate" style="${ctvInp}" value="${new Date().toISOString().split('T')[0]}">
+                        </div>
+                        <div>
+                            <label style="${ctvLbl}">End Date</label>
+                            <input type="date" id="ctvFormEndDate" style="${ctvInp}" value="${new Date(Date.now()+30*864e5).toISOString().split('T')[0]}">
+                        </div>
+                    </div>
+                    <div style="margin-bottom:12px;">
+                        <label style="${ctvLbl}">Max Cookies *</label>
+                        <input type="number" id="ctvFormMaxCookies" style="${ctvInp}" placeholder="e.g. 100" min="1">
+                    </div>
+                    <div style="margin-bottom:16px;">
+                        <label style="${ctvLbl}">Notes</label>
+                        <textarea id="ctvFormNotes" rows="2" style="${ctvInp}resize:vertical;" placeholder="Optional notes"></textarea>
+                    </div>
+                    <div id="ctvFormResult" style="display:none;background:rgba(16,185,129,0.15);border:1px solid rgba(16,185,129,0.3);padding:12px;border-radius:8px;margin-bottom:12px;font-size:13px;"></div>
+                    <div style="display:flex;gap:10px;">
+                        <button class="btn btn-success" style="flex:1;" onclick="submitCreateCtv()">Create</button>
+                        <button class="btn btn-danger" style="flex:1;" onclick="document.getElementById('ctvModal').remove();">Cancel</button>
+                    </div>
+                </div>
+            `;
+            document.body.appendChild(modal);
+            modal.addEventListener('click', e => { if (e.target === modal) modal.remove(); });
+        }
+
+        async function submitCreateCtv() {
+            const username = document.getElementById('ctvFormUsername').value.trim();
+            const displayName = document.getElementById('ctvFormDisplayName').value.trim();
+            const password = document.getElementById('ctvFormPassword').value;
+            const startDate = document.getElementById('ctvFormStartDate').value;
+            const endDate = document.getElementById('ctvFormEndDate').value;
+            const maxCookies = document.getElementById('ctvFormMaxCookies').value;
+            const notes = document.getElementById('ctvFormNotes').value;
+
+            if (!username || !displayName || !maxCookies) {
+                showMessage('Please fill all required fields.', 'error');
+                return;
+            }
+
+            try {
+                const admin_token = localStorage.getItem('admin_token');
+                const res = await fetch(`${BACKEND_URL}/api/admin/ctv`, {
+                    method: 'POST',
+                    headers: { 'Authorization': `Bearer ${admin_token}`, 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ username, displayName, password: password || undefined, startDate, endDate, maxCookies: parseInt(maxCookies), notes })
+                });
+                const data = await res.json();
+                if (data.success) {
+                    const resultEl = document.getElementById('ctvFormResult');
+                    resultEl.style.display = 'block';
+                    let msg = `<div style="margin-bottom:8px;">CTV "<strong>${data.collaborator.username}</strong>" created!</div>`;
+                    if (data.generatedPassword) {
+                        msg += `<div style="font-size:11px;color:#aaa;margin-bottom:6px;text-transform:uppercase;letter-spacing:0.5px;">Generated Password</div>
+                               <div style="display:flex;align-items:center;gap:8px;">
+                                   <code id="newPwText" style="flex:1;background:#0f0f0f;border:1px solid #333;border-radius:6px;padding:8px 10px;font-size:14px;font-weight:700;color:#10b981;letter-spacing:1px;word-break:break-all;">${data.generatedPassword}</code>
+                                   <button onclick="copyPwBtn(this,'newPwText')" title="Copy password"
+                                       style="flex-shrink:0;padding:8px;background:transparent;border:1px solid #333;border-radius:6px;color:#888;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all 0.2s;">
+                                       <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+                                   </button>
+                               </div>
+                               <div style="font-size:11px;color:#f59e0b;margin-top:6px;">Đã reset thành công mật khẩu!</div>`;
+                    }
+                    resultEl.innerHTML = msg;
+                    showMessage('CTV created successfully!', 'success');
+                    await loadCtvStats();
+                    await loadCtvList();
+                } else {
+                    showMessage(data.error || 'Failed to create CTV.', 'error');
+                }
+            } catch (err) {
+                showMessage('Connection error.', 'error');
+            }
+        }
+
+        async function showEditCtvModal(id) {
+            try {
+                const admin_token = localStorage.getItem('admin_token');
+                const res = await fetch(`${BACKEND_URL}/api/admin/ctv?search=&status=all&page=1&limit=100`, {
+                    headers: { 'Authorization': `Bearer ${admin_token}` }
+                });
+                const data = await res.json();
+                if (!data.success) return;
+                const ctv = data.collaborators.find(c => c._id === id);
+                if (!ctv) { showMessage('CTV not found.', 'error'); return; }
+
+                const existing = document.getElementById('ctvModal');
+                if (existing) existing.remove();
+
+                const modal = document.createElement('div');
+                modal.id = 'ctvModal';
+                modal.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,0.7);display:flex;align-items:center;justify-content:center;z-index:10000;padding:20px;';
+                const eFS = 'font-family:Inter,Segoe UI,sans-serif;font-size:13px;';
+                const eLbl = 'display:block;font-size:12px;color:#aaa;margin-bottom:5px;font-weight:500;';
+                const eInp = `width:100%;padding:10px 12px;background:#0f0f0f;border:1px solid #333;border-radius:8px;color:#fff;${eFS}`;
+                modal.innerHTML = `
+                    <div style="background:#1a1a1a;border:1px solid #333;border-radius:16px;padding:24px;width:100%;max-width:420px;max-height:90vh;overflow-y:auto;${eFS}">
+                        <h3 style="margin-bottom:20px;font-size:16px;font-weight:700;">Edit CTV: ${escHtml(ctv.displayName)}</h3>
+                        <div style="margin-bottom:12px;">
+                            <label style="${eLbl}">Display Name</label>
+                            <input type="text" id="ctvEditDisplayName" value="${escHtml(ctv.displayName)}" style="${eInp}">
+                        </div>
+                        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px;">
+                            <div>
+                                <label style="${eLbl}">Start Date</label>
+                                <input type="date" id="ctvEditStartDate" value="${new Date(ctv.startDate).toISOString().split('T')[0]}" style="${eInp}">
+                            </div>
+                            <div>
+                                <label style="${eLbl}">End Date</label>
+                                <input type="date" id="ctvEditEndDate" value="${new Date(ctv.endDate).toISOString().split('T')[0]}" style="${eInp}">
+                            </div>
+                        </div>
+                        <div style="margin-bottom:12px;">
+                            <label style="${eLbl}">Max Cookies</label>
+                            <input type="number" id="ctvEditMaxCookies" value="${ctv.maxCookies}" style="${eInp}" min="1">
+                        </div>
+                        <div style="margin-bottom:12px;">
+                            <label style="${eLbl}">Status</label>
+                            <select id="ctvEditStatus" style="${eInp}">
+                                <option value="active" ${ctv.status==='active'?'selected':''}>Active</option>
+                                <option value="suspended" ${ctv.status==='suspended'?'selected':''}>Suspended</option>
+                                <option value="expired" ${ctv.status==='expired'?'selected':''}>Expired</option>
+                            </select>
+                        </div>
+                        <div style="margin-bottom:16px;">
+                            <label style="${eLbl}">Notes</label>
+                            <textarea id="ctvEditNotes" rows="2" style="${eInp}resize:vertical;">${escHtml(ctv.notes||'')}</textarea>
+                        </div>
+                        <div style="background:rgba(59,130,246,0.1);border:1px solid rgba(59,130,246,0.3);padding:10px;border-radius:8px;margin-bottom:12px;font-size:13px;color:#93c5fd;">
+                            Username: ${escHtml(ctv.username)} | Used: ${ctv.cookiesUsed} / ${ctv.maxCookies} cookies
+                        </div>
+                        <div style="display:flex;gap:8px;flex-wrap:wrap;">
+                            <button class="btn btn-success" style="flex:1;" onclick="submitEditCtv('${id}')">Save</button>
+                            <button class="btn btn-info" style="flex:1;" onclick="resetCtvPassword('${id}')">Reset PW</button>
+                            <button class="btn btn-warning" style="flex:1;" onclick="resetCtvQuota('${id}')">Reset Quota</button>
+                            <button class="btn btn-danger" style="flex:1;" onclick="document.getElementById('ctvModal').remove();">Cancel</button>
+                        </div>
+                        <div id="ctvEditResult" style="display:none;margin-top:12px;padding:10px;border-radius:8px;font-size:13px;"></div>
+                    </div>
+                `;
+                document.body.appendChild(modal);
+                modal.addEventListener('click', e => { if (e.target === modal) modal.remove(); });
+            } catch (err) {
+                showMessage('Error loading CTV data.', 'error');
+            }
+        }
+
+        async function submitEditCtv(id) {
+            const body = {
+                displayName: document.getElementById('ctvEditDisplayName').value.trim(),
+                startDate: document.getElementById('ctvEditStartDate').value,
+                endDate: document.getElementById('ctvEditEndDate').value,
+                maxCookies: parseInt(document.getElementById('ctvEditMaxCookies').value),
+                status: document.getElementById('ctvEditStatus').value,
+                notes: document.getElementById('ctvEditNotes').value
+            };
+
+            try {
+                const admin_token = localStorage.getItem('admin_token');
+                const res = await fetch(`${BACKEND_URL}/api/admin/ctv/${id}`, {
+                    method: 'PUT',
+                    headers: { 'Authorization': `Bearer ${admin_token}`, 'Content-Type': 'application/json' },
+                    body: JSON.stringify(body)
+                });
+                const data = await res.json();
+                if (data.success) {
+                    showMessage('CTV updated!', 'success');
+                    document.getElementById('ctvModal').remove();
+                    await loadCtvStats();
+                    await loadCtvList();
+                } else {
+                    showMessage(data.error || 'Update failed.', 'error');
+                }
+            } catch (err) {
+                showMessage('Connection error.', 'error');
+            }
+        }
+
+        async function resetCtvPassword(id) {
+            if (!confirm('Reset password for this CTV? A new password will be generated.')) return;
+            try {
+                const admin_token = localStorage.getItem('admin_token');
+                const res = await fetch(`${BACKEND_URL}/api/admin/ctv/${id}/reset-password`, {
+                    method: 'POST',
+                    headers: { 'Authorization': `Bearer ${admin_token}`, 'Content-Type': 'application/json' },
+                    body: JSON.stringify({})
+                });
+                const data = await res.json();
+                if (data.success) {
+                    const resultEl = document.getElementById('ctvEditResult');
+                    if (resultEl) {
+                        resultEl.style.display = 'block';
+                        resultEl.style.background = 'rgba(16,185,129,0.15)';
+                        resultEl.style.border = '1px solid rgba(16,185,129,0.3)';
+                        resultEl.innerHTML = data.generatedPassword
+                            ? `<div style="font-size:11px;color:#aaa;margin-bottom:6px;text-transform:uppercase;letter-spacing:0.5px;">New Password</div>
+                               <div style="display:flex;align-items:center;gap:8px;">
+                                   <code id="newPwText" style="flex:1;background:#0f0f0f;border:1px solid #333;border-radius:6px;padding:8px 10px;font-size:14px;font-weight:700;color:#10b981;letter-spacing:1px;word-break:break-all;">${data.generatedPassword}</code>
+                                   <button onclick="copyPwBtn(this,'newPwText')" title="Copy password"
+                                       style="flex-shrink:0;padding:8px;background:transparent;border:1px solid #333;border-radius:6px;color:#888;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all 0.2s;">
+                                       <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+                                   </button>
+                               </div>
+                               <div style="font-size:11px;color:#f59e0b;margin-top:6px;">Luu lai mat khau nay, se khong hien lai!</div>`
+                            : 'Password reset.';
+                    }
+                    showMessage('Password reset!', 'success');
+                } else {
+                    showMessage(data.error || 'Failed.', 'error');
+                }
+            } catch (err) {
+                showMessage('Connection error.', 'error');
+            }
+        }
+
+        async function resetCtvQuota(id) {
+            if (!confirm('Reset cookie quota to 0 for this CTV?')) return;
+            try {
+                const admin_token = localStorage.getItem('admin_token');
+                const res = await fetch(`${BACKEND_URL}/api/admin/ctv/${id}/reset-quota`, {
+                    method: 'POST',
+                    headers: { 'Authorization': `Bearer ${admin_token}`, 'Content-Type': 'application/json' }
+                });
+                const data = await res.json();
+                if (data.success) {
+                    showMessage('Quota reset!', 'success');
+                    document.getElementById('ctvModal').remove();
+                    await loadCtvStats();
+                    await loadCtvList();
+                } else {
+                    showMessage(data.error || 'Failed.', 'error');
+                }
+            } catch (err) {
+                showMessage('Connection error.', 'error');
+            }
+        }
+
+        async function suspendCtv(id) {
+            if (!confirm('Suspend this CTV?')) return;
+            try {
+                const admin_token = localStorage.getItem('admin_token');
+                const res = await fetch(`${BACKEND_URL}/api/admin/ctv/${id}/suspend`, {
+                    method: 'POST',
+                    headers: { 'Authorization': `Bearer ${admin_token}` }
+                });
+                const data = await res.json();
+                if (data.success) {
+                    showMessage('CTV suspended.', 'success');
+                    await loadCtvStats();
+                    await loadCtvList();
+                } else {
+                    showMessage(data.error || 'Failed.', 'error');
+                }
+            } catch (err) {
+                showMessage('Connection error.', 'error');
+            }
+        }
+
+        async function activateCtv(id) {
+            try {
+                const admin_token = localStorage.getItem('admin_token');
+                const res = await fetch(`${BACKEND_URL}/api/admin/ctv/${id}/activate`, {
+                    method: 'POST',
+                    headers: { 'Authorization': `Bearer ${admin_token}` }
+                });
+                const data = await res.json();
+                if (data.success) {
+                    showMessage('CTV activated.', 'success');
+                    await loadCtvStats();
+                    await loadCtvList();
+                } else {
+                    showMessage(data.error || 'Failed.', 'error');
+                }
+            } catch (err) {
+                showMessage('Connection error.', 'error');
+            }
+        }
+
+        async function deleteCtv(id, username) {
+            if (!confirm(`Delete CTV "${username}" and all their logs? This cannot be undone.`)) return;
+            try {
+                const admin_token = localStorage.getItem('admin_token');
+                const res = await fetch(`${BACKEND_URL}/api/admin/ctv/${id}`, {
+                    method: 'DELETE',
+                    headers: { 'Authorization': `Bearer ${admin_token}` }
+                });
+                const data = await res.json();
+                if (data.success) {
+                    showMessage('CTV deleted.', 'success');
+                    await loadCtvStats();
+                    await loadCtvList();
+                } else {
+                    showMessage(data.error || 'Failed.', 'error');
+                }
+            } catch (err) {
+                showMessage('Connection error.', 'error');
+            }
+        }
+
+        async function showCtvLogs(id, username) {
+            try {
+                const admin_token = localStorage.getItem('admin_token');
+                const res = await fetch(`${BACKEND_URL}/api/admin/ctv/${id}/logs?page=1&limit=50`, {
+                    headers: { 'Authorization': `Bearer ${admin_token}` }
+                });
+                const data = await res.json();
+                if (!data.success) return;
+
+                const existing = document.getElementById('ctvModal');
+                if (existing) existing.remove();
+
+                const modal = document.createElement('div');
+                modal.id = 'ctvModal';
+                modal.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,0.7);display:flex;align-items:center;justify-content:center;z-index:10000;padding:20px;';
+
+                let logsHtml = '';
+                if (data.logs.length === 0) {
+                    logsHtml = '<div style="text-align:center;padding:20px;color:#666;">No logs yet.</div>';
+                } else {
+                    logsHtml = `<div style="max-height:50vh;overflow-y:auto;">
+                        <table style="width:100%;border-collapse:collapse;font-size:0.8em;">
+                            <thead><tr style="background:rgba(255,255,255,0.05);">
+                                <th style="padding:8px;text-align:left;color:#aaa;">Cookie #</th>
+                                <th style="padding:8px;text-align:center;color:#aaa;">Status</th>
+                                <th style="padding:8px;text-align:left;color:#aaa;">Date</th>
+                            </tr></thead>
+                            <tbody>${data.logs.map(l => {
+                                const sc = l.status === 'token_generated' ? '#10b981' : '#ef4444';
+                                const sb = l.status === 'token_generated' ? 'rgba(16,185,129,0.15)' : 'rgba(239,68,68,0.15)';
+                                return `<tr style="border-bottom:1px solid #222;">
+                                    <td style="padding:8px;">#${l.cookieNumber}</td>
+                                    <td style="padding:8px;text-align:center;"><span style="background:${sb};color:${sc};padding:2px 8px;border-radius:10px;font-size:0.85em;">${l.status}</span></td>
+                                    <td style="padding:8px;color:#aaa;">${new Date(l.createdAt).toLocaleString('vi-VN')}</td>
+                                </tr>`;
+                            }).join('')}</tbody>
+                        </table>
+                    </div>`;
+                }
+
+                modal.innerHTML = `
+                    <div style="background:#1a1a1a;border:1px solid #333;border-radius:16px;padding:24px;width:100%;max-width:500px;">
+                        <h3 style="margin-bottom:6px;font-size:1.1em;">Logs: ${escHtml(username)}</h3>
+                        <p style="font-size:0.82em;color:#aaa;margin-bottom:16px;">Used: ${data.collaborator.cookiesUsed} / ${data.collaborator.maxCookies} | Total entries: ${data.pagination.total}</p>
+                        ${logsHtml}
+                        <button class="btn btn-secondary" style="margin-top:16px;" onclick="document.getElementById('ctvModal').remove();">Close</button>
+                    </div>
+                `;
+                document.body.appendChild(modal);
+                modal.addEventListener('click', e => { if (e.target === modal) modal.remove(); });
+            } catch (err) {
+                showMessage('Error loading logs.', 'error');
+            }
+        }
+        function copyPwBtn(btn, elId) {
+            const text = document.getElementById(elId)?.textContent?.trim() || '';
+            if (!text) return;
+            const svgCheck = '<svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>';
+            const svgCopy = '<svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>';
+            const done = () => {
+                btn.innerHTML = svgCheck;
+                btn.style.color = '#10b981';
+                btn.style.borderColor = '#10b981';
+                setTimeout(() => { btn.innerHTML = svgCopy; btn.style.color = ''; btn.style.borderColor = ''; }, 2000);
+            };
+            if (navigator.clipboard && navigator.clipboard.writeText) {
+                navigator.clipboard.writeText(text).then(done).catch(() => fallbackCopy(text, done));
+            } else {
+                fallbackCopy(text, done);
+            }
+        }
+        function fallbackCopy(text, callback) {
+            const ta = document.createElement('textarea');
+            ta.value = text;
+            ta.style.cssText = 'position:fixed;top:-9999px;left:-9999px;opacity:0;';
+            document.body.appendChild(ta);
+            ta.select();
+            try { document.execCommand('copy'); if (callback) callback(); } catch(e) {}
+            document.body.removeChild(ta);
         }
     </script>
 </body>
