@@ -1,0 +1,1385 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="robots" content="noindex, nofollow">
+    <title>CTV Portal - Tiem Banh Netflix</title>
+    <link rel="icon" type="image/png" href="../favicon.png">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        :root {
+            --bg-primary: #0a0a0a;
+            --bg-secondary: #111111;
+            --bg-card: #181818;
+            --bg-elevated: #1f1f1f;
+            --bg-input: #262626;
+            --border: #2a2a2a;
+            --border-focus: #e50914;
+            --text-primary: #f0f0f0;
+            --text-secondary: #999;
+            --text-muted: #555;
+            --red: #e50914;
+            --red-dim: rgba(229,9,20,0.15);
+            --green: #10b981;
+            --green-dim: rgba(16,185,129,0.15);
+            --blue: #3b82f6;
+            --blue-dim: rgba(59,130,246,0.15);
+            --orange: #f59e0b;
+            --orange-dim: rgba(245,158,11,0.15);
+            --purple: #8b5cf6;
+            --purple-dim: rgba(139,92,246,0.15);
+            --radius: 12px;
+            --radius-sm: 8px;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            min-height: 100vh;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* ============ SCROLLBAR ============ */
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: var(--bg-primary); }
+        ::-webkit-scrollbar-thumb { background: #333; border-radius: 3px; }
+
+        /* ============ UTILITY ============ */
+        .hidden { display: none !important; }
+
+        /* ============ LOGIN OVERLAY ============ */
+        #loginOverlay {
+            position: fixed; inset: 0;
+            background: var(--bg-primary);
+            display: flex; align-items: center; justify-content: center;
+            z-index: 1000; padding: 20px;
+        }
+        .login-box {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 32px 24px;
+            width: 100%; max-width: 380px;
+        }
+        .login-box .brand {
+            text-align: center; margin-bottom: 28px;
+        }
+        .login-box .brand h1 {
+            color: var(--red);
+            font-size: 1.5rem; font-weight: 800; letter-spacing: -0.5px;
+        }
+        .login-box .brand p {
+            color: var(--text-secondary); font-size: 0.85rem; margin-top: 4px;
+        }
+        .form-group { margin-bottom: 16px; }
+        .form-group label {
+            display: flex; align-items: center; gap: 6px;
+            font-size: 0.8rem; color: var(--text-secondary);
+            margin-bottom: 6px; font-weight: 500;
+        }
+        .form-group label i { width: 14px; height: 14px; }
+        .form-group input {
+            width: 100%; padding: 12px 14px;
+            background: var(--bg-input); border: 1px solid var(--border);
+            border-radius: var(--radius-sm); color: var(--text-primary);
+            font-size: 0.95rem; outline: none; transition: border-color 0.2s;
+        }
+        .form-group input:focus { border-color: var(--border-focus); }
+
+        .btn {
+            display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+            padding: 12px 20px; border-radius: var(--radius-sm);
+            font-size: 0.9rem; font-weight: 600; cursor: pointer;
+            border: none; transition: all 0.2s; width: 100%;
+        }
+        .btn i { width: 18px; height: 18px; }
+        .btn-red { background: var(--red); color: #fff; }
+        .btn-red:hover { background: #c4070f; }
+        .btn-red:disabled { opacity: 0.5; cursor: not-allowed; }
+        .btn-outline {
+            background: transparent; color: var(--text-secondary);
+            border: 1px solid var(--border);
+        }
+        .btn-outline:hover { border-color: var(--text-secondary); color: var(--text-primary); }
+        .btn-green {
+            background: rgba(34, 197, 94, 0.1);
+            border: 1px solid #22c55e !important;
+            color: #22c55e;
+        }
+        .btn-green:hover { background: rgba(34, 197, 94, 0.18); }
+        .btn-green:active { transform: scale(0.97); background: rgba(34, 197, 94, 0.22); }
+        .btn-green:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
+        .btn-blue { background: var(--blue); color: #fff; }
+        .btn-blue:hover { background: #2563eb; }
+        .btn-sm { padding: 8px 14px; font-size: 0.8rem; width: auto; }
+
+        .login-error {
+            background: var(--red-dim); color: #f87171;
+            padding: 10px 12px; border-radius: var(--radius-sm);
+            font-size: 0.82rem; margin-bottom: 14px; display: none;
+        }
+
+        /* ============ MAIN APP ============ */
+        #app { display: none; }
+        .app-header {
+            background: var(--bg-secondary);
+            border-bottom: 1px solid var(--border);
+            padding: 16px 20px;
+            position: sticky; top: 0; z-index: 100;
+        }
+        .app-header-inner {
+            display: flex; align-items: center; justify-content: space-between;
+            max-width: 600px; margin: 0 auto;
+        }
+        .app-header .logo {
+            color: var(--red); font-size: 1.1rem; font-weight: 800; letter-spacing: -0.5px;
+        }
+        .app-header .user-info {
+            display: flex; align-items: center; gap: 10px;
+        }
+        .app-header .user-name {
+            font-size: 0.82rem; color: var(--text-secondary); font-weight: 500;
+        }
+        .btn-icon {
+            background: transparent; border: none; color: var(--text-secondary);
+            cursor: pointer; padding: 6px; border-radius: 6px; display: flex;
+            align-items: center; justify-content: center;
+        }
+        .btn-icon:hover { background: var(--bg-elevated); color: var(--text-primary); }
+        .btn-icon i { width: 20px; height: 20px; }
+
+        .app-body {
+            max-width: 600px; margin: 0 auto; padding: 20px 16px 100px;
+        }
+
+        /* ============ NAV TABS ============ */
+        .nav-tabs {
+            display: flex; gap: 4px;
+            background: var(--bg-secondary); border-radius: var(--radius);
+            padding: 4px; margin-bottom: 20px;
+            border: 1px solid var(--border);
+        }
+        .nav-tab {
+            flex: 1; display: flex; align-items: center; justify-content: center; gap: 6px;
+            padding: 10px 8px; border-radius: var(--radius-sm);
+            font-size: 0.8rem; font-weight: 600; cursor: pointer;
+            background: transparent; border: none; color: var(--text-muted);
+            transition: all 0.2s;
+        }
+        .nav-tab i { width: 16px; height: 16px; }
+        .nav-tab.active {
+            background: var(--bg-elevated); color: var(--text-primary);
+            box-shadow: 0 1px 3px rgba(0,0,0,0.3);
+        }
+        .nav-tab:hover:not(.active) { color: var(--text-secondary); }
+
+        /* ============ STAT CARDS ============ */
+        .stats-grid {
+            display: grid; grid-template-columns: repeat(2, 1fr);
+            gap: 10px; margin-bottom: 20px;
+        }
+        .stat-card {
+            background: var(--bg-card); border: 1px solid var(--border);
+            border-radius: var(--radius); padding: 16px;
+        }
+        .stat-card .stat-label {
+            display: flex; align-items: center; gap: 6px;
+            font-size: 0.72rem; color: var(--text-secondary);
+            text-transform: uppercase; letter-spacing: 0.5px;
+            margin-bottom: 8px; font-weight: 600;
+        }
+        .stat-card .stat-label i { width: 14px; height: 14px; }
+        .stat-card .stat-value {
+            font-size: 1.5rem; font-weight: 800; letter-spacing: -0.5px;
+        }
+        .stat-card .stat-sub {
+            font-size: 0.72rem; color: var(--text-muted); margin-top: 4px;
+        }
+        .stat-card.green .stat-label i { color: var(--green); }
+        .stat-card.green .stat-value { color: var(--green); }
+        .stat-card.blue .stat-label i { color: var(--blue); }
+        .stat-card.blue .stat-value { color: var(--blue); }
+        .stat-card.orange .stat-label i { color: var(--orange); }
+        .stat-card.orange .stat-value { color: var(--orange); }
+        .stat-card.red .stat-label i { color: var(--red); }
+        .stat-card.red .stat-value { color: var(--red); }
+        .stat-card.purple .stat-label i { color: var(--purple); }
+        .stat-card.purple .stat-value { color: var(--purple); }
+
+        .stat-card.wide { grid-column: 1 / -1; }
+        .progress-bar-track {
+            width: 100%; height: 6px; background: var(--bg-input);
+            border-radius: 3px; margin-top: 10px; overflow: hidden;
+        }
+        .progress-bar-fill {
+            height: 100%; border-radius: 3px;
+            background: linear-gradient(90deg, var(--green), var(--blue));
+            transition: width 0.5s ease;
+        }
+
+        /* ============ ACTION SECTION ============ */
+        .action-section {
+            background: var(--bg-card); border: 1px solid var(--border);
+            border-radius: var(--radius); padding: 20px; margin-bottom: 20px;
+        }
+        .action-section h3 {
+            display: flex; align-items: center; gap: 8px;
+            font-size: 0.95rem; font-weight: 700; margin-bottom: 16px;
+        }
+        .action-section h3 i { width: 20px; height: 20px; color: var(--red); }
+
+        .quantity-select {
+            display: flex; align-items: center; gap: 12px; margin-bottom: 16px;
+        }
+        .quantity-select label {
+            font-size: 0.85rem; color: var(--text-secondary); white-space: nowrap;
+        }
+        .quantity-input {
+            display: flex; align-items: center; gap: 0; flex: 1;
+        }
+        .qty-btn {
+            width: 40px; height: 40px;
+            background: var(--bg-input); border: 1px solid var(--border);
+            color: var(--text-primary); font-size: 1.1rem; cursor: pointer;
+            display: flex; align-items: center; justify-content: center;
+            transition: background 0.2s;
+        }
+        .qty-btn:first-child { border-radius: var(--radius-sm) 0 0 var(--radius-sm); }
+        .qty-btn:last-child { border-radius: 0 var(--radius-sm) var(--radius-sm) 0; }
+        .qty-btn:hover { background: var(--bg-elevated); }
+        .qty-btn i { width: 16px; height: 16px; }
+        .qty-value {
+            width: 60px; height: 40px;
+            background: var(--bg-input); border: 1px solid var(--border);
+            border-left: none; border-right: none;
+            color: var(--text-primary); font-size: 1rem; font-weight: 700;
+            text-align: center; outline: none;
+            -moz-appearance: textfield;
+            appearance: textfield;
+        }
+        .qty-value::-webkit-outer-spin-button,
+        .qty-value::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+        .qty-value:focus { border-color: var(--border-focus); }
+
+        /* ============ COOKIE CARDS ============ */
+        .batch-group { margin-bottom: 16px; }
+        .cookie-results { margin-bottom: 20px; }
+        .cookie-results h3 {
+            display: flex; align-items: center; gap: 8px;
+            font-size: 0.95rem; font-weight: 700; margin-bottom: 14px;
+        }
+        .cookie-results h3 i { width: 20px; height: 20px; color: var(--green); }
+
+        .cookie-card {
+            background: var(--bg-card); border: 1px solid var(--border);
+            border-radius: var(--radius); padding: 16px; margin-bottom: 12px;
+            transition: border-color 0.2s;
+        }
+        .cookie-card:hover { border-color: #444; }
+        .cookie-card-header {
+            display: flex; align-items: center; justify-content: space-between;
+            margin-bottom: 12px;
+        }
+        .cookie-card-header .cookie-num {
+            display: flex; align-items: center; gap: 6px;
+            font-size: 0.82rem; font-weight: 700; color: var(--text-primary);
+        }
+        .cookie-card-header .cookie-num i { width: 16px; height: 16px; color: var(--orange); }
+        .cookie-card-header .token-status {
+            display: inline-flex; align-items: center; gap: 4px;
+            font-size: 0.7rem; font-weight: 600; padding: 3px 8px;
+            border-radius: 20px;
+        }
+        .token-status.valid { background: var(--green-dim); color: var(--green); }
+        .token-status.expired { background: var(--red-dim); color: #f87171; }
+        .token-status i { width: 12px; height: 12px; }
+
+        .cookie-field { margin-bottom: 10px; }
+        .cookie-field-label {
+            font-size: 0.7rem; color: var(--text-muted); text-transform: uppercase;
+            letter-spacing: 0.5px; margin-bottom: 4px; font-weight: 600;
+        }
+        .cookie-field-value {
+            display: flex; align-items: center; gap: 8px;
+        }
+        .cookie-field-value code {
+            flex: 1; background: var(--bg-input); padding: 8px 10px;
+            border-radius: var(--radius-sm); font-size: 0.75rem;
+            color: var(--text-secondary); overflow: hidden;
+            text-overflow: ellipsis; white-space: nowrap;
+            font-family: 'SF Mono', 'Fira Code', monospace;
+            border: 1px solid var(--border);
+        }
+        .copy-btn {
+            background: var(--bg-input); border: 1px solid var(--border);
+            color: var(--text-secondary); padding: 8px; border-radius: var(--radius-sm);
+            cursor: pointer; flex-shrink: 0; display: flex;
+            align-items: center; justify-content: center;
+            transition: all 0.2s;
+        }
+        .copy-btn:hover { border-color: var(--text-secondary); color: var(--text-primary); }
+        .copy-btn.copied { border-color: var(--green); color: var(--green); }
+        .copy-btn i { width: 16px; height: 16px; }
+
+        .cookie-card-footer {
+            display: flex; align-items: center; justify-content: space-between;
+            margin-top: 12px; padding-top: 12px;
+            border-top: 1px solid var(--border);
+        }
+        .cookie-card-footer .time-left {
+            font-size: 0.75rem; color: var(--text-muted);
+            display: flex; align-items: center; gap: 4px;
+        }
+        .cookie-card-footer .time-left i { width: 14px; height: 14px; }
+        .regen-btn {
+            display: inline-flex; align-items: center; gap: 4px;
+            padding: 6px 12px; border-radius: var(--radius-sm);
+            font-size: 0.75rem; font-weight: 600; cursor: pointer;
+            background: var(--blue-dim); color: var(--blue);
+            border: 1px solid transparent; transition: all 0.2s;
+        }
+        .regen-btn:hover { border-color: var(--blue); }
+        .regen-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+        .regen-btn i { width: 14px; height: 14px; }
+
+        /* ============ HISTORY ============ */
+        .history-section { margin-bottom: 20px; }
+        .history-item {
+            background: var(--bg-card); border: 1px solid var(--border);
+            border-radius: var(--radius); padding: 14px; margin-bottom: 8px;
+            display: flex; align-items: center; gap: 12px;
+        }
+        .history-item .hi-icon {
+            width: 36px; height: 36px; border-radius: 8px;
+            display: flex; align-items: center; justify-content: center;
+            flex-shrink: 0;
+        }
+        .history-item .hi-icon.success { background: var(--green-dim); color: var(--green); }
+        .history-item .hi-icon.fail { background: var(--red-dim); color: #f87171; }
+        .history-item .hi-icon i { width: 18px; height: 18px; }
+        .history-item .hi-body { flex: 1; min-width: 0; }
+        .history-item .hi-title {
+            font-size: 0.82rem; font-weight: 600; margin-bottom: 2px;
+            white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+        }
+        .history-item .hi-meta {
+            font-size: 0.72rem; color: var(--text-muted);
+        }
+        .history-item .hi-actions { flex-shrink: 0; }
+
+        .load-more-btn {
+            width: 100%; padding: 12px; border-radius: var(--radius-sm);
+            background: var(--bg-card); border: 1px solid var(--border);
+            color: var(--text-secondary); font-size: 0.82rem; font-weight: 600;
+            cursor: pointer; transition: all 0.2s;
+            display: flex; align-items: center; justify-content: center; gap: 6px;
+        }
+        .load-more-btn:hover { border-color: var(--text-muted); }
+        .load-more-btn i { width: 16px; height: 16px; }
+
+        /* ============ SETTINGS ============ */
+        .settings-section { margin-bottom: 20px; }
+        .settings-card {
+            background: var(--bg-card); border: 1px solid var(--border);
+            border-radius: var(--radius); padding: 20px; margin-bottom: 12px;
+        }
+        .settings-card h3 {
+            display: flex; align-items: center; gap: 8px;
+            font-size: 0.9rem; font-weight: 700; margin-bottom: 16px;
+        }
+        .settings-card h3 i { width: 18px; height: 18px; color: var(--purple); }
+
+        /* ============ TOAST ============ */
+        #toast {
+            position: fixed; top: 20px; left: 50%; transform: translateX(-50%);
+            background: var(--bg-elevated); color: var(--text-primary);
+            padding: 12px 20px; border-radius: var(--radius-sm);
+            font-size: 0.82rem; font-weight: 600;
+            box-shadow: 0 8px 30px rgba(0,0,0,0.5);
+            border: 1px solid var(--border);
+            z-index: 9999; display: none;
+            max-width: 90%; text-align: center;
+        }
+        #toast.success { border-color: var(--green); }
+        #toast.error { border-color: var(--red); }
+
+        /* ============ LOADING ============ */
+        .spinner {
+            display: inline-block; width: 18px; height: 18px;
+            border: 2px solid rgba(255,255,255,0.2);
+            border-top-color: #fff; border-radius: 50%;
+            animation: spin 0.7s linear infinite;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        .loading-overlay {
+            position: fixed; inset: 0;
+            background: rgba(0,0,0,0.6); z-index: 500;
+            display: flex; flex-direction: column;
+            align-items: center; justify-content: center; gap: 12px;
+        }
+        .loading-overlay .spinner { width: 32px; height: 32px; border-width: 3px; }
+        .loading-overlay p { color: var(--text-secondary); font-size: 0.85rem; }
+
+        /* ============ CUSTOM CONFIRM MODAL ============ */
+        .confirm-overlay {
+            position: fixed; inset: 0;
+            background: rgba(0,0,0,0.75);
+            display: flex; align-items: center; justify-content: center;
+            z-index: 10000; padding: 20px;
+        }
+        .confirm-box {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 24px 20px;
+            width: 100%; max-width: 380px;
+            text-align: center;
+        }
+        .confirm-box .confirm-msg {
+            font-size: 0.88rem;
+            color: var(--text-primary);
+            margin-bottom: 20px;
+            line-height: 1.5;
+        }
+        .confirm-box .confirm-msg .confirm-sub {
+            display: block;
+            font-size: 0.78rem;
+            color: var(--text-muted);
+            margin-top: 4px;
+        }
+        .confirm-box .confirm-actions {
+            display: flex; gap: 10px;
+        }
+        .confirm-box .confirm-actions button {
+            flex: 1; padding: 10px; border-radius: var(--radius-sm);
+            font-size: 0.85rem; font-weight: 600; cursor: pointer;
+            border: 1px solid transparent; transition: all 0.2s;
+        }
+        .confirm-box .confirm-actions .btn-confirm-ok {
+            background: var(--red); color: #fff; border-color: var(--red);
+        }
+        .confirm-box .confirm-actions .btn-confirm-ok:hover { background: #c4070f; border-color: #c4070f; }
+        .confirm-box .confirm-actions .btn-confirm-cancel {
+            background: transparent; color: var(--text-secondary);
+            border-color: var(--border);
+        }
+        .confirm-box .confirm-actions .btn-confirm-cancel:hover {
+            border-color: var(--text-muted); color: var(--text-primary);
+        }
+
+        /* ============ EMPTY STATE ============ */
+        .empty-state {
+            text-align: center; padding: 40px 20px;
+            color: var(--text-muted);
+        }
+        .empty-state i { width: 48px; height: 48px; margin-bottom: 12px; }
+        .empty-state p { font-size: 0.85rem; }
+
+        /* ============ RESPONSIVE ============ */
+        @media (max-width: 400px) {
+            .app-body { padding: 16px 12px 100px; }
+            .stat-card .stat-value { font-size: 1.3rem; }
+            .login-box { padding: 24px 18px; }
+        }
+
+        /* ============ DESKTOP LAYOUT ============ */
+        @media (min-width: 769px) {
+            .app-body {
+                max-width: 960px;
+                padding: 28px 32px 60px;
+            }
+            .app-header-inner {
+                max-width: 960px;
+            }
+            .nav-tabs {
+                max-width: 480px;
+            }
+            .stats-grid {
+                grid-template-columns: repeat(4, 1fr);
+            }
+            .stat-card.wide {
+                grid-column: 1 / -1;
+            }
+            /* Cookie cards in 2-column grid within each batch */
+            .batch-cards {
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+                gap: 12px;
+            }
+            /* Wider action section */
+            .action-section {
+                max-width: 100%;
+            }
+            /* History items wider */
+            .history-item {
+                padding: 16px 20px;
+            }
+            /* Login box wider on desktop */
+            .login-box {
+                max-width: 440px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<!-- ============ LOGIN ============ -->
+<div id="loginOverlay">
+    <div class="login-box">
+        <div class="brand">
+            <h1>Tiem Banh Netflix</h1>
+            <p>CTV Portal</p>
+        </div>
+        <div id="loginError" class="login-error"></div>
+        <div class="form-group">
+            <label><i data-lucide="user"></i> Username</label>
+            <input type="text" id="loginUsername" placeholder="Enter username" autocomplete="username">
+        </div>
+        <div class="form-group">
+            <label><i data-lucide="lock"></i> Password</label>
+            <div style="position:relative;">
+                <input type="password" id="loginPassword" placeholder="Enter password" autocomplete="current-password" style="padding-right:44px;">
+                <button type="button" id="pwToggleBtn" onclick="togglePwVisibility()"
+                    style="position:absolute;right:0;top:0;bottom:0;width:44px;background:transparent;border:none;color:var(--text-muted);cursor:pointer;display:flex;align-items:center;justify-content:center;padding:0;">
+                    <i data-lucide="eye" id="pwToggleIcon" style="width:18px;height:18px;"></i>
+                </button>
+            </div>
+        </div>
+        <button class="btn btn-red" id="loginBtn" onclick="handleLogin()">
+            <i data-lucide="log-in"></i> Login
+        </button>
+        <div style="margin-top:20px;padding-top:16px;border-top:1px solid var(--border);">
+            <div style="background:rgba(245,158,11,0.08);border:1px solid rgba(245,158,11,0.3);border-radius:10px;padding:14px 16px;display:flex;align-items:center;gap:12px;">
+                <div style="flex-shrink:0;width:34px;height:34px;background:rgba(245,158,11,0.15);border-radius:8px;display:flex;align-items:center;justify-content:center;">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="#f59e0b"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+                </div>
+                <div style="flex:1;min-width:0;">
+                    <div style="font-size:0.78rem;font-weight:700;color:#f59e0b;margin-bottom:2px;">Đăng ký CTV Tiệm Bánh?</div>
+                    <div style="font-size:0.7rem;color:var(--text-muted);">Liên hệ qua Facebook</div>
+                </div>
+                <a href="https://www.facebook.com/tiembanh4k" target="_blank" rel="noopener noreferrer"
+                   style="flex-shrink:0;font-size:0.72rem;font-weight:600;color:#f59e0b;text-decoration:none;padding:5px 10px;border:1px solid rgba(245,158,11,0.4);border-radius:6px;white-space:nowrap;">
+                    Liên hệ
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ============ MAIN APP ============ -->
+<div id="app">
+    <header class="app-header">
+        <div class="app-header-inner">
+            <span class="logo">CTV Tiem Banh Netflix</span>
+            <div class="user-info">
+                <span class="user-name" id="headerUserName"></span>
+                <button class="btn-icon" onclick="handleLogout()" title="Logout">
+                    <i data-lucide="log-out"></i>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main class="app-body">
+        <!-- NAV TABS -->
+        <div class="nav-tabs">
+            <button class="nav-tab active" data-tab="dashboard" onclick="switchTab('dashboard')">
+                <i data-lucide="layout-dashboard"></i> Dashboard
+            </button>
+            <button class="nav-tab" data-tab="cookies" onclick="switchTab('cookies')">
+                <i data-lucide="cookie"></i> Cookies
+            </button>
+            <button class="nav-tab" data-tab="history" onclick="switchTab('history')">
+                <i data-lucide="history"></i> History
+            </button>
+        </div>
+
+        <!-- ============ DASHBOARD TAB ============ -->
+        <div id="tab-dashboard" class="tab-content">
+            <div class="stats-grid">
+                <div class="stat-card green">
+                    <div class="stat-label"><i data-lucide="package"></i> Remaining</div>
+                    <div class="stat-value" id="statRemaining">--</div>
+                    <div class="stat-sub">cookies left</div>
+                </div>
+                <div class="stat-card blue">
+                    <div class="stat-label"><i data-lucide="check-circle"></i> Used</div>
+                    <div class="stat-value" id="statUsed">--</div>
+                    <div class="stat-sub" id="statUsedSub">of -- total</div>
+                </div>
+                <div class="stat-card orange">
+                    <div class="stat-label"><i data-lucide="calendar"></i> Days Left</div>
+                    <div class="stat-value" id="statDays">--</div>
+                    <div class="stat-sub" id="statDaysSub"></div>
+                </div>
+                <div class="stat-card purple">
+                    <div class="stat-label"><i data-lucide="activity"></i> Success</div>
+                    <div class="stat-value" id="statSuccess">--</div>
+                    <div class="stat-sub">tokens generated</div>
+                </div>
+                <div class="stat-card wide">
+                    <div class="stat-label"><i data-lucide="bar-chart-3"></i> Quota Usage</div>
+                    <div class="progress-bar-track">
+                        <div class="progress-bar-fill" id="quotaBar" style="width: 0%"></div>
+                    </div>
+                    <div class="stat-sub" id="quotaText" style="margin-top:8px;">-- / -- cookies</div>
+                </div>
+            </div>
+
+            <!-- CTV Registration Banner -->
+            <div style="background:rgba(245,158,11,0.08);border:1px solid rgba(245,158,11,0.3);border-radius:var(--radius);padding:16px 18px;display:flex;align-items:center;gap:14px;">
+                <div style="flex-shrink:0;width:38px;height:38px;background:rgba(245,158,11,0.15);border-radius:10px;display:flex;align-items:center;justify-content:center;">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="#f59e0b"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+                </div>
+                <div style="flex:1;min-width:0;">
+                    <div style="font-size:0.82rem;font-weight:700;color:#f59e0b;margin-bottom:3px;">Đăng ký CTV Tiệm Bánh?</div>
+                    <div style="font-size:0.75rem;color:var(--text-muted);">Liên hệ qua trang Facebook của Tiệm Bánh Netflix</div>
+                </div>
+                <a href="https://www.facebook.com/tiembanh4k" target="_blank" rel="noopener noreferrer"
+                   style="flex-shrink:0;font-size:0.75rem;font-weight:600;color:#f59e0b;text-decoration:none;padding:6px 12px;border:1px solid rgba(245,158,11,0.4);border-radius:6px;white-space:nowrap;">
+                    Liên hệ
+                </a>
+            </div>
+        </div>
+
+        <!-- ============ COOKIES TAB ============ -->
+        <div id="tab-cookies" class="tab-content hidden">
+            <div class="action-section">
+                <h3><i data-lucide="download"></i> Get Cookies</h3>
+                <div class="quantity-select">
+                    <label>Quantity:</label>
+                    <div class="quantity-input">
+                        <button class="qty-btn" onclick="adjustQty(-1)"><i data-lucide="minus"></i></button>
+                        <input type="number" class="qty-value" id="qtyValue" value="1" min="1" max="20" oninput="onQtyInput(this)">
+                        <button class="qty-btn" onclick="adjustQty(1)"><i data-lucide="plus"></i></button>
+                    </div>
+                </div>
+                <button class="btn btn-green" id="getCookiesBtn" onclick="getCookies()">
+                    <i data-lucide="download"></i> Get Cookies & Generate Links
+                </button>
+            </div>
+
+            <div id="cookieResults" class="cookie-results hidden">
+                <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;">
+                    <h3 style="margin-bottom:0;"><i data-lucide="check-circle"></i> <span id="resultTitle">Results</span></h3>
+                    <button class="btn-sm btn-outline" onclick="clearCookieResults()" style="display:inline-flex;align-items:center;gap:4px;">
+                        <i data-lucide="trash-2" style="width:14px;height:14px;"></i> Clear
+                    </button>
+                </div>
+                <div id="cookieCardList"></div>
+            </div>
+        </div>
+
+        <!-- ============ HISTORY TAB ============ -->
+        <div id="tab-history" class="tab-content hidden">
+            <div class="history-section">
+                <div id="historyHeader" style="display:none;margin-bottom:14px;">
+                    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;">
+                        <span id="historyTotalText" style="font-size:0.85rem;font-weight:700;"></span>
+                        <div style="display:flex;gap:6px;">
+                            <button class="btn btn-outline btn-sm" onclick="deleteHistory('invalid')" style="font-size:0.7rem;padding:5px 10px;">Xóa Invalid</button>
+                            <button class="btn btn-outline btn-sm" onclick="deleteHistory('all')" style="font-size:0.7rem;padding:5px 10px;border-color:var(--red);color:var(--red);">Xóa tất cả</button>
+                        </div>
+                    </div>
+                </div>
+                <div id="historyList"></div>
+                <button id="loadMoreBtn" class="load-more-btn hidden" onclick="loadMoreHistory()">
+                    <i data-lucide="chevron-down"></i> Load More
+                </button>
+                <div id="historyEmpty" class="empty-state hidden">
+                    <i data-lucide="inbox"></i>
+                    <p>No history yet. Get some cookies first!</p>
+                </div>
+            </div>
+        </div>
+    </main>
+</div>
+
+<!-- ============ LOADING OVERLAY ============ -->
+<div id="loadingOverlay" class="loading-overlay hidden">
+    <div class="spinner"></div>
+    <p id="loadingText">Processing...</p>
+</div>
+
+<!-- ============ TOAST ============ -->
+<div id="toast"></div>
+
+<script src="../config.js"></script>
+<script>
+const BACKEND_URL = window.APP_CONFIG ? window.APP_CONFIG.BACKEND_URL : 'http://localhost:3000';
+const TOKEN_KEY = 'ctv_token';
+
+let currentTab = 'dashboard';
+let cookieQty = 1;
+let historyPage = 1;
+let historyHasMore = false;
+let currentCookies = [];
+let batchCounter = 0;
+let allBatches = [];
+
+// ========================================
+// INIT
+// ========================================
+document.addEventListener('DOMContentLoaded', () => {
+    lucide.createIcons();
+    document.getElementById('loginPassword').addEventListener('keydown', e => {
+        if (e.key === 'Enter') handleLogin();
+    });
+    document.getElementById('loginUsername').addEventListener('keydown', e => {
+        if (e.key === 'Enter') document.getElementById('loginPassword').focus();
+    });
+    checkAuth();
+});
+
+// ========================================
+// AUTH
+// ========================================
+function togglePwVisibility() {
+    const inp = document.getElementById('loginPassword');
+    const icon = document.getElementById('pwToggleIcon');
+    if (inp.type === 'password') {
+        inp.type = 'text';
+        icon.setAttribute('data-lucide', 'eye-off');
+    } else {
+        inp.type = 'password';
+        icon.setAttribute('data-lucide', 'eye');
+    }
+    lucide.createIcons();
+}
+
+async function checkAuth() {
+    const token = localStorage.getItem(TOKEN_KEY);
+    if (!token) { showLogin(); return; }
+
+    try {
+        const res = await apiFetch('/api/ctv-auth/verify', 'POST', { token });
+        if (res.success) {
+            showApp(res.collaborator);
+        } else {
+            localStorage.removeItem(TOKEN_KEY);
+            showLogin();
+        }
+    } catch {
+        localStorage.removeItem(TOKEN_KEY);
+        showLogin();
+    }
+}
+
+async function handleLogin() {
+    const username = document.getElementById('loginUsername').value.trim();
+    const password = document.getElementById('loginPassword').value;
+    const errEl = document.getElementById('loginError');
+    const btn = document.getElementById('loginBtn');
+
+    if (!username || !password) {
+        errEl.textContent = 'Please enter username and password.';
+        errEl.style.display = 'block';
+        return;
+    }
+
+    btn.disabled = true;
+    btn.innerHTML = '<span class="spinner"></span> Logging in...';
+    errEl.style.display = 'none';
+
+    try {
+        const res = await apiFetch('/api/ctv-auth/login', 'POST', { username, password });
+        if (res.success) {
+            localStorage.setItem(TOKEN_KEY, res.token);
+            showApp(res.collaborator);
+        } else {
+            errEl.textContent = res.error || 'Login failed.';
+            errEl.style.display = 'block';
+        }
+    } catch (err) {
+        errEl.textContent = err.message || 'Connection error.';
+        errEl.style.display = 'block';
+    } finally {
+        btn.disabled = false;
+        btn.innerHTML = '<i data-lucide="log-in"></i> Login';
+        lucide.createIcons();
+    }
+}
+
+function handleLogout() {
+    localStorage.removeItem(TOKEN_KEY);
+    showLogin();
+}
+
+function showLogin() {
+    document.getElementById('loginOverlay').style.display = 'flex';
+    document.getElementById('app').style.display = 'none';
+    document.getElementById('loginUsername').value = '';
+    document.getElementById('loginPassword').value = '';
+    document.getElementById('loginError').style.display = 'none';
+}
+
+function showApp(collaborator) {
+    document.getElementById('loginOverlay').style.display = 'none';
+    document.getElementById('app').style.display = 'block';
+    document.getElementById('headerUserName').textContent = collaborator.displayName;
+    loadDashboard();
+}
+
+// ========================================
+// TABS
+// ========================================
+function switchTab(tab) {
+    currentTab = tab;
+    document.querySelectorAll('.nav-tab').forEach(t => t.classList.toggle('active', t.dataset.tab === tab));
+    document.querySelectorAll('.tab-content').forEach(c => c.classList.add('hidden'));
+    document.getElementById('tab-' + tab).classList.remove('hidden');
+    lucide.createIcons();
+
+    if (tab === 'dashboard') loadDashboard();
+    if (tab === 'history') { historyPage = 1; loadHistory(true); }
+}
+
+// ========================================
+// DASHBOARD
+// ========================================
+async function loadDashboard() {
+    try {
+        const res = await apiFetch('/api/ctv/stats', 'GET');
+        if (!res.success) return;
+        const s = res.stats;
+
+        document.getElementById('statRemaining').textContent = s.quota.remaining;
+        document.getElementById('statUsed').textContent = s.quota.used;
+        document.getElementById('statUsedSub').textContent = `of ${s.quota.max} total`;
+        document.getElementById('statDays').textContent = s.collaboration.daysRemaining;
+        document.getElementById('statDaysSub').textContent = `until ${new Date(s.collaboration.endDate).toLocaleDateString('vi-VN')}`;
+        document.getElementById('statSuccess').textContent = s.activity.totalSuccess;
+
+        const pct = s.quota.max > 0 ? Math.round((s.quota.used / s.quota.max) * 100) : 0;
+        document.getElementById('quotaBar').style.width = pct + '%';
+        document.getElementById('quotaText').textContent = `${s.quota.used} / ${s.quota.max} cookies (${pct}%)`;
+    } catch (err) {
+        console.error('Dashboard load error:', err);
+    }
+}
+
+// ========================================
+// GET COOKIES
+// ========================================
+function adjustQty(delta) {
+    const input = document.getElementById('qtyValue');
+    cookieQty = Math.max(1, Math.min(20, (parseInt(input.value) || cookieQty) + delta));
+    input.value = cookieQty;
+}
+
+function onQtyInput(input) {
+    const val = parseInt(input.value);
+    if (!isNaN(val)) {
+        cookieQty = Math.max(1, Math.min(20, val));
+    }
+    // Correct the displayed value on blur (not during typing to allow backspace)
+    input.addEventListener('blur', function onBlur() {
+        input.value = cookieQty;
+        input.removeEventListener('blur', onBlur);
+    }, { once: true });
+}
+
+async function getCookies() {
+    const btn = document.getElementById('getCookiesBtn');
+    btn.disabled = true;
+
+    showLoading('Getting cookies & generating token links...');
+
+    try {
+        const res = await apiFetch('/api/ctv/get-cookies', 'POST', { quantity: cookieQty });
+        hideLoading();
+
+        if (!res.success) {
+            toast(res.error || 'Failed to get cookies.', 'error');
+            return;
+        }
+
+        batchCounter++;
+        const batch = { id: batchCounter, cookies: res.cookies, time: new Date() };
+        allBatches.unshift(batch);
+        currentCookies = allBatches.flatMap(b => b.cookies);
+        renderAllBatches();
+        toast(res.message, 'success');
+        loadDashboard();
+    } catch (err) {
+        hideLoading();
+        toast(err.message || 'Connection error.', 'error');
+    } finally {
+        btn.disabled = false;
+    }
+}
+
+function clearCookieResults() {
+    allBatches = [];
+    currentCookies = [];
+    batchCounter = 0;
+    document.getElementById('cookieCardList').innerHTML = '';
+    document.getElementById('cookieResults').classList.add('hidden');
+}
+
+function renderAllBatches() {
+    const container = document.getElementById('cookieCardList');
+    const section = document.getElementById('cookieResults');
+    const totalCount = allBatches.reduce((sum, b) => sum + b.cookies.length, 0);
+    document.getElementById('resultTitle').textContent = `${totalCount} Cookie(s) Total`;
+    section.classList.remove('hidden');
+
+    container.innerHTML = allBatches.map(batch => {
+        const batchTime = batch.time.toLocaleTimeString('vi-VN');
+        const batchCards = batch.cookies.map((c, i) => renderSingleCard(c, i + 1)).join('');
+        return `
+        <div class="batch-group">
+            <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px;padding:8px 12px;background:var(--bg-elevated);border-radius:var(--radius-sm);border-left:3px solid var(--green);">
+                <i data-lucide="layers" style="width:16px;height:16px;color:var(--green);"></i>
+                <span style="font-size:0.8rem;font-weight:700;color:var(--text-primary);">Batch #${batch.id}</span>
+                <span style="font-size:0.72rem;color:var(--text-muted);margin-left:auto;">${batchTime} - ${batch.cookies.length} cookie(s)</span>
+            </div>
+            <div class="batch-cards">
+                ${batchCards}
+            </div>
+        </div>`;
+    }).join('');
+
+    lucide.createIcons();
+}
+
+function renderSingleCard(c, idx) {
+    const now = Math.floor(Date.now() / 1000);
+    const valid = c.tokenExpires && c.tokenExpires > now;
+    const timeStr = valid ? formatTime(c.timeRemaining || (c.tokenExpires - now)) : 'Expired';
+
+    return `
+    <div class="cookie-card" id="card-${c.logId}">
+        <div class="cookie-card-header">
+            <span class="cookie-num"><i data-lucide="hash"></i> #${idx} (Cookie ${c.cookieNumber})</span>
+            <span class="token-status ${valid ? 'valid' : 'expired'}">
+                <i data-lucide="${valid ? 'check-circle' : 'x-circle'}"></i> ${valid ? 'Valid' : 'Expired'}
+            </span>
+        </div>
+        <div class="cookie-field">
+            <div class="cookie-field-label">Cookie Value</div>
+            <div class="cookie-field-value">
+                <code title="${escapeHtml(c.cookieValue)}">${escapeHtml(c.cookieValue.substring(0, 60))}...</code>
+                <button class="copy-btn" onclick="copyText(this, '${escapeAttr(c.cookieValue)}')" title="Copy Cookie">
+                    <i data-lucide="copy"></i>
+                </button>
+            </div>
+        </div>
+        <div class="cookie-field">
+            <div class="cookie-field-label">Token Link</div>
+            <div class="cookie-field-value">
+                <code title="${escapeHtml(c.tokenLink || '')}">${escapeHtml((c.tokenLink || '').substring(0, 60))}...</code>
+                <button class="copy-btn" onclick="copyText(this, '${escapeAttr(c.tokenLink || '')}')" title="Copy Token Link">
+                    <i data-lucide="copy"></i>
+                </button>
+            </div>
+        </div>
+        <div class="cookie-card-footer">
+            <span class="time-left"><i data-lucide="clock"></i> ${timeStr}</span>
+            <button class="regen-btn" onclick="regenerateToken('${c.logId}', this)">
+                <i data-lucide="refresh-cw"></i> Regenerate
+            </button>
+        </div>
+    </div>`;
+}
+
+async function regenerateToken(logId, btn) {
+    btn.disabled = true;
+    btn.innerHTML = '<span class="spinner" style="width:14px;height:14px;border-width:2px;"></span>';
+
+    try {
+        const res = await apiFetch('/api/ctv/regenerate-token', 'POST', { logId });
+        if (res.success) {
+            for (const batch of allBatches) {
+                const idx = batch.cookies.findIndex(c => c.logId === logId);
+                if (idx >= 0) {
+                    batch.cookies[idx] = { ...batch.cookies[idx], ...res };
+                    break;
+                }
+            }
+            currentCookies = allBatches.flatMap(b => b.cookies);
+            renderAllBatches();
+            toast('Token regenerated!', 'success');
+        } else {
+            toast(res.error || 'Regeneration failed.', 'error');
+        }
+    } catch (err) {
+        toast(err.message || 'Error.', 'error');
+    } finally {
+        btn.disabled = false;
+        btn.innerHTML = '<i data-lucide="refresh-cw"></i> Regenerate';
+        lucide.createIcons();
+    }
+}
+
+// ========================================
+// HISTORY
+// ========================================
+let historyTotalCount = 0;
+let historyRunningIndex = 0;
+
+async function loadHistory(reset = false) {
+    if (reset) {
+        historyPage = 1;
+        historyRunningIndex = 0;
+        document.getElementById('historyList').innerHTML = '';
+    }
+
+    try {
+        const res = await apiFetch(`/api/ctv/history?page=${historyPage}&limit=15`, 'GET');
+        if (!res.success) return;
+
+        const list = document.getElementById('historyList');
+        const emptyEl = document.getElementById('historyEmpty');
+        const moreBtn = document.getElementById('loadMoreBtn');
+        const headerEl = document.getElementById('historyHeader');
+        const now = Math.floor(Date.now() / 1000);
+
+        historyTotalCount = res.pagination.total || 0;
+
+        if (res.logs.length === 0 && historyPage === 1) {
+            emptyEl.classList.remove('hidden');
+            moreBtn.classList.add('hidden');
+            headerEl.style.display = 'none';
+            lucide.createIcons();
+            return;
+        }
+
+        emptyEl.classList.add('hidden');
+        headerEl.style.display = 'block';
+        document.getElementById('historyTotalText').textContent = `${historyTotalCount} cookie(s)`;
+
+        const svgChevron = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>`;
+
+        const html = res.logs.map(log => {
+            historyRunningIndex++;
+            const idx = historyRunningIndex;
+            const isOk = log.status === 'token_generated';
+            const valid = log.tokenExpires && log.tokenExpires > now;
+            const date = new Date(log.createdAt).toLocaleString('vi-VN');
+            const timeStr = valid ? formatTime(log.tokenExpires - now) : '';
+
+            let statusText;
+            if (isOk && valid) {
+                statusText = `<span style="color:var(--green);font-size:0.78rem;font-weight:600;">Valid - ${timeStr}</span>`;
+            } else if (isOk) {
+                statusText = `<span style="color:var(--red);font-size:0.78rem;font-weight:600;">Expired</span>`;
+            } else {
+                statusText = `<span style="color:#f87171;font-size:0.78rem;font-weight:600;">Failed</span>`;
+            }
+
+            return `
+            <div class="history-item" style="cursor:pointer;" onclick='showHistoryDetail(${JSON.stringify(log).replace(/'/g,"&#39;")})'>
+                <div class="hi-icon ${isOk ? 'success' : 'fail'}">
+                    <span style="font-size:0.72rem;font-weight:800;">${idx}</span>
+                </div>
+                <div class="hi-body">
+                    <div class="hi-title">Cookie #${log.cookieNumber}</div>
+                    <div class="hi-meta">${date} ${statusText}</div>
+                </div>
+                <div class="hi-actions" style="color:var(--text-muted);">
+                    ${svgChevron}
+                </div>
+            </div>`;
+        }).join('');
+
+        list.insertAdjacentHTML('beforeend', html);
+
+        historyHasMore = historyPage < res.pagination.totalPages;
+        moreBtn.classList.toggle('hidden', !historyHasMore);
+
+        lucide.createIcons();
+    } catch (err) {
+        console.error('History load error:', err);
+    }
+}
+
+function loadMoreHistory() {
+    historyPage++;
+    loadHistory(false);
+}
+
+async function deleteHistory(mode) {
+    const msg = mode === 'all'
+        ? 'Xóa toàn bộ lịch sử?<br><span class="confirm-sub">Hành động này không thể hoàn tác.</span>'
+        : 'Xóa các cookie không tạo được token khỏi lịch sử?<br><span class="confirm-sub">Hành động này không thể hoàn tác.</span>';
+    const ok = await customConfirm(msg);
+    if (!ok) return;
+
+    showLoading('Deleting...');
+    try {
+        const res = await apiFetch(`/api/ctv/history?mode=${mode}`, 'DELETE');
+        hideLoading();
+        if (res.success) {
+            toast(`Da xoa ${res.deletedCount} muc.`, 'success');
+            loadHistory(true);
+        } else {
+            toast(res.error || 'Failed.', 'error');
+        }
+    } catch (err) {
+        hideLoading();
+        toast(err.message || 'Error.', 'error');
+    }
+}
+
+// ========================================
+// HISTORY DETAIL MODAL
+// ========================================
+function showHistoryDetail(log) {
+    const existing = document.getElementById('historyModal');
+    if (existing) existing.remove();
+
+    const now = Math.floor(Date.now() / 1000);
+    const isOk = log.status === 'token_generated';
+    const valid = log.tokenExpires && log.tokenExpires > now;
+    const timeStr = valid ? formatTime(log.tokenExpires - now) : 'Expired';
+    const date = new Date(log.createdAt).toLocaleString('vi-VN');
+
+    const overlay = document.createElement('div');
+    overlay.id = 'historyModal';
+    const svgCheck = `<svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>`;
+    const svgX = `<svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>`;
+    const svgCopy = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>`;
+    const svgClock = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>`;
+    const svgRegen = `<svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>`;
+
+    overlay.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,0.75);display:flex;align-items:center;justify-content:center;z-index:9000;padding:20px;';
+    overlay.innerHTML = `
+        <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:24px 20px;width:100%;max-width:520px;max-height:90vh;overflow-y:auto;">
+            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;">
+                <span style="font-size:0.95rem;font-weight:700;">Cookie #${log.cookieNumber}</span>
+                <span id="modalStatusBadge" style="display:inline-flex;align-items:center;gap:5px;font-size:0.85rem;font-weight:700;color:${valid ? 'var(--green)' : 'var(--red)'};">
+                    ${valid ? svgCheck : svgX} ${valid ? 'Valid' : 'Expired'}
+                </span>
+            </div>
+            <div style="font-size:0.75rem;color:var(--text-muted);margin-bottom:16px;">${date}</div>
+
+            ${isOk ? `
+            <div class="cookie-field">
+                <div class="cookie-field-label">Cookie Value</div>
+                <div class="cookie-field-value">
+                    <code title="${escapeHtml(log.cookieValue)}">${escapeHtml((log.cookieValue || '').substring(0, 60))}...</code>
+                    <button class="copy-btn" onclick="copyText(this, '${escapeAttr(log.cookieValue || '')}')" title="Copy Cookie">${svgCopy}</button>
+                </div>
+            </div>
+            <div class="cookie-field">
+                <div class="cookie-field-label">Token Link</div>
+                <div class="cookie-field-value">
+                    <code id="modalTokenCode" title="${escapeHtml(log.tokenLink || '')}">${escapeHtml((log.tokenLink || '').substring(0, 60))}...</code>
+                    <button id="modalTokenCopyBtn" class="copy-btn" onclick="copyText(this, '${escapeAttr(log.tokenLink || '')}')" title="Copy Token Link">${svgCopy}</button>
+                </div>
+            </div>
+            <div id="modalTokenStatus" style="display:flex;align-items:center;gap:8px;margin-top:12px;padding:10px;background:var(--bg-input);border-radius:var(--radius-sm);">
+                <span style="color:${valid ? 'var(--green)' : 'var(--red)'};">${svgClock}</span>
+                <span style="font-size:0.82rem;color:${valid ? 'var(--green)' : '#f87171'};">${valid ? 'Token valid — ' + timeStr + ' remaining' : 'Token expired'}</span>
+            </div>
+            <div id="modalSuccessMsg" style="display:none;margin-top:12px;padding:10px 14px;background:var(--green-dim);border:1px solid rgba(16,185,129,0.3);border-radius:var(--radius-sm);font-size:0.82rem;font-weight:600;color:var(--green);text-align:center;"></div>
+            <div style="display:flex;gap:10px;margin-top:16px;">
+                <button id="modalRegenBtn" class="btn btn-blue" style="flex:2;min-width:0;display:inline-flex;align-items:center;justify-content:center;gap:6px;white-space:nowrap;" onclick="regenFromHistory('${log._id}')">
+                    ${svgRegen} Regenerate Token
+                </button>
+                <button class="btn btn-outline" style="flex:1;min-width:0;" onclick="document.getElementById('historyModal').remove();">
+                    Close
+                </button>
+            </div>
+            ` : `
+            <div style="text-align:center;padding:20px;color:var(--text-muted);">
+                <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="margin-bottom:8px;"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>
+                <p>Token generation failed for this cookie.</p>
+            </div>
+            <button class="btn btn-outline btn-sm" style="width:100%;margin-top:12px;" onclick="document.getElementById('historyModal').remove();">Close</button>
+            `}
+        </div>
+    `;
+    document.body.appendChild(overlay);
+    overlay.addEventListener('click', e => { if (e.target === overlay) overlay.remove(); });
+}
+
+async function regenFromHistory(logId) {
+    showLoading('Regenerating token...');
+    try {
+        const res = await apiFetch('/api/ctv/regenerate-token', 'POST', { logId });
+        hideLoading();
+        if (res.success) {
+            updateModalWithNewToken(res);
+            loadHistory(true);
+        } else {
+            toast(res.error || 'Không thể tạo token.', 'error');
+            document.getElementById('historyModal').remove();
+            const del = await customConfirm('Không thể tạo token cho cookie này.<br>Bạn có muốn xóa khỏi lịch sử?');
+            if (del) await deleteHistoryItem(logId);
+        }
+    } catch (err) {
+        hideLoading();
+        toast(err.message || 'Error.', 'error');
+        document.getElementById('historyModal')?.remove();
+        const del = await customConfirm('Không thể tạo token cho cookie này.<br>Bạn có muốn xóa khỏi lịch sử?');
+        if (del) await deleteHistoryItem(logId);
+    }
+}
+
+function updateModalWithNewToken(res) {
+    const svgCheck = `<svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>`;
+    const svgCopy = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>`;
+    const svgClock = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>`;
+
+    const newLink = res.tokenLink || '';
+    const timeStr = res.timeRemaining ? formatTime(res.timeRemaining) : '';
+
+    const badge = document.getElementById('modalStatusBadge');
+    if (badge) {
+        badge.style.color = 'var(--green)';
+        badge.innerHTML = `${svgCheck} Valid`;
+    }
+
+    const codeEl = document.getElementById('modalTokenCode');
+    if (codeEl) {
+        codeEl.title = escapeHtml(newLink);
+        codeEl.textContent = newLink.substring(0, 60) + '...';
+    }
+
+    const copyBtn = document.getElementById('modalTokenCopyBtn');
+    if (copyBtn) {
+        copyBtn.setAttribute('onclick', `copyText(this, '${escapeAttr(newLink)}')`);
+        copyBtn.innerHTML = svgCopy;
+    }
+
+    const statusEl = document.getElementById('modalTokenStatus');
+    if (statusEl) {
+        statusEl.innerHTML = `
+            <span style="color:var(--green);">${svgClock}</span>
+            <span style="font-size:0.82rem;color:var(--green);">Token valid — ${timeStr} remaining</span>
+        `;
+    }
+
+    const msgEl = document.getElementById('modalSuccessMsg');
+    if (msgEl) {
+        msgEl.textContent = 'Token mới đã được tạo thành công!';
+        msgEl.style.display = 'block';
+        setTimeout(() => { msgEl.style.display = 'none'; }, 4000);
+    }
+}
+
+async function deleteHistoryItem(logId) {
+    try {
+        const res = await apiFetch(`/api/ctv/history/${logId}`, 'DELETE');
+        if (res.success) {
+            toast('Da xoa khoi lich su.', 'success');
+            loadHistory(true);
+        }
+    } catch (err) {
+        toast('Loi khi xoa.', 'error');
+    }
+}
+
+// ========================================
+// HELPERS
+// ========================================
+async function apiFetch(path, method = 'GET', body = null) {
+    const opts = {
+        method,
+        headers: { 'Content-Type': 'application/json' }
+    };
+    const token = localStorage.getItem(TOKEN_KEY);
+    if (token) opts.headers['Authorization'] = 'Bearer ' + token;
+    if (body && method !== 'GET') opts.body = JSON.stringify(body);
+
+    const res = await fetch(BACKEND_URL + path, opts);
+    const data = await res.json();
+
+    if (res.status === 401 || res.status === 403) {
+        if (data.error && (data.error.includes('expired') || data.error.includes('Invalid token'))) {
+            localStorage.removeItem(TOKEN_KEY);
+            showLogin();
+            throw new Error('Session expired. Please login again.');
+        }
+    }
+
+    if (!res.ok && !data.success) {
+        throw new Error(data.error || `HTTP ${res.status}`);
+    }
+
+    return data;
+}
+
+function copyText(btn, text) {
+    navigator.clipboard.writeText(text).then(() => {
+        btn.classList.add('copied');
+        const icon = btn.querySelector('i') || btn.querySelector('.lucide');
+        if (icon) { icon.setAttribute('data-lucide', 'check'); lucide.createIcons(); }
+        setTimeout(() => {
+            btn.classList.remove('copied');
+            if (icon) { icon.setAttribute('data-lucide', 'copy'); lucide.createIcons(); }
+        }, 1500);
+    }).catch(() => {
+        // Fallback
+        const ta = document.createElement('textarea');
+        ta.value = text;
+        document.body.appendChild(ta);
+        ta.select();
+        document.execCommand('copy');
+        document.body.removeChild(ta);
+        toast('Copied!', 'success');
+    });
+}
+
+function toast(msg, type = 'success') {
+    const el = document.getElementById('toast');
+    el.textContent = msg;
+    el.className = type;
+    el.style.display = 'block';
+    setTimeout(() => { el.style.display = 'none'; }, 3000);
+}
+
+function customConfirm(message) {
+    return new Promise(resolve => {
+        const overlay = document.createElement('div');
+        overlay.className = 'confirm-overlay';
+        overlay.innerHTML = `
+            <div class="confirm-box">
+                <div class="confirm-msg">${message}</div>
+                <div class="confirm-actions">
+                    <button class="btn-confirm-ok" id="cfmOk">Đồng ý</button>
+                    <button class="btn-confirm-cancel" id="cfmCancel">Hủy</button>
+                </div>
+            </div>
+        `;
+        document.body.appendChild(overlay);
+        overlay.querySelector('#cfmOk').addEventListener('click', () => { overlay.remove(); resolve(true); });
+        overlay.querySelector('#cfmCancel').addEventListener('click', () => { overlay.remove(); resolve(false); });
+        overlay.addEventListener('click', e => { if (e.target === overlay) { overlay.remove(); resolve(false); } });
+    });
+}
+
+function showLoading(text) {
+    document.getElementById('loadingText').textContent = text || 'Processing...';
+    document.getElementById('loadingOverlay').classList.remove('hidden');
+}
+function hideLoading() {
+    document.getElementById('loadingOverlay').classList.add('hidden');
+}
+
+function formatTime(seconds) {
+    if (seconds <= 0) return 'Expired';
+    const h = Math.floor(seconds / 3600);
+    const m = Math.floor((seconds % 3600) / 60);
+    if (h > 0) return `${h}h ${m}m`;
+    return `${m}m`;
+}
+
+function escapeHtml(str) {
+    if (!str) return '';
+    return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+function escapeAttr(str) {
+    if (!str) return '';
+    return str.replace(/\\/g,'\\\\').replace(/'/g,"\\'").replace(/"/g,'\\"').replace(/\n/g,'');
+}
+</script>
+</body>
+</html>
