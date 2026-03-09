@@ -2093,18 +2093,26 @@ function showCelebrationModal(celebrationData, token, user) {
                 
                 <!-- Info Grid -->
                 <div class="celeb-grid-info">
-                    <!-- Extension -->
-                    <div class="celeb-info-card">
+                    <!-- CTV Program -->
+                    <div class="celeb-info-card celeb-info-card-ctv">
                         <div class="celeb-info-header">
-                            <span class="celeb-info-icon">${svgIcons.puzzle}</span>
-                            <span>Extension v${celebrationData.extensionVersion || CELEBRATION_EXTENSION_VERSION}<span class="celeb-mobile-only"> (cho phiên bản PC)</span></span>
+                            <span class="celeb-info-icon celeb-info-icon-ctv"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></span>
+                            <span>Chương trình CTV Tiệm Bánh</span>
                         </div>
                         <ul class="celeb-list">
-                            ${celebrationData.extensionChanges.map(c => `<li><span class="celeb-check">${svgIcons.check}</span>${c}</li>`).join('')}
+                            <li><span class="celeb-check">${svgIcons.check}</span>Trở thành Cộng Tác Viên chính thức của Tiệm Bánh</li>
+                            <li><span class="celeb-check">${svgIcons.check}</span>Nhận giá ưu đãi để resell dịch vụ của Tiệm Bánh</li>
+                            <li><span class="celeb-check">${svgIcons.check}</span>Quản lý quota, lịch sử sử dụng dễ dàng</li>
                         </ul>
-                        <a href="${celebrationData.extensionDownloadUrl}" target="_blank" class="celeb-download">
-                            ${svgIcons.download}
-                            <span>Tải Extension</span>
+                        <a href="https://www.facebook.com/tiembanh4k" target="_blank" style="display:flex;align-items:center;gap:12px;padding:12px 14px;background:rgba(245,158,11,0.08);border:1px solid rgba(245,158,11,0.3);border-radius:10px;text-decoration:none;margin-top:4px;">
+                            <div style="flex-shrink:0;width:34px;height:34px;background:rgba(245,158,11,0.15);border-radius:8px;display:flex;align-items:center;justify-content:center;">
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="#f59e0b"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+                            </div>
+                            <div style="flex:1;min-width:0;">
+                                <div style="font-size:0.78rem;font-weight:700;color:#f59e0b;margin-bottom:2px;">Đăng ký CTV Tiệm Bánh?</div>
+                                <div style="font-size:0.7rem;color:rgba(255,255,255,0.45);">Liên hệ qua Facebook</div>
+                            </div>
+                            <span style="flex-shrink:0;display:flex;align-items:center;justify-content:center;width:32px;height:32px;color:#f59e0b;opacity:0.7;transition:opacity 0.2s;"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 7h10v10"/><path d="M7 17 17 7"/></svg></span>
                         </a>
                     </div>
                     
@@ -2450,6 +2458,26 @@ function showCelebrationModal(celebrationData, token, user) {
             .celeb-info-icon-amber {
                 background: rgba(251, 191, 36, 0.1);
                 color: #fbbf24;
+            }
+            
+            .celeb-info-icon-ctv {
+                background: rgba(251, 191, 36, 0.1);
+                color: #fbbf24;
+            }
+            
+            .celeb-info-card-ctv {
+                border-color: rgba(251, 191, 36, 0.15);
+                background: rgba(251, 191, 36, 0.03);
+            }
+            
+            .celeb-download-ctv {
+                background: linear-gradient(135deg, #fbbf24, #f59e0b) !important;
+                color: #000 !important;
+                font-weight: 700;
+            }
+            
+            .celeb-download-ctv:hover {
+                box-shadow: 0 6px 20px rgba(251, 191, 36, 0.35) !important;
             }
             
             .celeb-list {
