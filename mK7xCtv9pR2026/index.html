@@ -1115,7 +1115,7 @@ async function deleteHistory(mode) {
         const res = await apiFetch(`/api/ctv/history?mode=${mode}`, 'DELETE');
         hideLoading();
         if (res.success) {
-            toast(`Da xoa ${res.deletedCount} muc.`, 'success');
+            toast(`Đã xóa ${res.deletedCount} cookie.`, 'success');
             loadHistory(true);
         } else {
             toast(res.error || 'Failed.', 'error');
@@ -1268,11 +1268,11 @@ async function deleteHistoryItem(logId) {
     try {
         const res = await apiFetch(`/api/ctv/history/${logId}`, 'DELETE');
         if (res.success) {
-            toast('Da xoa khoi lich su.', 'success');
+            toast('Đã xóa khỏi lịch sử!', 'success');
             loadHistory(true);
         }
     } catch (err) {
-        toast('Loi khi xoa.', 'error');
+        toast('Lỗi khi xóa', 'error');
     }
 }
 
