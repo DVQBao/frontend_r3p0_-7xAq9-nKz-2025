@@ -399,7 +399,9 @@ function getCurrentUser() {
 }
 
 function logout() {
+    localStorage.removeItem('auth_token');
     localStorage.removeItem('current_user');
+    localStorage.removeItem('currentUser');
     sessionStorage.removeItem('logged_in');
     window.location.href = '/auth/';
 }
@@ -1609,8 +1611,8 @@ function checkPasswordStrength() {
 document.addEventListener('DOMContentLoaded', () => {
     console.log('🔐 Auth page initialized');
 
-    // Check if already logged in
-    if (sessionStorage.getItem('logged_in') === 'true') {
+    // Check if already logged in (auth_token is the source of truth)
+    if (localStorage.getItem('auth_token')) {
         const currentUser = getCurrentUser();
         if (currentUser) {
             console.log('✅ Already logged in:', currentUser.email);

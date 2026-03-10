@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="vi">
 
 <head>
@@ -4663,55 +4663,68 @@ Nếu cần thêm lượt đổi tài khoản, vui lòng liên hệ Support qua 
                 return;
             }
 
+            const token = localStorage.getItem('auth_token');
             const currentUser = localStorage.getItem('current_user');
-            const loggedIn = sessionStorage.getItem('logged_in') === 'true';
 
-            if (loggedIn && currentUser) {
-                // ✅ FETCH FRESH DATA FROM BACKEND FIRST
+            if (token && currentUser) {
                 console.log('🔄 Fetching fresh user data from backend...');
-                const token = localStorage.getItem('auth_token');
-                let user = JSON.parse(currentUser); // Fallback nếu API fail
+                let user = JSON.parse(currentUser);
 
-                if (token) {
-                    try {
-                        const backendUrl = window.APP_CONFIG ? window.APP_CONFIG.BACKEND_URL : 'https://backend-c0r3-7xpq9zn2025.onrender.com';
-                        const response = await fetch(`${backendUrl}/api/auth/me`, {
-                            method: 'GET',
-                            headers: {
-                                'Authorization': `Bearer ${token}`,
-                                'Content-Type': 'application/json'
-                            }
-                        });
+                try {
+                    const backendUrl = window.APP_CONFIG ? window.APP_CONFIG.BACKEND_URL : 'https://backend-c0r3-7xpq9zn2025.onrender.com';
+                    const response = await fetch(`${backendUrl}/api/auth/me`, {
+                        method: 'GET',
+                        headers: {
+                            'Authorization': `Bearer ${token}`,
+                            'Content-Type': 'application/json'
+                        }
+                    });
 
-                        if (response.ok) {
-                            const data = await response.json();
-                            if (data.success && data.user) {
-                                user = data.user; // Use fresh data from API
-                                // Update localStorage với data mới
-                                localStorage.setItem('current_user', JSON.stringify(user));
-                                localStorage.setItem('currentUser', JSON.stringify(user));
-                                console.log('✅ Fresh user data loaded:', {
-                                    plan: user.plan,
-                                    credits: user.credits,
-                                    monthlyReportLimit: user.monthlyReportLimit
-                                });
+                    if (response.ok) {
+                        const data = await response.json();
+                        if (data.success && data.user) {
+                            user = data.user;
+                            localStorage.setItem('current_user', JSON.stringify(user));
+                            localStorage.setItem('currentUser', JSON.stringify(user));
+                            console.log('✅ Fresh user data loaded:', {
+                                plan: user.plan,
+                                credits: user.credits,
+                                monthlyReportLimit: user.monthlyReportLimit
+                            });
 
-                                // ========================================
-                                // CHECK REFERRAL NOTIFICATION
-                                // ========================================
-                                if (data.referralNotification && data.referralNotification.hasUnread) {
-                                    console.log('🎁 User has unread referral notifications:', data.referralNotification);
-                                    // Delay hiển thị popup để trang load xong
-                                    setTimeout(() => {
-                                        showReferralNotificationPopup(data.referralNotification);
-                                    }, 1000);
-                                }
+                            // ========================================
+                            // CHECK REFERRAL NOTIFICATION
+                            // ========================================
+                            if (data.referralNotification && data.referralNotification.hasUnread) {
+                                console.log('🎁 User has unread referral notifications:', data.referralNotification);
+                                setTimeout(() => {
+                                    showReferralNotificationPopup(data.referralNotification);
+                                }, 1000);
                             }
                         }
-                    } catch (error) {
-                        console.warn('⚠️ Failed to fetch fresh user data, using cached:', error);
+                    } else if (response.status === 401 || response.status === 403) {
+                        console.warn('⚠️ Token expired or invalid, clearing session...');
+                        localStorage.removeItem('auth_token');
+                        localStorage.removeItem('current_user');
+                        localStorage.removeItem('currentUser');
+                        sessionStorage.removeItem('logged_in');
+
+                        document.getElementById('loginSection').style.display = 'block';
+                        document.getElementById('userProfileCard').style.display = 'none';
+                        const loginRequired = document.getElementById('loginRequired');
+                        if (loginRequired) loginRequired.style.display = 'block';
+                        const openBtn = document.getElementById('openNetflixBtn');
+                        const guestBtn = document.getElementById('watchAsGuestBtn');
+                        if (openBtn) openBtn.disabled = true;
+                        if (guestBtn) guestBtn.disabled = true;
+                        console.log('⚠️ Session expired - User must login again');
+                        return;
                     }
+                } catch (error) {
+                    console.warn('⚠️ Failed to fetch fresh user data, using cached:', error);
                 }
+
+                sessionStorage.setItem('logged_in', 'true');
 
                 // Hide login section, show profile
                 document.getElementById('loginSection').style.display = 'none';
@@ -4797,11 +4810,14 @@ Nếu cần thêm lượt đổi tài khoản, vui lòng liên hệ Support qua 
 
                 console.log('✅ User logged in:', user.email, 'Plan:', user.plan);
             } else {
-                // Show login section, hide profile
+                localStorage.removeItem('auth_token');
+                localStorage.removeItem('current_user');
+                localStorage.removeItem('currentUser');
+                sessionStorage.removeItem('logged_in');
+
                 document.getElementById('loginSection').style.display = 'block';
                 document.getElementById('userProfileCard').style.display = 'none';
 
-                // Disable guest section
                 const loginRequired = document.getElementById('loginRequired');
                 if (loginRequired) loginRequired.style.display = 'block';
 
@@ -4824,8 +4840,9 @@ Nếu cần thêm lượt đổi tài khoản, vui lòng liên hệ Support qua 
             });
 
             if (confirmed) {
-                localStorage.removeItem('current_user');
                 localStorage.removeItem('auth_token');
+                localStorage.removeItem('current_user');
+                localStorage.removeItem('currentUser');
                 sessionStorage.removeItem('logged_in');
 
                 showCustomModal({
@@ -6048,14 +6065,22 @@ Nếu cần thêm lượt đổi tài khoản, vui lòng liên hệ Support qua 
                     body: JSON.stringify({ code: code })
                 });
 
+                if (response.status === 401 || response.status === 403) {
+                    localStorage.removeItem('auth_token');
+                    localStorage.removeItem('current_user');
+                    localStorage.removeItem('currentUser');
+                    sessionStorage.removeItem('logged_in');
+                    showTvStatus('Phiên đăng nhập đã hết hạn. Đang tải lại trang...', 'error');
+                    setTimeout(() => window.location.reload(), 1500);
+                    return;
+                }
+
                 const data = await response.json();
 
                 if (data.success) {
-                    // Thành công!
                     showTvStatus('TV đã được kích hoạt thành công! Kiểm tra TV của bạn.', 'success');
                     codeInput.value = '';
 
-                    // Show modal thông báo thành công
                     if (typeof showCustomModal === 'function') {
                         showCustomModal({
                             icon: '✅',
@@ -6068,11 +6093,9 @@ Nếu cần thêm lượt đổi tài khoản, vui lòng liên hệ Support qua 
                         });
                     }
                 } else {
-                    // Xử lý lỗi cụ thể
                     let errorMsg = data.error || 'Không thể kích hoạt TV.';
                     let errorType = 'error';
 
-                    // Gợi ý cho từng loại lỗi
                     if (data.code === 'COOKIE_EXPIRED' || data.code === 'SESSION_EXPIRED' || data.code === 'COOKIE_INVALID') {
                         // Hiển thị modal hướng dẫn rõ ràng
                         if (typeof showCustomModal === 'function') {
@@ -6252,6 +6275,16 @@ Nếu cần thêm lượt đổi tài khoản, vui lòng liên hệ Support qua 
                         'Authorization': `Bearer ${authToken}`
                     }
                 });
+
+                if (response.status === 401 || response.status === 403) {
+                    localStorage.removeItem('auth_token');
+                    localStorage.removeItem('current_user');
+                    localStorage.removeItem('currentUser');
+                    sessionStorage.removeItem('logged_in');
+                    statusDiv.innerHTML = '<span style="color: #ef4444;">Phiên đăng nhập hết hạn. Đang tải lại...</span>';
+                    setTimeout(() => window.location.reload(), 1500);
+                    return;
+                }
 
                 const data = await response.json();
 
@@ -6935,13 +6968,22 @@ Nếu cần thêm lượt đổi tài khoản, vui lòng liên hệ Support qua 
                     body: JSON.stringify({ code: code })
                 });
 
+                if (response.status === 401 || response.status === 403) {
+                    localStorage.removeItem('auth_token');
+                    localStorage.removeItem('current_user');
+                    localStorage.removeItem('currentUser');
+                    sessionStorage.removeItem('logged_in');
+                    statusDiv.innerHTML = '<span style="color: #ef4444;">Phiên đăng nhập hết hạn. Đang tải lại...</span>';
+                    setTimeout(() => window.location.reload(), 1500);
+                    return;
+                }
+
                 const data = await response.json();
 
                 if (data.success) {
                     statusDiv.innerHTML = '<span style="color: #4ade80;">Kích hoạt Netflix TV thành công!</span>';
                     codeInput.value = '';
 
-                    // Reload assigned cookies để cập nhật TV Account display
                     if (typeof loadAssignedCookies === 'function') {
                         loadAssignedCookies();
                     }
