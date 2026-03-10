@@ -163,13 +163,14 @@
             border: 1px solid var(--border);
         }
         .nav-tab {
-            flex: 1; display: flex; align-items: center; justify-content: center; gap: 6px;
-            padding: 10px 8px; border-radius: var(--radius-sm);
-            font-size: 0.8rem; font-weight: 600; cursor: pointer;
+            flex: 1; display: flex; align-items: center; justify-content: center; gap: 4px;
+            padding: 10px 4px; border-radius: var(--radius-sm);
+            font-size: 0.75rem; font-weight: 600; cursor: pointer;
             background: transparent; border: none; color: var(--text-muted);
-            transition: all 0.2s;
+            transition: all 0.2s; white-space: nowrap; min-width: 0;
+            overflow: hidden;
         }
-        .nav-tab i { width: 16px; height: 16px; }
+        .nav-tab i { width: 15px; height: 15px; flex-shrink: 0; }
         .nav-tab.active {
             background: var(--bg-elevated); color: var(--text-primary);
             box-shadow: 0 1px 3px rgba(0,0,0,0.3);
@@ -480,6 +481,10 @@
         .empty-state p { font-size: 0.85rem; }
 
         /* ============ RESPONSIVE ============ */
+        @media (max-width: 420px) {
+            .nav-tab { font-size: 0.7rem; gap: 3px; padding: 9px 3px; }
+            .nav-tab i { width: 14px; height: 14px; }
+        }
         @media (max-width: 400px) {
             .app-body { padding: 16px 12px 100px; }
             .stat-card .stat-value { font-size: 1.3rem; }
@@ -596,6 +601,9 @@
             <button class="nav-tab" data-tab="history" onclick="switchTab('history')">
                 <i data-lucide="history"></i> History
             </button>
+            <button class="nav-tab" data-tab="api" onclick="switchTab('api')">
+                <i data-lucide="key"></i> API
+            </button>
         </div>
 
         <!-- ============ DASHBOARD TAB ============ -->
@@ -693,6 +701,127 @@
                 <div id="historyEmpty" class="empty-state hidden">
                     <i data-lucide="inbox"></i>
                     <p>No history yet. Get some cookies first!</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- ============ API TAB ============ -->
+        <div id="tab-api" class="tab-content hidden">
+            <div class="action-section">
+                <h3><i data-lucide="key"></i> API Key</h3>
+                <p style="font-size:0.82rem;color:var(--text-secondary);margin-bottom:16px;">
+                    Tạo API Key để nhúng lên website của bạn. Mỗi lần gọi API sẽ trừ 1 cookie từ quota chung.
+                </p>
+
+                <!-- No key state -->
+                <div id="apiNoKey">
+                    <div style="text-align:center;padding:24px;background:var(--bg-input);border-radius:var(--radius-sm);border:1px dashed var(--border);">
+                        <i data-lucide="key" style="width:32px;height:32px;color:var(--text-muted);margin-bottom:8px;"></i>
+                        <p style="font-size:0.85rem;color:var(--text-muted);margin-bottom:14px;">Chưa có API Key</p>
+                        <button class="btn btn-green btn-sm" onclick="generateApiKey()" style="width:auto;margin:0 auto;">
+                            <i data-lucide="plus"></i> Tạo API Key
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Has key state -->
+                <div id="apiHasKey" class="hidden">
+                    <div style="margin-bottom:14px;">
+                        <div class="cookie-field-label" style="margin-bottom:6px;">Your API Key</div>
+                        <div class="cookie-field-value">
+                            <code id="apiKeyDisplay" style="flex:1;background:var(--bg-input);padding:10px 12px;border-radius:var(--radius-sm);font-size:0.78rem;color:var(--green);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-family:'SF Mono','Fira Code',monospace;border:1px solid var(--border);letter-spacing:0.3px;"></code>
+                            <button class="copy-btn" onclick="copyApiKey(this)" title="Copy API Key">
+                                <i data-lucide="copy"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:14px;">
+                        <div style="background:var(--bg-input);padding:10px 12px;border-radius:var(--radius-sm);border:1px solid var(--border);">
+                            <div style="font-size:0.68rem;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:4px;">API Calls</div>
+                            <div id="apiUsageCount" style="font-size:1.1rem;font-weight:800;color:var(--blue);">0</div>
+                        </div>
+                        <div style="background:var(--bg-input);padding:10px 12px;border-radius:var(--radius-sm);border:1px solid var(--border);">
+                            <div style="font-size:0.68rem;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:4px;">Last Used</div>
+                            <div id="apiLastUsed" style="font-size:0.82rem;font-weight:600;color:var(--text-secondary);margin-top:2px;">--</div>
+                        </div>
+                    </div>
+
+                    <div style="display:flex;gap:6px;margin-bottom:14px;">
+                        <button id="apiToggleBtn" class="btn btn-outline" onclick="toggleApiKey()" style="flex:1;padding:6px 4px;font-size:0.68rem;width:auto;white-space:nowrap;">
+                            <i data-lucide="pause" style="width:12px;height:12px;"></i> <span id="apiToggleText">Tắt</span>
+                        </button>
+                        <button class="btn btn-outline" onclick="regenerateApiKey()" style="flex:1;padding:6px 4px;font-size:0.68rem;width:auto;white-space:nowrap;">
+                            <i data-lucide="refresh-cw" style="width:12px;height:12px;"></i> Tạo lại
+                        </button>
+                        <button class="btn btn-outline" onclick="revokeApiKey()" style="flex:1;padding:6px 4px;font-size:0.68rem;width:auto;white-space:nowrap;border-color:var(--red);color:var(--red);">
+                            <i data-lucide="trash-2" style="width:12px;height:12px;"></i> Xóa
+                        </button>
+                    </div>
+
+                    <div id="apiDisabledBanner" class="hidden" style="background:var(--orange-dim);border:1px solid rgba(245,158,11,0.3);border-radius:var(--radius-sm);padding:10px 14px;margin-bottom:14px;display:flex;align-items:center;gap:8px;">
+                        <i data-lucide="alert-triangle" style="width:16px;height:16px;color:var(--orange);flex-shrink:0;"></i>
+                        <span style="font-size:0.78rem;color:var(--orange);font-weight:600;">API Key đang bị tắt. Bật lại để sử dụng.</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- API Usage Guide -->
+            <div id="apiGuide" class="action-section hidden">
+                <h3><i data-lucide="book-open"></i> Hướng dẫn sử dụng</h3>
+
+                <div style="margin-bottom:16px;">
+                    <div style="font-size:0.78rem;font-weight:700;color:var(--text-primary);margin-bottom:6px;">Endpoint</div>
+                    <div class="cookie-field-value">
+                        <code id="apiEndpointDisplay" style="flex:1;background:var(--bg-input);padding:8px 10px;border-radius:var(--radius-sm);font-size:0.75rem;color:var(--blue);font-family:'SF Mono','Fira Code',monospace;border:1px solid var(--border);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;"></code>
+                        <button class="copy-btn" onclick="copyText(this, getApiEndpoint())" title="Copy">
+                            <i data-lucide="copy"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <div style="margin-bottom:16px;">
+                    <div style="font-size:0.78rem;font-weight:700;color:var(--text-primary);margin-bottom:6px;">Response</div>
+                    <pre style="background:var(--bg-input);padding:12px;border-radius:var(--radius-sm);font-size:0.72rem;color:var(--text-secondary);font-family:'SF Mono','Fira Code',monospace;border:1px solid var(--border);overflow-x:auto;white-space:pre;line-height:1.5;">{
+  "success": true,
+  "cookie": "NetflixId=...",
+  "mobileLoginLink": "https://netflix.com/unsupported?nftoken=...",
+  "pcLoginLink": "https://netflix.com/browse?nftoken=...",
+  "tokenExpires": 1741234567,
+  "timeRemaining": 3600,
+  "quota": { "used": 5, "max": 50, "remaining": 45 }
+}</pre>
+                </div>
+
+                <div style="margin-bottom:14px;">
+                    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;">
+                        <span style="font-size:0.78rem;font-weight:700;color:var(--text-primary);">cURL</span>
+                        <button class="copy-btn" onclick="copyCurlExample(this)" title="Copy" style="padding:4px 8px;">
+                            <i data-lucide="copy" style="width:14px;height:14px;"></i>
+                        </button>
+                    </div>
+                    <pre id="curlExample" style="background:var(--bg-input);padding:12px;border-radius:var(--radius-sm);font-size:0.72rem;color:#a78bfa;font-family:'SF Mono','Fira Code',monospace;border:1px solid var(--border);overflow-x:auto;white-space:pre;line-height:1.5;"></pre>
+                </div>
+
+                <div style="margin-bottom:14px;">
+                    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;">
+                        <span style="font-size:0.78rem;font-weight:700;color:var(--text-primary);">JavaScript (Fetch)</span>
+                        <button class="copy-btn" onclick="copyJsExample(this)" title="Copy" style="padding:4px 8px;">
+                            <i data-lucide="copy" style="width:14px;height:14px;"></i>
+                        </button>
+                    </div>
+                    <pre id="jsExample" style="background:var(--bg-input);padding:12px;border-radius:var(--radius-sm);font-size:0.72rem;color:#34d399;font-family:'SF Mono','Fira Code',monospace;border:1px solid var(--border);overflow-x:auto;white-space:pre;line-height:1.5;"></pre>
+                </div>
+
+                <div style="background:var(--bg-input);border:1px solid var(--border);border-radius:var(--radius-sm);padding:12px 14px;">
+                    <div style="font-size:0.75rem;font-weight:700;color:var(--text-primary);margin-bottom:6px;">Lưu ý</div>
+                    <ul style="font-size:0.72rem;color:var(--text-secondary);padding-left:16px;line-height:1.6;margin:0;">
+                        <li>Rate limit: <strong>10 request/phút</strong></li>
+                        <li>Mỗi lần gọi lấy 1 cookie, trừ 1 quota</li>
+                        <li>Quota chung với portal (web CTV)</li>
+                        <li>Token link có thời hạn, kiểm tra <code>timeRemaining</code></li>
+                        <li>Giữ bí mật API Key, không để lộ ở frontend public</li>
+                    </ul>
                 </div>
             </div>
         </div>
@@ -836,6 +965,7 @@ function switchTab(tab) {
 
     if (tab === 'dashboard') loadDashboard();
     if (tab === 'history') { historyPage = 1; loadHistory(true); }
+    if (tab === 'api') loadApiKeyInfo();
 }
 
 // ========================================
@@ -947,10 +1077,21 @@ function renderAllBatches() {
     lucide.createIcons();
 }
 
+function getMobileLink(tokenLink) {
+    return tokenLink || '';
+}
+
+function getPcLink(tokenLink) {
+    if (!tokenLink) return '';
+    return tokenLink.replace('/unsupported?', '/browse?');
+}
+
 function renderSingleCard(c, idx) {
     const now = Math.floor(Date.now() / 1000);
     const valid = c.tokenExpires && c.tokenExpires > now;
     const timeStr = valid ? formatTime(c.timeRemaining || (c.tokenExpires - now)) : 'Expired';
+    const mobileLink = getMobileLink(c.tokenLink);
+    const pcLink = getPcLink(c.tokenLink);
 
     return `
     <div class="cookie-card" id="card-${c.logId}">
@@ -970,10 +1111,19 @@ function renderSingleCard(c, idx) {
             </div>
         </div>
         <div class="cookie-field">
-            <div class="cookie-field-label">Token Link</div>
+            <div class="cookie-field-label"><i data-lucide="smartphone" style="width:12px;height:12px;display:inline;vertical-align:middle;margin-right:2px;"></i> Mobile Login</div>
             <div class="cookie-field-value">
-                <code title="${escapeHtml(c.tokenLink || '')}">${escapeHtml((c.tokenLink || '').substring(0, 60))}...</code>
-                <button class="copy-btn" onclick="copyText(this, '${escapeAttr(c.tokenLink || '')}')" title="Copy Token Link">
+                <code title="${escapeHtml(mobileLink)}">${escapeHtml(mobileLink.substring(0, 60))}...</code>
+                <button class="copy-btn" onclick="copyText(this, '${escapeAttr(mobileLink)}')" title="Copy Mobile Link">
+                    <i data-lucide="copy"></i>
+                </button>
+            </div>
+        </div>
+        <div class="cookie-field">
+            <div class="cookie-field-label"><i data-lucide="monitor" style="width:12px;height:12px;display:inline;vertical-align:middle;margin-right:2px;"></i> PC Login</div>
+            <div class="cookie-field-value">
+                <code title="${escapeHtml(pcLink)}">${escapeHtml(pcLink.substring(0, 60))}...</code>
+                <button class="copy-btn" onclick="copyText(this, '${escapeAttr(pcLink)}')" title="Copy PC Link">
                     <i data-lucide="copy"></i>
                 </button>
             </div>
@@ -1167,10 +1317,17 @@ function showHistoryDetail(log) {
                 </div>
             </div>
             <div class="cookie-field">
-                <div class="cookie-field-label">Token Link</div>
+                <div class="cookie-field-label"><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline;vertical-align:middle;margin-right:2px;"><rect x="5" y="2" width="14" height="20" rx="2" ry="2"/><line x1="12" y1="18" x2="12.01" y2="18"/></svg> Mobile Login</div>
                 <div class="cookie-field-value">
-                    <code id="modalTokenCode" title="${escapeHtml(log.tokenLink || '')}">${escapeHtml((log.tokenLink || '').substring(0, 60))}...</code>
-                    <button id="modalTokenCopyBtn" class="copy-btn" onclick="copyText(this, '${escapeAttr(log.tokenLink || '')}')" title="Copy Token Link">${svgCopy}</button>
+                    <code id="modalMobileCode" title="${escapeHtml(getMobileLink(log.tokenLink))}">${escapeHtml(getMobileLink(log.tokenLink).substring(0, 60))}...</code>
+                    <button id="modalMobileCopyBtn" class="copy-btn" onclick="copyText(this, '${escapeAttr(getMobileLink(log.tokenLink))}')" title="Copy Mobile Link">${svgCopy}</button>
+                </div>
+            </div>
+            <div class="cookie-field">
+                <div class="cookie-field-label"><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline;vertical-align:middle;margin-right:2px;"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg> PC Login</div>
+                <div class="cookie-field-value">
+                    <code id="modalPcCode" title="${escapeHtml(getPcLink(log.tokenLink))}">${escapeHtml(getPcLink(log.tokenLink).substring(0, 60))}...</code>
+                    <button id="modalPcCopyBtn" class="copy-btn" onclick="copyText(this, '${escapeAttr(getPcLink(log.tokenLink))}')" title="Copy PC Link">${svgCopy}</button>
                 </div>
             </div>
             <div id="modalTokenStatus" style="display:flex;align-items:center;gap:8px;margin-top:12px;padding:10px;background:var(--bg-input);border-radius:var(--radius-sm);">
@@ -1227,7 +1384,8 @@ function updateModalWithNewToken(res) {
     const svgCopy = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>`;
     const svgClock = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>`;
 
-    const newLink = res.tokenLink || '';
+    const newMobileLink = getMobileLink(res.tokenLink);
+    const newPcLink = getPcLink(res.tokenLink);
     const timeStr = res.timeRemaining ? formatTime(res.timeRemaining) : '';
 
     const badge = document.getElementById('modalStatusBadge');
@@ -1236,16 +1394,26 @@ function updateModalWithNewToken(res) {
         badge.innerHTML = `${svgCheck} Valid`;
     }
 
-    const codeEl = document.getElementById('modalTokenCode');
-    if (codeEl) {
-        codeEl.title = escapeHtml(newLink);
-        codeEl.textContent = newLink.substring(0, 60) + '...';
+    const mobileCodeEl = document.getElementById('modalMobileCode');
+    if (mobileCodeEl) {
+        mobileCodeEl.title = escapeHtml(newMobileLink);
+        mobileCodeEl.textContent = newMobileLink.substring(0, 60) + '...';
+    }
+    const mobileCopyBtn = document.getElementById('modalMobileCopyBtn');
+    if (mobileCopyBtn) {
+        mobileCopyBtn.setAttribute('onclick', `copyText(this, '${escapeAttr(newMobileLink)}')`);
+        mobileCopyBtn.innerHTML = svgCopy;
     }
 
-    const copyBtn = document.getElementById('modalTokenCopyBtn');
-    if (copyBtn) {
-        copyBtn.setAttribute('onclick', `copyText(this, '${escapeAttr(newLink)}')`);
-        copyBtn.innerHTML = svgCopy;
+    const pcCodeEl = document.getElementById('modalPcCode');
+    if (pcCodeEl) {
+        pcCodeEl.title = escapeHtml(newPcLink);
+        pcCodeEl.textContent = newPcLink.substring(0, 60) + '...';
+    }
+    const pcCopyBtn = document.getElementById('modalPcCopyBtn');
+    if (pcCopyBtn) {
+        pcCopyBtn.setAttribute('onclick', `copyText(this, '${escapeAttr(newPcLink)}')`);
+        pcCopyBtn.innerHTML = svgCopy;
     }
 
     const statusEl = document.getElementById('modalTokenStatus');
@@ -1274,6 +1442,186 @@ async function deleteHistoryItem(logId) {
     } catch (err) {
         toast('Lỗi khi xóa', 'error');
     }
+}
+
+// ========================================
+// API KEY MANAGEMENT
+// ========================================
+let cachedApiKey = null;
+
+function getApiEndpoint() {
+    return BACKEND_URL + '/api/ctv-api/get-cookie';
+}
+
+async function loadApiKeyInfo() {
+    try {
+        const res = await apiFetch('/api/ctv/me', 'GET');
+        if (!res.success) return;
+
+        const c = res.collaborator;
+        cachedApiKey = c.apiKey || null;
+        renderApiKeyState(c);
+    } catch (err) {
+        console.error('Load API key info error:', err);
+    }
+}
+
+function renderApiKeyState(collaborator) {
+    const noKey = document.getElementById('apiNoKey');
+    const hasKey = document.getElementById('apiHasKey');
+    const guide = document.getElementById('apiGuide');
+    const disabledBanner = document.getElementById('apiDisabledBanner');
+
+    if (!collaborator.apiKey) {
+        noKey.classList.remove('hidden');
+        hasKey.classList.add('hidden');
+        guide.classList.add('hidden');
+        return;
+    }
+
+    noKey.classList.add('hidden');
+    hasKey.classList.remove('hidden');
+    guide.classList.remove('hidden');
+
+    const masked = collaborator.apiKey.substring(0, 8) + '••••••••' + collaborator.apiKey.substring(collaborator.apiKey.length - 6);
+    document.getElementById('apiKeyDisplay').textContent = masked;
+    document.getElementById('apiKeyDisplay').title = 'Click Copy to copy full key';
+    document.getElementById('apiUsageCount').textContent = collaborator.apiUsageCount || 0;
+    document.getElementById('apiLastUsed').textContent = collaborator.apiKeyLastUsed
+        ? new Date(collaborator.apiKeyLastUsed).toLocaleString('vi-VN')
+        : '--';
+
+    const toggleText = document.getElementById('apiToggleText');
+    const toggleBtn = document.getElementById('apiToggleBtn');
+    if (collaborator.apiKeyEnabled) {
+        toggleText.textContent = 'Tắt';
+        toggleBtn.style.borderColor = '';
+        toggleBtn.style.color = '';
+        disabledBanner.classList.add('hidden');
+        disabledBanner.style.display = 'none';
+    } else {
+        toggleText.textContent = 'Bật';
+        toggleBtn.style.borderColor = 'var(--green)';
+        toggleBtn.style.color = 'var(--green)';
+        disabledBanner.classList.remove('hidden');
+        disabledBanner.style.display = 'flex';
+    }
+
+    const endpoint = getApiEndpoint();
+    document.getElementById('apiEndpointDisplay').textContent = 'GET ' + endpoint;
+
+    document.getElementById('curlExample').textContent =
+`curl -X GET "${endpoint}" \\
+  -H "X-API-Key: ${collaborator.apiKey}"`;
+
+    document.getElementById('jsExample').textContent =
+`const res = await fetch("${endpoint}", {
+  headers: { "X-API-Key": "YOUR_API_KEY" }
+});
+const data = await res.json();
+
+if (data.success) {
+  console.log("Mobile:", data.mobileLoginLink);
+  console.log("PC:", data.pcLoginLink);
+  console.log("Remaining:", data.quota.remaining);
+}`;
+
+    lucide.createIcons();
+}
+
+async function generateApiKey() {
+    const ok = await customConfirm('Tạo API Key mới?<br><span class="confirm-sub">Bạn sẽ dùng key này để gọi API từ website của mình.</span>');
+    if (!ok) return;
+
+    showLoading('Generating API Key...');
+    try {
+        const res = await apiFetch('/api/ctv/api-key/generate', 'POST');
+        hideLoading();
+        if (res.success) {
+            cachedApiKey = res.apiKey;
+            toast('API Key đã được tạo!', 'success');
+            loadApiKeyInfo();
+        } else {
+            toast(res.error || 'Failed.', 'error');
+        }
+    } catch (err) {
+        hideLoading();
+        toast(err.message || 'Error.', 'error');
+    }
+}
+
+async function regenerateApiKey() {
+    const ok = await customConfirm('Tạo lại API Key?<br><span class="confirm-sub">Key cũ sẽ bị vô hiệu ngay lập tức. Website đang dùng key cũ sẽ không hoạt động.</span>');
+    if (!ok) return;
+
+    showLoading('Regenerating API Key...');
+    try {
+        const res = await apiFetch('/api/ctv/api-key/generate', 'POST');
+        hideLoading();
+        if (res.success) {
+            cachedApiKey = res.apiKey;
+            toast('API Key mới đã được tạo!', 'success');
+            loadApiKeyInfo();
+        } else {
+            toast(res.error || 'Failed.', 'error');
+        }
+    } catch (err) {
+        hideLoading();
+        toast(err.message || 'Error.', 'error');
+    }
+}
+
+async function revokeApiKey() {
+    const ok = await customConfirm('Xóa API Key?<br><span class="confirm-sub">Key sẽ bị xóa vĩnh viễn. Website đang dùng key này sẽ không hoạt động.</span>');
+    if (!ok) return;
+
+    showLoading('Revoking API Key...');
+    try {
+        const res = await apiFetch('/api/ctv/api-key/revoke', 'POST');
+        hideLoading();
+        if (res.success) {
+            cachedApiKey = null;
+            toast('API Key đã bị xóa.', 'success');
+            loadApiKeyInfo();
+        } else {
+            toast(res.error || 'Failed.', 'error');
+        }
+    } catch (err) {
+        hideLoading();
+        toast(err.message || 'Error.', 'error');
+    }
+}
+
+async function toggleApiKey() {
+    try {
+        const res = await apiFetch('/api/ctv/api-key/toggle', 'POST');
+        if (res.success) {
+            toast(res.message, 'success');
+            loadApiKeyInfo();
+        } else {
+            toast(res.error || 'Failed.', 'error');
+        }
+    } catch (err) {
+        toast(err.message || 'Error.', 'error');
+    }
+}
+
+function copyApiKey(btn) {
+    if (!cachedApiKey) {
+        toast('No API key to copy.', 'error');
+        return;
+    }
+    copyText(btn, cachedApiKey);
+}
+
+function copyCurlExample(btn) {
+    const text = document.getElementById('curlExample').textContent;
+    copyText(btn, text);
+}
+
+function copyJsExample(btn) {
+    const text = document.getElementById('jsExample').textContent;
+    copyText(btn, text);
 }
 
 // ========================================
