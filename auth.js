@@ -3476,19 +3476,23 @@ window.confirmPurchaseCredits = async function () {
         hideSmartLoading();
 
         if (response.ok && data.success) {
-            // Success!
+            // Success: đóng modal mua credits và mở thẳng modal thanh toán với QR động
             closePurchaseCreditsModal();
 
-            // Show success message
-            alert(`✅ ${data.message}\n\nSố credits hiện tại: ${data.credits}\n\n💡 Vui lòng chuyển khoản ${amount.toLocaleString('vi-VN')} VNĐ cho Admin để kích hoạt credits!`);
+            try {
+                // Mở payment modal chuyên dụng cho mua credits
+                if (typeof openPaymentModal === 'function') {
+                    openPaymentModal('credits', amount, 'credits');
+                }
+            } catch (e) {
+                console.error('Không thể mở payment modal cho credits:', e);
+                alert(`✅ ${data.message}\n\nVui lòng chuyển khoản ${amount.toLocaleString('vi-VN')} VNĐ cho Admin để kích hoạt credits!`);
+            }
 
-            // Refresh user info
+            // Refresh user info (credits có thể được cập nhật sau khi admin duyệt)
             if (typeof loadCookieInfo === 'function') {
                 await loadCookieInfo();
             }
-
-            // Open Facebook contact
-            window.open('https://www.facebook.com/tiembanh4k/', '_blank');
 
         } else {
             alert(`❌ Lỗi: ${data.message || data.error || 'Có lỗi xảy ra'}`);
