@@ -4237,6 +4237,98 @@
             }
         }
 
+        // ========================================
+        // CTV COOKIE CONTROL (Sync / Reset / Delete)
+        // ========================================
+        async function resetAllCtvCookies() {
+            const isMobile = window.innerWidth <= 768;
+            const doReset = async () => {
+                try {
+                    showMessage('Đang reset CTV Cookies...', 'info');
+                    const response = await fetch(`${BACKEND_URL}/api/admin/cookies/ctv/reset-all`, {
+                        method: 'POST',
+                        headers: { 'Authorization': `Bearer ${localStorage.getItem('admin_token')}` }
+                    });
+                    const data = await response.json();
+                    if (data.success) {
+                        showMessage(data.message, 'success');
+                        loadCtvCookieStats();
+                    } else {
+                        showMessage(data.error || 'Reset thất bại', 'error');
+                    }
+                } catch (error) {
+                    showMessage('Lỗi: ' + error.message, 'error');
+                }
+            };
+            if (isMobile) {
+                showConfirmModal('Reset TẤT CẢ CTV Cookies?<br><br>Chỉ ảnh hưởng đến CTV, không ảnh hưởng user thường.', doReset, 'Reset CTV', 'Reset', 'btn-warning');
+            } else {
+                if (!confirm('Reset TẤT CẢ CTV Cookies?\n\nChỉ ảnh hưởng đến CTV, không ảnh hưởng user thường.')) return;
+                doReset();
+            }
+        }
+
+        async function deleteAllCtvCookies() {
+            const isMobile = window.innerWidth <= 768;
+            const doDelete = async () => {
+                try {
+                    showMessage('Đang xóa CTV Cookies...', 'info');
+                    const response = await fetch(`${BACKEND_URL}/api/admin/cookies/ctv/delete-all`, {
+                        method: 'DELETE',
+                        headers: { 'Authorization': `Bearer ${localStorage.getItem('admin_token')}` }
+                    });
+                    const data = await response.json();
+                    if (data.success) {
+                        showMessage(data.message, 'success');
+                        loadCtvCookieStats();
+                    } else {
+                        showMessage(data.error || 'Xóa thất bại', 'error');
+                    }
+                } catch (error) {
+                    showMessage('Lỗi: ' + error.message, 'error');
+                }
+            };
+            if (isMobile) {
+                showConfirmModal('<strong style="color:#ef4444">XÓA TẤT CẢ CTV Cookies?</strong><br><br>Chỉ nên dùng khi muốn làm sạch toàn bộ kho CTV.', doDelete, 'Xóa CTV', 'Xóa tất cả', 'btn-danger');
+            } else {
+                if (!confirm('XÓA TẤT CẢ CTV Cookies?\n\nChỉ nên dùng khi muốn làm sạch toàn bộ kho CTV.')) return;
+                if (!confirm('Bạn chắc chắn chứ? Toàn bộ CtvCookies sẽ bị xóa vĩnh viễn!')) return;
+                doDelete();
+            }
+        }
+
+        async function syncCtvCookiesFromMobile() {
+            const isMobile = window.innerWidth <= 768;
+            const doSync = async () => {
+                try {
+                    showMessage('Đang sync CTV Cookies từ Mobile...', 'info');
+                    const response = await fetch(`${BACKEND_URL}/api/admin/cookies/ctv/sync`, {
+                        method: 'POST',
+                        headers: { 'Authorization': `Bearer ${localStorage.getItem('admin_token')}` }
+                    });
+                    const data = await response.json();
+                    if (data.success) {
+                        let msg = data.message || 'Sync thành công.';
+                        if (data.stats) {
+                            msg += ` (New: ${data.stats.created}, Updated: ${data.stats.updated})`;
+                        }
+                        showMessage(msg, 'success');
+                        loadCtvCookieStats();
+                    } else {
+                        showMessage(data.error || 'Sync thất bại', 'error');
+                    }
+                } catch (error) {
+                    showMessage('Lỗi: ' + error.message, 'error');
+                }
+            };
+            if (isMobile) {
+                showConfirmModal('Sync CTV Cookies từ Mobile?<br><br>Cập nhật lại kho CTV theo Mobile cookies hiện tại.', doSync, 'Sync CTV', 'Sync', 'btn-success');
+            } else {
+                if (!confirm('Sync CTV Cookies từ Mobile?\n\nCập nhật lại kho CTV theo Mobile cookies hiện tại.')) return;
+                doSync();
+            }
+        }
+
         // Sync cookies từ PC sang Mobile
         async function syncCookiesToMobile() {
             const isMobile = window.innerWidth <= 768;
@@ -5222,7 +5314,7 @@
                             <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
                             New CTV
                         </button>
-                        <button class="btn btn-primary btn-sm" onclick="loadCtvList()" style="display:inline-flex;align-items:center;gap:6px;">
+                        <button class="btn btn-primary btn-sm" onclick="loadCtvList(); loadCtvStats(); loadCtvCookieStats();" style="display:inline-flex;align-items:center;gap:6px;">
                             <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>
                             Refresh
                         </button>
@@ -5245,6 +5337,51 @@
 
                     <div id="ctvStats" style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:14px;"></div>
 
+                    <!-- CTV COOKIE STATS + ACTIONS (Mobile admin view) -->
+                    <div id="ctvCookieStatsBlock" style="background:rgba(15,23,42,0.6);border-radius:10px;padding:12px 10px;margin-bottom:14px;border:1px solid rgba(148,163,184,0.35);">
+                        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;gap:8px;flex-wrap:wrap;">
+                            <div style="font-size:0.82em;font-weight:600;color:#e5e7eb;display:flex;align-items:center;gap:6px;">
+                                <span style="display:inline-flex;width:18px;height:18px;border-radius:999px;background:rgba(56,189,248,0.15);align-items:center;justify-content:center;color:#38bdf8;font-size:11px;">CTV</span>
+                                <span>CTV Cookies</span>
+                            </div>
+                        <div style="display:flex;gap:6px;flex-wrap:wrap;">
+                            <button class="btn btn-secondary btn-sm" onclick="syncCtvCookiesFromMobile()" style="font-size:11px;padding:6px 10px;background:rgba(34,197,94,0.08);border-color:#22c55e;color:#22c55e;">
+                                Sync CTV
+                            </button>
+                            <button class="btn btn-secondary btn-sm desktop-only" onclick="showCtvCookieDetail()" style="font-size:11px;padding:6px 10px;background:rgba(59,130,246,0.08);border-color:#3b82f6;color:#93c5fd;">
+                                Detail
+                            </button>
+                                <button class="btn btn-secondary btn-sm" onclick="resetAllCtvCookies()" style="font-size:11px;padding:6px 10px;background:rgba(59,130,246,0.08);border-color:#3b82f6;color:#3b82f6;">
+                                    Reset CTV
+                                </button>
+                                <button class="btn btn-secondary btn-sm" onclick="deleteAllCtvCookies()" style="font-size:11px;padding:6px 10px;background:rgba(248,113,113,0.08);border-color:#ef4444;color:#ef4444;">
+                                    Delete CTV
+                                </button>
+                            </div>
+                        </div>
+                        <div id="ctvCookieStats" style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;">
+                            <div style="background:rgba(30,64,175,0.35);padding:8px 6px;border-radius:8px;text-align:center;border:1px solid rgba(59,130,246,0.5);">
+                                <div id="ctvCookieTotalStat" style="font-size:1.1em;font-weight:800;color:#60a5fa;">-</div>
+                                <div style="font-size:0.68em;color:#cbd5f5;margin-top:2px;">Tổng CTV</div>
+                            </div>
+                            <div style="background:rgba(21,128,61,0.35);padding:8px 6px;border-radius:8px;text-align:center;border:1px solid rgba(34,197,94,0.55);">
+                                <div id="ctvCookieAvailableStat" style="font-size:1.1em;font-weight:800;color:#4ade80;">-</div>
+                                <div style="font-size:0.68em;color:#bbf7d0;margin-top:2px;">Còn dùng</div>
+                            </div>
+                            <div style="background:rgba(30,64,175,0.25);padding:8px 6px;border-radius:8px;text-align:center;border:1px solid rgba(59,130,246,0.4);">
+                                <div id="ctvCookieUsedStat" style="font-size:1.1em;font-weight:800;color:#93c5fd;">-</div>
+                                <div style="font-size:0.68em;color:#cbd5f5;margin-top:2px;">Đã cấp</div>
+                            </div>
+                            <div style="background:rgba(127,29,29,0.35);padding:8px 6px;border-radius:8px;text-align:center;border:1px solid rgba(248,113,113,0.6);">
+                                <div id="ctvCookieInactiveStat" style="font-size:1.1em;font-weight:800;color:#fca5a5;">-</div>
+                                <div style="font-size:0.68em;color:#fecaca;margin-top:2px;">Inactive</div>
+                            </div>
+                        </div>
+                        <div style="margin-top:6px;font-size:0.7em;color:#9ca3af;">
+                            <span>- Sync CTV</span>: cập nhật CTV DB theo Mobile (1 chiều, không ảnh hưởng user thường).
+                        </div>
+                    </div>
+
                     <div id="ctvTableContainer"></div>
 
                     <div id="ctvPagination" style="display:flex;justify-content:center;gap:8px;padding:12px 0;"></div>
@@ -5253,6 +5390,7 @@
 
             usersTable.parentNode.insertBefore(container, usersTable.nextSibling);
             await loadCtvStats();
+            await loadCtvCookieStats();
             await loadCtvList();
         }
 
@@ -5285,6 +5423,151 @@
                 `;
             } catch (err) {
                 console.error('CTV stats error:', err);
+            }
+        }
+
+        // CTV COOKIE STATS (Mobile admin panel CTV tab)
+        async function loadCtvCookieStats() {
+            try {
+                const admin_token = localStorage.getItem('admin_token');
+                const res = await fetch(`${BACKEND_URL}/api/admin/cookies/ctv/stats`, {
+                    headers: { 'Authorization': `Bearer ${admin_token}` }
+                });
+                if (!res.ok) return;
+                const data = await res.json();
+                if (!data.success || !data.stats) return;
+                const s = data.stats;
+                const setText = (id, val) => {
+                    const el = document.getElementById(id);
+                    if (el) el.textContent = val;
+                };
+                setText('ctvCookieTotalStat', s.total);
+                setText('ctvCookieAvailableStat', s.available);
+                setText('ctvCookieUsedStat', s.used);
+                setText('ctvCookieInactiveStat', s.inactive);
+            } catch (err) {
+                console.error('CTV cookie stats error:', err);
+            }
+        }
+
+        // Desktop Detail modal cho từng CTV cookie
+        async function showCtvCookieDetail() {
+            try {
+                const admin_token = localStorage.getItem('admin_token');
+                const res = await fetch(`${BACKEND_URL}/api/admin/cookies/ctv?limit=300`, {
+                    headers: { 'Authorization': `Bearer ${admin_token}` }
+                });
+                if (!res.ok) {
+                    showMessage('Không lấy được danh sách CTV Cookies.', 'error');
+                    return;
+                }
+                const data = await res.json();
+                if (!data.success || !data.cookies) {
+                    showMessage('Không có dữ liệu CTV Cookies.', 'error');
+                    return;
+                }
+
+                const cookies = data.cookies;
+
+                const existing = document.getElementById('ctvCookieDetailModal');
+                if (existing) existing.remove();
+
+                const modal = document.createElement('div');
+                modal.id = 'ctvCookieDetailModal';
+                modal.style.cssText = 'position:fixed;inset:0;background:rgba(15,23,42,0.75);display:flex;align-items:center;justify-content:center;z-index:10000;padding:20px;';
+
+                const rowsHtml = cookies.map(c => {
+                    const slotText = `${c.currentSlots || 0}/${c.maxSlots || 1}`;
+                    let statusLabel = 'Inactive';
+                    let statusColor = '#fecaca';
+                    let statusBg = 'rgba(127,29,29,0.35)';
+
+                    if (c.isActive && (c.currentSlots || 0) < (c.maxSlots || 1)) {
+                        statusLabel = 'Available';
+                        statusColor = '#bbf7d0';
+                        statusBg = 'rgba(22,163,74,0.35)';
+                    } else if (c.isActive && (c.currentSlots || 0) >= (c.maxSlots || 1)) {
+                        statusLabel = 'Used';
+                        statusColor = '#bfdbfe';
+                        statusBg = 'rgba(30,64,175,0.35)';
+                    }
+
+                    let ctvName = '';
+                    if (c.collaborator) {
+                        ctvName = c.collaborator.displayName || c.collaborator.usernameDisplay || c.collaborator.username || '';
+                    } else {
+                        // Không có collaborator map được
+                        if ((c.currentSlots || 0) > 0) {
+                            // Slot đã dùng nhưng không có log: dữ liệu cũ hoặc lỗi log
+                            ctvName = 'Không rõ (dữ liệu cũ / thiếu log)';
+                        } else {
+                            ctvName = 'Chưa cấp';
+                        }
+                    }
+
+                    return `
+                        <tr>
+                            <td style="padding:6px 8px;font-size:0.75rem;color:#e5e7eb;width:16%;">#${c.cookieNumber}</td>
+                            <td style="padding:6px 8px;font-size:0.75rem;width:16%;">
+                                <span style="display:inline-flex;align-items:center;gap:4px;">
+                                    <span style="font-weight:600;color:#e5e7eb;">${slotText}</span>
+                                </span>
+                            </td>
+                            <td style="padding:6px 8px;font-size:0.72rem;width:18%;">
+                                <span style="display:inline-flex;align-items:center;padding:2px 8px;border-radius:999px;background:${statusBg};color:${statusColor};border:1px solid rgba(148,163,184,0.4);font-weight:600;">
+                                    ${statusLabel}
+                                </span>
+                            </td>
+                            <td style="padding:6px 8px;font-size:0.75rem;color:#e5e7eb;max-width:260px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;width:50%;">
+                                ${ctvName}
+                            </td>
+                        </tr>
+                    `;
+                }).join('');
+
+                modal.innerHTML = `
+                    <div style="background:#020617;border:1px solid #1f2937;border-radius:16px;padding:18px 20px;width:100%;max-width:720px;max-height:80vh;box-shadow:0 25px 50px -12px rgba(15,23,42,0.8);display:flex;flex-direction:column;">
+                        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;gap:10px;">
+                            <div>
+                                <div style="font-size:0.8rem;text-transform:uppercase;letter-spacing:.08em;color:#64748b;">CTV Cookies</div>
+                                <h3 style="margin:2px 0 0;font-size:1.05rem;color:#e5e7eb;">Chi tiết từng cookie CTV</h3>
+                            </div>
+                            <button class="btn btn-secondary" style="padding:6px 10px;font-size:0.78rem;" onclick="document.getElementById('ctvCookieDetailModal').remove();">Close</button>
+                        </div>
+                        <div style="font-size:0.7rem;color:#9ca3af;margin-bottom:10px;">
+                            Danh sách hiển thị số thứ tự cookie, số slot đã dùng, trạng thái và CTV đang giữ cookie đó (nếu có).
+                        </div>
+                        <div style="border-radius:12px;border:1px solid #1f2937;overflow:hidden;background:#020617;">
+                            <table style="width:100%;border-collapse:collapse;font-size:0.75rem;">
+                                <thead>
+                                    <tr style="background:#020617;border-bottom:1px solid #1f2937;">
+                                        <th style="text-align:left;padding:6px 8px;font-size:0.7rem;color:#9ca3af;font-weight:500;width:16%;"># Cookie</th>
+                                        <th style="text-align:left;padding:6px 8px;font-size:0.7rem;color:#9ca3af;font-weight:500;width:16%;">Slot</th>
+                                        <th style="text-align:left;padding:6px 8px;font-size:0.7rem;color:#9ca3af;font-weight:500;width:18%;">Trạng thái</th>
+                                        <th style="text-align:left;padding:6px 8px;font-size:0.7rem;color:#9ca3af;font-weight:500;width:50%;">CTV đang dùng</th>
+                                    </tr>
+                                </thead>
+                            </table>
+                            <div style="max-height:52vh;overflow:auto;">
+                                <table style="width:100%;border-collapse:collapse;font-size:0.75rem;">
+                                    <tbody>
+                                        ${rowsHtml || `<tr><td colspan="4" style="padding:10px 8px;font-size:0.75rem;color:#9ca3af;text-align:center;">Không có CTV Cookies nào.</td></tr>`}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <div style="margin-top:8px;font-size:0.7rem;color:#6b7280;display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap;">
+                            <span>Tổng: ${data.pagination ? data.pagination.total : cookies.length} cookies.</span>
+                            <span>Hiển thị tối đa 300 cookie gần nhất theo số thứ tự.</span>
+                        </div>
+                    </div>
+                `;
+
+                document.body.appendChild(modal);
+                modal.addEventListener('click', e => { if (e.target === modal) modal.remove(); });
+            } catch (err) {
+                console.error('CTV cookie detail error:', err);
+                showMessage('Lỗi khi tải danh sách CTV Cookies.', 'error');
             }
         }
 

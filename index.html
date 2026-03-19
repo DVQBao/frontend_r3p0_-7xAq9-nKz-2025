@@ -401,6 +401,121 @@
                 text-underline-offset: 2px;
             }
 
+            /* Mini Partner Cards (hiển thị trong sidebar, ngay dưới Account Overview - mobile only) */
+            #partnerCards.active {
+                display: grid;
+                grid-template-columns: 1fr;
+                gap: 12px;
+                padding: 4px 0 10px 0;
+                margin-bottom: 15px;
+            }
+
+            .partner-mini-card {
+                width: 100%;
+                text-decoration: none;
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                gap: 12px;
+                padding: 12px 14px;
+                border-radius: 14px;
+                background: rgba(0, 0, 0, 0.35);
+                border: 1px solid rgba(255, 255, 255, 0.12);
+                backdrop-filter: blur(10px);
+                box-shadow: 0 10px 34px rgba(0, 0, 0, 0.35);
+                position: relative;
+                overflow: hidden;
+                transition: transform 0.18s ease, border-color 0.18s ease, background 0.18s ease;
+            }
+
+            .partner-mini-card::before {
+                content: '';
+                position: absolute;
+                inset: -2px;
+                background: radial-gradient(circle at top left, rgba(124, 58, 237, 0.35), transparent 55%),
+                    radial-gradient(circle at bottom right, rgba(244, 114, 182, 0.25), transparent 55%);
+                opacity: 0.55;
+                filter: blur(10px);
+                z-index: 0;
+            }
+
+            .partner-mini-card > * {
+                position: relative;
+                z-index: 1;
+            }
+
+            .partner-mini-card:hover {
+                transform: translateY(-2px);
+                border-color: rgba(255, 255, 255, 0.22);
+                background: rgba(0, 0, 0, 0.45);
+            }
+
+            .partner-mini-left {
+                display: flex;
+                align-items: center;
+                gap: 12px;
+                min-width: 0;
+            }
+
+            .partner-mini-icon {
+                width: 38px;
+                height: 38px;
+                border-radius: 12px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                flex-shrink: 0;
+                background: transparent;
+                box-shadow: none;
+            }
+
+            .partner-mini-icon svg {
+                width: 16px;
+                height: 16px;
+            }
+
+            .partner-mini-text {
+                display: flex;
+                flex-direction: column;
+                min-width: 0;
+                align-items: flex-start;
+                text-align: left;
+            }
+
+            .partner-mini-title {
+                font-size: 1.0rem;
+                font-weight: 900;
+                color: #fff;
+                line-height: 1.15;
+                margin-bottom: 3px;
+                text-align: left;
+            }
+
+            .partner-mini-sub {
+                font-size: 0.72rem;
+                color: #cbd5e1;
+                line-height: 1.25;
+                text-align: left;
+            }
+
+            .partner-mini-arrow {
+                color: rgba(96, 165, 250, 0.95);
+                font-size: 1.25rem;
+                flex-shrink: 0;
+                opacity: 0.95;
+                transform: translateX(2px);
+            }
+
+            .partner-mini-card--lunasub .partner-mini-icon {
+                color: rgba(255, 255, 255, 0.95);
+                background: transparent;
+            }
+
+            .partner-mini-card--lunakey .partner-mini-icon {
+                color: rgba(255, 255, 255, 0.95);
+                background: transparent;
+            }
+
             /* Footer hidden */
             footer {
                 display: none !important;
@@ -818,6 +933,11 @@
         /* Desktop (>1024px): Ẩn mobile TV form & App Login form */
         #mobileTvForm,
         #mobileAppLoginForm {
+            display: none;
+        }
+
+        /* Desktop (>1024px): Ẩn mini partner cards (chỉ hiển thị trên mobile theo đúng vị trí trong sidebar) */
+        #partnerCards {
             display: none;
         }
 
@@ -1957,6 +2077,7 @@
             }
         }
     </style>
+    <script src="https://unpkg.com/lucide@latest"></script>
 </head>
 
 <body>
@@ -2676,11 +2797,44 @@
                                     </div>
                                 </div>
 
+                                <!-- Mini Partner Cards (sẽ chỉ hiện sau khi đăng nhập thành công) -->
+                                <div id="partnerCards" class="partner-mini-cards" aria-label="Đối tác" role="navigation">
+                                    <a class="partner-mini-card partner-mini-card--lunasub"
+                                        href="https://lunasub.com/" target="_blank" rel="noopener noreferrer"
+                                        aria-label="Mở LunaSub.com (tab mới)">
+                                        <div class="partner-mini-left">
+                                                <div class="partner-mini-icon" aria-hidden="true">
+                                                    <i data-lucide="heart"></i>
+                                                </div>
+                                            <div class="partner-mini-text">
+                                                <div class="partner-mini-title">LunaSub.com</div>
+                                                <div class="partner-mini-sub">Dịch vụ tăng tương tác, tăng like,<br>follow, view chất lượng cao</div>
+                                            </div>
+                                        </div>
+                                        <div class="partner-mini-arrow" aria-hidden="true">→</div>
+                                    </a>
+
+                                    <a class="partner-mini-card partner-mini-card--lunakey"
+                                        href="https://lunakey.net/" target="_blank" rel="noopener noreferrer"
+                                        aria-label="Mở LunaKey.net (tab mới)">
+                                        <div class="partner-mini-left">
+                                            <div class="partner-mini-icon" aria-hidden="true">
+                                                <i data-lucide="key"></i>
+                                            </div>
+                                            <div class="partner-mini-text">
+                                                <div class="partner-mini-title">LunaKey.net</div>
+                                                <div class="partner-mini-sub">Tài khoản Premium Netflix, Spotify,<br>YouTube giá rẻ, uy tín</div>
+                                            </div>
+                                        </div>
+                                        <div class="partner-mini-arrow" aria-hidden="true">→</div>
+                                    </a>
+                                </div>
+
                                 <!-- Mobile App Login (chỉ hiển thị trên mobile) -->
                                 <div id="mobileAppLoginForm">
                                     <div class="app-login-title">ĐĂNG NHẬP NETFLIX APP</div>
-                                    <div class="app-login-desc">Tạo link đăng nhập Netflix để xem trực tiếp trên app
-                                        điện thoại/tablet</div>
+                                    <div class="app-login-desc">Tạo link đăng nhập để xem trực tiếp trên app
+                                        điện thoại</div>
                                     <button type="button" id="mobileAppLoginBtn" onclick="handleMobileAppLogin()">
                                         <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14"
                                             viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
@@ -4723,6 +4877,7 @@ Nếu cần thêm lượt đổi tài khoản, vui lòng liên hệ Support qua 
 
                             document.getElementById('loginSection').style.display = 'block';
                             document.getElementById('userProfileCard').style.display = 'none';
+                            document.getElementById('partnerCards')?.classList.remove('active');
                             const loginRequired = document.getElementById('loginRequired');
                             if (loginRequired) loginRequired.style.display = 'block';
                             const openBtn = document.getElementById('openNetflixBtn');
@@ -4742,6 +4897,7 @@ Nếu cần thêm lượt đổi tài khoản, vui lòng liên hệ Support qua 
                 // Hide login section, show profile
                 document.getElementById('loginSection').style.display = 'none';
                 document.getElementById('userProfileCard').style.display = 'block';
+                document.getElementById('partnerCards')?.classList.add('active');
 
                 // Update profile info
                 document.getElementById('userDisplayName').textContent = user.name;
@@ -4830,6 +4986,7 @@ Nếu cần thêm lượt đổi tài khoản, vui lòng liên hệ Support qua 
 
                 document.getElementById('loginSection').style.display = 'block';
                 document.getElementById('userProfileCard').style.display = 'none';
+                document.getElementById('partnerCards')?.classList.remove('active');
 
                 const loginRequired = document.getElementById('loginRequired');
                 if (loginRequired) loginRequired.style.display = 'block';
@@ -4873,6 +5030,18 @@ Nếu cần thêm lượt đổi tài khoản, vui lòng liên hệ Support qua 
 
         // Check auth on load
         checkAuth();
+
+        // Render lucide icons (used by partner mini cards).
+        // We retry briefly because the lucide script might not be finished loading yet.
+        (function renderLucideIconsWithRetry(attempt = 0) {
+            const MAX_ATTEMPTS = 20;
+            if (window.lucide && typeof window.lucide.createIcons === 'function') {
+                window.lucide.createIcons();
+                return;
+            }
+            if (attempt >= MAX_ATTEMPTS) return;
+            setTimeout(() => renderLucideIconsWithRetry(attempt + 1), 100);
+        })();
 
         // Manual Extension Detection - Improved method
         // Try multiple extension IDs (unpacked extension has different ID)
