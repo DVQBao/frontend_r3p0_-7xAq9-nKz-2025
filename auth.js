@@ -2032,6 +2032,19 @@ function showCelebrationModal(celebrationData, token, user) {
             <rect width="20" height="15" x="2" y="7" rx="2" ry="2"/>
             <polyline points="17 2 12 7 7 2"/>
         </svg>`,
+        music: `<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M9 18V5l12-2v13"/>
+            <circle cx="6" cy="18" r="3"/>
+            <circle cx="18" cy="16" r="3"/>
+        </svg>`,
+        play: `<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polygon points="5 3 19 12 5 21 5 3"/>
+        </svg>`,
+        briefcase: `<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="2" y="7" width="20" height="14" rx="2" ry="2"/>
+            <path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/>
+            <path d="M2 13h20"/>
+        </svg>`,
         puzzle: `<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <path d="M19.439 7.85c-.049.322.059.648.289.878l1.568 1.568c.47.47.706 1.087.706 1.704s-.235 1.233-.706 1.704l-1.611 1.611a.98.98 0 0 1-.837.276c-.47-.07-.802-.48-.968-.925a2.501 2.501 0 1 0-3.214 3.214c.446.166.855.497.925.968a.979.979 0 0 1-.276.837l-1.61 1.61a2.404 2.404 0 0 1-1.705.707 2.402 2.402 0 0 1-1.704-.706l-1.568-1.568a1.026 1.026 0 0 0-.877-.29c-.493.074-.84.504-1.02.968a2.5 2.5 0 1 1-3.237-3.237c.464-.18.894-.527.967-1.02a1.026 1.026 0 0 0-.289-.877l-1.568-1.568A2.402 2.402 0 0 1 1.998 12c0-.617.236-1.234.706-1.704L4.23 8.77c.24-.24.581-.353.917-.303.515.077.877.528 1.073 1.01a2.5 2.5 0 1 0 3.259-3.259c-.482-.196-.933-.558-1.01-1.073-.05-.336.062-.676.303-.917l1.525-1.525A2.402 2.402 0 0 1 12 1.998c.617 0 1.234.236 1.704.706l1.568 1.568c.23.23.556.338.877.29.493-.074.84-.504 1.02-.968a2.5 2.5 0 1 1 3.237 3.237c-.464.18-.894.527-.967 1.02Z"/>
         </svg>`,
@@ -2046,8 +2059,32 @@ function showCelebrationModal(celebrationData, token, user) {
             <path d="M5 3v4"/><path d="M3 5h4"/><path d="M19 17v4"/><path d="M17 19h4"/>
         </svg>`,
         arrowRight: `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>`,
-        keyRound: `<svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 2l-2 2m-7.61 7.61a5.5 5.5 0 1 1-7.778 7.778 5.5 5.5 0 0 1 7.777-7.777zm0 0L15.5 7.5m0 0l3 3L22 7l-3-3m-3.5 3.5L19 4"/></svg>`
+        keyRound: `<svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 2l-2 2m-7.61 7.61a5.5 5.5 0 1 1-7.778 7.778 5.5 5.5 0 0 1 7.777-7.777zm0 0L15.5 7.5m0 0l3 3L22 7l-3-3m-3.5 3.5L19 4"/></svg>`,
+        partner: `<svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M18 8a3 3 0 1 0-3-3"/>
+            <path d="M6 8a3 3 0 1 1 3-3"/>
+            <path d="M8 21h8"/>
+            <path d="M9 17l3 3 3-3"/>
+            <path d="M4 14h4l2-3 2 3h4"/>
+        </svg>`,
+        shield: `<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 22s7-3 7-10V5l-7-3-7 3v7c0 7 7 10 7 10Z"/>
+        </svg>`,
+        badgeStar: `<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 17.27 18.18 21 16.54 13.97 22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21 12 17.27Z"/>
+        </svg>`,
+        externalLink: `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M15 3h6v6"/>
+            <path d="M10 14 21 3"/>
+            <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/>
+        </svg>`
     };
+
+    // Remove the leading "Từ hôm nay..." sentence so the partner card sits closer to the hero subtitle.
+    const mainDescriptionTextRaw = celebrationData?.mainDescription ?? '';
+    const mainDescriptionText = typeof mainDescriptionTextRaw === 'string'
+        ? mainDescriptionTextRaw.replace(/^Từ hôm nay,[\s\S]*?(?:\.|\!|\?|$)/i, '').trim()
+        : '';
 
     // Create celebration modal HTML - Fullscreen, no container
     const modalHTML = `
@@ -2074,59 +2111,162 @@ function showCelebrationModal(celebrationData, token, user) {
                 </div>
                 
                 <!-- Main Description -->
-                <p class="celeb-desc">${celebrationData.mainDescription}</p>
+                ${mainDescriptionText ? `<p class="celeb-desc">${mainDescriptionText}</p>` : ''}
 
-                <!-- NEW: App Login Hero Feature -->
-                <div class="celeb-app-login-hero">
-                    <div class="celeb-app-login-badge">MỚI</div>
-                    <div class="celeb-app-login-icon">${svgIcons.keyRound}</div>
-                    <h3 class="celeb-app-login-title">Xem Netflix trên App điện thoại</h3>
-                    <p class="celeb-app-login-desc">Giờ đây bạn có thể tạo link đăng nhập Netflix ngay trên web Tiệm Bánh và mở thẳng app Netflix trên điện thoại/tablet để xem phim!</p>
-                </div>
-                
-                <!-- Feature Highlight -->
-                <div class="celeb-feature">
-                    <div class="celeb-feature-icon">${svgIcons.tv}</div>
-                    <div class="celeb-feature-content">
-                        <h3>${celebrationData.highlightFeature}</h3>
-                        <p>${celebrationData.highlightDescription}</p>
+                <!-- Partner block (Lunakey / Lunasub) -->
+                <div class="celeb-partner-card" id="celebPartnerCard">
+                    <div class="celeb-partner-header">
+                        <div class="celeb-partner-left">
+                            <div class="celeb-partner-icon-wrap">
+                                <div class="celeb-partner-icon-bg"></div>
+                                <div class="celeb-partner-icon">${svgIcons.partner}</div>
+                            </div>
+                            <div class="celeb-partner-heading">
+                                <div class="celeb-partner-title-row">
+                                    <span class="celeb-partner-title-main">LUNAKEY &amp; LUNASUB</span>
+                                    <span class="celeb-partner-badge-dot"></span>
+                                </div>
+                                <div class="celeb-partner-subline">
+                                    <span class="celeb-partner-title-sub">Đối tác tài khoản số &amp; tăng tương tác uy tín, được Tiệm Bánh tin dùng và giới thiệu.</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="celeb-partner-body">
+                        <div class="celeb-partner-col celeb-partner-col-left">
+                            <button class="celeb-partner-col-header celeb-partner-btn" type="button" data-partner="lunakey" aria-label="Mở Lunakey.net (tab mới)">
+                                <span class="celeb-partner-col-title-stack">
+                                    <span class="celeb-partner-col-title">LunaKey.net</span>
+                                    <span class="celeb-partner-col-subtitle">Tài khoản giá rẻ, chất lượng cao</span>
+                                </span>
+                                <span class="celeb-partner-btn-icon" aria-hidden="true">${svgIcons.externalLink}</span>
+                            </button>
+                            <div class="celeb-partner-tag-grid">
+                                <span class="celeb-partner-tag">
+                                    <span class="celeb-partner-tag-icon">${svgIcons.tv}</span>
+                                    <span>Netflix</span>
+                                </span>
+                                <span class="celeb-partner-tag">
+                                    <span class="celeb-partner-tag-icon">${svgIcons.play}</span>
+                                    <span>YouTube</span>
+                                </span>
+                                <span class="celeb-partner-tag">
+                                    <span class="celeb-partner-tag-icon">${svgIcons.briefcase}</span>
+                                    <span>Gmail</span>
+                                </span>
+                                <span class="celeb-partner-tag">
+                                    <span class="celeb-partner-tag-icon">${svgIcons.puzzle}</span>
+                                    <span>ChatGPT</span>
+                                </span>
+                                <span class="celeb-partner-tag">
+                                    <span class="celeb-partner-tag-icon">${svgIcons.music}</span>
+                                    <span>Spotify</span>
+                                </span>
+                                <span class="celeb-partner-tag">
+                                    <span class="celeb-partner-tag-icon">${svgIcons.tv}</span>
+                                    <span>HBO Max</span>
+                                </span>
+                                <span class="celeb-partner-tag">
+                                    <span class="celeb-partner-tag-icon">${svgIcons.puzzle}</span>
+                                    <span>Canva</span>
+                                </span>
+                                <span class="celeb-partner-tag">
+                                    <span class="celeb-partner-tag-icon">${svgIcons.sparkles}</span>
+                                    <span>+10 nữa</span>
+                                </span>
+                            </div>
+                        </div>
+
+                        <div class="celeb-partner-col celeb-partner-col-right">
+                            <button class="celeb-partner-col-header celeb-partner-btn" type="button" data-partner="lunasub" aria-label="Mở Lunasub.com (tab mới)">
+                                <span class="celeb-partner-col-title-stack">
+                                    <span class="celeb-partner-col-title">LunaSub.com</span>
+                                    <span class="celeb-partner-col-subtitle">Dịch vụ tăng tương tác chất lượng cao</span>
+                                </span>
+                                <span class="celeb-partner-btn-icon" aria-hidden="true">${svgIcons.externalLink}</span>
+                            </button>
+                            <div class="celeb-partner-tag-grid">
+                                <span class="celeb-partner-tag">
+                                    <span class="celeb-partner-tag-icon">${svgIcons.sparkles}</span>
+                                    <span>Follow</span>
+                                </span>
+                                <span class="celeb-partner-tag">
+                                    <span class="celeb-partner-tag-icon">${svgIcons.bell}</span>
+                                    <span>Comment</span>
+                                </span>
+                                <span class="celeb-partner-tag">
+                                    <span class="celeb-partner-tag-icon">${svgIcons.tv}</span>
+                                    <span>View</span>
+                                </span>
+                                <span class="celeb-partner-tag">
+                                    <span class="celeb-partner-tag-icon">${svgIcons.arrowRight}</span>
+                                    <span>Share</span>
+                                </span>
+                                <span class="celeb-partner-tag">
+                                    <span class="celeb-partner-tag-icon">${svgIcons.music}</span>
+                                    <span>TikTok</span>
+                                </span>
+                                <span class="celeb-partner-tag">
+                                    <span class="celeb-partner-tag-icon">${svgIcons.sparkles}</span>
+                                    <span>Instagram</span>
+                                </span>
+                                <span class="celeb-partner-tag">
+                                    <span class="celeb-partner-tag-icon">${svgIcons.play}</span>
+                                    <span>YouTube</span>
+                                </span>
+                                <span class="celeb-partner-tag">
+                                    <span class="celeb-partner-tag-icon">${svgIcons.briefcase}</span>
+                                    <span>Facebook</span>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="celeb-partner-trust-row">
+                        <div class="celeb-partner-trust-item">
+                            <span class="celeb-partner-trust-icon">${svgIcons.check}</span>
+                            <span>Uy tín</span>
+                        </div>
+                        <div class="celeb-partner-trust-item">
+                            <span class="celeb-partner-trust-icon">${svgIcons.check}</span>
+                            <span>An toàn</span>
+                        </div>
+                        <div class="celeb-partner-trust-item">
+                            <span class="celeb-partner-trust-icon">${svgIcons.check}</span>
+                            <span>Chất lượng</span>
+                        </div>
                     </div>
                 </div>
-                
-                <!-- Info Grid -->
+
+                <!-- Single feature card: App + TV + các cập nhật khác -->
                 <div class="celeb-grid-info">
-                    <!-- CTV Program -->
-                    <div class="celeb-info-card celeb-info-card-ctv">
-                        <div class="celeb-info-header">
-                            <span class="celeb-info-icon celeb-info-icon-ctv"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></span>
-                            <span>Chương trình CTV Tiệm Bánh</span>
-                        </div>
-                        <ul class="celeb-list">
-                            <li><span class="celeb-check">${svgIcons.check}</span>Trở thành Cộng Tác Viên chính thức của Tiệm Bánh</li>
-                            <li><span class="celeb-check">${svgIcons.check}</span>Nhận giá ưu đãi để resell dịch vụ của Tiệm Bánh</li>
-                            <li><span class="celeb-check">${svgIcons.check}</span>Quản lý quota, lịch sử sử dụng dễ dàng</li>
-                        </ul>
-                        <a href="https://www.facebook.com/tiembanh4k" target="_blank" style="display:flex;align-items:center;gap:12px;padding:12px 14px;background:rgba(245,158,11,0.08);border:1px solid rgba(245,158,11,0.3);border-radius:10px;text-decoration:none;margin-top:4px;">
-                            <div style="flex-shrink:0;width:34px;height:34px;background:rgba(245,158,11,0.15);border-radius:8px;display:flex;align-items:center;justify-content:center;">
-                                <svg width="18" height="18" viewBox="0 0 24 24" fill="#f59e0b"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+                    <div class="celeb-info-card celeb-info-card-summary">
+                        <div class="celeb-info-summary-title">THÔNG ĐIỆP TỪ TIỆM BÁNH</div>
+                        <div class="celeb-info-summary-rows">
+                            <div class="celeb-info-summary-row">
+                                <span class="celeb-info-icon celeb-info-icon-green" aria-hidden="true">${svgIcons.smartphone}</span>
+                                <div class="celeb-info-summary-text">
+                                    <span class="celeb-info-summary-sub">Xem Netflix trên điện thoại</span>
+                                    <span class="celeb-info-summary-subtitle">Với chức năng Tạo link đăng nhập.</span>
+                                </div>
                             </div>
-                            <div style="flex:1;min-width:0;">
-                                <div style="font-size:0.78rem;font-weight:700;color:#f59e0b;margin-bottom:2px;">Đăng ký CTV Tiệm Bánh?</div>
-                                <div style="font-size:0.7rem;color:rgba(255,255,255,0.45);">Liên hệ qua Facebook</div>
+
+                            <div class="celeb-info-summary-row">
+                                <span class="celeb-info-icon celeb-info-icon-tv" aria-hidden="true">${svgIcons.tv}</span>
+                                <div class="celeb-info-summary-text">
+                                    <span class="celeb-info-summary-sub">Kích hoạt Netflix TV bằng điện thoại</span>
+                                    <span class="celeb-info-summary-subtitle">Không cần dùng PC, nhanh chóng, tiện lợi.</span>
+                                </div>
                             </div>
-                            <span style="flex-shrink:0;display:flex;align-items:center;justify-content:center;width:32px;height:32px;color:#f59e0b;opacity:0.7;transition:opacity 0.2s;"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 7h10v10"/><path d="M7 17 17 7"/></svg></span>
-                        </a>
-                    </div>
-                    
-                    <!-- Free Plan -->
-                    <div class="celeb-info-card">
-                        <div class="celeb-info-header">
-                            <span class="celeb-info-icon celeb-info-icon-amber">${svgIcons.bell}</span>
-                            <span>Thay đổi gói Free</span>
+
+                            <div class="celeb-info-summary-row">
+                                <span class="celeb-info-icon celeb-info-icon-ctv" aria-hidden="true">${svgIcons.briefcase}</span>
+                                <div class="celeb-info-summary-text">
+                                    <span class="celeb-info-summary-sub">Chương trình CTV Tiệm Bánh Netflix</span>
+                                    <span class="celeb-info-summary-subtitle">Resell dịch vụ Tiệm Bánh, có API để build web/bot.</span>
+                                </div>
+                            </div>
                         </div>
-                        <ul class="celeb-list celeb-list-compact">
-                            ${celebrationData.freePlanChanges.map(c => `<li><span class="celeb-check">${svgIcons.check}</span>${c}</li>`).join('')}
-                        </ul>
                     </div>
                 </div>
                 
@@ -2178,6 +2318,462 @@ function showCelebrationModal(celebrationData, token, user) {
                     linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px);
                 background-size: 60px 60px;
                 mask-image: radial-gradient(ellipse 80% 60% at 50% 50%, black 20%, transparent 70%);
+            }
+
+            /* Partner popup card */
+            .celeb-partner-card {
+                display: flex;
+                flex-direction: column;
+                gap: 14px;
+                margin: 10px 0 6px;
+                padding: 16px 16px 14px;
+                border-radius: 18px;
+                background:
+                    linear-gradient(135deg, rgba(15,23,42,0.96), rgba(15,23,42,0.98)),
+                    radial-gradient(circle at top left, rgba(59,130,246,0.18), transparent 55%),
+                    radial-gradient(circle at bottom right, rgba(236,72,153,0.18), transparent 55%);
+                border: 1px solid rgba(148,163,184,0.35);
+                box-shadow:
+                    0 18px 45px rgba(15,23,42,0.9),
+                    0 0 0 1px rgba(15,23,42,0.9),
+                    0 0 0 1px rgba(15,23,42,0.9) inset;
+                position: relative;
+                overflow: hidden;
+            }
+
+            .celeb-partner-card::before {
+                content: "";
+                position: absolute;
+                inset: -40%;
+                background:
+                    radial-gradient(circle at 0% 0%, rgba(56,189,248,0.14), transparent 60%),
+                    radial-gradient(circle at 100% 100%, rgba(249,115,22,0.18), transparent 60%);
+                opacity: 0.9;
+                pointer-events: none;
+            }
+
+            .celeb-partner-header {
+                position: relative;
+                z-index: 1;
+                display: flex;
+                justify-content: space-between;
+                gap: 16px;
+                align-items: center;
+            }
+
+            .celeb-partner-left {
+                position: relative;
+                z-index: 1;
+                display: flex;
+                align-items: center;
+                gap: 12px;
+            }
+
+            .celeb-partner-icon-wrap {
+                position: relative;
+                width: 64px;
+                height: 64px;
+                border-radius: 18px;
+                overflow: hidden;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                box-shadow: 0 12px 30px rgba(15,23,42,0.95);
+            }
+
+            .celeb-partner-icon-bg {
+                position: absolute;
+                inset: 0;
+                background:
+                    radial-gradient(circle at 0% 0%, rgba(56,189,248,0.35), transparent 55%),
+                    radial-gradient(circle at 100% 100%, rgba(236,72,153,0.45), transparent 55%);
+                opacity: 0.9;
+            }
+
+            .celeb-partner-icon {
+                position: relative;
+                color: #e5e7eb;
+                filter: drop-shadow(0 8px 24px rgba(15,23,42,0.9));
+            }
+
+            .celeb-partner-heading {
+                position: relative;
+                z-index: 1;
+                display: flex;
+                flex-direction: column;
+                gap: 2px;
+            }
+
+            .celeb-partner-title-row {
+                display: flex;
+                align-items: center;
+                gap: 6px;
+                font-size: 0.8rem;
+            }
+
+            .celeb-partner-title-main {
+                font-weight: 800;
+                letter-spacing: 0.08em;
+                font-size: 0.85rem;
+                color: #e5e7eb;
+            }
+
+            .celeb-partner-badge-dot {
+                width: 8px;
+                height: 8px;
+                border-radius: 999px;
+                background: #22c55e;
+                box-shadow: 0 0 0 6px rgba(34,197,94,0.25);
+            }
+
+            .celeb-partner-subline {
+                max-width: 360px;
+            }
+
+            .celeb-partner-title-sub {
+                font-size: 0.78rem;
+                font-weight: 500;
+                color: rgba(209,213,219,0.9);
+            }
+
+            .celeb-partner-btn {
+                cursor: pointer;
+                border: 0;
+                background: transparent;
+                padding: 0;
+                color: inherit;
+                text-align: left;
+            }
+
+            .celeb-partner-btn:hover .celeb-partner-col-title {
+                text-decoration: underline;
+            }
+
+            .celeb-partner-btn-icon {
+                display: inline-flex;
+                align-items: center;
+                justify-content: center;
+                opacity: 0.92;
+                position: absolute;
+                        /* Keep corner icon inside the card so it won't overlap/break layout */
+                        top: 6px;
+                        right: 6px;
+                z-index: 10;
+                pointer-events: none; /* keep button click behavior */
+            }
+
+            .celeb-partner-btn-icon svg {
+                width: 16px;
+                height: 16px;
+            }
+
+            .celeb-partner-body {
+                position: relative;
+                z-index: 1;
+                display: grid;
+                grid-template-columns: 1fr;
+                gap: 10px;
+            }
+
+            .celeb-partner-col {
+                border-radius: 14px;
+                padding: 10px 10px 8px;
+                background: radial-gradient(circle at top left, rgba(37,99,235,0.35), rgba(15,23,42,0.96));
+                border: 1px solid rgba(96,165,250,0.6);
+                position: relative; /* anchor absolutely-positioned icons */
+            }
+
+            .celeb-partner-col-right {
+                background: radial-gradient(circle at top left, rgba(219,39,119,0.4), rgba(15,23,42,0.96));
+                border-color: rgba(244,114,182,0.7);
+            }
+
+            .celeb-partner-col-header {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                margin-bottom: 6px;
+                gap: 6px;
+                width: 100%;
+                        padding-right: 22px; /* leave room for the corner icon overlay */
+            }
+
+            .celeb-partner-col-title {
+                font-size: 0.75rem;
+                font-weight: 700;
+                letter-spacing: 0.09em;
+                text-transform: uppercase;
+                color: #e5e7eb;
+            }
+
+            .celeb-partner-col-title-stack {
+                display: inline-flex;
+                flex-direction: column;
+                gap: 2px;
+                line-height: 1.15;
+            }
+
+            .celeb-partner-col-subtitle {
+                font-size: 0.65rem;
+                font-weight: 600;
+                color: rgba(209,213,219,0.92);
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                        max-width: 220px;
+            }
+
+            .celeb-partner-col-pill {
+                padding: 2px 8px;
+                border-radius: 999px;
+                font-size: 0.6rem;
+                font-weight: 700;
+                text-transform: uppercase;
+                letter-spacing: 0.08em;
+                background: #f97316;
+                color: #111827;
+                box-shadow: 0 0 0 1px rgba(15,23,42,0.9);
+            }
+
+            .celeb-partner-tag-grid {
+                display: grid;
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+                gap: 6px;
+                margin-bottom: 6px;
+            }
+
+            .celeb-partner-tag {
+                display: flex;
+                align-items: center;
+                justify-content: flex-start;
+                padding: 4px 6px;
+                border-radius: 999px;
+                font-size: 0.7rem;
+                font-weight: 600;
+                background: rgba(15,23,42,0.86);
+                color: rgba(249,250,251,0.94);
+                border: 1px solid rgba(148,163,184,0.55);
+                white-space: nowrap;
+            }
+
+            .celeb-partner-tag-icon {
+                display: inline-flex;
+                align-items: center;
+                justify-content: center;
+                margin-right: 4px;
+            }
+
+            .celeb-partner-tag-icon svg {
+                width: 14px;
+                height: 14px;
+            }
+
+            .celeb-partner-trust-row {
+                position: relative;
+                z-index: 1;
+                margin-top: 6px;
+                padding-top: 0;
+                border-top: 0;
+                display: flex;
+                flex-wrap: wrap;
+                align-items: center;
+                justify-content: center;
+                gap: 8px;
+                font-size: 0.7rem;
+                color: #22c55e;
+            }
+
+            .celeb-partner-trust-item {
+                display: inline-flex;
+                align-items: center;
+                gap: 4px;
+                padding: 3px 8px;
+                border-radius: 999px;
+                background: rgba(34,197,94,0.12);
+                border: 1px solid rgba(34,197,94,0.35);
+            }
+
+            .celeb-partner-trust-icon {
+                display: inline-flex;
+                align-items: center;
+                justify-content: center;
+                width: 18px;
+                height: 18px;
+                border-radius: 999px;
+                background: linear-gradient(135deg, #22c55e, #16a34a);
+                color: #ffffff;
+                box-shadow: 0 10px 22px rgba(34,197,94,0.22);
+            }
+
+            .celeb-partner-trust-icon svg {
+                width: 12px;
+                height: 12px;
+            }
+
+            .celeb-partner-trust-separator {
+                width: 8px;
+                height: 1px;
+                background: rgba(148,163,184,0.7);
+                border-radius: 999px;
+            }
+
+            .celeb-partner-cta-row {
+                position: relative;
+                z-index: 1;
+                margin-top: 2px;
+            }
+
+            .celeb-partner-cta-btn {
+                width: 100%;
+                border-radius: 999px;
+                padding: 9px 14px;
+                border: none;
+                outline: none;
+                cursor: pointer;
+                display: inline-flex;
+                align-items: center;
+                justify-content: center;
+                gap: 8px;
+                background: linear-gradient(90deg, #6366f1, #ec4899);
+                box-shadow:
+                    0 14px 35px rgba(79,70,229,0.7),
+                    0 0 0 1px rgba(15,23,42,0.95);
+                color: #f9fafb;
+                font-weight: 800;
+                font-size: 0.78rem;
+                letter-spacing: 0.1em;
+                text-transform: uppercase;
+                transition: transform 0.15s ease, box-shadow 0.15s ease, filter 0.15s ease;
+            }
+
+            .celeb-partner-cta-btn:hover {
+                transform: translateY(-1px);
+                box-shadow:
+                    0 18px 40px rgba(79,70,229,0.85),
+                    0 0 0 1px rgba(15,23,42,0.95);
+                filter: brightness(1.05);
+            }
+
+            .celeb-partner-cta-icon {
+                display: inline-flex;
+                align-items: center;
+                justify-content: center;
+            }
+
+            .celeb-partner-cta-text {
+                white-space: nowrap;
+            }
+
+            .celeb-partner-secondary-row {
+                position: relative;
+                z-index: 1;
+            }
+
+            .celeb-partner-secondary-btn {
+                width: 100%;
+                border-radius: 999px;
+                padding: 7px 12px;
+                border: 1px solid rgba(148,163,184,0.55);
+                background: rgba(15,23,42,0.92);
+                color: rgba(229,231,235,0.96);
+                font-size: 0.72rem;
+                font-weight: 600;
+                letter-spacing: 0.08em;
+                text-transform: uppercase;
+                cursor: pointer;
+                display: inline-flex;
+                align-items: center;
+                justify-content: center;
+                transition: background 0.15s ease, border-color 0.15s ease, transform 0.15s ease;
+            }
+
+            .celeb-partner-secondary-btn:hover {
+                background: rgba(15,23,42,1);
+                border-color: rgba(209,213,219,0.9);
+                transform: translateY(-0.5px);
+            }
+
+            .celeb-partner-secondary-text {
+                white-space: nowrap;
+            }
+
+            .celeb-partner-footer {
+                position: relative;
+                z-index: 1;
+                margin-top: 2px;
+                font-size: 0.65rem;
+                letter-spacing: 0.26em;
+                text-transform: uppercase;
+                color: rgba(148,163,184,0.9);
+                text-align: center;
+                opacity: 0.9;
+            }
+
+            .celeb-info-card-summary {
+                margin-top: 8px;
+            }
+
+            .celeb-info-icon svg {
+                width: 18px;
+                height: 18px;
+            }
+
+            .celeb-info-icon-green {
+                background: rgba(34, 197, 94, 0.12);
+                color: #4ade80;
+            }
+
+            .celeb-info-icon-tv {
+                background: rgba(59, 130, 246, 0.12);
+                color: #60a5fa;
+            }
+
+            .celeb-info-summary-rows {
+                display: flex;
+                flex-direction: column;
+                gap: 12px;
+            }
+
+            .celeb-info-summary-row {
+                display: flex;
+                align-items: flex-start;
+                gap: 12px;
+            }
+
+            .celeb-info-summary-text {
+                display: flex;
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 2px;
+                min-width: 0;
+                flex: 1 1 auto;
+            }
+
+            .celeb-info-summary-sub {
+                font-size: 0.92rem;
+                font-weight: 700;
+                color: rgba(229, 231, 235, 0.95);
+                line-height: 1.25;
+                white-space: normal;
+                overflow: visible;
+                text-overflow: clip;
+                flex: 0 0 auto;
+                min-width: 0;
+                overflow-wrap: anywhere;
+                word-break: break-word;
+            }
+
+            .celeb-info-summary-subtitle {
+                font-size: 0.78rem;
+                color: rgba(209, 213, 219, 0.7);
+                line-height: 1.35;
+                white-space: normal;
+                overflow: visible;
+                text-overflow: clip;
+                flex: 0 0 auto;
+                min-width: 0;
+                overflow-wrap: anywhere;
+                word-break: break-word;
             }
             
             .celeb-particle {
@@ -2436,6 +3032,43 @@ function showCelebrationModal(celebrationData, token, user) {
                 border-radius: 12px;
             }
             
+            .celeb-info-card.celeb-info-card-summary {
+                background: linear-gradient(135deg, rgba(59, 130, 246, 0.18) 0%, rgba(168, 85, 247, 0.09) 100%);
+                border: 1px solid rgba(59, 130, 246, 0.40);
+                box-shadow: 0 18px 45px rgba(59, 130, 246, 0.10);
+                position: relative;
+                overflow: hidden;
+            }
+            
+            .celeb-info-card.celeb-info-card-summary::before {
+                content: "";
+                position: absolute;
+                top: -60%;
+                left: -40%;
+                width: 180%;
+                height: 160%;
+                background: radial-gradient(circle at 50% 40%, rgba(96, 165, 250, 0.18), transparent 60%);
+                pointer-events: none;
+                transform: rotate(-8deg);
+            }
+            
+            .celeb-info-summary-title {
+                position: relative;
+                z-index: 1;
+                display: inline-block;
+                margin: 0 0 14px 0;
+                padding: 10px 14px;
+                border-radius: 999px;
+                font-size: 0.95rem;
+                font-weight: 900;
+                letter-spacing: 0.08em;
+                text-transform: uppercase;
+                color: rgba(255, 255, 255, 0.96);
+                background: linear-gradient(135deg, rgba(59, 130, 246, 0.17) 0%, rgba(168, 85, 247, 0.08) 100%);
+                border: 1px solid rgba(59, 130, 246, 0.32);
+                text-shadow: 0 8px 22px rgba(0, 0, 0, 0.28);
+            }
+            
             .celeb-info-header {
                 display: flex;
                 align-items: center;
@@ -2539,14 +3172,14 @@ function showCelebrationModal(celebrationData, token, user) {
                 display: flex;
                 align-items: center;
                 justify-content: center;
-                gap: 8px;
-                padding: 18px 32px;
-                font-size: 1.1rem;
+                gap: 6px;
+                padding: 11px 16px;
+                font-size: 0.8rem;
                 font-weight: 600;
-                color: white;
-                background: linear-gradient(135deg, #e50914 0%, #b20710 100%);
-                border: none;
-                border-radius: 12px;
+                color: #22c55e;
+                background: rgba(34, 197, 94, 0.1);
+                border: 1px solid #22c55e;
+                border-radius: 6px;
                 cursor: pointer;
                 transition: all 0.3s ease;
                 position: relative;
@@ -2554,24 +3187,19 @@ function showCelebrationModal(celebrationData, token, user) {
             }
             
             .celeb-btn:disabled {
-                background: linear-gradient(135deg, #3a3a3a 0%, #2a2a2a 100%);
+                background: rgba(34, 197, 94, 0.06);
                 cursor: not-allowed;
+                opacity: 0.6;
             }
             
             .celeb-btn:not(:disabled):hover {
-                transform: translateY(-2px);
-                box-shadow: 0 10px 30px rgba(229, 9, 20, 0.4);
+                transform: translateY(-1px);
+                background: rgba(34, 197, 94, 0.2);
+                box-shadow: 0 6px 20px rgba(16, 185, 129, 0.22);
             }
             
             .celeb-btn:not(:disabled)::before {
-                content: '';
-                position: absolute;
-                top: 0;
-                left: -100%;
-                width: 100%;
-                height: 100%;
-                background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
-                animation: celeb-shimmer 2s infinite;
+                display: none;
             }
             
             @keyframes celeb-shimmer {
@@ -2581,6 +3209,12 @@ function showCelebrationModal(celebrationData, token, user) {
             .celeb-btn-countdown {
                 font-weight: 400;
                 opacity: 0.8;
+            }
+
+            .celeb-btn svg {
+                width: 14px;
+                height: 14px;
+                flex-shrink: 0;
             }
             
             /* Mobile only text - hidden on desktop */
@@ -2643,15 +3277,33 @@ function showCelebrationModal(celebrationData, token, user) {
     // Insert modal into DOM
     document.body.insertAdjacentHTML('beforeend', modalHTML);
 
+    // Partner buttons: open trực tiếp Lunakey / Lunasub
+    document.querySelectorAll('.celeb-partner-btn').forEach(btnEl => {
+        const partner = btnEl.getAttribute('data-partner');
+        if (!partner) return;
+        btnEl.addEventListener('click', (e) => {
+            e.stopPropagation();
+            let url = null;
+            if (partner === 'lunakey') {
+                url = 'https://lunakey.net';
+            } else if (partner === 'lunasub') {
+                url = 'https://lunasub.com';
+            }
+            if (url) {
+                window.open(url, '_blank');
+            }
+        });
+    });
+
     const btn = document.getElementById('celebrationBtn');
     let countdown = 10;
 
     // Update button text
     function updateBtnText() {
         if (countdown > 0) {
-            btn.innerHTML = `<span class="celeb-btn-text">Đợi một chút...</span><span class="celeb-btn-countdown">${countdown}s</span>`;
+            btn.innerHTML = `<span class="celeb-btn-icon" aria-hidden="true">${svgIcons.briefcase}</span><span class="celeb-btn-text">Đợi một chút...</span><span class="celeb-btn-countdown">${countdown}s</span>`;
         } else {
-            btn.innerHTML = `<span class="celeb-btn-text">Vào Tiệm Bánh ngay</span>${svgIcons.arrowRight}`;
+            btn.innerHTML = `<span class="celeb-btn-icon" aria-hidden="true">${svgIcons.briefcase}</span><span class="celeb-btn-text">Vào Tiệm Bánh ngay</span>`;
             btn.disabled = false;
         }
     }

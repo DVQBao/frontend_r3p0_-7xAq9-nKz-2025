@@ -276,7 +276,7 @@
 
         .cookie-card {
             background: var(--bg-card); border: 1px solid var(--border);
-            border-radius: var(--radius); padding: 16px; margin-bottom: 12px;
+            border-radius: var(--radius); padding: 18px 18px 16px; margin-bottom: 12px;
             transition: border-color 0.2s;
         }
         .cookie-card:hover { border-color: #444; }
@@ -300,17 +300,17 @@
 
         .cookie-field { margin-bottom: 10px; }
         .cookie-field-label {
-            font-size: 0.7rem; color: var(--text-muted); text-transform: uppercase;
+            font-size: 0.7rem; color: var(--text-secondary); text-transform: uppercase;
             letter-spacing: 0.5px; margin-bottom: 4px; font-weight: 600;
         }
         .cookie-field-value {
             display: flex; align-items: center; gap: 8px;
         }
         .cookie-field-value code {
-            flex: 1; background: var(--bg-input); padding: 8px 10px;
-            border-radius: var(--radius-sm); font-size: 0.75rem;
-            color: var(--text-secondary); overflow: hidden;
-            text-overflow: ellipsis; white-space: nowrap;
+            flex: 1; background: var(--bg-input); padding: 9px 11px;
+            border-radius: var(--radius-sm); font-size: 0.76rem;
+            color: var(--text-primary);
+            white-space: normal; word-break: break-all;
             font-family: 'SF Mono', 'Fira Code', monospace;
             border: 1px solid var(--border);
         }
@@ -509,10 +509,10 @@
             .stat-card.wide {
                 grid-column: 1 / -1;
             }
-            /* Cookie cards in 2-column grid within each batch */
+            /* Cookie cards full-width (match batch header width) on desktop */
             .batch-cards {
                 display: grid;
-                grid-template-columns: 1fr 1fr;
+                grid-template-columns: 1fr;
                 gap: 12px;
             }
             /* Wider action section */
@@ -784,6 +784,8 @@
                     <div style="font-size:0.78rem;font-weight:700;color:var(--text-primary);margin-bottom:6px;">Response</div>
                     <pre style="background:var(--bg-input);padding:12px;border-radius:var(--radius-sm);font-size:0.72rem;color:var(--text-secondary);font-family:'SF Mono','Fira Code',monospace;border:1px solid var(--border);overflow-x:auto;white-space:pre;line-height:1.5;">{
   "success": true,
+  "logId": "69bbf8...7bd8466",
+  "cookieNumber": 13,
   "cookie": "NetflixId=...",
   "mobileLoginLink": "https://netflix.com/unsupported?nftoken=...",
   "pcLoginLink": "https://netflix.com/browse?nftoken=...",
@@ -819,6 +821,7 @@
                         <li>Rate limit: <strong>10 request/phút</strong></li>
                         <li>Mỗi lần gọi lấy 1 cookie, trừ 1 quota</li>
                         <li>Quota chung với portal (web CTV)</li>
+                        <li><code>logId</code> là mã định danh cookie, dùng để gọi <code>/api/ctv-api/regenerate-token</code></li>
                         <li>Token link có thời hạn, kiểm tra <code>timeRemaining</code></li>
                         <li>Giữ bí mật API Key, không để lộ ở frontend public</li>
                     </ul>
@@ -1102,6 +1105,15 @@ function renderSingleCard(c, idx) {
             </span>
         </div>
         <div class="cookie-field">
+            <div class="cookie-field-label">Log ID</div>
+            <div class="cookie-field-value">
+                <code title="${escapeHtml(c.logId || '')}">${escapeHtml((c.logId || '').toString().substring(0, 32))}...</code>
+                <button class="copy-btn" onclick="copyText(this, '${escapeAttr((c.logId || '').toString())}')" title="Copy Log ID">
+                    <i data-lucide="copy"></i>
+                </button>
+            </div>
+        </div>
+        <div class="cookie-field">
             <div class="cookie-field-label">Cookie Value</div>
             <div class="cookie-field-value">
                 <code title="${escapeHtml(c.cookieValue)}">${escapeHtml(c.cookieValue.substring(0, 60))}...</code>
@@ -1309,6 +1321,13 @@ function showHistoryDetail(log) {
             <div style="font-size:0.75rem;color:var(--text-muted);margin-bottom:16px;">${date}</div>
 
             ${isOk ? `
+            <div class="cookie-field">
+                <div class="cookie-field-label">Log ID</div>
+                <div class="cookie-field-value">
+                    <code title="${escapeHtml(log._id || '')}">${escapeHtml((log._id || '').toString().substring(0, 32))}...</code>
+                    <button class="copy-btn" onclick="copyText(this, '${escapeAttr((log._id || '').toString())}')" title="Copy Log ID">${svgCopy}</button>
+                </div>
+            </div>
             <div class="cookie-field">
                 <div class="cookie-field-label">Cookie Value</div>
                 <div class="cookie-field-value">
@@ -1521,6 +1540,8 @@ function renderApiKeyState(collaborator) {
 const data = await res.json();
 
 if (data.success) {
+  console.log("Log ID (dùng cho /regenerate-token):", data.logId);
+  console.log("Cookie number:", data.cookieNumber);
   console.log("Mobile:", data.mobileLoginLink);
   console.log("PC:", data.pcLoginLink);
   console.log("Remaining:", data.quota.remaining);
