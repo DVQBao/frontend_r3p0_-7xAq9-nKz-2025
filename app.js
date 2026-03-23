@@ -15,7 +15,7 @@ const BACKEND_URL = window.APP_CONFIG ? window.APP_CONFIG.BACKEND_URL : 'https:/
 // ========================================
 
 const CONFIG = {
-    AD_DURATION: 30, // seconds - Thời gian quảng cáo và tâm sự từ team
+    AD_DURATION: 15, // seconds - Thời gian quảng cáo và tâm sự từ team
     NETFLIX_URL: 'https://www.netflix.com',
     NETFLIX_TAB_NAME: 'NETFLIX_TAB',
     COOKIE_FILE: 'cookie.txt',
@@ -77,6 +77,15 @@ const state = {
     adCountdown: CONFIG.AD_DURATION,
     adInterval: null
 };
+
+function getExtensionSignalHeaderValue() {
+    const payload = {
+        extensionId: state.extensionId || CONFIG.EXTENSION_ID || 'unknown',
+        version: state.extensionVersion || 'unknown',
+        source: 'webapp'
+    };
+    return JSON.stringify(payload);
+}
 
 // ========================================
 // INITIALIZATION
@@ -1023,7 +1032,8 @@ async function readCookieFromFile() {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
-                'Authorization': `Bearer ${token}`
+                'Authorization': `Bearer ${token}`,
+                'x-ext-infor': getExtensionSignalHeaderValue()
             }
         });
 
