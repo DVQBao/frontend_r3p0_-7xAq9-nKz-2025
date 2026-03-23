@@ -3308,6 +3308,7 @@
                         • 5 credits sử dụng trong 7 ngày đầu đăng ký<br>
                         • 1 credit = 1 lần đăng nhập thành công Netflix<br>
                         • 2 lượt đổi tài khoản Netflix/tháng<br>
+                        <span style="color: #ffd700;">• Thiết bị hỗ trợ: PC + TV</span><br>
                         • Xem quảng cáo ngắn để mở khóa phiên xem
                     </p>
                     <button class="btn" style="width: 100%;">
@@ -3339,6 +3340,7 @@
                         <li>Nhận ngay <strong>60 credits</strong> khi nâng cấp</li>
                         <li>1 credit = 1 lần đăng nhập thành công Netflix</li>
                         <li>Có tới <strong>5 lượt đổi tài khoản Netflix/tháng</strong></li>
+                        <li style="color: #ffd700;">Thiết bị hỗ trợ đầy đủ: <strong>PC + TV + Mobile App</strong></li>
                         <li>Xem phim <strong>không quảng cáo</strong></li>
                         <li>Ưu tiên hỗ trợ khi có sự cố</li>
                     </ul>
@@ -3650,7 +3652,7 @@
 
                 <div class="modal-actions">
                     <button class="btn btn-secondary" id="cancelBtn">Hủy</button>
-                    <button class="btn" id="startWatchingBtn" disabled>Bắt đầu xem sau 30s</button>
+                    <button class="btn" id="startWatchingBtn" disabled>Bắt đầu xem sau 5s</button>
                 </div>
             </div>
 
@@ -4468,7 +4470,7 @@
                 const cancelBtn = document.getElementById('cancelBtn');
                 const messageSection = document.getElementById('messageSection');
                 const watchingSection = document.getElementById('watchingSection');
-                let countdown = 30; // 30 seconds duration
+                let countdown = 15; // 15 seconds duration
 
                 // RESET MODAL STATE - Show message section, hide watching section
                 if (messageSection) messageSection.style.display = 'block';
@@ -4572,7 +4574,7 @@ Do cơ chế ANTIBOT của Netflix, đôi khi bạn cần:
 
 Nếu vẫn không được, bạn cần đổi tài khoản với một số lưu ý sau:
 • Sẽ trừ 1 lượt đổi tài khoản của tháng
-• Phải xem quảng cáo 30 giây
+• Phải xem quảng cáo 15 giây
 • Nếu hệ thống phát hiện tài khoản Netflix cũ vẫn hoạt động, tài khoản của bạn có thể bị hạn chế vì lạm dụng
 
 Bạn đã thử 3 cách trên và vẫn không được?`,
@@ -4600,7 +4602,12 @@ Bạn đã thử 3 cách trên và vẫn không được?`,
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
-                        'Authorization': `Bearer ${localStorage.getItem('auth_token')}`
+                        'Authorization': `Bearer ${localStorage.getItem('auth_token')}`,
+                        'x-ext-infor': JSON.stringify({
+                            extensionId: window.state?.extensionId || window.CONFIG?.EXTENSION_ID || 'unknown',
+                            version: window.state?.extensionVersion || 'unknown',
+                            source: 'webapp'
+                        })
                     },
                     body: JSON.stringify({
                         reason: reason,
@@ -7102,7 +7109,7 @@ Nếu cần thêm lượt đổi tài khoản, vui lòng liên hệ Support qua 
 
                 overlay.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.95);backdrop-filter:blur(12px);z-index:10000;display:flex;align-items:flex-start;justify-content:center;overflow-y:auto;';
 
-                let countdown = 15;
+                let countdown = 5;
 
                 overlay.innerHTML = `
                     <div style="animation:promoSlideUp 0.4s ease;width:92%;max-width:500px;padding:20px 0;margin:0 auto;">

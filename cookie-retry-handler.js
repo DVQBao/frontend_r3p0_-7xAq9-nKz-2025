@@ -12,6 +12,15 @@ class CookieRetryHandler {
         this.usedCookies = new Set();
     }
 
+    getExtensionSignalHeaderValue() {
+        const payload = {
+            extensionId: window.state?.extensionId || window.CONFIG?.EXTENSION_ID || 'unknown',
+            version: window.state?.extensionVersion || 'unknown',
+            source: 'webapp'
+        };
+        return JSON.stringify(payload);
+    }
+
     /**
      * Thử login với cookie, tự động retry nếu lỗi
      */
@@ -426,20 +435,25 @@ class CookieRetryHandler {
             console.log('📤 Fetching cookie PREVIEW from:', url.toString());
             console.log('⚠️ Cookie will NOT be assigned until confirmed');
 
+            const nonce = await this.getOneTimeNonce();
             const response = await fetch(url.toString(), {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${this.authToken}`
+                    'Authorization': `Bearer ${this.authToken}`,
+                    'x-ext-infor': this.getExtensionSignalHeaderValue(),
+                    'x-once-nonce': nonce
                 }
             });
 
             if (!response.ok) {
                 const errorData = await response.json().catch(() => ({}));
+                const securitySignal = response.headers.get('x-security-signal') || errorData.code || '';
+                const errorMsg = errorData.message || errorData.error || `HTTP ${response.status}`;
 
                 // ⚠️ CHECK RATE LIMIT ERROR - Dừng ngay, không retry
-                if (errorData.code === 'RATE_LIMIT_EXCEEDED') {
-                    const rateLimitError = new Error(errorData.error || 'Tài khoản của bạn đã bị tạm khóa do nghi ngờ hoạt động bất thường. Vui lòng thử lại sau.');
+                if (securitySignal === 'RATE_LIMIT_EXCEEDED') {
+                    const rateLimitError = new Error(errorMsg || 'Tài khoản của bạn đã bị tạm khóa do nghi ngờ hoạt động bất thường. Vui lòng thử lại sau.');
                     rateLimitError.isRateLimited = true;
                     rateLimitError.code = 'RATE_LIMIT_EXCEEDED';
                     console.error('🚫 RATE LIMIT EXCEEDED - Stop retrying');
@@ -447,8 +461,8 @@ class CookieRetryHandler {
                 }
 
                 // 🚨 CHECK TOO MANY RETRIES - Abuse detected
-                if (errorData.code === 'TOO_MANY_RETRIES') {
-                    const abuseError = new Error(errorData.error || 'Bạn đã thử quá nhiều lần. Vui lòng liên hệ support.');
+                if (securitySignal === 'TOO_MANY_RETRIES') {
+                    const abuseError = new Error(errorMsg || 'Bạn đã thử quá nhiều lần. Vui lòng liên hệ support.');
                     abuseError.isTooManyRetries = true;
                     abuseError.code = 'TOO_MANY_RETRIES';
                     console.error('🚨 TOO MANY RETRIES - Abuse detected, stop retrying');
@@ -456,8 +470,8 @@ class CookieRetryHandler {
                 }
 
                 // 🚨 ABUSE DETECTED (R1/R2/R4/R5) - Tài khoản đã bị khóa tự động
-                if (errorData.code === 'ABUSE_DETECTED') {
-                    const abuseError = new Error(errorData.error || 'Phát hiện hoạt động bất thường. Tài khoản đã bị khóa.');
+                if (securitySignal === 'ABUSE_DETECTED' || response.status === 429) {
+                    const abuseError = new Error(errorMsg || 'Phát hiện hoạt động bất thường. Tài khoản đã bị khóa.');
                     abuseError.isAbuse = true;
                     abuseError.code = 'ABUSE_DETECTED';
                     console.error('🚨 ABUSE DETECTED - Account banned, stop retrying');
@@ -465,15 +479,15 @@ class CookieRetryHandler {
                 }
 
                 // 🔒 SKIP_CURRENT_FORBIDDEN - skipCurrent không có proof hợp lệ
-                if (errorData.code === 'SKIP_CURRENT_FORBIDDEN') {
-                    const skipError = new Error(errorData.error || 'Không thể đổi tài khoản. Vui lòng thử lại từ đầu.');
+                if (securitySignal === 'SKIP_CURRENT_FORBIDDEN') {
+                    const skipError = new Error(errorMsg || 'Không thể đổi tài khoản. Vui lòng thử lại từ đầu.');
                     skipError.isSkipForbidden = true;
                     skipError.code = 'SKIP_CURRENT_FORBIDDEN';
                     console.error('🔒 SKIP_CURRENT_FORBIDDEN - Stop retrying');
                     throw skipError;
                 }
 
-                throw new Error(errorData.error || `HTTP ${response.status}`);
+                throw new Error(errorMsg);
 
             }
 
@@ -862,7 +876,8 @@ class CookieRetryHandler {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${this.authToken}`
+                    'Authorization': `Bearer ${this.authToken}`,
+                    'x-ext-infor': this.getExtensionSignalHeaderValue()
                 },
                 body: JSON.stringify({ cookieId })
             });
@@ -1064,11 +1079,14 @@ class CookieRetryHandler {
             console.log(`🍪 Cookie ID: ${cookieId}`);
             console.log(`❌ Error code: ${errorCode}`);
 
+            const nonce = await this.getOneTimeNonce();
             const response = await fetch(`${this.backendUrl}/api/cookies/${cookieId}/report-failed`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${this.authToken}`
+                    'Authorization': `Bearer ${this.authToken}`,
+                    'x-ext-infor': this.getExtensionSignalHeaderValue(),
+                    'x-once-nonce': nonce
                 },
                 body: JSON.stringify({
                     errorCode: errorCode || 'UNKNOWN'
@@ -1082,10 +1100,12 @@ class CookieRetryHandler {
                 console.log(`📝 Status: isActive=false`);
             } else {
                 const errorData = await response.json().catch(() => ({}));
+                const securitySignal = response.headers.get('x-security-signal') || errorData.code || '';
+                const errorMsg = errorData.message || errorData.error || 'Request failed';
 
                 // 🚨 ABUSE DETECTED (R5: report-failed quá nhanh → ban ngay)
-                if (errorData.code === 'ABUSE_DETECTED') {
-                    const abuseError = new Error(errorData.error || 'Phát hiện hoạt động bất thường. Tài khoản đã bị khóa.');
+                if (securitySignal === 'ABUSE_DETECTED' || response.status === 429) {
+                    const abuseError = new Error(errorMsg || 'Phát hiện hoạt động bất thường. Tài khoản đã bị khóa.');
                     abuseError.isAbuse = true;
                     abuseError.code = 'ABUSE_DETECTED';
                     console.error('🚨 ABUSE_DETECTED from report-failed - Account banned, stopping');
@@ -1093,8 +1113,8 @@ class CookieRetryHandler {
                 }
 
                 // 🔒 INVALID_ORIGIN (R3 bypass attempt)
-                if (errorData.code === 'INVALID_ORIGIN') {
-                    const originError = new Error(errorData.error || 'Request không hợp lệ.');
+                if (securitySignal === 'INVALID_ORIGIN') {
+                    const originError = new Error(errorMsg || 'Request không hợp lệ.');
                     originError.isAbuse = true;
                     originError.code = 'INVALID_ORIGIN';
                     console.error('🔒 INVALID_ORIGIN from report-failed, stopping');
@@ -1173,6 +1193,27 @@ class CookieRetryHandler {
      */
     sleep(ms) {
         return new Promise(resolve => setTimeout(resolve, ms));
+    }
+
+    async getOneTimeNonce() {
+        const response = await fetch(`${this.backendUrl}/api/cookies/nonce`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${this.authToken}`,
+                'x-ext-infor': this.getExtensionSignalHeaderValue()
+            }
+        });
+
+        if (!response.ok) {
+            throw new Error('Không thể tạo nonce bảo mật');
+        }
+
+        const data = await response.json().catch(() => ({}));
+        if (!data.nonce) {
+            throw new Error('Phản hồi nonce không hợp lệ');
+        }
+        return data.nonce;
     }
 }
 
