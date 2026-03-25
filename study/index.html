@@ -1,0 +1,823 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Dịch Vụ Định Dạng Văn Bản — Tiệm Bánh Netflix</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Be+Vietnam+Pro:wght@300;400;500;600&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --cream: #faf8f4;
+    --ink: #1a1710;
+    --ink-light: #4a4740;
+    --ink-muted: #8a8680;
+    --accent: #c8622a;
+    --accent-soft: #f0e6dd;
+    --accent-light: #fdf5ef;
+    --line: #e8e4dc;
+    --white: #ffffff;
+    --shadow-sm: 0 2px 8px rgba(26,23,16,0.06);
+    --shadow-md: 0 8px 32px rgba(26,23,16,0.10);
+    --shadow-lg: 0 20px 60px rgba(26,23,16,0.14);
+    --radius: 12px;
+    --radius-lg: 20px;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'Be Vietnam Pro', sans-serif;
+    background: var(--cream);
+    color: var(--ink);
+    line-height: 1.7;
+    font-size: 16px;
+    overflow-x: hidden;
+  }
+
+  /* ─── NAV ─────────────────────────────── */
+  nav {
+    position: sticky; top: 0; z-index: 100;
+    background: rgba(250,248,244,0.90);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--line);
+    padding: 0 clamp(20px, 5vw, 80px);
+    height: 64px;
+    display: flex; align-items: center; justify-content: space-between;
+  }
+
+  .nav-brand {
+    display: flex; align-items: center; gap: 10px;
+    text-decoration: none; color: var(--ink);
+  }
+  .nav-brand-icon {
+    width: 36px; height: 36px;
+    background: var(--accent);
+    border-radius: 8px;
+    display: grid; place-items: center;
+    flex-shrink: 0;
+  }
+  .nav-brand-text { font-family: 'Playfair Display', serif; font-size: 1.05rem; font-weight: 700; }
+  .nav-brand-sub { font-size: 0.72rem; color: var(--ink-muted); font-weight: 400; letter-spacing: 0.06em; text-transform: uppercase; }
+
+  .nav-links { display: flex; align-items: center; gap: 8px; }
+  .nav-links a {
+    text-decoration: none; color: var(--ink-light); font-size: 0.88rem; font-weight: 500;
+    padding: 6px 14px; border-radius: 8px; transition: all .2s;
+  }
+  .nav-links a:hover { background: var(--accent-soft); color: var(--accent); }
+  .nav-cta {
+    background: var(--accent) !important; color: var(--white) !important;
+    padding: 8px 18px !important; border-radius: 8px !important;
+  }
+  .nav-cta:hover { background: #b8541e !important; }
+
+  .hamburger { display: none; cursor: pointer; padding: 6px; border: none; background: transparent; }
+
+  /* ─── HERO ─────────────────────────────── */
+  .hero {
+    padding: clamp(60px, 10vw, 120px) clamp(20px, 5vw, 80px) clamp(60px, 8vw, 100px);
+    display: grid;
+    grid-template-columns: minmax(0, 1.12fr) minmax(0, 0.88fr);
+    gap: clamp(40px, 6vw, 80px);
+    align-items: center;
+    max-width: 1200px; margin: 0 auto;
+  }
+
+  .hero-eyebrow {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: var(--accent-soft); color: var(--accent);
+    font-size: 0.78rem; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase;
+    padding: 6px 14px; border-radius: 999px; margin-bottom: 20px;
+  }
+  .hero-eyebrow-dot { width: 6px; height: 6px; background: var(--accent); border-radius: 50%; animation: pulse 2s infinite; }
+  @keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:.5;transform:scale(1.3)} }
+
+  .hero-title {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(2.2rem, 5vw, 3.6rem);
+    font-weight: 700; line-height: 1.18;
+    color: var(--ink); margin-bottom: 20px;
+    text-align: justify; text-justify: inter-word;
+  }
+  .hero-title em { font-style: normal; color: var(--accent); }
+
+  .hero-desc { color: var(--ink-light); font-size: 1.02rem; margin-bottom: 32px; max-width: 480px; text-align: justify; text-justify: inter-word; }
+
+  .hero-actions { display: flex; gap: 12px; flex-wrap: wrap; }
+
+  .btn-primary {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: var(--accent); color: var(--white);
+    font-family: 'Be Vietnam Pro', sans-serif; font-size: 0.92rem; font-weight: 600;
+    padding: 13px 24px; border-radius: var(--radius); border: none;
+    cursor: pointer; text-decoration: none; transition: all .2s;
+    box-shadow: 0 4px 16px rgba(200,98,42,0.28);
+  }
+  .btn-primary:hover { background: #b8541e; transform: translateY(-1px); box-shadow: 0 6px 24px rgba(200,98,42,0.36); }
+
+  .btn-secondary {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: transparent; color: var(--ink);
+    font-family: 'Be Vietnam Pro', sans-serif; font-size: 0.92rem; font-weight: 500;
+    padding: 13px 24px; border-radius: var(--radius);
+    border: 1.5px solid var(--line); cursor: pointer; text-decoration: none; transition: all .2s;
+  }
+  .btn-secondary:hover { border-color: var(--accent); color: var(--accent); background: var(--accent-light); }
+
+  .hero-image-wrap {
+    position: relative;
+    aspect-ratio: 4/3;
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    box-shadow: var(--shadow-lg);
+    background: linear-gradient(160deg, #f7f3ec 0%, #f1ebe2 100%);
+  }
+  .hero-image-wrap img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .paper-stack {
+    position: absolute;
+    inset: 18px 16px 16px 16px;
+  }
+  .paper-sheet {
+    position: absolute;
+    width: 56%;
+    height: 86%;
+    top: 6%;
+    background: #fff;
+    border: 1px solid #e7e2d9;
+    border-radius: 4px;
+    box-shadow: 0 12px 28px rgba(26, 23, 16, 0.18);
+    overflow: hidden;
+  }
+  .paper-sheet::before {
+    content: "";
+    position: absolute;
+    left: 12%;
+    right: 12%;
+    top: 22%;
+    height: 1px;
+    background: #d9d4cb;
+    box-shadow: 0 24px 0 #d9d4cb, 0 48px 0 #d9d4cb, 0 72px 0 #d9d4cb, 0 96px 0 #d9d4cb;
+  }
+  .paper-sheet::after {
+    content: "";
+    position: absolute;
+    left: 12%;
+    right: 28%;
+    top: 15%;
+    height: 6px;
+    border-radius: 999px;
+    background: #ebe7de;
+  }
+  .paper-sheet.back {
+    left: 30%;
+    transform: rotate(6deg);
+  }
+  .paper-sheet.mid {
+    left: 20%;
+    transform: rotate(-2.5deg);
+  }
+  .paper-sheet.front {
+    left: 43%;
+    transform: rotate(4deg);
+  }
+  .paper-ribbon {
+    position: absolute;
+    top: 7%;
+    left: 21%;
+    width: 120px;
+    height: 30px;
+    background: #8dc8df;
+    color: #214654;
+    font-size: 0.6rem;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transform: rotate(-37deg);
+    box-shadow: 0 4px 12px rgba(27, 53, 64, 0.2);
+  }
+  .hero-image-badge {
+    position: absolute; bottom: 16px; left: 16px;
+    background: var(--white); border-radius: var(--radius);
+    padding: 10px 16px; box-shadow: var(--shadow-md);
+    display: flex; align-items: center; gap: 10px;
+    font-size: 0.82rem;
+  }
+  .badge-icon { width: 32px; height: 32px; background: var(--accent-soft); border-radius: 8px; display: grid; place-items: center; }
+  .badge-label { font-weight: 600; color: var(--ink); font-size: 0.85rem; }
+  .badge-sub { color: var(--ink-muted); font-size: 0.75rem; }
+
+  /* ─── SECTION BASE ─────────────────────── */
+  section { padding: clamp(60px, 8vw, 100px) clamp(20px, 5vw, 80px); }
+  .container { max-width: 1200px; margin: 0 auto; }
+  .section-label {
+    font-size: 0.76rem; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase;
+    color: var(--accent); margin-bottom: 12px;
+  }
+  .section-title {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(1.8rem, 3.5vw, 2.8rem);
+    font-weight: 700; line-height: 1.22; color: var(--ink); margin-bottom: 16px;
+  }
+  .section-desc {
+    color: var(--ink-light); font-size: 1rem; max-width: 560px;
+    text-align: justify; text-justify: inter-word;
+  }
+
+  /* ─── PAIN POINTS / WHY ─────────────────── */
+  .why-section { background: var(--white); }
+  .why-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 24px; margin-top: 48px;
+  }
+  .why-card {
+    background: var(--cream);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-lg); padding: 28px;
+    transition: all .25s;
+  }
+  .why-card:hover { border-color: var(--accent); box-shadow: var(--shadow-md); transform: translateY(-3px); }
+  .why-icon { width: 48px; height: 48px; background: var(--accent-soft); border-radius: 12px; display: grid; place-items: center; margin-bottom: 16px; }
+  .why-card h3 { font-size: 1rem; font-weight: 600; margin-bottom: 8px; }
+  .why-card p {
+    font-size: 0.88rem; color: var(--ink-light); line-height: 1.6;
+    text-align: justify; text-justify: inter-word;
+  }
+
+  /* ─── SERVICES ─────────────────────────── */
+  .services-section { background: var(--cream); }
+  .services-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 24px; margin-top: 48px;
+  }
+  .service-card {
+    background: var(--white);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-lg); padding: 32px;
+    transition: all .25s; position: relative; overflow: hidden;
+  }
+  .service-card::before {
+    content: ''; position: absolute; top: 0; left: 0; right: 0;
+    height: 3px; background: var(--accent); transform: scaleX(0); transform-origin: left;
+    transition: transform .3s;
+  }
+  .service-card:hover::before { transform: scaleX(1); }
+  .service-card:hover { box-shadow: var(--shadow-md); transform: translateY(-3px); }
+  .service-tag {
+    display: inline-block;
+    background: var(--accent-soft); color: var(--accent);
+    font-size: 0.72rem; font-weight: 600; letter-spacing: 0.06em;
+    padding: 4px 10px; border-radius: 6px; margin-bottom: 16px;
+    text-transform: uppercase;
+  }
+  .service-card h3 { font-family: 'Playfair Display', serif; font-size: 1.3rem; font-weight: 700; margin-bottom: 10px; }
+  .service-card p {
+    font-size: 0.9rem; color: var(--ink-light); margin-bottom: 20px; line-height: 1.65;
+    text-align: justify; text-justify: inter-word;
+  }
+  .service-features { list-style: none; display: flex; flex-direction: column; gap: 8px; }
+  .service-features li {
+    font-size: 0.875rem; color: var(--ink-light);
+    display: flex; align-items: flex-start; gap: 8px;
+    text-align: justify; text-justify: inter-word;
+  }
+  .service-features li.price-highlight {
+    color: var(--accent);
+    font-weight: 600;
+  }
+  .service-features li::before {
+    content: ''; flex-shrink: 0;
+    width: 16px; height: 16px; margin-top: 2px;
+    background: var(--accent-soft); border-radius: 50%;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 16 16' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M3 8l3 3 7-7' stroke='%23c8622a' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+    background-repeat: no-repeat; background-position: center;
+  }
+
+  /* ─── PRICING ──────────────────────────── */
+  .pricing-section { background: var(--white); }
+  .pricing-wrap {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 48px; margin-top: 48px; align-items: start;
+  }
+  .pricing-note {
+    background: var(--accent-soft);
+    border-left: 3px solid var(--accent);
+    border-radius: 0 var(--radius) var(--radius) 0;
+    padding: 20px 24px; margin-bottom: 24px;
+  }
+  .pricing-note p { font-size: 0.9rem; color: var(--ink-light); }
+  .pricing-note strong { color: var(--accent); }
+  .price-table { width: 100%; border-collapse: collapse; }
+  .price-table th {
+    text-align: left; font-size: 0.78rem; font-weight: 600;
+    letter-spacing: 0.06em; text-transform: uppercase;
+    color: var(--ink-muted); padding: 10px 14px;
+    border-bottom: 2px solid var(--line);
+  }
+  .price-table td { padding: 14px; border-bottom: 1px solid var(--line); font-size: 0.9rem; }
+  .price-table tr:last-child td { border-bottom: none; }
+  .price-table tr:hover td { background: var(--cream); }
+  .price-tag { font-weight: 600; color: var(--accent); }
+  .price-time { color: var(--ink-muted); font-size: 0.82rem; }
+
+  .pricing-info { display: flex; flex-direction: column; gap: 16px; }
+  .info-card {
+    background: var(--cream); border: 1px solid var(--line);
+    border-radius: var(--radius); padding: 20px;
+    display: flex; gap: 14px; align-items: flex-start;
+  }
+  .info-icon { width: 40px; height: 40px; background: var(--white); border: 1px solid var(--line); border-radius: 10px; display: grid; place-items: center; flex-shrink: 0; }
+  .info-card h4 { font-size: 0.9rem; font-weight: 600; margin-bottom: 4px; }
+  .info-card p { font-size: 0.82rem; color: var(--ink-light); line-height: 1.55; }
+
+  /* ─── SAMPLE DOCUMENT ──────────────────── */
+  .sample-section { background: var(--white); }
+  .sample-wrap {
+    display: grid;
+    grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr);
+    gap: clamp(32px, 5vw, 64px);
+    align-items: center;
+    margin-top: 48px;
+  }
+  .sample-desc h3 { font-family: 'Playfair Display', serif; font-size: 1.5rem; font-weight: 700; margin-bottom: 12px; }
+  .sample-desc p { font-size: 0.92rem; color: var(--ink-light); margin-bottom: 24px; line-height: 1.7; }
+  .sample-meta { display: flex; gap: 12px; flex-wrap: wrap; margin-bottom: 24px; }
+  .services-download {
+    margin-top: 28px;
+    display: flex;
+    justify-content: center;
+  }
+  .sample-chip {
+    display: flex; align-items: center; gap: 6px;
+    background: var(--white); border: 1px solid var(--line);
+    padding: 6px 12px; border-radius: 8px;
+    font-size: 0.8rem; color: var(--ink-light);
+  }
+  .sample-preview {
+    background: var(--white);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-md);
+    overflow: hidden;
+    aspect-ratio: 5/4;
+    max-width: 520px;
+    width: 100%;
+    justify-self: end;
+    display: flex; flex-direction: column;
+  }
+  .preview-bar {
+    background: #f0ece4; border-bottom: 1px solid var(--line);
+    padding: 10px 16px;
+    display: flex; align-items: center; gap: 6px;
+  }
+  .preview-dot { width: 10px; height: 10px; border-radius: 50%; }
+  .preview-label { font-size: 0.75rem; color: var(--ink-muted); margin-left: 6px; font-weight: 500; }
+  .preview-img {
+    flex: 1; overflow: hidden;
+    background: linear-gradient(180deg, #faf8f4 0%, #f4f0e9 100%);
+    display: grid; place-items: center;
+    padding: 24px;
+  }
+  .preview-img img { width: 100%; height: 100%; object-fit: cover; object-position: top; }
+  .doc-preview {
+    width: 86%;
+    height: 86%;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .doc-shadow-sheet {
+    position: absolute;
+    width: 62%;
+    height: 74%;
+    border-radius: 8px;
+    border: 1px solid #e8e3da;
+    background: #f4efe7;
+    top: 13%;
+    left: 19%;
+    transform: rotate(-3deg);
+  }
+  .doc-shadow-sheet.back {
+    top: 10%;
+    left: 22%;
+    transform: rotate(2.5deg);
+  }
+  .doc-page {
+    position: relative;
+    width: 64%;
+    height: 78%;
+    background: #fff;
+    border-radius: 8px;
+    border: 1px solid #e8e3da;
+    box-shadow: 0 14px 30px rgba(26, 23, 16, 0.15);
+    padding: 14px 14px 12px;
+    overflow: hidden;
+  }
+  .doc-clip {
+    position: absolute;
+    top: 10px;
+    right: 14px;
+    width: 54px;
+    height: 16px;
+    border-radius: 999px;
+    background: #8dc8df;
+    opacity: 0.9;
+  }
+  .doc-line {
+    height: 6px;
+    border-radius: 999px;
+    background: #ece7de;
+    margin-bottom: 7px;
+  }
+  .doc-line.title { width: 70%; height: 8px; background: #e0d7cb; margin-bottom: 12px; }
+  .doc-line.w-90 { width: 90%; }
+  .doc-line.w-82 { width: 82%; }
+  .doc-line.w-75 { width: 75%; }
+  .doc-line.w-68 { width: 68%; }
+  .doc-line.w-60 { width: 60%; }
+  .doc-divider {
+    height: 1px;
+    background: #efeae2;
+    margin: 10px 0;
+  }
+  .doc-two-col {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+    margin-top: 3px;
+  }
+  .doc-box {
+    border: 1px solid #efeae2;
+    border-radius: 6px;
+    padding: 7px;
+    background: #fdfbf8;
+  }
+  .doc-box .doc-line { height: 5px; margin-bottom: 5px; }
+  .doc-box .doc-line:last-child { margin-bottom: 0; }
+  .doc-stamp {
+    position: absolute;
+    right: 10px;
+    bottom: 12px;
+    border: 1.5px dashed #d7c9b8;
+    color: #b7875f;
+    border-radius: 999px;
+    padding: 3px 10px;
+    font-size: 0.62rem;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    background: #fffaf4;
+  }
+
+  /* ─── CONTACT ──────────────────────────── */
+  .contact-section { background: var(--white); border-top: 1px solid var(--line); }
+  .contact-section .section-label { color: var(--accent); }
+  .contact-section .section-title { color: var(--ink); text-align: center; }
+  .contact-section .section-desc { color: var(--muted); text-align: center; max-width: 760px; margin: 0 auto; }
+  .contact-section .divider { margin: 16px auto 0; background: var(--accent); }
+  .contact-grid {
+    display: flex;
+    justify-content: center;
+    margin-top: 48px;
+    max-width: 100%;
+  }
+  .contact-channels {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(200px, 1fr));
+    gap: 16px;
+    width: min(100%, 920px);
+  }
+  .contact-btn {
+    display: flex; align-items: center; gap: 16px;
+    background: var(--white); border: 1px solid var(--line);
+    border-radius: var(--radius); padding: 18px 22px;
+    text-decoration: none; color: var(--ink);
+    font-size: 0.92rem; font-weight: 500;
+    transition: all .2s; cursor: pointer;
+  }
+  .contact-btn:hover { background: #fffdf9; border-color: var(--accent); transform: translateY(-2px); box-shadow: 0 10px 24px rgba(200,98,42,0.12); }
+  .contact-btn-icon {
+    width: 44px; height: 44px; border-radius: 10px;
+    display: grid; place-items: center; flex-shrink: 0;
+    background: var(--accent-soft);
+  }
+  .contact-btn-label { font-size: 0.78rem; color: var(--muted); font-weight: 400; }
+  .contact-btn-value { font-size: 0.96rem; font-weight: 700; color: var(--ink); }
+
+
+  /* ─── FOOTER ───────────────────────────── */
+  footer {
+    background: #110f0c;
+    padding: 28px clamp(20px, 5vw, 80px);
+    display: flex; align-items: center; justify-content: space-between; flex-wrap: gap;
+    gap: 16px; flex-wrap: wrap;
+  }
+  footer p { font-size: 0.82rem; color: #5a5650; }
+  footer a { color: #7a7570; text-decoration: none; font-size: 0.82rem; }
+  footer a:hover { color: var(--accent); }
+
+  /* ─── FLOATING CTA ─────────────────────── */
+  .fab {
+    position: fixed; bottom: 24px; right: 24px; z-index: 200;
+    background: var(--accent); color: var(--white);
+    width: 54px; height: 54px; border-radius: 50%;
+    display: grid; place-items: center;
+    box-shadow: 0 6px 24px rgba(200,98,42,0.45);
+    text-decoration: none; transition: all .2s;
+  }
+  .fab:hover { background: #b8541e; transform: scale(1.08); }
+
+  /* ─── DIVIDER ──────────────────────────── */
+  .divider { width: 48px; height: 3px; background: var(--accent); border-radius: 2px; margin: 16px 0 0; }
+
+  /* ─── RESPONSIVE ───────────────────────── */
+  @media (max-width: 900px) {
+    .hero, .pricing-wrap, .sample-wrap { grid-template-columns: 1fr; }
+    .contact-channels { grid-template-columns: 1fr; max-width: 520px; }
+    .hero-image-wrap { max-width: 480px; }
+    .paper-sheet { width: 62%; }
+    .paper-sheet.back { left: 24%; }
+    .paper-sheet.mid { left: 14%; }
+    .paper-sheet.front { left: 34%; }
+    .paper-ribbon { left: 16%; }
+    .nav-links { display: none; }
+    .nav-links.open { display: flex; flex-direction: column; position: absolute; top: 64px; left: 0; right: 0; background: var(--cream); border-bottom: 1px solid var(--line); padding: 16px 20px; gap: 4px; }
+    .hamburger { display: flex; }
+    .sample-preview {
+      max-width: 560px;
+      justify-self: start;
+      aspect-ratio: 4/3;
+    }
+  }
+
+  @media (max-width: 600px) {
+    .hero-actions { flex-direction: column; }
+    .hero-actions a, .hero-actions button { width: 100%; justify-content: center; }
+    .contact-btn { padding: 14px 16px; }
+  }
+
+  /* ─── ANIMATION ENTRANCE ───────────────── */
+  .fade-up { opacity: 0; transform: translateY(24px); transition: opacity .5s ease, transform .5s ease; }
+  .fade-up.visible { opacity: 1; transform: translateY(0); }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a class="nav-brand" href="#">
+    <div class="nav-brand-icon">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <rect x="4" y="3" width="16" height="18" rx="2" stroke="white" stroke-width="1.8"/>
+        <line x1="8" y1="8" x2="16" y2="8" stroke="white" stroke-width="1.6" stroke-linecap="round"/>
+        <line x1="8" y1="12" x2="16" y2="12" stroke="white" stroke-width="1.6" stroke-linecap="round"/>
+        <line x1="8" y1="16" x2="13" y2="16" stroke="white" stroke-width="1.6" stroke-linecap="round"/>
+      </svg>
+    </div>
+    <div>
+      <div class="nav-brand-text">Tiệm Bánh Netflix</div>
+      <div class="nav-brand-sub">GÓC HỌC TẬP</div>
+    </div>
+  </a>
+  <div class="nav-links" id="navLinks">
+    <a href="#why">Này là cái gì zậy hai?</a>
+    <a href="#services">Giá cả sao?</a>
+    <a href="../sample.docx" download="sample.docx">Có mẫu đó hôn?</a>
+    <a href="#contact" class="nav-cta">Liên hệ ngay</a>
+  </div>
+  <button class="hamburger" id="hamburger" aria-label="Menu" onclick="document.getElementById('navLinks').classList.toggle('open')">
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
+      <line x1="3" y1="6" x2="21" y2="6" stroke="#1a1710" stroke-width="2" stroke-linecap="round"/>
+      <line x1="3" y1="12" x2="21" y2="12" stroke="#1a1710" stroke-width="2" stroke-linecap="round"/>
+      <line x1="3" y1="18" x2="21" y2="18" stroke="#1a1710" stroke-width="2" stroke-linecap="round"/>
+    </svg>
+  </button>
+</nav>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-text fade-up">
+    <div class="hero-eyebrow">
+      <span class="hero-eyebrow-dot"></span>
+      Dịch vụ hỗ trợ định dạng văn bản
+    </div>
+    <h1 class="hero-title">
+      Deadline dí sát nút?<br/>
+      <em>Để đó Tiệm lo cho!</em>
+    </h1>
+    <p class="hero-desc">
+      Bài tập, báo cáo, tiểu luận chưa kịp định dạng để chạy deadline? Đừng looooo — Chủ Tiệm Bánh đây và mình sẽ trực tiếp chỉnh sửa, căn lề, đánh số trang, tạo mục lục... một cách thật hoàn chỉnh theo yêu cầu của các bạn. Trong thời gian đó, bạn có thể nghỉ ngơi, nạp lại năng lượng, và tiếp tục Netflix and Chill.
+    </p>
+    <div class="hero-actions">
+      <a href="#contact" class="btn-primary">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 9.81 19.79 19.79 0 01.0 1.2 2 2 0 012 0h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.09 7.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        Đặt dịch vụ ngay
+      </a>
+      <a href="../sample.docx" class="btn-secondary" download="sample.docx">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z" stroke="#1a1710" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><polyline points="14 2 14 8 20 8" stroke="#1a1710" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><line x1="16" y1="13" x2="8" y2="13" stroke="#1a1710" stroke-width="1.6" stroke-linecap="round"/><line x1="16" y1="17" x2="8" y2="17" stroke="#1a1710" stroke-width="1.6" stroke-linecap="round"/><polyline points="10 9 9 9 8 9" stroke="#1a1710" stroke-width="1.6" stroke-linecap="round"/></svg>
+        Tải sản phẩm mẫu
+      </a>
+    </div>
+  </div>
+  <div class="hero-image-wrap fade-up" style="transition-delay: .15s">
+    <div class="paper-stack" aria-hidden="true">
+      <div class="paper-sheet back"></div>
+      <div class="paper-sheet mid"></div>
+      <div class="paper-sheet front"></div>
+      <div class="paper-ribbon">Đã định dạng</div>
+    </div>
+    <div class="hero-image-badge">
+      <div class="badge-icon">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M12 22C6.477 22 2 17.523 2 12S6.477 2 12 2s10 4.477 10 10-4.477 10-10 10z" stroke="#c8622a" stroke-width="1.8"/><polyline points="12 6 12 12 16 14" stroke="#c8622a" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </div>
+      <div>
+        <div class="badge-label">Hoàn trả sản phẩm nhanh</div>
+        <div class="badge-sub">Từ 1 giờ đến 1 ngày</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- WHY -->
+<section class="why-section" id="why">
+  <div class="container">
+    <div class="fade-up">
+      <div class="section-label">Tại sao cần dịch vụ này?</div>
+      <div class="section-title">Khi deadline ập đến cùng lúc</div>
+      <p class="section-desc">Bạn không thiếu năng lực, chỉ đang thiếu thời gian để vừa hoàn thiện nội dung vừa chỉn chu hình thức.</p>
+      <div class="divider"></div>
+    </div>
+    <div class="why-grid">
+      <div class="why-card fade-up">
+        <div class="why-icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="10" stroke="#c8622a" stroke-width="1.8"/><polyline points="12 6 12 12 16 14" stroke="#c8622a" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+        <h3>Deadline dồn đống</h3>
+        <p>3-4 môn nộp cùng tuần, chưa kịp viết xong nội dung lại lo cả hình thức — áp lực gấp đôi.</p>
+      </div>
+      <div class="why-card fade-up" style="transition-delay:.08s">
+        <div class="why-icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M9 19V6l12-3v13" stroke="#c8622a" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><circle cx="6" cy="19" r="3" stroke="#c8622a" stroke-width="1.8"/><circle cx="21" cy="16" r="3" stroke="#c8622a" stroke-width="1.8"/></svg>
+        </div>
+        <h3>Định dạng Word rối mắt</h3>
+        <p>Căn lề sai, font chữ không đồng nhất, mục lục tự động không chạy — mất cả tiếng để fix.</p>
+      </div>
+      <div class="why-card fade-up" style="transition-delay:.16s">
+        <div class="why-icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2" stroke="#c8622a" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><circle cx="9" cy="7" r="4" stroke="#c8622a" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75" stroke="#c8622a" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+        <h3>Chủ Tiệm ra tayyyy</h3>
+        <p>Không qua trung gian, không tự động hóa — từng tài liệu được xử lý tỉ mỉ theo yêu cầu của bạn.</p>
+      </div>
+      <div class="why-card fade-up" style="transition-delay:.24s">
+        <div class="why-icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><polyline points="20 6 9 17 4 12" stroke="#c8622a" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+        <h3>Bạn cần nghỉ ngơi</h3>
+        <p>Giao phần định dạng cho Tiệm, bạn tập trung vào nội dung, ôn thi, hoặc đơn giản là... ngủ bù.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SERVICES -->
+<section class="services-section" id="services">
+  <div class="container">
+    <div class="fade-up">
+      <div class="section-label">Gói dịch vụ & bảng giá</div>
+      <div class="section-title">Rõ ràng, không phát sinh</div>
+      <p class="section-desc">Giữ nguyên quy trình theo từng mức độ tài liệu, báo giá theo độ phức tạp và thời gian trả file.</p>
+      <div class="divider"></div>
+    </div>
+    <div class="services-grid">
+      <div class="service-card fade-up">
+        <div class="service-tag">Mức cơ bản</div>
+        <h3>Văn bản cơ bản</h3>
+        <p>Chỉnh font, căn lề, giãn dòng, mục lục đơn giản cho các tài liệu ngắn.</p>
+        <ul class="service-features">
+          <li class="price-highlight">Giá tham khảo: 3.000 - 5.000đ / trang</li>
+          <li>Thời gian trả: tùy độ dài tài liệu</li>
+          <li>Phù hợp bài tập, báo cáo ngắn</li>
+          <li>Chuẩn hóa nhanh phần hình thức văn bản</li>
+        </ul>
+      </div>
+      <div class="service-card fade-up" style="transition-delay:.1s">
+        <div class="service-tag">Mức nâng cao</div>
+        <h3>Văn bản có bảng biểu, hình ảnh</h3>
+        <p>Tài liệu có bảng, hình, header/footer, đánh số mục chuẩn theo yêu cầu cụ thể.</p>
+        <ul class="service-features">
+          <li class="price-highlight">Giá tham khảo: 5.000 - 10.000đ / trang</li>
+          <li>Thời gian trả: tùy mức độ phức tạp</li>
+          <li>Phù hợp tiểu luận, đồ án nhiều thành phần</li>
+          <li>Tối ưu mục lục, heading, bảng biểu, bố cục</li>
+        </ul>
+      </div>
+      <div class="service-card fade-up" style="transition-delay:.2s">
+        <div class="service-tag">Mức chuyên sâu</div>
+        <h3>Tài liệu khó, nhiều quy chuẩn</h3>
+        <p>Luận văn, hồ sơ thầu, biểu mẫu nhiều section hoặc yêu cầu format theo chuẩn riêng.</p>
+        <ul class="service-features">
+          <li class="price-highlight">Giá tham khảo: liên hệ nhận báo giá</li>
+          <li>Thời gian trả: theo yêu cầu cụ thể</li>
+          <li>Áp dụng chuẩn riêng của các đơn vị</li>
+          <li>Phù hợp tài liệu phức tạp cần xử lý kỹ lưỡng</li>
+        </ul>
+      </div>
+    </div>
+    <div class="services-download fade-up">
+      <a href="../sample.docx" class="btn-primary" download="sample.docx">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><polyline points="7 10 12 15 17 10" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><line x1="12" y1="15" x2="12" y2="3" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        Tải sản phẩm mẫu
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section class="contact-section" id="contact">
+  <div class="container">
+    <div class="fade-up">
+      <div class="section-title">Liên hệ với Tiệm ngayyyy</div>
+      <p class="section-desc">Nhắn tin, gọi điện rồi quăng cái file qua liền cho Tiệm Bánh, còn cưng đứng dậy đi coi phim, nghỉ ngơi, ngủ bù nghe chưa, hai thươnggggg :* </p>
+      <div class="divider"></div>
+    </div>
+    <div class="contact-grid">
+      <div class="contact-channels fade-up">
+        <a href="tel:0393434851" class="contact-btn">
+          <div class="contact-btn-icon">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 9.81 19.79 19.79 0 010 1.2 2 2 0 012 0h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.09 7.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z" stroke="#f0c090" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </div>
+          <div>
+            <div class="contact-btn-label">Hotline</div>
+            <div class="contact-btn-value">039 3434 851</div>
+          </div>
+        </a>
+        <a href="https://zalo.me/0393434851" target="_blank" rel="noopener" class="contact-btn">
+          <div class="contact-btn-icon">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><rect x="2" y="2" width="20" height="20" rx="5" stroke="#f0c090" stroke-width="1.8"/><path d="M7 15V9.5M7 9.5C7 9.5 9.5 9.5 9.5 12C9.5 14.5 7 14.5 7 14.5" stroke="#f0c090" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/><path d="M12 15V9.5L16 15V9.5" stroke="#f0c090" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </div>
+          <div>
+            <div class="contact-btn-label">Nhắn tin ngay</div>
+            <div class="contact-btn-value">Zalo Tiệm Bánh</div>
+          </div>
+        </a>
+        <a href="https://www.facebook.com/tiembanh4k" target="_blank" rel="noopener" class="contact-btn">
+          <div class="contact-btn-icon">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M18 2h-3a5 5 0 00-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 011-1h3z" stroke="#f0c090" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </div>
+          <div>
+            <div class="contact-btn-label">Fanpage</div>
+            <div class="contact-btn-value">Inbox Facebook</div>
+          </div>
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <p>© 2025 Tiệm Bánh Netflix — Tạp hóa tổng hợp, thứ gì cũng cóooo</p>
+  <div style="display:flex; gap:20px; align-items:center;">
+    <a href="tel:0393434851">039 3434 851</a>
+    <a href="https://zalo.me/0393434851" target="_blank">Zalo</a>
+    <a href="https://www.facebook.com/tiembanh4k" target="_blank">Facebook</a>
+  </div>
+</footer>
+
+<!-- FLOATING CTA -->
+<a href="https://zalo.me/0393434851" target="_blank" class="fab" title="Chat Zalo ngay">
+  <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+</a>
+
+<script>
+  // Intersection Observer for fade-up
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); } });
+  }, { threshold: 0.1 });
+  document.querySelectorAll('.fade-up').forEach(el => observer.observe(el));
+
+  // Nav active
+  const sections = document.querySelectorAll('section[id], div.hero');
+  const navLinks = document.querySelectorAll('.nav-links a');
+  window.addEventListener('scroll', () => {
+    let current = '';
+    sections.forEach(s => { if (window.scrollY >= s.offsetTop - 80) current = s.id || ''; });
+    navLinks.forEach(a => {
+      a.style.background = '';
+      if (a.getAttribute('href') === '#' + current) a.style.background = 'var(--accent-soft)';
+    });
+  });
+</script>
+</body>
+</html>

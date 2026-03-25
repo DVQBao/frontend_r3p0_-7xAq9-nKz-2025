@@ -2073,6 +2073,19 @@ function showCelebrationModal(celebrationData, token, user) {
         badgeStar: `<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <path d="M12 17.27 18.18 21 16.54 13.97 22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21 12 17.27Z"/>
         </svg>`,
+        studyBook: `<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/>
+            <path d="M4 4.5A2.5 2.5 0 0 1 6.5 2H20v20H6.5A2.5 2.5 0 0 0 4 19.5z"/>
+        </svg>`,
+        studyTag: `<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M20.59 13.41 10 2.82a2 2 0 0 0-1.41-.59H3v5.59a2 2 0 0 0 .59 1.41l10.59 10.59a2 2 0 0 0 2.82 0l3.99-3.99a2 2 0 0 0 0-2.82z"/>
+            <line x1="7" y1="7" x2="7.01" y2="7"/>
+        </svg>`,
+        studyChat: `<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 15a4 4 0 0 1-4 4H8l-5 3V7a4 4 0 0 1 4-4h10a4 4 0 0 1 4 4z"/>
+            <path d="M8 10h8"/>
+            <path d="M8 14h5"/>
+        </svg>`,
         externalLink: `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <path d="M15 3h6v6"/>
             <path d="M10 14 21 3"/>
@@ -2113,8 +2126,57 @@ function showCelebrationModal(celebrationData, token, user) {
                 <!-- Main Description -->
                 ${mainDescriptionText ? `<p class="celeb-desc">${mainDescriptionText}</p>` : ''}
 
-                <!-- Partner block (Lunakey / Lunasub) -->
-                <div class="celeb-partner-card" id="celebPartnerCard">
+                <!-- Advertisement: Góc học tập landing page (top) -->
+                <div class="celeb-top-cards">
+                    <div class="celeb-grid-info celeb-study-card">
+                        <div class="celeb-info-card" style="background: linear-gradient(135deg, rgba(16,185,129,0.18) 0%, rgba(59,130,246,0.08) 100%); border: 1px solid rgba(16,185,129,0.40);">
+                            <div class="celeb-info-summary-title" style="background: transparent; border: none; padding: 0;">
+                                Góc học tập - Tiệm Bánh Netflix
+                            </div>
+                            <div class="celeb-info-summary-subtitle">Ra mắt dịch vụ hỗ trợ định dạng văn bản, tài liệu... để các bạn có thêm thời gian nghỉ ngơi, thư giãn, Netflix and chill</div>
+
+                            <div class="celeb-info-summary-rows">
+                                <div class="celeb-info-summary-row">
+                                    <span class="celeb-info-icon celeb-info-icon-green" aria-hidden="true">${svgIcons.studyBook}</span>
+                                    <div class="celeb-info-summary-text">
+                                        <span class="celeb-info-summary-sub">Tại sao cần dịch vụ này?</span>
+                                        <span class="celeb-info-summary-subtitle">Khi deadline ập đến cùng lúc</span>
+                                    </div>
+                                </div>
+
+                                <div class="celeb-info-summary-row">
+                                    <span class="celeb-info-icon celeb-info-icon-tv" aria-hidden="true">${svgIcons.studyTag}</span>
+                                    <div class="celeb-info-summary-text">
+                                        <span class="celeb-info-summary-sub">Gói dịch vụ &amp; bảng giá</span>
+                                        <span class="celeb-info-summary-subtitle">Rõ ràng, không phát sinh</span>
+                                    </div>
+                                </div>
+
+                                <div class="celeb-info-summary-row">
+                                    <span class="celeb-info-icon celeb-info-icon-amber" aria-hidden="true">${svgIcons.studyChat}</span>
+                                    <div class="celeb-info-summary-text">
+                                        <span class="celeb-info-summary-sub">Quăng cái file qua đây</span>
+                                        <span class="celeb-info-summary-subtitle">Rồi đứng dậy đi coi phim liền cho haiii</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div style="margin-top: 14px; display: flex; gap: 10px; flex-wrap: wrap; align-items: center;">
+                                <a
+                                    href="../study/"
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    class="celeb-download"
+                                    style="padding: 10px 18px;"
+                                >
+                                    <span>Ghé qua góc học tập</span>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Partner block (Lunakey / Lunasub) -->
+                    <div class="celeb-partner-card" id="celebPartnerCard">
                     <div class="celeb-partner-header">
                         <div class="celeb-partner-left">
                             <div class="celeb-partner-icon-wrap">
@@ -2236,12 +2298,11 @@ function showCelebrationModal(celebrationData, token, user) {
                             <span>Chất lượng</span>
                         </div>
                     </div>
-                </div>
-
-                <!-- Single feature card: App + TV + các cập nhật khác -->
-                <div class="celeb-grid-info">
+                    </div>
+                    <!-- Single feature card: App + TV + các cập nhật khác -->
+                    <div class="celeb-grid-info celeb-message-card">
                     <div class="celeb-info-card celeb-info-card-summary">
-                        <div class="celeb-info-summary-title">THÔNG ĐIỆP TỪ TIỆM BÁNH</div>
+                        <div class="celeb-info-summary-title" style="background: transparent; border: none; padding: 0; margin-bottom: 10px;">THÔNG ĐIỆP TỪ TIỆM BÁNH</div>
                         <div class="celeb-info-summary-rows">
                             <div class="celeb-info-summary-row">
                                 <span class="celeb-info-icon celeb-info-icon-green" aria-hidden="true">${svgIcons.smartphone}</span>
@@ -2268,6 +2329,10 @@ function showCelebrationModal(celebrationData, token, user) {
                             </div>
                         </div>
                     </div>
+
+                </div>
+                
+                <!-- Close desktop grid wrapper -->
                 </div>
                 
                 <!-- CTA Button -->
@@ -2776,6 +2841,11 @@ function showCelebrationModal(celebrationData, token, user) {
                 word-break: break-word;
             }
             
+            /* Only the card-level subtitle (div), not the row-level subtitle (span) */
+            div.celeb-info-summary-subtitle {
+                margin-bottom: 16px;
+            }
+            
             .celeb-particle {
                 position: absolute;
                 width: var(--size);
@@ -2801,6 +2871,53 @@ function showCelebrationModal(celebrationData, token, user) {
                 width: 100%;
                 margin: auto 0;
                 animation: celeb-fadeIn 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+            }
+
+            .celeb-top-cards {
+                display: block; /* Mobile stays unchanged */
+            }
+
+            @media (min-width: 601px) {
+                .celeb-content {
+                    max-width: 1100px;
+                }
+
+                .celeb-top-cards {
+                    display: grid;
+                    grid-template-columns: 1fr 1fr;
+                    grid-template-areas:
+                        "study partner"
+                        "message partner";
+                    column-gap: 22px;
+                    row-gap: 22px;
+                    align-items: stretch; /* Make right column height match left column total height */
+                    margin-bottom: 32px;
+                }
+
+                .celeb-study-card {
+                    grid-area: study;
+                }
+
+                .celeb-message-card {
+                    grid-area: message;
+                }
+
+                .celeb-top-cards > .celeb-grid-info {
+                    margin-bottom: 0;
+                }
+
+                .celeb-top-cards > .celeb-partner-card {
+                    margin: 0;
+                    grid-area: partner; /* Span both rows */
+                }
+
+                /* Shrink CTA width on desktop so it doesn't look over-stretched */
+                .celeb-btn {
+                    width: 100%;
+                    max-width: 720px;
+                    margin-left: auto;
+                    margin-right: auto;
+                }
             }
             
             @keyframes celeb-fadeIn {
@@ -3024,6 +3141,10 @@ function showCelebrationModal(celebrationData, token, user) {
                 gap: 16px;
                 margin-bottom: 32px;
             }
+
+            .celeb-grid-info > .celeb-info-card:only-child {
+                grid-column: 1 / -1; /* Ensure single card spans full width */
+            }
             
             .celeb-info-card {
                 padding: 20px;
@@ -3056,9 +3177,9 @@ function showCelebrationModal(celebrationData, token, user) {
                 position: relative;
                 z-index: 1;
                 display: inline-block;
-                margin: 0 0 14px 0;
+                margin: 0 0 10px 0;
                 padding: 10px 14px;
-                border-radius: 999px;
+                border-radius: 0px;
                 font-size: 0.95rem;
                 font-weight: 900;
                 letter-spacing: 0.08em;
@@ -3158,12 +3279,45 @@ function showCelebrationModal(celebrationData, token, user) {
                 border-radius: 8px;
                 font-size: 0.85rem;
                 font-weight: 500;
+                line-height: 1; /* Stabilize inline content vertical metrics */
+                overflow: hidden; /* Clip any SVG stroke that may visually exceed the box */
                 transition: all 0.2s ease;
             }
             
             .celeb-download:hover {
                 transform: translateY(-2px);
                 box-shadow: 0 6px 20px rgba(16, 185, 129, 0.35);
+            }
+
+            .celeb-download svg {
+                width: 16px;
+                height: 16px;
+                flex-shrink: 0;
+            }
+
+            .celeb-download-arrow {
+                display: inline-flex;
+                align-items: center;
+                justify-content: center;
+                line-height: 0; /* Prevent baseline from shifting the SVG vertically */
+                width: 16px;
+                height: 16px;
+                flex: 0 0 16px;
+                padding: 0;
+                margin: 0;
+                overflow: hidden; /* Extra safety: keep the arrow SVG fully within its 16x16 box */
+            }
+
+            .celeb-download > span:not(.celeb-download-arrow) {
+                display: inline-flex; /* So we can center the text visually within a stable height */
+                align-items: center;
+                min-height: 16px; /* Match arrow box height so icon centers on text */
+            }
+
+            .celeb-download-arrow svg {
+                display: block; /* Remove inline baseline alignment quirks */
+                width: 100%;
+                height: 100%;
             }
             
             /* CTA Button */
@@ -3226,6 +3380,11 @@ function showCelebrationModal(celebrationData, token, user) {
             @media (max-width: 600px) {
                 .celeb-overlay {
                     padding: 24px 16px;
+                }
+
+                /* Remove wrapper box on mobile so spacing matches the original layout exactly */
+                .celeb-top-cards {
+                    display: contents;
                 }
                 
                 .celeb-feature {
