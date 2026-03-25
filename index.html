@@ -511,6 +511,20 @@
                 background: transparent;
             }
 
+            /* "Góc học tập" - giống LunaSub: icon + text trắng/xám */
+            .partner-mini-card--study .partner-mini-icon {
+                color: rgba(255, 255, 255, 0.95);
+                background: transparent;
+            }
+
+            .partner-mini-card--study .partner-mini-title {
+                color: #fff;
+            }
+
+            .partner-mini-card--study .partner-mini-sub {
+                color: #cbd5e1;
+            }
+
             .partner-mini-card--lunakey .partner-mini-icon {
                 color: rgba(255, 255, 255, 0.95);
                 background: transparent;
@@ -2669,6 +2683,22 @@
                                 <div style="color: #e50914; font-size: 1.5rem; font-weight: bold;">→</div>
                             </div>
                         </a>
+
+                        <!-- Góc Học Tập Banner -->
+                        <a href="/study/" style="text-decoration: none; display: block; margin-top: 14px;">
+                            <div style="background: linear-gradient(135deg, rgba(34, 197, 94, 0.16) 0%, rgba(16, 185, 129, 0.1) 100%); border: 2px solid rgba(34, 197, 94, 0.4); border-radius: 12px; padding: 22px 25px; display: flex; align-items: center; gap: 15px; transition: all 0.3s ease;"
+                                onmouseover="this.style.borderColor='rgba(34, 197, 94, 0.7)'; this.style.background='linear-gradient(135deg, rgba(34, 197, 94, 0.22) 0%, rgba(16, 185, 129, 0.15) 100%)'; this.style.transform='translateY(-2px)';"
+                                onmouseout="this.style.borderColor='rgba(34, 197, 94, 0.4)'; this.style.background='linear-gradient(135deg, rgba(34, 197, 94, 0.16) 0%, rgba(16, 185, 129, 0.1) 100%)'; this.style.transform='translateY(0)';">
+                                <div style="flex: 1;">
+                                    <h4
+                                        style="color: #22c55e; font-size: 1.15rem; margin-bottom: 6px; font-weight: 700;">
+                                        GÓC HỌC TẬP – TIỆM BÁNH NETFLIX</h4>
+                                    <p style="color: #ccc; font-size: 0.9rem; line-height: 1.4; margin: 0;">Dịch vụ hỗ trợ
+                                        định dạng văn bản, báo cáo... từ Tiệm Bánh Netflix</p>
+                                </div>
+                                <div style="color: #22c55e; font-size: 1.5rem; font-weight: bold;">→</div>
+                            </div>
+                        </a>
                     </div>
 
                     <!-- RIGHT SIDEBAR: User Info & Extension Status -->
@@ -2799,6 +2829,21 @@
 
                                 <!-- Mini Partner Cards (sẽ chỉ hiện sau khi đăng nhập thành công) -->
                                 <div id="partnerCards" class="partner-mini-cards" aria-label="Đối tác" role="navigation">
+                                    <a class="partner-mini-card partner-mini-card--study"
+                                        href="/study/" target="_blank" rel="noopener noreferrer"
+                                        aria-label="Mở Góc học tập">
+                                        <div class="partner-mini-left">
+                                            <div class="partner-mini-icon" aria-hidden="true">
+                                                <i data-lucide="book-open"></i>
+                                            </div>
+                                            <div class="partner-mini-text">
+                                                <div class="partner-mini-title">Góc học tập</div>
+                                                <div class="partner-mini-sub">Dịch vụ hỗ trợ định dạng văn bản,<br>báo cáo... từ Tiệm Bánh Netflix</div>
+                                            </div>
+                                        </div>
+                                        <div class="partner-mini-arrow" aria-hidden="true">→</div>
+                                    </a>
+
                                     <a class="partner-mini-card partner-mini-card--lunasub"
                                         href="https://lunasub.com/" target="_blank" rel="noopener noreferrer"
                                         aria-label="Mở LunaSub.com (tab mới)">
@@ -7143,6 +7188,22 @@ Nếu cần thêm lượt đổi tài khoản, vui lòng liên hệ Support qua 
                                     <div style="font-size:0.7rem;color:#fff;">Resell dịch vụ của Tiệm Bánh</div>
                                 </div>
                                 <span style="flex-shrink:0;font-size:0.72rem;font-weight:600;color:#22c55e;padding:5px 10px;border:1px solid rgba(34,197,94,0.4);border-radius:6px;white-space:nowrap;">Liên hệ</span>
+                            </a>
+
+                            <!-- Study: Tiệm Bánh Netflix -->
+                            <a href="/study/" target="_blank" rel="noopener noreferrer" class="promo-card" style="display:flex;align-items:center;gap:12px;padding:12px 14px;background:rgba(96,165,250,0.07);border:1px solid rgba(96,165,250,0.28);border-radius:14px;text-decoration:none;border-left:3px solid #60a5fa;">
+                                <div style="flex-shrink:0;width:34px;height:34px;background:rgba(96,165,250,0.15);border-radius:8px;display:flex;align-items:center;justify-content:center;">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#60a5fa" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M2 8a3 3 0 0 1 3-3h14a2 2 0 0 1 2 2v14a2 2 0 0 0-2-2H5a3 3 0 0 0-3 3z"></path>
+                                        <path d="M22 19V5"></path>
+                                        <path d="M2 8v14"></path>
+                                    </svg>
+                                </div>
+                                <div style="flex:1;min-width:0;">
+                                    <div style="font-size:0.78rem;font-weight:700;color:#60a5fa;margin-bottom:2px;">Góc học tập - Tiệm Bánh Netflix</div>
+                                    <div style="font-size:0.7rem;color:#fff;">Dịch vụ hỗ trợ định dạng văn bản</div>
+                                </div>
+                                <span style="flex-shrink:0;font-size:0.72rem;font-weight:600;color:#60a5fa;padding:5px 10px;border:1px solid rgba(96,165,250,0.4);border-radius:6px;white-space:nowrap;">Liên hệ</span>
                             </a>
 
                             <!-- Capcut Pro -->
