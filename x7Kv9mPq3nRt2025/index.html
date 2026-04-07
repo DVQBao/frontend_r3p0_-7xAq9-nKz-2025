@@ -619,6 +619,456 @@
             margin-top: 30px;
         }
 
+        .admin-shared-modal[style*="display: block"],
+        .admin-shared-modal[style*="display:block"] {
+            display: flex !important;
+        }
+
+        .admin-shared-modal,
+        .admin-modal-overlay {
+            align-items: center;
+            justify-content: center;
+            padding: 24px;
+        }
+
+        select option {
+            background: #f8fafc !important;
+            color: #111827 !important;
+        }
+
+        .admin-shared-modal .modal-content,
+        .admin-modal-shell {
+            width: min(100%, 620px);
+            max-height: calc(100vh - 48px);
+            overflow-y: auto;
+            margin: 0;
+            padding: 28px;
+            border-radius: 24px;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            background:
+                radial-gradient(circle at top left, rgba(229, 9, 20, 0.16), transparent 36%),
+                radial-gradient(circle at top right, rgba(59, 130, 246, 0.12), transparent 34%),
+                linear-gradient(160deg, rgba(28, 28, 32, 0.98), rgba(10, 10, 12, 0.96));
+            box-shadow: 0 34px 90px rgba(0, 0, 0, 0.58);
+            backdrop-filter: blur(18px);
+        }
+
+        .admin-modal-shell--compact {
+            width: min(100%, 520px);
+        }
+
+        .admin-modal-shell--wide {
+            width: min(100%, 720px);
+        }
+
+        .admin-modal-shell--xwide {
+            width: min(100%, 920px);
+        }
+
+        .admin-shared-modal .form-group,
+        .admin-modal-shell .form-group {
+            margin-bottom: 18px;
+        }
+
+        .admin-shared-modal .form-group label,
+        .admin-modal-shell .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-size: 0.77rem;
+            font-weight: 700;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            color: rgba(229, 231, 235, 0.7);
+        }
+
+        .admin-shared-modal .form-group input,
+        .admin-shared-modal .form-group select,
+        .admin-shared-modal .form-group textarea,
+        .admin-modal-shell .form-group input,
+        .admin-modal-shell .form-group select,
+        .admin-modal-shell .form-group textarea {
+            width: 100%;
+            padding: 13px 14px;
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 14px;
+            font-size: 0.95rem;
+            color: #fff;
+            transition: border-color 0.2s ease, background 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .admin-shared-modal .form-group input:focus,
+        .admin-shared-modal .form-group select:focus,
+        .admin-shared-modal .form-group textarea:focus,
+        .admin-modal-shell .form-group input:focus,
+        .admin-modal-shell .form-group select:focus,
+        .admin-modal-shell .form-group textarea:focus {
+            outline: none;
+            border-color: rgba(229, 9, 20, 0.5);
+            background: rgba(229, 9, 20, 0.05);
+            box-shadow: 0 0 0 4px rgba(229, 9, 20, 0.12);
+        }
+
+        .admin-modal-header {
+            display: flex;
+            align-items: flex-start;
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+
+        .admin-shared-modal .modal-header {
+            display: flex;
+            align-items: flex-start;
+            gap: 16px;
+            margin-bottom: 22px;
+            padding-bottom: 0;
+            border-bottom: none;
+        }
+
+        .admin-shared-modal .modal-header::before {
+            content: "";
+            width: 58px;
+            height: 58px;
+            border-radius: 18px;
+            flex-shrink: 0;
+            border: 1px solid rgba(251, 191, 36, 0.24);
+            background-color: rgba(251, 191, 36, 0.1);
+            background-position: center;
+            background-repeat: no-repeat;
+            background-size: 26px 26px;
+            box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.08);
+        }
+
+        #upgradeModal.admin-shared-modal .modal-header::before {
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23fbbf24' stroke-width='1.9' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m12 3 2.7 5.47 6.03.88-4.36 4.25 1.03 6-5.4-2.84-5.4 2.84 1.03-6L3.27 9.35l6.03-.88L12 3Z'/%3E%3C/svg%3E");
+            background-image:
+                url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23fbbf24' stroke-width='1.9' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m12 3 2.7 5.47 6.03.88-4.36 4.25 1.03 6-5.4-2.84-5.4 2.84 1.03-6L3.27 9.35l6.03-.88L12 3Z'/%3E%3C/svg%3E"),
+                linear-gradient(135deg, rgba(251, 191, 36, 0.18), rgba(229, 9, 20, 0.08));
+        }
+
+        #downgradeModal.admin-shared-modal .modal-header::before {
+            border-color: rgba(248, 113, 113, 0.22);
+            background-image:
+                url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23f87171' stroke-width='1.9' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M12 5v14'/%3E%3Cpath d='m19 12-7 7-7-7'/%3E%3C/svg%3E"),
+                linear-gradient(135deg, rgba(239, 68, 68, 0.18), rgba(251, 191, 36, 0.05));
+        }
+
+        #manualBanModal.admin-shared-modal .modal-header::before {
+            border-color: rgba(248, 113, 113, 0.22);
+            background-image:
+                url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23f87171' stroke-width='1.9' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M12 3 5 6v6c0 5 3.4 8.74 7 9 3.6-.26 7-4 7-9V6l-7-3Z'/%3E%3Cpath d='M9.5 12.5 11 14l3.5-3.5'/%3E%3C/svg%3E"),
+                linear-gradient(135deg, rgba(239, 68, 68, 0.16), rgba(251, 191, 36, 0.06));
+        }
+
+        .admin-shared-modal .modal-header h3 {
+            flex: 1;
+            margin: 0;
+            font-size: 1.34rem;
+            font-weight: 800;
+            letter-spacing: -0.03em;
+            color: #fff;
+        }
+
+        .admin-shared-modal .close {
+            width: 42px;
+            height: 42px;
+            border-radius: 14px;
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            background: rgba(255, 255, 255, 0.04);
+            color: rgba(255, 255, 255, 0.72);
+            font-size: 1.45rem;
+            line-height: 1;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            transition: transform 0.2s ease, border-color 0.2s ease, color 0.2s ease, background 0.2s ease;
+        }
+
+        .admin-shared-modal .close:hover {
+            transform: translateY(-1px);
+            border-color: rgba(255, 255, 255, 0.24);
+            background: rgba(255, 255, 255, 0.08);
+            color: #fff;
+        }
+
+        .admin-modal-header-main {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .admin-modal-icon {
+            width: 58px;
+            height: 58px;
+            border-radius: 18px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            color: #fbbf24;
+            flex-shrink: 0;
+            background: linear-gradient(135deg, rgba(251, 191, 36, 0.18), rgba(229, 9, 20, 0.08));
+            border: 1px solid rgba(251, 191, 36, 0.24);
+            box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.08);
+        }
+
+        .admin-modal-icon svg {
+            width: 26px;
+            height: 26px;
+        }
+
+        .admin-modal-kicker {
+            font-size: 0.72rem;
+            font-weight: 700;
+            letter-spacing: 0.18em;
+            text-transform: uppercase;
+            color: rgba(251, 191, 36, 0.88);
+            margin-bottom: 8px;
+        }
+
+        .admin-modal-title {
+            margin: 0;
+            font-size: 1.38rem;
+            font-weight: 800;
+            letter-spacing: -0.03em;
+            color: #fff;
+        }
+
+        .admin-modal-subtitle {
+            margin: 10px 0 0;
+            color: rgba(229, 231, 235, 0.72);
+            line-height: 1.6;
+            font-size: 0.94rem;
+        }
+
+        .admin-modal-close {
+            width: 42px;
+            height: 42px;
+            border-radius: 14px;
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            background: rgba(255, 255, 255, 0.04);
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 1.45rem;
+            line-height: 1;
+            cursor: pointer;
+            transition: transform 0.2s ease, border-color 0.2s ease, color 0.2s ease, background 0.2s ease;
+            flex-shrink: 0;
+        }
+
+        .admin-modal-close:hover {
+            transform: translateY(-1px);
+            border-color: rgba(255, 255, 255, 0.24);
+            background: rgba(255, 255, 255, 0.08);
+            color: #fff;
+        }
+
+        .admin-modal-note {
+            margin-bottom: 20px;
+            padding: 6px 0 6px 16px;
+            border-radius: 0;
+            border: none;
+            border-left: 2px solid rgba(251, 191, 36, 0.24);
+            background: linear-gradient(90deg, rgba(251, 191, 36, 0.1), transparent 72%);
+            color: rgba(255, 255, 255, 0.82);
+            line-height: 1.65;
+        }
+
+        .admin-modal-note strong {
+            color: #fff;
+        }
+
+        .admin-modal-note--info {
+            border-left-color: rgba(96, 165, 250, 0.32);
+            background: linear-gradient(90deg, rgba(59, 130, 246, 0.1), transparent 72%);
+        }
+
+        .admin-modal-note--warn {
+            border-left-color: rgba(248, 113, 113, 0.34);
+            background: linear-gradient(90deg, rgba(239, 68, 68, 0.1), transparent 72%);
+        }
+
+        .admin-modal-actions {
+            margin-top: 26px;
+            padding-top: 18px;
+            border-top: 1px solid rgba(255, 255, 255, 0.08);
+            gap: 12px;
+        }
+
+        .admin-shared-modal .modal-actions {
+            margin-top: 26px;
+            padding-top: 18px;
+            border-top: 1px solid rgba(255, 255, 255, 0.08);
+            gap: 12px;
+        }
+
+        .admin-modal-actions .btn {
+            min-height: 46px;
+            border-radius: 14px;
+            justify-content: center;
+        }
+
+        .admin-shared-modal .modal-actions .btn {
+            min-height: 46px;
+            border-radius: 14px;
+            justify-content: center;
+        }
+
+        .admin-modal-grid-2 {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 12px;
+        }
+
+        .admin-modal-inline-stats {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 18px;
+        }
+
+        .admin-modal-stat {
+            padding: 12px 14px;
+            border-radius: 16px;
+            border: 1px solid rgba(96, 165, 250, 0.22);
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.12), rgba(255, 255, 255, 0.03));
+            color: #dbeafe;
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+
+        .admin-modal-result {
+            display: none;
+            margin-top: 14px;
+            padding: 14px 16px;
+            border-radius: 16px;
+            border: 1px solid rgba(16, 185, 129, 0.28);
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.16), rgba(255, 255, 255, 0.03));
+            font-size: 0.9rem;
+            color: #d1fae5;
+        }
+
+        .admin-modal-secret {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-top: 8px;
+        }
+
+        .admin-modal-secret code {
+            flex: 1;
+            padding: 10px 12px;
+            border-radius: 12px;
+            background: rgba(0, 0, 0, 0.36);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            color: #34d399;
+            font-size: 0.92rem;
+            font-weight: 700;
+            letter-spacing: 0.08em;
+            word-break: break-all;
+        }
+
+        .admin-modal-copy-btn {
+            flex-shrink: 0;
+            width: 40px;
+            height: 40px;
+            border-radius: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            background: rgba(255, 255, 255, 0.03);
+            color: rgba(255, 255, 255, 0.72);
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            transition: border-color 0.2s ease, color 0.2s ease, background 0.2s ease;
+        }
+
+        .admin-modal-copy-btn:hover {
+            border-color: rgba(255, 255, 255, 0.2);
+            color: #fff;
+            background: rgba(255, 255, 255, 0.06);
+        }
+
+        .admin-modal-copy-btn svg {
+            width: 16px;
+            height: 16px;
+        }
+
+        .admin-modal-table-wrap {
+            margin-top: 12px;
+            border-radius: 18px;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            overflow: hidden;
+            background: rgba(3, 7, 18, 0.72);
+        }
+
+        .admin-modal-table-scroll {
+            max-height: 52vh;
+            overflow: auto;
+        }
+
+        .admin-modal-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.82rem;
+        }
+
+        .admin-modal-table thead {
+            background: rgba(255, 255, 255, 0.04);
+        }
+
+        .admin-modal-table th {
+            padding: 12px 14px;
+            font-size: 0.72rem;
+            color: rgba(229, 231, 235, 0.62);
+            font-weight: 700;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            text-align: left;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        .admin-modal-table td {
+            padding: 12px 14px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+            color: rgba(255, 255, 255, 0.86);
+            vertical-align: top;
+        }
+
+        .admin-modal-table tbody tr:last-child td {
+            border-bottom: none;
+        }
+
+        .admin-modal-empty {
+            padding: 28px 16px;
+            text-align: center;
+            color: rgba(229, 231, 235, 0.5);
+        }
+
+        .admin-modal-chip {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 5px 10px;
+            border-radius: 999px;
+            border: 1px solid rgba(148, 163, 184, 0.35);
+            font-size: 0.78rem;
+            font-weight: 700;
+            white-space: nowrap;
+        }
+
+        .admin-modal-chip--success {
+            color: #bbf7d0;
+            background: rgba(22, 163, 74, 0.18);
+        }
+
+        .admin-modal-chip--info {
+            color: #bfdbfe;
+            background: rgba(30, 64, 175, 0.22);
+        }
+
+        .admin-modal-chip--danger {
+            color: #fecaca;
+            background: rgba(127, 29, 29, 0.26);
+        }
+
         /* Ẩn mobile-only stats trên desktop */
         .mobile-stat-only {
             display: none;
@@ -1617,7 +2067,7 @@
     </div>
 
     <!-- Modal nâng cấp -->
-    <div id="upgradeModal" class="modal">
+    <div id="upgradeModal" class="modal admin-shared-modal">
         <div class="modal-content">
             <div class="modal-header">
                 <h3>Nâng cấp lên Pro</h3>
@@ -1648,7 +2098,7 @@
     </div>
 
     <!-- Modal hạ cấp -->
-    <div id="downgradeModal" class="modal">
+    <div id="downgradeModal" class="modal admin-shared-modal">
         <div class="modal-content">
             <div class="modal-header">
                 <h3>Hạ cấp về Free</h3>
@@ -1770,6 +2220,36 @@
 
         let confirmModalCallback = null;
 
+        function getAdminModalSvg(type) {
+            const icons = {
+                upgrade: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m12 3 2.7 5.47 6.03.88-4.36 4.25 1.03 6-5.4-2.84-5.4 2.84 1.03-6L3.27 9.35l6.03-.88L12 3Z"></path></svg>',
+                downgrade: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5v14"></path><path d="m19 12-7 7-7-7"></path></svg>',
+                shield: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3 5 6v6c0 5 3.4 8.74 7 9 3.6-.26 7-4 7-9V6l-7-3Z"></path><path d="M9.5 12.5 11 14l3.5-3.5"></path></svg>',
+                cookie: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 2a2 2 0 0 0 4 0c0 1.2.97 2.17 2.17 2.17A2.83 2.83 0 0 0 21 7a2.83 2.83 0 0 0-2.83 2.83A2.17 2.17 0 0 1 16 12a2 2 0 0 0-2 2 2 2 0 0 1-4 0 2 2 0 0 0-2-2 2 2 0 0 1-2-2 2.17 2.17 0 0 0-2.17-2.17A2.83 2.83 0 0 1 1 5a2.83 2.83 0 0 0 2.83-2.83A2.17 2.17 0 0 1 6 0a2 2 0 0 0 2 2 2 2 0 0 1 4 0Z" transform="translate(1 4) scale(.92)"></path><circle cx="9.5" cy="9.5" r="1"></circle><circle cx="14.5" cy="14.5" r="1"></circle><circle cx="15.5" cy="9" r="1"></circle></svg>',
+                users: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M16 21v-2a4 4 0 0 0-4-4H7a4 4 0 0 0-4 4v2"></path><circle cx="9.5" cy="7" r="4"></circle><path d="M20 8v6"></path><path d="M17 11h6"></path></svg>',
+                logs: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 6h13"></path><path d="M8 12h13"></path><path d="M8 18h13"></path><path d="M3 6h.01"></path><path d="M3 12h.01"></path><path d="M3 18h.01"></path></svg>',
+                lock: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="11" width="16" height="10" rx="2"></rect><path d="M8 11V7a4 4 0 1 1 8 0v4"></path></svg>',
+                eye: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 12s3.6-6 10-6 10 6 10 6-3.6 6-10 6-10-6-10-6Z"></path><circle cx="12" cy="12" r="3"></circle></svg>',
+                eyeOff: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m3 3 18 18"></path><path d="M10.58 10.58a2 2 0 0 0 2.83 2.83"></path><path d="M9.88 5.09A10.94 10.94 0 0 1 12 5c6.4 0 10 7 10 7a18.78 18.78 0 0 1-4.24 5.08"></path><path d="M6.61 6.61C3.93 8.35 2 12 2 12a18.7 18.7 0 0 0 5.39 5.39"></path></svg>',
+                copy: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="13" height="13" rx="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>'
+            };
+            return icons[type] || icons.upgrade;
+        }
+
+        function buildAdminModalHeader(icon, kicker, title, subtitle, closeAction) {
+            return `
+                <div class="admin-modal-header">
+                    <div class="admin-modal-icon">${getAdminModalSvg(icon)}</div>
+                    <div class="admin-modal-header-main">
+                        <div class="admin-modal-kicker">${kicker}</div>
+                        <h3 class="admin-modal-title">${title}</h3>
+                        ${subtitle ? `<p class="admin-modal-subtitle">${subtitle}</p>` : ''}
+                    </div>
+                    ${closeAction ? `<button type="button" class="admin-modal-close" onclick="${closeAction}" aria-label="Close">&times;</button>` : ''}
+                </div>
+            `;
+        }
+
         function showConfirmModal(message, callback, title = 'Xác nhận', btnText = 'Xác nhận', btnClass = 'btn-danger') {
             confirmModalCallback = callback;
             document.getElementById('confirmModalTitle').textContent = title;
@@ -1839,7 +2319,7 @@
                     <div class="admin-login-container">
                         <div class="admin-login-box">
                             <div class="admin-login-header">
-                                <div class="admin-login-icon">🔐</div>
+                                <div class="admin-login-icon">${getAdminModalSvg('lock')}</div>
                                 <h1>Admin Panel</h1>
                                 <p>Tiệm Bánh Netflix</p>
                             </div>
@@ -1852,7 +2332,7 @@
                                     <label for="adminPassword">Mật khẩu</label>
                                     <div class="password-input-wrapper">
                                         <input type="password" id="adminPassword" placeholder="Nhập mật khẩu" required autocomplete="current-password">
-                                        <button type="button" class="toggle-password" onclick="toggleAdminPassword()">👁️</button>
+                                        <button type="button" class="toggle-password" onclick="toggleAdminPassword()">${getAdminModalSvg('eye')}</button>
                                     </div>
                                 </div>
                                 <div id="adminLoginError" class="admin-login-error"></div>
@@ -1867,6 +2347,8 @@
                     </div>
                 `;
                 document.body.appendChild(loginOverlay);
+                loginOverlay.querySelector('.admin-login-icon').innerHTML = getAdminModalSvg('lock');
+                loginOverlay.querySelector('.toggle-password').innerHTML = getAdminModalSvg('eye');
 
                 // Thêm CSS cho login form
                 const loginStyles = document.createElement('style');
@@ -1904,9 +2386,23 @@
                     }
                     
                     .admin-login-icon {
-                        font-size: 48px;
-                        margin-bottom: 16px;
+                        width: 84px;
+                        height: 84px;
+                        margin: 0 auto 18px;
+                        display: inline-flex;
+                        align-items: center;
+                        justify-content: center;
+                        border-radius: 26px;
+                        color: #fbbf24;
+                        background: linear-gradient(135deg, rgba(251, 191, 36, 0.18), rgba(229, 9, 20, 0.08));
+                        border: 1px solid rgba(251, 191, 36, 0.24);
+                        box-shadow: 0 18px 35px rgba(0, 0, 0, 0.28), inset 0 1px 0 rgba(255, 255, 255, 0.08);
                         animation: pulse 2s infinite;
+                    }
+
+                    .admin-login-icon svg {
+                        width: 34px;
+                        height: 34px;
                     }
                     
                     @keyframes pulse {
@@ -1975,19 +2471,31 @@
                     
                     .toggle-password {
                         position: absolute;
-                        right: 12px;
+                        right: 10px;
                         top: 50%;
                         transform: translateY(-50%);
-                        background: none;
-                        border: none;
+                        width: 38px;
+                        height: 38px;
+                        display: inline-flex;
+                        align-items: center;
+                        justify-content: center;
+                        background: rgba(255, 255, 255, 0.04);
+                        border: 1px solid rgba(255, 255, 255, 0.08);
+                        border-radius: 12px;
+                        color: rgba(255, 255, 255, 0.68);
                         cursor: pointer;
-                        font-size: 18px;
-                        opacity: 0.6;
-                        transition: opacity 0.2s;
+                        transition: color 0.2s ease, border-color 0.2s ease, background 0.2s ease;
+                    }
+
+                    .toggle-password svg {
+                        width: 18px;
+                        height: 18px;
                     }
                     
                     .toggle-password:hover {
-                        opacity: 1;
+                        color: #fff;
+                        border-color: rgba(255, 255, 255, 0.18);
+                        background: rgba(255, 255, 255, 0.08);
                     }
                     
                     .admin-login-error {
@@ -2112,10 +2620,10 @@
             const toggleBtn = document.querySelector('.toggle-password');
             if (passwordInput.type === 'password') {
                 passwordInput.type = 'text';
-                toggleBtn.textContent = '🙈';
+                toggleBtn.innerHTML = getAdminModalSvg('eyeOff');
             } else {
                 passwordInput.type = 'password';
-                toggleBtn.textContent = '👁️';
+                toggleBtn.innerHTML = getAdminModalSvg('eye');
             }
         }
 
@@ -5166,9 +5674,9 @@
             if (!modal) {
                 modal = document.createElement('div');
                 modal.id = 'manualBanModal';
-                modal.className = 'modal';
+                modal.className = 'modal admin-shared-modal';
                 modal.innerHTML = `
-                    <div class="modal-content" style="max-width: 500px;">
+                    <div class="modal-content admin-modal-shell admin-modal-shell--compact">
                         <div class="modal-header">
                             <h3>Ban thủ công IP/Email</h3>
                             <span class="close" onclick="closeManualBanModal()">&times;</span>
@@ -5193,7 +5701,7 @@
                                 <option value="0">Vĩnh viễn</option>
                             </select>
                         </div>
-                        <div class="modal-actions">
+                        <div class="modal-actions admin-modal-actions">
                             <button class="btn btn-secondary" onclick="closeManualBanModal()">Hủy</button>
                             <button class="btn btn-danger" onclick="confirmManualBan()">Ban ngay</button>
                         </div>
@@ -5470,7 +5978,8 @@
 
                 const modal = document.createElement('div');
                 modal.id = 'ctvCookieDetailModal';
-                modal.style.cssText = 'position:fixed;inset:0;background:rgba(15,23,42,0.75);display:flex;align-items:center;justify-content:center;z-index:10000;padding:20px;';
+                modal.className = 'admin-modal-overlay';
+                modal.style.cssText = 'position:fixed;inset:0;background:rgba(2,6,23,0.82);display:flex;align-items:center;justify-content:center;z-index:10000;padding:20px;';
 
                 const rowsHtml = cookies.map(c => {
                     const slotText = `${c.currentSlots || 0}/${c.maxSlots || 1}`;
@@ -5522,19 +6031,23 @@
                 }).join('');
 
                 modal.innerHTML = `
-                    <div style="background:#020617;border:1px solid #1f2937;border-radius:16px;padding:18px 20px;width:100%;max-width:720px;max-height:80vh;box-shadow:0 25px 50px -12px rgba(15,23,42,0.8);display:flex;flex-direction:column;">
-                        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;gap:10px;">
+                    <div class="admin-modal-shell admin-modal-shell--xwide" style="display:flex;flex-direction:column;">
+                        ${buildAdminModalHeader('cookie', 'CTV Cookies', 'Chi tiet tung cookie CTV', 'Tong hop so slot da dung, trang thai va CTV dang giu cookie. Chi doi giao dien, khong doi logic.', `document.getElementById('ctvCookieDetailModal').remove()`)}
+                        <div class="admin-modal-note admin-modal-note--info">
+                            Bang du lieu ben duoi van giu nguyen thong tin hien co, nhung duoc dat trong shell premium de de doc hon tren desktop.
+                        </div>
+                        <div style="display:none;align-items:center;justify-content:space-between;margin-bottom:12px;gap:10px;">
                             <div>
                                 <div style="font-size:0.8rem;text-transform:uppercase;letter-spacing:.08em;color:#64748b;">CTV Cookies</div>
                                 <h3 style="margin:2px 0 0;font-size:1.05rem;color:#e5e7eb;">Chi tiết từng cookie CTV</h3>
                             </div>
                             <button class="btn btn-secondary" style="padding:6px 10px;font-size:0.78rem;" onclick="document.getElementById('ctvCookieDetailModal').remove();">Close</button>
                         </div>
-                        <div style="font-size:0.7rem;color:#9ca3af;margin-bottom:10px;">
+                        <div style="display:none;font-size:0.7rem;color:#9ca3af;margin-bottom:10px;">
                             Danh sách hiển thị số thứ tự cookie, số slot đã dùng, trạng thái và CTV đang giữ cookie đó (nếu có).
                         </div>
-                        <div style="border-radius:12px;border:1px solid #1f2937;overflow:hidden;background:#020617;">
-                            <table style="width:100%;border-collapse:collapse;font-size:0.75rem;">
+                        <div class="admin-modal-table-wrap">
+                            <table class="admin-modal-table">
                                 <thead>
                                     <tr style="background:#020617;border-bottom:1px solid #1f2937;">
                                         <th style="text-align:left;padding:6px 8px;font-size:0.7rem;color:#9ca3af;font-weight:500;width:16%;"># Cookie</th>
@@ -5544,8 +6057,8 @@
                                     </tr>
                                 </thead>
                             </table>
-                            <div style="max-height:52vh;overflow:auto;">
-                                <table style="width:100%;border-collapse:collapse;font-size:0.75rem;">
+                            <div class="admin-modal-table-scroll">
+                                <table class="admin-modal-table">
                                     <tbody>
                                         ${rowsHtml || `<tr><td colspan="4" style="padding:10px 8px;font-size:0.75rem;color:#9ca3af;text-align:center;">Không có CTV Cookies nào.</td></tr>`}
                                     </tbody>
@@ -5715,13 +6228,17 @@
 
             const modal = document.createElement('div');
             modal.id = 'ctvModal';
-            modal.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,0.7);display:flex;align-items:center;justify-content:center;z-index:10000;padding:20px;';
+            modal.className = 'admin-modal-overlay';
+            modal.style.cssText = 'position:fixed;inset:0;background:rgba(2,6,23,0.82);display:flex;align-items:center;justify-content:center;z-index:10000;padding:20px;';
             const ctvFS = 'font-family:Inter,Segoe UI,sans-serif;font-size:13px;';
             const ctvLbl = 'display:block;font-size:12px;color:#aaa;margin-bottom:5px;font-weight:500;';
             const ctvInp = `width:100%;padding:10px 12px;background:#0f0f0f;border:1px solid #333;border-radius:8px;color:#fff;${ctvFS}`;
             modal.innerHTML = `
-                <div style="background:#1a1a1a;border:1px solid #333;border-radius:16px;padding:24px;width:100%;max-width:420px;max-height:90vh;overflow-y:auto;${ctvFS}">
-                    <h3 style="margin-bottom:20px;font-size:16px;font-weight:700;">Create New CTV</h3>
+                <div class="admin-modal-shell admin-modal-shell--compact" style="${ctvFS}">
+                    ${buildAdminModalHeader('users', 'CTV Workspace', 'Create New CTV', 'Tao tai khoan cong tac vien trong mot shell dong bo voi theme premium.', `document.getElementById('ctvModal').remove()`)}
+                    <div class="admin-modal-note admin-modal-note--info">
+                        Cac field ben duoi va request tao CTV duoc giu nguyen. Ban chi dang nhin thay mot giao dien moi.
+                    </div>
                     <div style="margin-bottom:12px;">
                         <label style="${ctvLbl}">Username *</label>
                         <input type="text" id="ctvFormUsername" style="${ctvInp}" placeholder="e.g. ctv_name">
@@ -5734,7 +6251,7 @@
                         <label style="${ctvLbl}">Password (leave empty to auto-generate)</label>
                         <input type="text" id="ctvFormPassword" style="${ctvInp}" placeholder="Auto-generate if empty">
                     </div>
-                    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px;">
+                    <div class="admin-modal-grid-2" style="margin-bottom:12px;">
                         <div>
                             <label style="${ctvLbl}">Start Date</label>
                             <input type="date" id="ctvFormStartDate" style="${ctvInp}" value="${new Date().toISOString().split('T')[0]}">
@@ -5752,8 +6269,8 @@
                         <label style="${ctvLbl}">Notes</label>
                         <textarea id="ctvFormNotes" rows="2" style="${ctvInp}resize:vertical;" placeholder="Optional notes"></textarea>
                     </div>
-                    <div id="ctvFormResult" style="display:none;background:rgba(16,185,129,0.15);border:1px solid rgba(16,185,129,0.3);padding:12px;border-radius:8px;margin-bottom:12px;font-size:13px;"></div>
-                    <div style="display:flex;gap:10px;">
+                    <div id="ctvFormResult" class="admin-modal-result" style="margin-bottom:12px;"></div>
+                    <div class="admin-modal-actions" style="display:flex;">
                         <button class="btn btn-success" style="flex:1;" onclick="submitCreateCtv()">Create</button>
                         <button class="btn btn-danger" style="flex:1;" onclick="document.getElementById('ctvModal').remove();">Cancel</button>
                     </div>
@@ -5791,12 +6308,12 @@
                     let msg = `<div style="margin-bottom:8px;">CTV "<strong>${data.collaborator.username}</strong>" created!</div>`;
                     if (data.generatedPassword) {
                         msg += `<div style="font-size:11px;color:#aaa;margin-bottom:6px;text-transform:uppercase;letter-spacing:0.5px;">Generated Password</div>
-                               <div style="display:flex;align-items:center;gap:8px;">
-                                   <code id="newPwText" style="flex:1;background:#0f0f0f;border:1px solid #333;border-radius:6px;padding:8px 10px;font-size:14px;font-weight:700;color:#10b981;letter-spacing:1px;word-break:break-all;">${data.generatedPassword}</code>
-                                   <button onclick="copyPwBtn(this,'newPwText')" title="Copy password"
-                                       style="flex-shrink:0;padding:8px;background:transparent;border:1px solid #333;border-radius:6px;color:#888;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all 0.2s;">
-                                       <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+                               <div class="admin-modal-secret">
+                                   <code id="newPwText">${data.generatedPassword}</code>
+                                   <button class="admin-modal-copy-btn" onclick="copyPwBtn(this,'newPwText')" title="Copy password">
+                                       ${getAdminModalSvg('copy')}
                                    </button>
+                               </div>
                                </div>
                                <div style="font-size:11px;color:#f59e0b;margin-top:6px;">Đã reset thành công mật khẩu!</div>`;
                     }
@@ -5828,18 +6345,19 @@
 
                 const modal = document.createElement('div');
                 modal.id = 'ctvModal';
-                modal.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,0.7);display:flex;align-items:center;justify-content:center;z-index:10000;padding:20px;';
+                modal.className = 'admin-modal-overlay';
+                modal.style.cssText = 'position:fixed;inset:0;background:rgba(2,6,23,0.82);display:flex;align-items:center;justify-content:center;z-index:10000;padding:20px;';
                 const eFS = 'font-family:Inter,Segoe UI,sans-serif;font-size:13px;';
                 const eLbl = 'display:block;font-size:12px;color:#aaa;margin-bottom:5px;font-weight:500;';
                 const eInp = `width:100%;padding:10px 12px;background:#0f0f0f;border:1px solid #333;border-radius:8px;color:#fff;${eFS}`;
                 modal.innerHTML = `
-                    <div style="background:#1a1a1a;border:1px solid #333;border-radius:16px;padding:24px;width:100%;max-width:420px;max-height:90vh;overflow-y:auto;${eFS}">
-                        <h3 style="margin-bottom:20px;font-size:16px;font-weight:700;">Edit CTV: ${escHtml(ctv.displayName)}</h3>
+                    <div class="admin-modal-shell admin-modal-shell--compact" style="${eFS}">
+                        ${buildAdminModalHeader('users', 'CTV Workspace', `Edit CTV: ${escHtml(ctv.displayName)}`, 'Cap nhat thong tin CTV trong mot modal cao cap hon nhung van giu nguyen luong xu ly.', `document.getElementById('ctvModal').remove()`)}
                         <div style="margin-bottom:12px;">
                             <label style="${eLbl}">Display Name</label>
                             <input type="text" id="ctvEditDisplayName" value="${escHtml(ctv.displayName)}" style="${eInp}">
                         </div>
-                        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px;">
+                        <div class="admin-modal-grid-2" style="margin-bottom:12px;">
                             <div>
                                 <label style="${eLbl}">Start Date</label>
                                 <input type="date" id="ctvEditStartDate" value="${new Date(ctv.startDate).toISOString().split('T')[0]}" style="${eInp}">
@@ -5865,16 +6383,16 @@
                             <label style="${eLbl}">Notes</label>
                             <textarea id="ctvEditNotes" rows="2" style="${eInp}resize:vertical;">${escHtml(ctv.notes||'')}</textarea>
                         </div>
-                        <div style="background:rgba(59,130,246,0.1);border:1px solid rgba(59,130,246,0.3);padding:10px;border-radius:8px;margin-bottom:12px;font-size:13px;color:#93c5fd;">
+                        <div class="admin-modal-note admin-modal-note--info" style="margin-bottom:12px;">
                             Username: ${escHtml(ctv.username)} | Used: ${ctv.cookiesUsed} / ${ctv.maxCookies} cookies
                         </div>
-                        <div style="display:flex;gap:8px;flex-wrap:wrap;">
+                        <div class="admin-modal-actions" style="display:flex;flex-wrap:wrap;gap:8px;">
                             <button class="btn btn-success" style="flex:1;" onclick="submitEditCtv('${id}')">Save</button>
                             <button class="btn btn-info" style="flex:1;" onclick="resetCtvPassword('${id}')">Reset PW</button>
                             <button class="btn btn-warning" style="flex:1;" onclick="resetCtvQuota('${id}')">Reset Quota</button>
                             <button class="btn btn-danger" style="flex:1;" onclick="document.getElementById('ctvModal').remove();">Cancel</button>
                         </div>
-                        <div id="ctvEditResult" style="display:none;margin-top:12px;padding:10px;border-radius:8px;font-size:13px;"></div>
+                        <div id="ctvEditResult" class="admin-modal-result"></div>
                     </div>
                 `;
                 document.body.appendChild(modal);
@@ -5933,11 +6451,10 @@
                         resultEl.style.border = '1px solid rgba(16,185,129,0.3)';
                         resultEl.innerHTML = data.generatedPassword
                             ? `<div style="font-size:11px;color:#aaa;margin-bottom:6px;text-transform:uppercase;letter-spacing:0.5px;">New Password</div>
-                               <div style="display:flex;align-items:center;gap:8px;">
-                                   <code id="newPwText" style="flex:1;background:#0f0f0f;border:1px solid #333;border-radius:6px;padding:8px 10px;font-size:14px;font-weight:700;color:#10b981;letter-spacing:1px;word-break:break-all;">${data.generatedPassword}</code>
-                                   <button onclick="copyPwBtn(this,'newPwText')" title="Copy password"
-                                       style="flex-shrink:0;padding:8px;background:transparent;border:1px solid #333;border-radius:6px;color:#888;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all 0.2s;">
-                                       <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+                               <div class="admin-modal-secret">
+                                   <code id="newPwText">${data.generatedPassword}</code>
+                                   <button class="admin-modal-copy-btn" onclick="copyPwBtn(this,'newPwText')" title="Copy password">
+                                       ${getAdminModalSvg('copy')}
                                    </button>
                                </div>
                                <div style="font-size:11px;color:#f59e0b;margin-top:6px;">Luu lai mat khau nay, se khong hien lai!</div>`
@@ -6050,14 +6567,16 @@
 
                 const modal = document.createElement('div');
                 modal.id = 'ctvModal';
-                modal.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,0.7);display:flex;align-items:center;justify-content:center;z-index:10000;padding:20px;';
+                modal.className = 'admin-modal-overlay';
+                modal.style.cssText = 'position:fixed;inset:0;background:rgba(2,6,23,0.82);display:flex;align-items:center;justify-content:center;z-index:10000;padding:20px;';
 
                 let logsHtml = '';
                 if (data.logs.length === 0) {
-                    logsHtml = '<div style="text-align:center;padding:20px;color:#666;">No logs yet.</div>';
+                    logsHtml = '<div class="admin-modal-empty">No logs yet.</div>';
                 } else {
-                    logsHtml = `<div style="max-height:50vh;overflow-y:auto;">
-                        <table style="width:100%;border-collapse:collapse;font-size:0.8em;">
+                    logsHtml = `<div class="admin-modal-table-wrap">
+                        <div class="admin-modal-table-scroll">
+                        <table class="admin-modal-table" style="font-size:0.8em;">
                             <thead><tr style="background:rgba(255,255,255,0.05);">
                                 <th style="padding:8px;text-align:left;color:#aaa;">Cookie #</th>
                                 <th style="padding:8px;text-align:center;color:#aaa;">Status</th>
@@ -6073,15 +6592,21 @@
                                 </tr>`;
                             }).join('')}</tbody>
                         </table>
+                        </div>
                     </div>`;
                 }
 
                 modal.innerHTML = `
-                    <div style="background:#1a1a1a;border:1px solid #333;border-radius:16px;padding:24px;width:100%;max-width:500px;">
-                        <h3 style="margin-bottom:6px;font-size:1.1em;">Logs: ${escHtml(username)}</h3>
-                        <p style="font-size:0.82em;color:#aaa;margin-bottom:16px;">Used: ${data.collaborator.cookiesUsed} / ${data.collaborator.maxCookies} | Total entries: ${data.pagination.total}</p>
+                    <div class="admin-modal-shell admin-modal-shell--wide">
+                        ${buildAdminModalHeader('logs', 'CTV Logs', `Logs: ${escHtml(username)}`, 'Theo doi cac lan su dung cookie trong mot modal sang hon va de quet thong tin hon.', `document.getElementById('ctvModal').remove()`)}
+                        <div class="admin-modal-inline-stats">
+                            <div class="admin-modal-stat">Used: ${data.collaborator.cookiesUsed} / ${data.collaborator.maxCookies}</div>
+                            <div class="admin-modal-stat">Total entries: ${data.pagination.total}</div>
+                        </div>
                         ${logsHtml}
-                        <button class="btn btn-secondary" style="margin-top:16px;" onclick="document.getElementById('ctvModal').remove();">Close</button>
+                        <div class="admin-modal-actions" style="display:flex;">
+                            <button class="btn btn-secondary" style="margin-top:0;" onclick="document.getElementById('ctvModal').remove();">Close</button>
+                        </div>
                     </div>
                 `;
                 document.body.appendChild(modal);

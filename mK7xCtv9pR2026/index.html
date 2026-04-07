@@ -472,6 +472,135 @@
             border-color: var(--text-muted); color: var(--text-primary);
         }
 
+        .portal-modal-shell {
+            width: 100%;
+            max-width: 560px;
+            max-height: calc(100vh - 40px);
+            overflow-y: auto;
+            padding: 24px 22px;
+            border-radius: 22px;
+            border: 1px solid rgba(255,255,255,0.08);
+            background:
+                radial-gradient(circle at top left, rgba(229, 9, 20, 0.16), transparent 36%),
+                radial-gradient(circle at top right, rgba(59, 130, 246, 0.14), transparent 34%),
+                linear-gradient(160deg, rgba(24, 24, 28, 0.98), rgba(10, 10, 12, 0.96));
+            box-shadow: 0 28px 80px rgba(0,0,0,0.56);
+            backdrop-filter: blur(18px);
+        }
+
+        .portal-modal-shell--wide {
+            max-width: 640px;
+        }
+
+        .portal-modal-header {
+            display: flex;
+            align-items: flex-start;
+            gap: 16px;
+            margin-bottom: 20px;
+        }
+
+        .portal-modal-icon {
+            width: 58px;
+            height: 58px;
+            border-radius: 18px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            color: #fbbf24;
+            flex-shrink: 0;
+            background: linear-gradient(135deg, rgba(251, 191, 36, 0.18), rgba(229, 9, 20, 0.08));
+            border: 1px solid rgba(251, 191, 36, 0.24);
+            box-shadow: inset 0 1px 0 rgba(255,255,255,0.08);
+        }
+
+        .portal-modal-icon svg {
+            width: 24px;
+            height: 24px;
+        }
+
+        .portal-modal-copy {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .portal-modal-kicker {
+            font-size: 0.72rem;
+            font-weight: 700;
+            letter-spacing: 0.18em;
+            text-transform: uppercase;
+            color: rgba(251, 191, 36, 0.88);
+            margin-bottom: 8px;
+        }
+
+        .portal-modal-title {
+            margin: 0;
+            font-size: 1.22rem;
+            font-weight: 800;
+            letter-spacing: -0.03em;
+            color: var(--text-primary);
+        }
+
+        .portal-modal-subtitle {
+            margin: 8px 0 0;
+            font-size: 0.84rem;
+            line-height: 1.6;
+            color: rgba(240, 240, 240, 0.72);
+        }
+
+        .portal-modal-note {
+            margin-bottom: 18px;
+            padding: 6px 0 6px 16px;
+            border-radius: 0;
+            border: none;
+            border-left: 2px solid rgba(255,255,255,0.18);
+            background: linear-gradient(90deg, rgba(255,255,255,0.06), transparent 72%);
+            line-height: 1.6;
+        }
+
+        .portal-modal-note--info {
+            border-left-color: rgba(59,130,246,0.34);
+            background: linear-gradient(90deg, rgba(59,130,246,0.1), transparent 72%);
+        }
+
+        .portal-modal-note--warn {
+            border-left-color: rgba(245,158,11,0.34);
+            background: linear-gradient(90deg, rgba(245,158,11,0.1), transparent 72%);
+        }
+
+        .portal-modal-meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 16px;
+        }
+
+        .portal-modal-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 10px;
+            border-radius: 999px;
+            font-size: 0.78rem;
+            font-weight: 700;
+            border: 1px solid rgba(148,163,184,0.35);
+        }
+
+        .portal-modal-badge.valid {
+            color: var(--green);
+            background: rgba(16,185,129,0.14);
+        }
+
+        .portal-modal-badge.expired {
+            color: #f87171;
+            background: rgba(239,68,68,0.14);
+        }
+
+        .portal-modal-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 18px;
+        }
+
         /* ============ EMPTY STATE ============ */
         .empty-state {
             text-align: center; padding: 40px 20px;
@@ -1309,16 +1438,22 @@ function showHistoryDetail(log) {
     const svgClock = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>`;
     const svgRegen = `<svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>`;
 
-    overlay.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,0.75);display:flex;align-items:center;justify-content:center;z-index:9000;padding:20px;';
+    overlay.style.cssText = 'position:fixed;inset:0;background:rgba(2,6,23,0.82);display:flex;align-items:center;justify-content:center;z-index:9000;padding:20px;';
     overlay.innerHTML = `
-        <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:24px 20px;width:100%;max-width:520px;max-height:90vh;overflow-y:auto;">
-            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;">
-                <span style="font-size:0.95rem;font-weight:700;">Cookie #${log.cookieNumber}</span>
-                <span id="modalStatusBadge" style="display:inline-flex;align-items:center;gap:5px;font-size:0.85rem;font-weight:700;color:${valid ? 'var(--green)' : 'var(--red)'};">
+        <div class="portal-modal-shell portal-modal-shell--wide">
+            <div class="portal-modal-header">
+                <div class="portal-modal-icon">${getPortalModalIcon('history')}</div>
+                <div class="portal-modal-copy">
+                    <div class="portal-modal-kicker">History Detail</div>
+                    <h3 class="portal-modal-title">Cookie #${log.cookieNumber}</h3>
+                    <p class="portal-modal-subtitle">${date}</p>
+                </div>
+            </div>
+            <div class="portal-modal-meta">
+                <span id="modalStatusBadge" class="portal-modal-badge ${valid ? 'valid' : 'expired'}">
                     ${valid ? svgCheck : svgX} ${valid ? 'Valid' : 'Expired'}
                 </span>
             </div>
-            <div style="font-size:0.75rem;color:var(--text-muted);margin-bottom:16px;">${date}</div>
 
             ${isOk ? `
             <div class="cookie-field">
@@ -1349,12 +1484,12 @@ function showHistoryDetail(log) {
                     <button id="modalPcCopyBtn" class="copy-btn" onclick="copyText(this, '${escapeAttr(getPcLink(log.tokenLink))}')" title="Copy PC Link">${svgCopy}</button>
                 </div>
             </div>
-            <div id="modalTokenStatus" style="display:flex;align-items:center;gap:8px;margin-top:12px;padding:10px;background:var(--bg-input);border-radius:var(--radius-sm);">
+            <div id="modalTokenStatus" class="portal-modal-note ${valid ? 'portal-modal-note--info' : 'portal-modal-note--warn'}" style="display:flex;align-items:center;gap:8px;margin-top:12px;">
                 <span style="color:${valid ? 'var(--green)' : 'var(--red)'};">${svgClock}</span>
                 <span style="font-size:0.82rem;color:${valid ? 'var(--green)' : '#f87171'};">${valid ? 'Token valid — ' + timeStr + ' remaining' : 'Token expired'}</span>
             </div>
             <div id="modalSuccessMsg" style="display:none;margin-top:12px;padding:10px 14px;background:var(--green-dim);border:1px solid rgba(16,185,129,0.3);border-radius:var(--radius-sm);font-size:0.82rem;font-weight:600;color:var(--green);text-align:center;"></div>
-            <div style="display:flex;gap:10px;margin-top:16px;">
+            <div class="portal-modal-actions">
                 <button id="modalRegenBtn" class="btn btn-blue" style="flex:2;min-width:0;display:inline-flex;align-items:center;justify-content:center;gap:6px;white-space:nowrap;" onclick="regenFromHistory('${log._id}')">
                     ${svgRegen} Regenerate Token
                 </button>
@@ -1363,7 +1498,7 @@ function showHistoryDetail(log) {
                 </button>
             </div>
             ` : `
-            <div style="text-align:center;padding:20px;color:var(--text-muted);">
+            <div class="portal-modal-note portal-modal-note--warn" style="text-align:center;color:var(--text-muted);">
                 <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="margin-bottom:8px;"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>
                 <p>Token generation failed for this cookie.</p>
             </div>
@@ -1704,14 +1839,32 @@ function toast(msg, type = 'success') {
     setTimeout(() => { el.style.display = 'none'; }, 3000);
 }
 
+function getPortalModalIcon(type) {
+    const icons = {
+        help: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"></circle><path d="M9.09 9a3 3 0 1 1 5.82 1c0 2-3 2-3 4"></path><path d="M12 17h.01"></path></svg>`,
+        history: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12a9 9 0 1 0 3-6.71"></path><path d="M3 3v6h6"></path><path d="M12 7v5l3 3"></path></svg>`,
+        valid: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"></path></svg>`,
+        expired: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m18 6-12 12"></path><path d="m6 6 12 12"></path></svg>`
+    };
+    return icons[type] || icons.help;
+}
+
 function customConfirm(message) {
     return new Promise(resolve => {
         const overlay = document.createElement('div');
         overlay.className = 'confirm-overlay';
         overlay.innerHTML = `
-            <div class="confirm-box">
-                <div class="confirm-msg">${message}</div>
-                <div class="confirm-actions">
+            <div class="confirm-box portal-modal-shell">
+                <div class="portal-modal-header">
+                    <div class="portal-modal-icon">${getPortalModalIcon('help')}</div>
+                    <div class="portal-modal-copy">
+                        <div class="portal-modal-kicker">Xac nhan</div>
+                        <h3 class="portal-modal-title">Ban co chac chan?</h3>
+                        <p class="portal-modal-subtitle">Noi dung ben duoi va handler xac nhan duoc giu nguyen. Chi thay doi giao dien modal.</p>
+                    </div>
+                </div>
+                <div class="confirm-msg portal-modal-note portal-modal-note--warn">${message}</div>
+                <div class="confirm-actions portal-modal-actions">
                     <button class="btn-confirm-ok" id="cfmOk">Đồng ý</button>
                     <button class="btn-confirm-cancel" id="cfmCancel">Hủy</button>
                 </div>

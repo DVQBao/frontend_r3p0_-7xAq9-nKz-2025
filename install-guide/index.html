@@ -5,18 +5,23 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     
     <!-- SEO Meta Tags -->
-    <meta name="description" content="Hướng dẫn chi tiết cách cài đặt Extension Tiệm Bánh Netflix cho Chrome. Đơn giản, dễ dàng, chỉ mất 2 phút để bắt đầu xem Netflix 4K.">
-    <meta name="keywords" content="cài đặt extension Netflix, hướng dẫn Netflix, Chrome extension, Netflix 4K, Tiệm Bánh Netflix">
+    <meta name="description" content="Huong dan cai dat Extension Tiem Banh Netflix cho Chrome va Edge. Quy trinh gon, de lam, chi mat khoang 2 phut de bat dau su dung.">
+    <meta name="keywords" content="cai dat extension Netflix, huong dan Netflix, Chrome extension, Edge extension, Tiem Banh Netflix">
     <meta name="author" content="Tiệm Bánh Netflix">
     <meta name="robots" content="index, follow">
-    <link rel="canonical" href="/https://tiembanh4k.com/install-guide/">
-    
+    <link rel="canonical" href="https://tiembanh4k.com/install-guide/">
+
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="article">
-    <meta property="og:url" content="/https://tiembanh4k.com/install-guide/">
-    <meta property="og:title" content="Hướng dẫn cài Extension - Tiệm Bánh Netflix">
-    <meta property="og:description" content="Hướng dẫn chi tiết cách cài đặt Extension cho Chrome. Đơn giản, dễ dàng, chỉ mất 2 phút.">
+    <meta property="og:url" content="https://tiembanh4k.com/install-guide/">
+    <meta property="og:title" content="Huong dan cai Extension - Tiem Banh Netflix">
+    <meta property="og:description" content="Huong dan cai dat Extension Tiem Banh Netflix cho Chrome va Edge. Nhanh, ro rang, lam theo trong vai phut.">
     <meta property="og:image" content="https://tiembanh4k.com/Background.webp">
+    <meta property="og:image:width" content="1920">
+    <meta property="og:image:height" content="1080">
+    <meta property="og:image:type" content="image/webp">
+    <meta property="og:locale" content="vi_VN">
+    <meta name="theme-color" content="#09090d">
     
     <!-- Google tag (gtag.js) -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-GM4CGKGZBM"></script>
@@ -28,10 +33,29 @@
     </script>
     
     <title>Hướng dẫn cài Extension - Tiệm Bánh Netflix</title>
-    <link rel="icon" type="image/png" href="../favicon.png">
-    <link rel="alternate icon" href="../favicon.png">
-    <link rel="apple-touch-icon" href="../favicon.png">
+    <link rel="icon" type="image/png" sizes="48x48" href="../favicon-48.png">
+    <link rel="icon" type="image/png" sizes="96x96" href="../favicon-96.png">
+    <link rel="icon" type="image/png" sizes="144x144" href="../favicon-144.png">
+    <link rel="icon" type="image/png" sizes="192x192" href="../favicon.png">
+    <link rel="icon" type="image/png" sizes="512x512" href="../favicon-512.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="../favicon.png">
     <style>
+        :root {
+            --bg: #06070a;
+            --panel: rgba(8, 10, 15, 0.82);
+            --panel-soft: rgba(255, 255, 255, 0.04);
+            --line: rgba(255, 255, 255, 0.1);
+            --text: #f4f7fb;
+            --muted: #b3bcc8;
+            --red: #ff2b2b;
+            --red-soft: rgba(255, 43, 43, 0.14);
+            --gold: #fbbf24;
+            --gold-soft: rgba(251, 191, 36, 0.12);
+            --green: #4ade80;
+            --green-soft: rgba(74, 222, 128, 0.14);
+            --blue: #60a5fa;
+        }
+
         * {
             margin: 0;
             padding: 0;
@@ -40,169 +64,298 @@
 
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-            background: linear-gradient(135deg, rgba(20, 20, 20, 0.95) 0%, rgba(26, 26, 26, 0.95) 100%), 
-                        url('../Background.webp') center/cover fixed;
-            color: #fff;
+            color: var(--text);
             min-height: 100vh;
-            padding: 40px 20px;
+            padding: 36px 20px;
+            background:
+                linear-gradient(180deg, rgba(6, 7, 10, 0.9), rgba(6, 7, 10, 0.97)),
+                url('../Background.webp') center/cover fixed;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        body::before,
+        body::after {
+            content: '';
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+        }
+
+        body::before {
+            background:
+                radial-gradient(circle at 14% 16%, rgba(255, 43, 43, 0.18), transparent 24%),
+                radial-gradient(circle at 86% 12%, rgba(96, 165, 250, 0.1), transparent 20%),
+                radial-gradient(circle at 50% 82%, rgba(251, 191, 36, 0.07), transparent 26%);
+        }
+
+        body::after {
+            background-image:
+                linear-gradient(rgba(255, 255, 255, 0.025) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255, 255, 255, 0.025) 1px, transparent 1px);
+            background-size: 120px 120px;
+            mask-image: radial-gradient(circle at center, black 35%, transparent 82%);
+            opacity: 0.16;
         }
 
         .container {
-            max-width: 800px;
+            max-width: 840px;
             margin: 0 auto;
-            background: rgba(0, 0, 0, 0.9);
-            border-radius: 12px;
-            padding: 30px;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            position: relative;
+            z-index: 1;
+            background: var(--panel);
+            border-radius: 26px;
+            padding: 36px;
+            border: 1px solid var(--line);
+            box-shadow: 0 28px 80px rgba(0, 0, 0, 0.4);
+            backdrop-filter: blur(18px);
         }
 
         .header {
             text-align: center;
-            margin-bottom: 30px;
+            margin-bottom: 32px;
         }
 
         h1 {
-            font-size: 2rem;
-            margin-bottom: 8px;
-            background: linear-gradient(90deg, #ff101c);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
+            font-size: clamp(2rem, 4vw, 3rem);
+            line-height: 1.04;
+            letter-spacing: -0.04em;
+            margin-bottom: 18px;
+            color: #fff;
+        }
+
+        .header h1 {
+            text-shadow: 0 10px 30px rgba(255, 43, 43, 0.16);
         }
 
         .subtitle {
-            color: #aaa;
+            color: var(--muted);
             font-size: 1rem;
-        }
-
-        .step-section {
-            background: rgba(255, 255, 255, 0.05);
-            border-left: 4px solid #e50914;
-            padding: 20px;
-            border-radius: 8px;
-            margin-bottom: 20px;
-        }
-
-        .step-number {
-            display: inline-block;
-            background: #e50914;
-            color: #fff;
-            width: 32px;
-            height: 32px;
-            border-radius: 50%;
-            text-align: center;
-            line-height: 32px;
-            font-weight: bold;
-            font-size: 1.1rem;
-            margin-right: 12px;
-        }
-
-        .step-title {
-            font-size: 1.3rem;
-            margin-bottom: 12px;
-            color: #fff;
-            display: flex;
-            align-items: center;
-        }
-
-        .step-content {
-            margin-left: 44px;
-        }
-
-        .step-content p {
-            color: #ddd;
-            line-height: 1.6;
-            margin-bottom: 12px;
-        }
-
-        .btn {
-            display: inline-block;
-            padding: 10px 20px;
-            background: #e50914;
-            color: #fff;
-            text-decoration: none;
-            text-align: center;
-            border-radius: 6px;
-            font-weight: 600;
-            border: none;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            font-size: 0.9rem;
-            margin-top: 8px;
-        }
-
-        .btn:hover {
-            background: #f40612;
-            transform: translateY(-1px);
-            box-shadow: 0 4px 12px rgba(229, 9, 20, 0.4);
-        }
-
-        .btn-secondary {
-            background: rgba(255, 255, 255, 0.1);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-        }
-
-        .btn-secondary:hover {
-            background: rgba(255, 255, 255, 0.15);
-        }
-
-
-        .code-block {
-            background: #1a1a1a;
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            border-radius: 4px;
-            padding: 12px;
-            margin: 12px 0;
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-            color: #4ade80;
-            overflow-x: auto;
-            font-size: 1rem;
-        }
-
-        .warning {
-            background: rgba(255, 193, 7, 0.1);
-            border: 1px solid rgba(255, 193, 7, 0.4);
-            border-radius: 4px;
-            padding: 10px 12px;
-            margin: 10px 0;
-            color: #fbbf24;
-            font-size: 0.9rem;
-            line-height: 1.5;
-        }
-
-        .success {
-            background: rgba(40, 167, 69, 0.15);
-            border: 2px solid #28a745;
-            border-radius: 6px;
-            padding: 12px;
-            margin: 15px 0;
-            color: #4ade80;
-            font-size: 0.9rem;
         }
 
         .info-box {
-            background: rgba(255, 255, 255, 0.05);
+            background:
+                linear-gradient(135deg, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.025));
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 20px;
+            padding: 20px;
+            font-size: 0.96rem;
+            line-height: 1.75;
+            text-align: left;
+            color: var(--muted);
+            box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.04);
+        }
+
+        .step-section {
+            position: relative;
+            background: linear-gradient(180deg, rgba(255, 255, 255, 0.035), rgba(255, 255, 255, 0.02));
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            padding: 24px;
+            border-radius: 22px;
+            margin-bottom: 18px;
+            transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+            overflow: hidden;
+        }
+
+        .step-section::before {
+            content: '';
+            position: absolute;
+            inset: 0 auto 0 0;
+            width: 4px;
+            background: linear-gradient(180deg, #ff2b2b, #ff7a1f);
+            opacity: 0.95;
+        }
+
+        .step-section:hover {
+            transform: translateY(-2px);
+            border-color: rgba(255, 255, 255, 0.13);
+            box-shadow: 0 22px 42px rgba(0, 0, 0, 0.22);
+        }
+
+        .step-number {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 38px;
+            height: 38px;
+            border-radius: 14px;
+            background: linear-gradient(135deg, var(--red), #ff6a1f);
+            color: #fff;
+            font-weight: 800;
+            font-size: 1rem;
+            margin-right: 14px;
+            box-shadow: 0 14px 26px rgba(255, 43, 43, 0.24);
+            flex-shrink: 0;
+        }
+
+        .step-title {
+            font-size: 1.35rem;
+            margin-bottom: 14px;
+            color: #fff;
+            display: flex;
+            align-items: center;
+            letter-spacing: -0.03em;
+        }
+
+        .step-content {
+            margin-left: 52px;
+        }
+
+        .step-content p {
+            color: var(--muted);
+            line-height: 1.75;
+            margin-bottom: 12px;
+        }
+
+        .step-content strong {
+            color: #fff;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 46px;
+            padding: 0 22px;
+            background: linear-gradient(135deg, var(--red), #ff6a1f);
+            color: #fff;
+            text-decoration: none;
+            text-align: center;
+            border-radius: 999px;
+            font-weight: 700;
+            border: none;
+            cursor: pointer;
+            transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+            font-size: 0.95rem;
+            margin-top: 8px;
+            box-shadow: 0 16px 30px rgba(255, 43, 43, 0.24);
+        }
+
+        .btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 20px 36px rgba(255, 43, 43, 0.3);
+        }
+
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.06);
+            border: 1px solid rgba(255, 255, 255, 0.14);
+            box-shadow: none;
+        }
+
+        .btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.09);
+            box-shadow: none;
+        }
+
+        .code-block {
+            background: rgba(255, 255, 255, 0.04);
             border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 6px;
-            padding: 16px;
-            font-size: 0.9rem;
+            border-radius: 16px;
+            padding: 14px 16px;
+            margin: 12px 0;
+            font-family: Consolas, Menlo, Monaco, monospace;
+            color: var(--green);
+            overflow-x: auto;
+            font-size: 0.98rem;
+            box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.04);
+        }
+
+        .warning {
+            background: var(--gold-soft);
+            border: 1px solid rgba(251, 191, 36, 0.24);
+            border-radius: 14px;
+            padding: 12px 14px;
+            margin: 10px 0;
+            color: #facc15;
+            font-size: 0.92rem;
+            line-height: 1.6;
+        }
+
+        .success {
+            background: var(--green-soft);
+            border: 1px solid rgba(74, 222, 128, 0.24);
+            border-radius: 16px;
+            padding: 14px 16px;
+            margin: 15px 0;
+            color: var(--green);
+            font-size: 0.95rem;
+            line-height: 1.7;
         }
 
         .back-link {
             text-align: center;
-            margin-top: 20px;
+            margin-top: 24px;
         }
 
         .back-link a {
-            color: #e50914;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 46px;
+            padding: 0 22px;
+            border-radius: 999px;
+            color: #fff;
             text-decoration: none;
-            font-weight: 600;
-            font-size: 1.1rem;
+            font-weight: 700;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            transition: transform 0.2s ease, background 0.2s ease, border-color 0.2s ease;
         }
 
         .back-link a:hover {
-            text-decoration: underline;
+            transform: translateY(-1px);
+            background: rgba(255, 255, 255, 0.08);
+            border-color: rgba(255, 255, 255, 0.18);
+        }
+
+        ol {
+            margin-left: 20px;
+            color: var(--muted);
+            line-height: 1.8;
+        }
+
+        li {
+            margin-bottom: 8px;
+        }
+
+        @media (max-width: 768px) {
+            body {
+                padding: 18px 12px 28px;
+            }
+
+            .container {
+                padding: 24px 18px;
+                border-radius: 22px;
+            }
+
+            h1 {
+                font-size: 1.9rem;
+            }
+
+            .step-section {
+                padding: 20px;
+            }
+
+            .step-title {
+                font-size: 1.2rem;
+                align-items: flex-start;
+            }
+
+            .step-content {
+                margin-left: 0;
+            }
+
+            .step-number {
+                width: 34px;
+                height: 34px;
+                border-radius: 12px;
+                margin-right: 12px;
+            }
+
+            .btn,
+            .back-link a {
+                width: 100%;
+            }
         }
     </style>
 </head>
@@ -210,17 +363,20 @@
     <div class="container">
         <div class="header">
             <h1>HƯỚNG DẪN CÀI ĐẶT<br>EXTENSION TIỆM BÁNH NETFLIX</h1>
-            <div class="info-box" style="margin-top: 12px; margin-bottom: 20px; font-size: 0.9rem; line-height: 1.6; text-align: justify; text-justify: inter-word;">
-                <div style="padding-bottom: 10px; margin-bottom: 10px; border-bottom: 1px solid rgba(255, 255, 255, 0.1); color: #ddd;">
-                    <span style="color: #4ade80; font-weight: 600;">Bảo mật & Minh bạch:</span> Toàn bộ mã nguồn của extension này được công khai minh bạch, cho phép mọi cá nhân hoặc tổ chức kiểm chứng độc lập. Chúng tôi cam kết không thu thập bất kỳ dữ liệu cá nhân nào và không yêu cầu quyền truy cập trái phép vào hệ thống của người dùng.
+            <div class="info-box">
+                <div style="padding-bottom: 12px; margin-bottom: 12px; border-bottom: 1px solid rgba(255, 255, 255, 0.08);">
+                    <span style="color: var(--green); font-weight: 700;">Bảo mật & Minh bạch:</span>
+                    Toàn bộ mã nguồn của extension này được công khai minh bạch, cho phép mọi cá nhân hoặc tổ chức kiểm chứng độc lập.
+                    Chúng tôi cam kết không thu thập bất kỳ dữ liệu cá nhân nào và không yêu cầu quyền truy cập trái phép vào hệ thống của người dùng.
                 </div>
-                <div style="color: #ddd;">
-                    <span style="color: #fbbf24; font-weight: 600;">Yêu cầu trình duyệt:</span> Để đảm bảo trải nghiệm mượt mà và tránh các xung đột về tính tương thích của Extension, vui lòng sử dụng trình duyệt <strong style="color: #fff;">Google Chrome</strong> hoặc <strong style="color: #fff;">Microsoft Edge</strong>.
+                <div>
+                    <span style="color: var(--gold); font-weight: 700;">Yêu cầu trình duyệt:</span>
+                    Để đảm bảo trải nghiệm mượt mà và tránh các xung đột về tính tương thích của Extension, vui lòng sử dụng trình duyệt
+                    <strong style="color: #fff;">Google Chrome</strong> hoặc <strong style="color: #fff;">Microsoft Edge</strong>.
                 </div>
             </div>
         </div>
 
-        <!-- Step 1: Watch Video -->
         <div class="step-section">
             <div class="step-title">
                 <span class="step-number">1</span>
@@ -233,7 +389,6 @@
             </div>
         </div>
 
-        <!-- Step 2: Download Extension -->
         <div class="step-section">
             <div class="step-title">
                 <span class="step-number">2</span>
@@ -241,14 +396,13 @@
             </div>
             <div class="step-content">
                 <p>Click nút bên dưới để tải folder extension:</p>
-                
+
                 <button class="btn" onclick="downloadExtension()">
                     Tải Extension
                 </button>
             </div>
         </div>
 
-        <!-- Step 3: Install Extension -->
         <div class="step-section">
             <div class="step-title">
                 <span class="step-number">3</span>
@@ -264,7 +418,7 @@
                 <p>Bật "Chế độ dành cho nhà phát triển" ở góc trên bên phải</p>
 
                 <p style="margin-top: 15px;"><strong>C. Load Extension:</strong></p>
-                <ol style="margin-left: 20px; color: #ddd; line-height: 1.8;">
+                <ol>
                     <li>Click nút <strong>"Tải tiện ích đã giải nén" ở góc bên trái</strong></li>
                     <li>Chọn folder extension đã tải ở bước 2</li>
                     <li>Extension sẽ xuất hiện</li>
@@ -276,15 +430,14 @@
             </div>
         </div>
 
-        <!-- Alternative for Edge Users -->
-        <div class="step-section" style="border-left-color: #0078d4;">
+        <div class="step-section" style="border-color: rgba(96, 165, 250, 0.18);">
             <div class="step-title">
-                <span class="step-number" style="background: #0078d4;"></span>
+                <span class="step-number" style="background: linear-gradient(135deg, #60a5fa, #2563eb); box-shadow: 0 14px 26px rgba(37, 99, 235, 0.22);">E</span>
                 <span>Dành cho Microsoft Edge</span>
             </div>
             <div class="step-content">
                 <p>Nếu bạn dùng Edge, mở:</p>
-                <div class="code-block">
+                <div class="code-block" style="color: var(--blue);">
                     edge://extensions/
                 </div>
 
@@ -292,24 +445,15 @@
             </div>
         </div>
 
-        <!-- Back to Home -->
         <div class="back-link">
             <a href="/">← Quay lại trang chủ</a>
         </div>
     </div>
 
     <script>
-
-        /**
-         * Download extension
-         * Opens Google Drive link to download extension ZIP
-         */
         function downloadExtension() {
             const driveUrl = 'https://drive.google.com/drive/folders/1eozcbA4q54f8Ox46d2HlptSD92tDFHCl?usp=sharing';
-            
-            // Open Google Drive in new tab
             window.open(driveUrl, '_blank');
-            
             console.log('Opening Google Drive to download extension');
         }
 

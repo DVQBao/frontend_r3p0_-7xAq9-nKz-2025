@@ -249,6 +249,110 @@ const antiSpam = {
     MAX_ATTEMPTS_PER_HOUR: 5
 };
 
+function isDesktopAuthV2() {
+    return document.documentElement.classList.contains('auth-desktop-v2');
+}
+
+function syncDesktopAuthStageHeight() {
+    if (!isDesktopAuthV2()) return;
+
+    const stage = document.querySelector('.auth-form-stage');
+    if (!stage) return;
+
+    const sections = Array.from(stage.querySelectorAll('.form-section'));
+    if (!sections.length) return;
+
+    let maxHeight = 0;
+    sections.forEach((section) => {
+        maxHeight = Math.max(maxHeight, section.scrollHeight || 0);
+    });
+
+    if (maxHeight > 0) {
+        stage.style.minHeight = `${Math.ceil(maxHeight + 12)}px`;
+    }
+
+}
+
+function updateRegisterConfirmState() {
+    const passwordInput = document.getElementById('registerPassword');
+    const confirmInput = document.getElementById('registerConfirmPassword');
+    if (!passwordInput || !confirmInput) return;
+
+    const confirmGroup = confirmInput.closest('.form-group');
+    if (!confirmGroup) return;
+
+    confirmGroup.classList.remove('is-valid', 'is-invalid');
+
+    const password = passwordInput.value;
+    const confirmPassword = confirmInput.value;
+    if (!confirmPassword) return;
+
+    if (password && password === confirmPassword) {
+        confirmGroup.classList.add('is-valid');
+    } else {
+        confirmGroup.classList.add('is-invalid');
+    }
+}
+
+function getCaptchaIconMarkup(state) {
+    if (state === 'pending') {
+        return '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12a9 9 0 1 1-2.64-6.36"></path><path d="M21 3v6h-6"></path></svg>';
+    }
+
+    if (state === 'verified') {
+        return '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m5 12 5 5 9-9"></path></svg>';
+    }
+
+    return '';
+}
+
+function setCaptchaVisualState(state) {
+    const checkbox = document.getElementById('captchaCheckbox');
+    const box = document.getElementById('captchaBox');
+    if (!checkbox || !box) return;
+
+    const statusMap = {
+        idle: 'X\u00e1c minh nhanh',
+        pending: '\u0110ang ki\u1ec3m tra',
+        verified: '\u0110\u00e3 x\u00e1c minh'
+    };
+    box.dataset.status = statusMap[state] || statusMap.idle;
+
+    if (!isDesktopAuthV2()) {
+        checkbox.classList.remove('checked');
+        box.classList.remove('verified', 'is-pending');
+
+        if (state === 'pending') {
+            box.classList.add('is-pending');
+            checkbox.innerHTML = '⏳';
+            return;
+        }
+
+        if (state === 'verified') {
+            checkbox.classList.add('checked');
+            box.classList.add('verified');
+            checkbox.innerHTML = '✓';
+            return;
+        }
+
+        checkbox.innerHTML = '';
+        return;
+    }
+
+    checkbox.classList.remove('checked', 'is-loading');
+    box.classList.remove('verified', 'is-pending');
+
+    if (state === 'pending') {
+        checkbox.classList.add('is-loading');
+        box.classList.add('is-pending');
+    } else if (state === 'verified') {
+        checkbox.classList.add('checked');
+        box.classList.add('verified');
+    }
+
+    checkbox.innerHTML = getCaptchaIconMarkup(state);
+}
+
 // ========================================
 // TAB SWITCHING
 // ========================================
@@ -277,6 +381,7 @@ function switchTab(tab) {
 
     // Clear messages
     clearMessages();
+    requestAnimationFrame(syncDesktopAuthStageHeight);
 }
 
 // ========================================
@@ -312,6 +417,68 @@ function clearMessages() {
 // CUSTOM MODAL DIALOG SYSTEM
 // ========================================
 
+function resolveAuthModalIcon(icon) {
+    if (typeof icon !== 'string') return '';
+    const trimmed = icon.trim();
+    if (!trimmed) return '';
+    if (trimmed.includes('<svg')) return trimmed;
+
+    const iconMap = {
+        'ℹ️': 'info',
+        'ℹ': 'info',
+        '❓': 'help',
+        '❔': 'help',
+        '⚠️': 'warning',
+        '⚠': 'warning',
+        '❌': 'error',
+        '✅': 'success',
+        '🎁': 'gift',
+        '📋': 'clipboard',
+        '📧': 'mail',
+        '🔒': 'lock',
+        '🔑': 'key',
+        '💳': 'card',
+        '🚫': 'ban',
+        '🚪': 'logout'
+    };
+
+    const paletteMap = {
+        info: '#60a5fa',
+        help: '#60a5fa',
+        warning: '#fbbf24',
+        error: '#f87171',
+        success: '#4ade80',
+        gift: '#fbbf24',
+        clipboard: '#93c5fd',
+        mail: '#fbbf24',
+        lock: '#fbbf24',
+        key: '#fbbf24',
+        card: '#fbbf24',
+        ban: '#f87171',
+        logout: '#cbd5e1'
+    };
+
+    const name = iconMap[trimmed] || 'info';
+    const stroke = paletteMap[name];
+    const icons = {
+        info: `<svg viewBox="0 0 24 24" fill="none" stroke="${stroke}" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"></circle><path d="M12 10v5"></path><path d="M12 7h.01"></path></svg>`,
+        help: `<svg viewBox="0 0 24 24" fill="none" stroke="${stroke}" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"></circle><path d="M9.5 9a2.5 2.5 0 1 1 4.42 1.63c-.7.8-1.92 1.43-1.92 2.87"></path><path d="M12 17h.01"></path></svg>`,
+        warning: `<svg viewBox="0 0 24 24" fill="none" stroke="${stroke}" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0Z"></path><path d="M12 9v4"></path><path d="M12 17h.01"></path></svg>`,
+        error: `<svg viewBox="0 0 24 24" fill="none" stroke="${stroke}" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"></circle><path d="m15 9-6 6"></path><path d="m9 9 6 6"></path></svg>`,
+        success: `<svg viewBox="0 0 24 24" fill="none" stroke="${stroke}" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"></circle><path d="m8.8 12.5 2.2 2.2 4.7-5"></path></svg>`,
+        gift: `<svg viewBox="0 0 24 24" fill="none" stroke="${stroke}" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="8" width="18" height="13" rx="2"></rect><path d="M12 8v13"></path><path d="M19 8a2 2 0 0 0 0-4c-2.2 0-3.7 2.1-4.4 4"></path><path d="M5 8a2 2 0 1 1 0-4c2.2 0 3.7 2.1 4.4 4"></path></svg>`,
+        clipboard: `<svg viewBox="0 0 24 24" fill="none" stroke="${stroke}" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"><rect x="8" y="4" width="13" height="16" rx="2"></rect><path d="M16 4V2H8v2"></path><path d="M5 8H3a1 1 0 0 0-1 1v11a2 2 0 0 0 2 2h10"></path></svg>`,
+        mail: `<svg viewBox="0 0 24 24" fill="none" stroke="${stroke}" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"></rect><path d="m4 7 8 5 8-5"></path></svg>`,
+        lock: `<svg viewBox="0 0 24 24" fill="none" stroke="${stroke}" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="11" width="14" height="10" rx="2"></rect><path d="M8 11V8a4 4 0 1 1 8 0v3"></path></svg>`,
+        key: `<svg viewBox="0 0 24 24" fill="none" stroke="${stroke}" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"><circle cx="7.5" cy="15.5" r="5.5"></circle><path d="m13 10 8-8"></path><path d="m17 6 2 2"></path><path d="m15 8 2 2"></path></svg>`,
+        card: `<svg viewBox="0 0 24 24" fill="none" stroke="${stroke}" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="5" width="20" height="14" rx="2"></rect><path d="M2 10h20"></path><path d="M7 15h2"></path></svg>`,
+        ban: `<svg viewBox="0 0 24 24" fill="none" stroke="${stroke}" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"></circle><path d="M8.5 8.5 15.5 15.5"></path><path d="M15.5 8.5 8.5 15.5"></path></svg>`,
+        logout: `<svg viewBox="0 0 24 24" fill="none" stroke="${stroke}" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"></path><path d="M10 17l5-5-5-5"></path><path d="M15 12H3"></path></svg>`
+    };
+
+    return icons[name] || icons.info;
+}
+
 function showCustomModal(options) {
     const {
         icon = 'ℹ️',
@@ -326,7 +493,9 @@ function showCustomModal(options) {
     const modalBody = document.getElementById('customModalBody');
     const modalFooter = document.getElementById('customModalFooter');
 
-    modalIcon.textContent = icon;
+    const iconMarkup = resolveAuthModalIcon(icon);
+    modalIcon.innerHTML = iconMarkup;
+    modalIcon.style.display = iconMarkup ? 'inline-flex' : 'none';
     modalTitle.textContent = title;
 
     // Support both plain text and pre-formatted text
@@ -1538,21 +1707,18 @@ function togglePassword(inputId, iconElement) {
 function toggleCaptcha() {
     const checkbox = document.getElementById('captchaCheckbox');
     const box = document.getElementById('captchaBox');
+    if (!checkbox || !box || box.classList.contains('is-pending')) return;
 
     if (antiSpam.captchaVerified) {
         // Uncheck
         antiSpam.captchaVerified = false;
-        checkbox.classList.remove('checked');
-        checkbox.innerHTML = '';
-        box.classList.remove('verified');
+        setCaptchaVisualState('idle');
     } else {
         // Check (simulate delay)
-        checkbox.innerHTML = '⏳';
+        setCaptchaVisualState('pending');
         setTimeout(() => {
             antiSpam.captchaVerified = true;
-            checkbox.classList.add('checked');
-            checkbox.innerHTML = '✓';
-            box.classList.add('verified');
+            setCaptchaVisualState('verified');
             console.log('✅ CAPTCHA verified');
         }, 800);
     }
@@ -1578,30 +1744,40 @@ function checkPasswordStrength() {
     const password = document.getElementById('registerPassword').value;
     const strengthFill = document.getElementById('strengthFill');
     const strengthText = document.getElementById('strengthText');
+    const strengthCard = strengthFill ? strengthFill.closest('.password-strength') : null;
 
     if (!password) {
         strengthFill.className = 'strength-fill';
         strengthText.textContent = '';
+        if (strengthCard) strengthCard.dataset.state = 'empty';
+        updateRegisterConfirmState();
         return;
     }
 
     const strength = calculatePasswordStrength(password);
 
     strengthFill.className = 'strength-fill';
+    let strengthState = 'weak';
 
     if (strength <= 1) {
         strengthFill.classList.add('strength-weak');
         strengthText.textContent = 'Yếu';
         strengthText.style.color = '#dc3545';
+        strengthState = 'weak';
     } else if (strength === 2) {
         strengthFill.classList.add('strength-medium');
         strengthText.textContent = 'Trung bình';
         strengthText.style.color = '#ffc107';
+        strengthState = 'medium';
     } else {
         strengthFill.classList.add('strength-strong');
         strengthText.textContent = 'Mạnh';
         strengthText.style.color = '#28a745';
+        strengthState = 'strong';
     }
+
+    if (strengthCard) strengthCard.dataset.state = strengthState;
+    updateRegisterConfirmState();
 }
 
 // ========================================
@@ -1633,6 +1809,25 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     `;
     document.head.appendChild(style);
+
+    const registerConfirmPassword = document.getElementById('registerConfirmPassword');
+    if (registerConfirmPassword) {
+        registerConfirmPassword.addEventListener('input', updateRegisterConfirmState);
+    }
+
+    setCaptchaVisualState(antiSpam.captchaVerified ? 'verified' : 'idle');
+    updateRegisterConfirmState();
+
+    if (isDesktopAuthV2()) {
+        requestAnimationFrame(syncDesktopAuthStageHeight);
+        window.addEventListener('resize', syncDesktopAuthStageHeight);
+
+        if (document.fonts && document.fonts.ready) {
+            document.fonts.ready.then(() => {
+                requestAnimationFrame(syncDesktopAuthStageHeight);
+            }).catch(() => { });
+        }
+    }
 });
 
 // Expose logout for global access
@@ -2113,14 +2308,21 @@ function showCelebrationModal(celebrationData, token, user) {
             <div class="celeb-content">
                 <!-- Hero Section -->
                 <div class="celeb-hero">
-                    <div class="celeb-icon-wrap">
-                        <div class="celeb-icon-glow"></div>
-                        ${svgIcons.smartphone}
-                        <div class="celeb-sparkle celeb-sparkle-1">${svgIcons.sparkles}</div>
-                        <div class="celeb-sparkle celeb-sparkle-2">${svgIcons.sparkles}</div>
+                    <div class="celeb-hero-main">
+                        <div class="celeb-icon-wrap">
+                            <div class="celeb-icon-glow"></div>
+                            ${svgIcons.smartphone}
+                            <div class="celeb-sparkle celeb-sparkle-1">${svgIcons.sparkles}</div>
+                            <div class="celeb-sparkle celeb-sparkle-2">${svgIcons.sparkles}</div>
+                        </div>
+                        <div class="celeb-hero-copy">
+                            <div class="celeb-hero-badges" aria-hidden="true">
+                                <span class="celeb-launch-pill">Mobile Access Live</span>
+                                <span class="celeb-version-chip">Extension v${CELEBRATION_EXTENSION_VERSION}</span>
+                            </div>
+                            <h1 class="celeb-title">BIG UPDATE</h1>
+                        </div>
                     </div>
-                    <h1 class="celeb-title">BIG UPDATE</h1>
-                    <p class="celeb-subtitle">Tiệm Bánh Netflix đã có trên điện thoại!</p>
                 </div>
                 
                 <!-- Main Description -->
@@ -2129,46 +2331,57 @@ function showCelebrationModal(celebrationData, token, user) {
                 <!-- Advertisement: Góc học tập landing page (top) -->
                 <div class="celeb-top-cards">
                     <div class="celeb-grid-info celeb-study-card">
-                        <div class="celeb-info-card" style="background: linear-gradient(135deg, rgba(16,185,129,0.18) 0%, rgba(59,130,246,0.08) 100%); border: 1px solid rgba(16,185,129,0.40);">
-                            <div class="celeb-info-summary-title" style="background: transparent; border: none; padding: 0;">
+                        <div class="celeb-info-card celeb-info-card-study">
+                            <div class="celeb-card-head celeb-desktop-only">
+                                <div class="celeb-card-head-icon celeb-card-head-icon-study" aria-hidden="true">${svgIcons.studyBook}</div>
+                                <div class="celeb-card-head-copy">
+                                    <div class="celeb-card-head-title">Góc Học Tập</div>
+                                    <div class="celeb-card-head-subtitle">Tiệm Bánh Netflix</div>
+                                </div>
+                            </div>
+                            <div class="celeb-card-section-label celeb-desktop-only">Tài nguyên hỗ trợ</div>
+                            <div class="celeb-info-summary-title celeb-info-summary-title-plain celeb-mobile-copy">
                                 Góc học tập - Tiệm Bánh Netflix
                             </div>
-                            <div class="celeb-info-summary-subtitle">Ra mắt dịch vụ hỗ trợ định dạng văn bản, tài liệu... để các bạn có thêm thời gian nghỉ ngơi, thư giãn, Netflix and chill</div>
+                            <div class="celeb-info-summary-subtitle celeb-mobile-copy">Ra mắt dịch vụ hỗ trợ định dạng văn bản, tài liệu... để các bạn có thêm thời gian nghỉ ngơi, thư giãn, Netflix and chill</div>
 
                             <div class="celeb-info-summary-rows">
-                                <div class="celeb-info-summary-row">
+                                <div class="celeb-info-summary-row celeb-info-summary-row-link">
                                     <span class="celeb-info-icon celeb-info-icon-green" aria-hidden="true">${svgIcons.studyBook}</span>
                                     <div class="celeb-info-summary-text">
                                         <span class="celeb-info-summary-sub">Tại sao cần dịch vụ này?</span>
                                         <span class="celeb-info-summary-subtitle">Khi deadline ập đến cùng lúc</span>
                                     </div>
+                                    <span class="celeb-item-arrow celeb-desktop-only" aria-hidden="true">${svgIcons.arrowRight}</span>
                                 </div>
 
-                                <div class="celeb-info-summary-row">
+                                <div class="celeb-info-summary-row celeb-info-summary-row-link">
                                     <span class="celeb-info-icon celeb-info-icon-tv" aria-hidden="true">${svgIcons.studyTag}</span>
                                     <div class="celeb-info-summary-text">
                                         <span class="celeb-info-summary-sub">Gói dịch vụ &amp; bảng giá</span>
                                         <span class="celeb-info-summary-subtitle">Rõ ràng, không phát sinh</span>
                                     </div>
+                                    <span class="celeb-item-arrow celeb-desktop-only" aria-hidden="true">${svgIcons.arrowRight}</span>
                                 </div>
 
-                                <div class="celeb-info-summary-row">
+                                <div class="celeb-info-summary-row celeb-info-summary-row-link">
                                     <span class="celeb-info-icon celeb-info-icon-amber" aria-hidden="true">${svgIcons.studyChat}</span>
                                     <div class="celeb-info-summary-text">
                                         <span class="celeb-info-summary-sub">Quăng cái file qua đây</span>
                                         <span class="celeb-info-summary-subtitle">Rồi đứng dậy đi coi phim liền cho haiii</span>
                                     </div>
+                                    <span class="celeb-item-arrow celeb-desktop-only" aria-hidden="true">${svgIcons.arrowRight}</span>
                                 </div>
                             </div>
 
-                            <div style="margin-top: 14px; display: flex; gap: 10px; flex-wrap: wrap; align-items: center;">
+                            <div class="celeb-card-actions">
                                 <a
                                     href="../study/"
                                     target="_blank"
                                     rel="noopener noreferrer"
                                     class="celeb-download"
-                                    style="padding: 10px 18px;"
                                 >
+                                    <span class="celeb-download-icon celeb-desktop-only" aria-hidden="true">${svgIcons.check}</span>
                                     <span>Ghé qua góc học tập</span>
                                 </a>
                             </div>
@@ -2202,7 +2415,7 @@ function showCelebrationModal(celebrationData, token, user) {
                                     <span class="celeb-partner-col-title">LunaKey.net</span>
                                     <span class="celeb-partner-col-subtitle">Tài khoản giá rẻ, chất lượng cao</span>
                                 </span>
-                                <span class="celeb-partner-btn-icon" aria-hidden="true">${svgIcons.externalLink}</span>
+                                <span class="celeb-partner-btn-icon" aria-hidden="true">${svgIcons.externalLink}<span class="celeb-partner-btn-label celeb-desktop-only">Truy cập</span></span>
                             </button>
                             <div class="celeb-partner-tag-grid">
                                 <span class="celeb-partner-tag">
@@ -2246,7 +2459,7 @@ function showCelebrationModal(celebrationData, token, user) {
                                     <span class="celeb-partner-col-title">LunaSub.com</span>
                                     <span class="celeb-partner-col-subtitle">Dịch vụ tăng tương tác chất lượng cao</span>
                                 </span>
-                                <span class="celeb-partner-btn-icon" aria-hidden="true">${svgIcons.externalLink}</span>
+                                <span class="celeb-partner-btn-icon" aria-hidden="true">${svgIcons.externalLink}<span class="celeb-partner-btn-label celeb-desktop-only">Truy cập</span></span>
                             </button>
                             <div class="celeb-partner-tag-grid">
                                 <span class="celeb-partner-tag">
@@ -2302,30 +2515,41 @@ function showCelebrationModal(celebrationData, token, user) {
                     <!-- Single feature card: App + TV + các cập nhật khác -->
                     <div class="celeb-grid-info celeb-message-card">
                     <div class="celeb-info-card celeb-info-card-summary">
-                        <div class="celeb-info-summary-title" style="background: transparent; border: none; padding: 0; margin-bottom: 10px;">THÔNG ĐIỆP TỪ TIỆM BÁNH</div>
+                        <div class="celeb-card-head celeb-desktop-only">
+                            <div class="celeb-card-head-icon" aria-hidden="true">${svgIcons.studyChat}</div>
+                            <div class="celeb-card-head-copy">
+                                <div class="celeb-card-head-title">Thông Điệp</div>
+                                <div class="celeb-card-head-subtitle">Từ Tiệm Bánh</div>
+                            </div>
+                        </div>
+                        <div class="celeb-card-section-label celeb-desktop-only">Tính năng mới</div>
+                        <div class="celeb-info-summary-title celeb-info-summary-title-plain celeb-mobile-copy">THÔNG ĐIỆP TỪ TIỆM BÁNH</div>
                         <div class="celeb-info-summary-rows">
-                            <div class="celeb-info-summary-row">
-                                <span class="celeb-info-icon celeb-info-icon-green" aria-hidden="true">${svgIcons.smartphone}</span>
+                            <div class="celeb-info-summary-row celeb-info-summary-row-link celeb-info-summary-row-message">
+                                <span class="celeb-info-icon celeb-info-icon-message" aria-hidden="true">${svgIcons.smartphone}</span>
                                 <div class="celeb-info-summary-text">
                                     <span class="celeb-info-summary-sub">Xem Netflix trên điện thoại</span>
                                     <span class="celeb-info-summary-subtitle">Với chức năng Tạo link đăng nhập.</span>
                                 </div>
+                                <span class="celeb-item-arrow celeb-desktop-only" aria-hidden="true">${svgIcons.arrowRight}</span>
                             </div>
 
-                            <div class="celeb-info-summary-row">
+                            <div class="celeb-info-summary-row celeb-info-summary-row-link celeb-info-summary-row-message">
                                 <span class="celeb-info-icon celeb-info-icon-tv" aria-hidden="true">${svgIcons.tv}</span>
                                 <div class="celeb-info-summary-text">
                                     <span class="celeb-info-summary-sub">Kích hoạt Netflix TV bằng điện thoại</span>
                                     <span class="celeb-info-summary-subtitle">Không cần dùng PC, nhanh chóng, tiện lợi.</span>
                                 </div>
+                                <span class="celeb-item-arrow celeb-desktop-only" aria-hidden="true">${svgIcons.arrowRight}</span>
                             </div>
 
-                            <div class="celeb-info-summary-row">
+                            <div class="celeb-info-summary-row celeb-info-summary-row-link celeb-info-summary-row-message">
                                 <span class="celeb-info-icon celeb-info-icon-ctv" aria-hidden="true">${svgIcons.briefcase}</span>
                                 <div class="celeb-info-summary-text">
                                     <span class="celeb-info-summary-sub">Chương trình CTV Tiệm Bánh Netflix</span>
                                     <span class="celeb-info-summary-subtitle">Resell dịch vụ Tiệm Bánh, có API để build web/bot.</span>
                                 </div>
+                                <span class="celeb-item-arrow celeb-desktop-only" aria-hidden="true">${svgIcons.arrowRight}</span>
                             </div>
                         </div>
                     </div>
@@ -2336,10 +2560,16 @@ function showCelebrationModal(celebrationData, token, user) {
                 </div>
                 
                 <!-- CTA Button -->
-                <button id="celebrationBtn" class="celeb-btn" disabled>
-                    <span class="celeb-btn-text">Đợi một chút...</span>
-                    <span class="celeb-btn-countdown"></span>
-                </button>
+                <div class="celeb-cta-panel">
+                    <div class="celeb-cta-copy celeb-desktop-only">
+                        <h2>Sẵn sàng trải nghiệm?</h2>
+                        <p>Khám phá ngay phương thức giải trí chất lượng cao với chi phí tối ưu từ Tiệm Bánh Netflix.</p>
+                    </div>
+                    <button id="celebrationBtn" class="celeb-btn" disabled>
+                        <span class="celeb-btn-text">Đợi một chút...</span>
+                        <span class="celeb-btn-countdown"></span>
+                    </button>
+                </div>
             </div>
         </div>
         
@@ -2877,20 +3107,95 @@ function showCelebrationModal(celebrationData, token, user) {
                 display: block; /* Mobile stays unchanged */
             }
 
+            .celeb-hero-main {
+                display: block;
+            }
+
+            .celeb-hero-copy {
+                display: block;
+            }
+
+            .celeb-desktop-only,
+            .celeb-hero-badges,
+            .celeb-hero-signals,
+            .celeb-card-kicker,
+            .celeb-partner-chip-row {
+                display: none;
+            }
+
+            .celeb-info-card-study {
+                background: linear-gradient(135deg, rgba(16,185,129,0.18) 0%, rgba(59,130,246,0.08) 100%);
+                border: 1px solid rgba(16,185,129,0.40);
+            }
+
+            .celeb-info-summary-title-plain {
+                background: transparent;
+                border: none;
+                padding: 0;
+                margin-bottom: 10px;
+            }
+
+            .celeb-card-actions {
+                margin-top: 14px;
+                display: flex;
+                gap: 10px;
+                flex-wrap: wrap;
+                align-items: center;
+            }
+
             @media (min-width: 601px) {
                 .celeb-content {
-                    max-width: 1100px;
+                    max-width: 1160px;
+                    padding: 42px 40px 34px;
+                    border-radius: 34px;
+                    background:
+                        linear-gradient(180deg, rgba(8, 11, 18, 0.94) 0%, rgba(7, 10, 16, 0.88) 100%);
+                    border: 1px solid rgba(255, 255, 255, 0.08);
+                    box-shadow:
+                        0 38px 90px rgba(2, 6, 23, 0.62),
+                        inset 0 1px 0 rgba(255, 255, 255, 0.04);
+                    overflow: hidden;
+                    backdrop-filter: blur(18px);
+                }
+
+                .celeb-content::before,
+                .celeb-content::after {
+                    content: "";
+                    position: absolute;
+                    pointer-events: none;
+                }
+
+                .celeb-content::before {
+                    inset: 0;
+                    background:
+                        radial-gradient(circle at 0% 0%, rgba(239, 68, 68, 0.16), transparent 28%),
+                        radial-gradient(circle at 100% 0%, rgba(59, 130, 246, 0.12), transparent 30%),
+                        linear-gradient(180deg, rgba(255, 255, 255, 0.03), transparent 20%);
+                    opacity: 0.9;
+                }
+
+                .celeb-content::after {
+                    top: 0;
+                    left: 38px;
+                    right: 38px;
+                    height: 1px;
+                    background: linear-gradient(90deg, transparent, rgba(248, 250, 252, 0.45), transparent);
+                }
+
+                .celeb-content > * {
+                    position: relative;
+                    z-index: 1;
                 }
 
                 .celeb-top-cards {
                     display: grid;
-                    grid-template-columns: 1fr 1fr;
+                    grid-template-columns: minmax(0, 0.92fr) minmax(0, 1.08fr);
                     grid-template-areas:
                         "study partner"
                         "message partner";
-                    column-gap: 22px;
-                    row-gap: 22px;
-                    align-items: stretch; /* Make right column height match left column total height */
+                    column-gap: 24px;
+                    row-gap: 24px;
+                    align-items: stretch;
                     margin-bottom: 32px;
                 }
 
@@ -2908,15 +3213,506 @@ function showCelebrationModal(celebrationData, token, user) {
 
                 .celeb-top-cards > .celeb-partner-card {
                     margin: 0;
-                    grid-area: partner; /* Span both rows */
+                    grid-area: partner;
                 }
 
-                /* Shrink CTA width on desktop so it doesn't look over-stretched */
+                .celeb-hero {
+                    text-align: left;
+                    margin-bottom: 0;
+                }
+
+                .celeb-hero-main {
+                    display: grid;
+                    grid-template-columns: 144px minmax(0, 1fr);
+                    gap: 26px;
+                    align-items: center;
+                }
+
+                .celeb-hero-copy {
+                    display: flex;
+                    flex-direction: column;
+                    align-items: flex-start;
+                    min-width: 0;
+                }
+
+                .celeb-hero-badges {
+                    display: flex;
+                    flex-wrap: wrap;
+                    gap: 10px;
+                    margin-bottom: 16px;
+                }
+
+                .celeb-launch-pill,
+                .celeb-version-chip {
+                    display: inline-flex;
+                    align-items: center;
+                    min-height: 34px;
+                    padding: 0 14px;
+                    border-radius: 999px;
+                    font-size: 0.72rem;
+                    font-weight: 800;
+                    letter-spacing: 0.16em;
+                    text-transform: uppercase;
+                    backdrop-filter: blur(12px);
+                }
+
+                .celeb-launch-pill {
+                    color: #ffe4e6;
+                    background: rgba(225, 29, 72, 0.18);
+                    border: 1px solid rgba(251, 113, 133, 0.32);
+                    box-shadow: 0 12px 28px rgba(225, 29, 72, 0.18);
+                }
+
+                .celeb-version-chip {
+                    color: rgba(226, 232, 240, 0.9);
+                    background: rgba(15, 23, 42, 0.72);
+                    border: 1px solid rgba(148, 163, 184, 0.22);
+                }
+
+                .celeb-icon-wrap {
+                    width: 132px;
+                    height: 132px;
+                    margin: 0;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    border-radius: 34px;
+                    background:
+                        radial-gradient(circle at 30% 20%, rgba(248, 113, 113, 0.25), transparent 40%),
+                        linear-gradient(180deg, rgba(17, 24, 39, 0.96), rgba(10, 14, 22, 0.88));
+                    border: 1px solid rgba(248, 113, 113, 0.18);
+                    box-shadow:
+                        0 28px 50px rgba(2, 6, 23, 0.5),
+                        inset 0 1px 0 rgba(255, 255, 255, 0.05);
+                }
+
+                .celeb-icon-wrap > svg {
+                    width: 94px;
+                    height: 94px;
+                }
+
+                .celeb-icon-glow {
+                    inset: -24px;
+                }
+
+                .celeb-sparkle-1 {
+                    top: -12px;
+                    right: -20px;
+                }
+
+                .celeb-sparkle-2 {
+                    bottom: -4px;
+                    left: -22px;
+                }
+
+                .celeb-title {
+                    font-size: clamp(3.8rem, 6vw, 5.25rem);
+                    line-height: 0.92;
+                    margin: 0 0 12px 0;
+                }
+
+                .celeb-subtitle {
+                    font-size: 1.32rem;
+                    line-height: 1.45;
+                    max-width: 42rem;
+                }
+
+                .celeb-desc {
+                    text-align: left;
+                    font-size: 0.98rem;
+                    max-width: 48rem;
+                    margin: 12px 0 24px 170px;
+                    color: rgba(226, 232, 240, 0.66);
+                }
+
+                .celeb-hero-signals {
+                    display: grid;
+                    grid-template-columns: repeat(3, minmax(0, 1fr));
+                    gap: 14px;
+                    margin: 0 0 28px 170px;
+                }
+
+                .celeb-hero-signal {
+                    min-height: 124px;
+                    padding: 16px 18px;
+                    border-radius: 22px;
+                    border: 1px solid rgba(255, 255, 255, 0.08);
+                    background:
+                        linear-gradient(180deg, rgba(15, 23, 42, 0.78), rgba(9, 14, 24, 0.68));
+                    box-shadow:
+                        inset 0 1px 0 rgba(255, 255, 255, 0.04),
+                        0 16px 36px rgba(2, 6, 23, 0.26);
+                }
+
+                .celeb-hero-signal-phone {
+                    border-color: rgba(248, 113, 113, 0.2);
+                }
+
+                .celeb-hero-signal-tv {
+                    border-color: rgba(96, 165, 250, 0.2);
+                }
+
+                .celeb-hero-signal-ecosystem {
+                    border-color: rgba(52, 211, 153, 0.2);
+                }
+
+                .celeb-hero-signal-label {
+                    display: inline-block;
+                    margin-bottom: 10px;
+                    font-size: 0.68rem;
+                    font-weight: 800;
+                    letter-spacing: 0.16em;
+                    text-transform: uppercase;
+                    color: rgba(248, 250, 252, 0.56);
+                }
+
+                .celeb-hero-signal-title {
+                    display: block;
+                    margin-bottom: 8px;
+                    font-size: 1.02rem;
+                    line-height: 1.35;
+                    color: rgba(248, 250, 252, 0.98);
+                }
+
+                .celeb-hero-signal-copy {
+                    display: block;
+                    font-size: 0.83rem;
+                    line-height: 1.55;
+                    color: rgba(203, 213, 225, 0.72);
+                }
+
+                .celeb-info-card,
+                .celeb-partner-card {
+                    border-radius: 28px;
+                }
+
+                .celeb-info-card {
+                    padding: 26px 24px 22px;
+                    background: linear-gradient(180deg, rgba(11, 15, 23, 0.92), rgba(8, 12, 19, 0.86));
+                    border: 1px solid rgba(255, 255, 255, 0.08);
+                    box-shadow:
+                        0 22px 54px rgba(2, 6, 23, 0.32),
+                        inset 0 1px 0 rgba(255, 255, 255, 0.03);
+                    position: relative;
+                    overflow: hidden;
+                }
+
+                .celeb-info-card::before {
+                    content: "";
+                    position: absolute;
+                    top: 0;
+                    left: 22px;
+                    right: 22px;
+                    height: 1px;
+                    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.24), transparent);
+                }
+
+                .celeb-info-card-study {
+                    background:
+                        radial-gradient(circle at 0% 0%, rgba(16, 185, 129, 0.16), transparent 42%),
+                        linear-gradient(180deg, rgba(8, 19, 20, 0.96), rgba(11, 18, 28, 0.9));
+                    border-color: rgba(52, 211, 153, 0.26);
+                    box-shadow:
+                        0 22px 54px rgba(6, 78, 59, 0.18),
+                        inset 0 1px 0 rgba(255, 255, 255, 0.03);
+                }
+
+                .celeb-info-card.celeb-info-card-summary {
+                    background:
+                        radial-gradient(circle at 100% 0%, rgba(99, 102, 241, 0.2), transparent 38%),
+                        linear-gradient(180deg, rgba(17, 24, 39, 0.96), rgba(14, 18, 32, 0.9));
+                    border-color: rgba(96, 165, 250, 0.22);
+                    box-shadow:
+                        0 22px 54px rgba(30, 64, 175, 0.18),
+                        inset 0 1px 0 rgba(255, 255, 255, 0.03);
+                    margin-top: 0;
+                }
+
+                .celeb-card-kicker {
+                    display: inline-flex;
+                    align-items: center;
+                    gap: 8px;
+                    margin-bottom: 14px;
+                    padding: 7px 12px;
+                    border-radius: 999px;
+                    border: 1px solid rgba(255, 255, 255, 0.08);
+                    background: rgba(255, 255, 255, 0.04);
+                    color: rgba(226, 232, 240, 0.78);
+                    font-size: 0.7rem;
+                    font-weight: 800;
+                    letter-spacing: 0.16em;
+                    text-transform: uppercase;
+                }
+
+                .celeb-card-kicker-icon {
+                    display: inline-flex;
+                    align-items: center;
+                    justify-content: center;
+                    width: 16px;
+                    height: 16px;
+                }
+
+                .celeb-card-kicker-icon svg {
+                    width: 14px;
+                    height: 14px;
+                }
+
+                .celeb-info-summary-title {
+                    display: block;
+                    margin-bottom: 10px;
+                    font-size: 1.04rem;
+                    letter-spacing: 0.12em;
+                    text-transform: uppercase;
+                }
+
+                div.celeb-info-summary-subtitle {
+                    margin-bottom: 18px;
+                    max-width: 34rem;
+                    font-size: 0.9rem;
+                    line-height: 1.65;
+                    color: rgba(226, 232, 240, 0.72);
+                }
+
+                .celeb-info-summary-rows {
+                    gap: 0;
+                }
+
+                .celeb-info-summary-row {
+                    gap: 14px;
+                    padding: 14px 0;
+                    border-top: 1px solid rgba(255, 255, 255, 0.06);
+                }
+
+                .celeb-info-summary-row:first-child {
+                    padding-top: 0;
+                    border-top: none;
+                }
+
+                .celeb-info-icon {
+                    width: 42px;
+                    height: 42px;
+                    border-radius: 14px;
+                    flex: 0 0 42px;
+                }
+
+                .celeb-info-icon svg {
+                    width: 20px;
+                    height: 20px;
+                }
+
+                .celeb-info-summary-sub {
+                    font-size: 1rem;
+                    line-height: 1.3;
+                }
+
+                .celeb-info-summary-subtitle {
+                    font-size: 0.83rem;
+                    line-height: 1.55;
+                }
+
+                .celeb-card-actions {
+                    margin-top: 18px;
+                }
+
+                .celeb-download {
+                    min-height: 48px;
+                    padding: 0 20px;
+                    border-radius: 999px;
+                    font-size: 0.84rem;
+                    font-weight: 700;
+                    box-shadow: 0 16px 34px rgba(16, 185, 129, 0.2);
+                }
+
+                .celeb-download:hover {
+                    transform: translateY(-3px);
+                    box-shadow: 0 22px 42px rgba(16, 185, 129, 0.24);
+                }
+
+                .celeb-partner-card {
+                    gap: 18px;
+                    padding: 24px 24px 20px;
+                    background:
+                        linear-gradient(180deg, rgba(10, 14, 24, 0.96), rgba(11, 16, 29, 0.94)),
+                        radial-gradient(circle at top left, rgba(59,130,246,0.18), transparent 55%),
+                        radial-gradient(circle at bottom right, rgba(236,72,153,0.18), transparent 55%);
+                    border: 1px solid rgba(148, 163, 184, 0.2);
+                    box-shadow:
+                        0 30px 70px rgba(2, 6, 23, 0.5),
+                        inset 0 1px 0 rgba(255, 255, 255, 0.04);
+                }
+
+                .celeb-partner-card::before {
+                    inset: 0;
+                    background:
+                        radial-gradient(circle at 0% 0%, rgba(56,189,248,0.15), transparent 44%),
+                        radial-gradient(circle at 100% 100%, rgba(249,115,22,0.15), transparent 44%);
+                    opacity: 1;
+                }
+
+                .celeb-partner-header {
+                    align-items: flex-start;
+                }
+
+                .celeb-partner-left {
+                    gap: 16px;
+                }
+
+                .celeb-partner-icon-wrap {
+                    width: 72px;
+                    height: 72px;
+                    border-radius: 24px;
+                }
+
+                .celeb-partner-heading {
+                    gap: 8px;
+                }
+
+                .celeb-partner-title-row {
+                    gap: 10px;
+                }
+
+                .celeb-partner-title-main {
+                    font-size: 0.96rem;
+                    letter-spacing: 0.14em;
+                }
+
+                .celeb-partner-subline {
+                    max-width: none;
+                }
+
+                .celeb-partner-title-sub {
+                    font-size: 0.88rem;
+                    line-height: 1.65;
+                    color: rgba(226, 232, 240, 0.82);
+                }
+
+                .celeb-partner-chip-row {
+                    display: flex;
+                    flex-wrap: wrap;
+                    gap: 8px;
+                    margin-top: 2px;
+                }
+
+                .celeb-partner-chip {
+                    display: inline-flex;
+                    align-items: center;
+                    min-height: 30px;
+                    padding: 0 12px;
+                    border-radius: 999px;
+                    border: 1px solid rgba(255, 255, 255, 0.09);
+                    background: rgba(255, 255, 255, 0.04);
+                    color: rgba(226, 232, 240, 0.76);
+                    font-size: 0.73rem;
+                    font-weight: 700;
+                    letter-spacing: 0.05em;
+                }
+
+                .celeb-partner-body {
+                    grid-template-columns: repeat(2, minmax(0, 1fr));
+                    gap: 14px;
+                }
+
+                .celeb-partner-col {
+                    padding: 14px 14px 12px;
+                    border-radius: 22px;
+                    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.04);
+                }
+
+                .celeb-partner-col-header {
+                    margin-bottom: 10px;
+                    gap: 8px;
+                    padding-right: 28px;
+                }
+
+                .celeb-partner-col-title {
+                    font-size: 0.82rem;
+                    letter-spacing: 0.12em;
+                }
+
+                .celeb-partner-col-subtitle {
+                    max-width: none;
+                    font-size: 0.7rem;
+                    line-height: 1.45;
+                }
+
+                .celeb-partner-btn-icon {
+                    top: 10px;
+                    right: 10px;
+                }
+
+                .celeb-partner-tag-grid {
+                    gap: 8px;
+                    margin-bottom: 0;
+                }
+
+                .celeb-partner-tag {
+                    min-height: 32px;
+                    padding: 0 10px;
+                    font-size: 0.76rem;
+                    background: rgba(6, 11, 20, 0.72);
+                    border-color: rgba(255, 255, 255, 0.12);
+                }
+
+                .celeb-partner-tag-icon {
+                    margin-right: 6px;
+                }
+
+                .celeb-partner-trust-row {
+                    justify-content: flex-start;
+                    gap: 10px;
+                    margin-top: 2px;
+                }
+
+                .celeb-partner-trust-item {
+                    min-height: 34px;
+                    padding: 0 12px;
+                }
+
                 .celeb-btn {
                     width: 100%;
-                    max-width: 720px;
-                    margin-left: auto;
-                    margin-right: auto;
+                    max-width: none;
+                    min-height: 62px;
+                    margin: 0;
+                    padding: 0 24px;
+                    border-radius: 22px;
+                    font-size: 0.98rem;
+                    font-weight: 700;
+                    color: rgba(236, 253, 245, 0.96);
+                    background: linear-gradient(90deg, rgba(4, 120, 87, 0.9), rgba(22, 163, 74, 0.82));
+                    border-color: rgba(74, 222, 128, 0.3);
+                    box-shadow:
+                        0 24px 50px rgba(6, 95, 70, 0.22),
+                        inset 0 1px 0 rgba(255, 255, 255, 0.04);
+                }
+
+                .celeb-btn:disabled {
+                    color: rgba(187, 247, 208, 0.86);
+                    background: linear-gradient(90deg, rgba(4, 28, 21, 0.95), rgba(5, 46, 22, 0.9));
+                    border-color: rgba(74, 222, 128, 0.2);
+                    opacity: 1;
+                }
+
+                .celeb-btn:not(:disabled):hover {
+                    transform: translateY(-2px);
+                    background: linear-gradient(90deg, rgba(5, 150, 105, 0.96), rgba(22, 163, 74, 0.92));
+                    box-shadow:
+                        0 28px 56px rgba(6, 95, 70, 0.28),
+                        inset 0 1px 0 rgba(255, 255, 255, 0.04);
+                }
+
+                .celeb-btn-icon {
+                    display: inline-flex;
+                    align-items: center;
+                    justify-content: center;
+                    width: 30px;
+                    height: 30px;
+                    border-radius: 999px;
+                    background: rgba(255, 255, 255, 0.08);
+                }
+
+                .celeb-btn-countdown {
+                    font-weight: 600;
+                    opacity: 0.92;
                 }
             }
             
@@ -3370,7 +4166,709 @@ function showCelebrationModal(celebrationData, token, user) {
                 height: 14px;
                 flex-shrink: 0;
             }
-            
+
+            @media (min-width: 601px) {
+                .celeb-desktop-only {
+                    display: block;
+                }
+
+                .celeb-content {
+                    max-width: 1100px;
+                    padding: 0;
+                    border-radius: 0;
+                    background: transparent;
+                    border: none;
+                    box-shadow: none;
+                    overflow: visible;
+                    backdrop-filter: none;
+                }
+
+                .celeb-content::before {
+                    display: none;
+                }
+
+                .celeb-content::after {
+                    display: none;
+                }
+
+                .celeb-hero {
+                    text-align: left;
+                    margin-bottom: 0;
+                }
+
+                .celeb-hero-main {
+                    display: grid;
+                    grid-template-columns: 120px minmax(0, 1fr);
+                    gap: 24px;
+                    align-items: center;
+                }
+
+                .celeb-hero-copy {
+                    display: flex;
+                    flex-direction: column;
+                    align-items: flex-start;
+                    min-width: 0;
+                }
+
+                .celeb-hero-badges {
+                    display: flex;
+                    flex-wrap: wrap;
+                    gap: 10px;
+                    margin-bottom: 14px;
+                }
+
+                .celeb-launch-pill,
+                .celeb-version-chip {
+                    display: inline-flex;
+                    align-items: center;
+                    min-height: 36px;
+                    padding: 0 15px;
+                    border-radius: 999px;
+                    font-size: 0.72rem;
+                    font-weight: 800;
+                    letter-spacing: 0.16em;
+                    text-transform: uppercase;
+                    backdrop-filter: blur(14px);
+                }
+
+                .celeb-launch-pill {
+                    color: #ffe5e8;
+                    background: rgba(229, 9, 20, 0.15);
+                    border: 1px solid rgba(255, 97, 110, 0.24);
+                }
+
+                .celeb-version-chip {
+                    color: rgba(232, 238, 248, 0.88);
+                    background: rgba(255, 255, 255, 0.04);
+                    border: 1px solid rgba(255, 255, 255, 0.08);
+                }
+
+                .celeb-icon-wrap {
+                    width: 112px;
+                    height: 112px;
+                    margin: 0;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    border-radius: 22px;
+                    background:
+                        radial-gradient(circle at 28% 24%, rgba(255, 112, 122, 0.16), transparent 38%),
+                        linear-gradient(180deg, rgba(25, 19, 30, 0.94), rgba(17, 20, 28, 0.9));
+                    border: 1px solid rgba(255, 116, 126, 0.16);
+                    box-shadow:
+                        0 22px 42px rgba(20, 7, 12, 0.32),
+                        inset 0 1px 0 rgba(255, 255, 255, 0.04);
+                }
+
+                .celeb-icon-wrap > svg {
+                    width: 82px;
+                    height: 82px;
+                }
+
+                .celeb-icon-glow {
+                    inset: -16px;
+                }
+
+                .celeb-title {
+                    font-size: clamp(3.6rem, 6vw, 5rem);
+                    line-height: 0.94;
+                    margin: 0 0 10px 0;
+                }
+
+                .celeb-subtitle {
+                    max-width: 44rem;
+                    font-size: 1.18rem;
+                    line-height: 1.45;
+                }
+
+                .celeb-desc {
+                    text-align: left;
+                    max-width: 44rem;
+                    margin: 10px 0 28px 144px;
+                    font-size: 0.96rem;
+                    color: rgba(225, 232, 242, 0.62);
+                }
+
+                .celeb-top-cards {
+                    display: grid;
+                    grid-template-columns: repeat(2, minmax(0, 1fr));
+                    grid-template-areas:
+                        "study message"
+                        "partner partner";
+                    gap: 16px;
+                    margin-bottom: 16px;
+                    align-items: stretch;
+                }
+
+                .celeb-study-card {
+                    grid-area: study;
+                }
+
+                .celeb-message-card {
+                    grid-area: message;
+                }
+
+                .celeb-top-cards > .celeb-partner-card {
+                    grid-area: partner;
+                    margin: 0;
+                }
+
+                .celeb-mobile-copy {
+                    display: none;
+                }
+
+                .celeb-info-card,
+                .celeb-partner-card {
+                    padding: 26px;
+                    border-radius: 22px;
+                    border: 1px solid rgba(255, 255, 255, 0.08);
+                    background: linear-gradient(180deg, rgba(20, 23, 33, 0.97), rgba(14, 17, 26, 0.95));
+                    box-shadow:
+                        0 20px 44px rgba(2, 6, 23, 0.24),
+                        inset 0 1px 0 rgba(255, 255, 255, 0.03);
+                    overflow: hidden;
+                }
+
+                .celeb-info-card::before,
+                .celeb-partner-card::before {
+                    content: "";
+                    position: absolute;
+                    inset: 0;
+                    pointer-events: none;
+                    background: linear-gradient(135deg, rgba(255, 255, 255, 0.02), transparent 58%);
+                }
+
+                .celeb-info-card-study {
+                    border-color: rgba(48, 209, 88, 0.14);
+                    background:
+                        radial-gradient(circle at 0% 0%, rgba(48, 209, 88, 0.07), transparent 36%),
+                        linear-gradient(180deg, rgba(18, 24, 22, 0.98), rgba(12, 18, 20, 0.96));
+                }
+
+                .celeb-info-card.celeb-info-card-summary {
+                    border-color: rgba(255, 107, 118, 0.14);
+                    background:
+                        radial-gradient(circle at 100% 0%, rgba(229, 9, 20, 0.07), transparent 34%),
+                        linear-gradient(180deg, rgba(19, 22, 32, 0.98), rgba(15, 18, 28, 0.96));
+                    margin-top: 0;
+                }
+
+                .celeb-card-head {
+                    display: flex;
+                    align-items: center;
+                    gap: 12px;
+                    margin-bottom: 22px;
+                }
+
+                .celeb-card-head-icon {
+                    width: 40px;
+                    height: 40px;
+                    flex: 0 0 40px;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    border-radius: 10px;
+                    background: rgba(229, 9, 20, 0.11);
+                    border: 1px solid rgba(229, 9, 20, 0.18);
+                    color: #ff4b55;
+                }
+
+                .celeb-card-head-icon-study {
+                    background: rgba(48, 209, 88, 0.08);
+                    border-color: rgba(48, 209, 88, 0.14);
+                    color: #5ee67f;
+                }
+
+                .celeb-card-head-icon svg {
+                    width: 18px;
+                    height: 18px;
+                }
+
+                .celeb-card-head-title {
+                    font-size: 0.92rem;
+                    font-weight: 700;
+                    letter-spacing: -0.01em;
+                }
+
+                .celeb-card-head-subtitle {
+                    margin-top: 2px;
+                    font-size: 0.74rem;
+                    color: rgba(255, 255, 255, 0.42);
+                }
+
+                .celeb-card-section-label {
+                    display: block;
+                    margin-bottom: 14px;
+                    font-size: 0.67rem;
+                    font-weight: 700;
+                    letter-spacing: 0.16em;
+                    text-transform: uppercase;
+                    color: rgba(255, 255, 255, 0.2);
+                }
+
+                .celeb-info-summary-rows {
+                    gap: 0;
+                }
+
+                .celeb-info-summary-row {
+                    gap: 12px;
+                }
+
+                .celeb-info-summary-row-link {
+                    align-items: center;
+                    padding: 12px 0;
+                    border-top: 1px solid rgba(255, 255, 255, 0.07);
+                    cursor: pointer;
+                    position: relative;
+                    border-radius: 14px;
+                    transition:
+                        transform 0.18s ease,
+                        background-color 0.18s ease,
+                        border-color 0.18s ease,
+                        box-shadow 0.18s ease;
+                }
+
+                .celeb-info-summary-row-link:first-child {
+                    padding-top: 0;
+                    border-top: none;
+                }
+
+                .celeb-info-summary-row-link:last-child {
+                    padding-bottom: 0;
+                }
+
+                .celeb-info-summary-row-link:hover {
+                    transform: translateX(4px);
+                    background: rgba(255, 255, 255, 0.025);
+                    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.02);
+                }
+
+                .celeb-info-summary-row-link:hover .celeb-item-arrow {
+                    color: rgba(255, 255, 255, 0.5);
+                    transform: translateX(3px);
+                }
+
+                .celeb-info-summary-row-link:hover .celeb-info-icon {
+                    transform: translateY(-1px) scale(1.04);
+                    box-shadow: 0 10px 20px rgba(15, 23, 42, 0.22);
+                }
+
+                .celeb-info-icon {
+                    width: 36px;
+                    height: 36px;
+                    flex: 0 0 36px;
+                    border-radius: 10px;
+                    transition: transform 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease;
+                }
+
+                .celeb-info-icon svg {
+                    width: 16px;
+                    height: 16px;
+                }
+
+                .celeb-info-summary-sub {
+                    font-size: 0.94rem;
+                    line-height: 1.32;
+                }
+
+                .celeb-info-summary-subtitle {
+                    font-size: 0.76rem;
+                    line-height: 1.55;
+                    color: rgba(255, 255, 255, 0.46);
+                    transition: color 0.18s ease;
+                }
+
+                .celeb-info-summary-row-link:hover .celeb-info-summary-sub {
+                    color: rgba(255, 255, 255, 0.98);
+                }
+
+                .celeb-info-summary-row-link:hover .celeb-info-summary-subtitle {
+                    color: rgba(255, 255, 255, 0.68);
+                }
+
+                .celeb-item-arrow {
+                    display: inline-flex;
+                    align-items: center;
+                    justify-content: center;
+                    margin-left: auto;
+                    color: rgba(255, 255, 255, 0.2);
+                    flex: 0 0 auto;
+                    transition: transform 0.18s ease, color 0.18s ease;
+                }
+
+                .celeb-item-arrow svg {
+                    width: 13px;
+                    height: 13px;
+                }
+
+                .celeb-info-summary-row-message {
+                    padding: 14px 0;
+                }
+
+                .celeb-info-summary-row-message:hover {
+                    background: rgba(255, 107, 118, 0.04);
+                    box-shadow:
+                        inset 0 1px 0 rgba(255, 255, 255, 0.02),
+                        0 12px 28px rgba(53, 23, 39, 0.16);
+                }
+
+                .celeb-info-icon-message {
+                    background: rgba(255, 75, 85, 0.1);
+                    color: #ff6772;
+                }
+
+                .celeb-card-actions {
+                    margin-top: 22px;
+                }
+
+                .celeb-download {
+                    min-height: 44px;
+                    padding: 0 16px;
+                    border-radius: 9px;
+                    background: rgba(48, 209, 88, 0.11);
+                    border: 1px solid rgba(48, 209, 88, 0.18);
+                    box-shadow: none;
+                    color: #47db70;
+                    font-size: 0.84rem;
+                    font-weight: 700;
+                }
+
+                .celeb-download:hover {
+                    transform: translateY(-1px);
+                    background: rgba(48, 209, 88, 0.16);
+                    box-shadow: 0 12px 26px rgba(48, 209, 88, 0.09);
+                }
+
+                .celeb-download-icon {
+                    display: inline-flex;
+                    align-items: center;
+                    justify-content: center;
+                    width: 14px;
+                    height: 14px;
+                }
+
+                .celeb-download-icon svg {
+                    width: 14px;
+                    height: 14px;
+                }
+
+                .celeb-partner-card {
+                    padding: 26px;
+                    border-color: rgba(255, 255, 255, 0.1);
+                    background:
+                        radial-gradient(circle at 0% 0%, rgba(229, 9, 20, 0.09), transparent 34%),
+                        radial-gradient(circle at 100% 0%, rgba(99, 102, 241, 0.08), transparent 30%),
+                        linear-gradient(180deg, rgba(22, 25, 37, 0.985), rgba(16, 19, 30, 0.97));
+                    box-shadow:
+                        0 24px 54px rgba(2, 6, 23, 0.28),
+                        inset 0 1px 0 rgba(255, 255, 255, 0.04);
+                }
+
+                .celeb-partner-card::before {
+                    background:
+                        linear-gradient(135deg, rgba(255, 255, 255, 0.015), transparent 56%);
+                    opacity: 1;
+                }
+
+                .celeb-partner-header {
+                    display: flex;
+                    justify-content: space-between;
+                    align-items: flex-start;
+                    gap: 16px;
+                    margin-bottom: 24px;
+                }
+
+                .celeb-partner-left {
+                    gap: 14px;
+                }
+
+                .celeb-partner-icon-wrap {
+                    width: 52px;
+                    height: 52px;
+                    border-radius: 14px;
+                    box-shadow: 0 14px 30px rgba(65, 32, 54, 0.2);
+                }
+
+                .celeb-partner-title-main {
+                    font-size: 1.14rem;
+                    font-weight: 800;
+                    letter-spacing: 0.05em;
+                    color: rgba(255, 255, 255, 0.97);
+                }
+
+                .celeb-partner-subline {
+                    max-width: 560px;
+                }
+
+                .celeb-partner-title-sub {
+                    font-size: 0.86rem;
+                    line-height: 1.65;
+                    color: rgba(255, 255, 255, 0.74);
+                }
+
+                .celeb-partner-trust-row {
+                    justify-content: flex-end;
+                    gap: 8px;
+                    margin-top: 0;
+                }
+
+                .celeb-partner-trust-item {
+                    min-height: 30px;
+                    padding: 0 12px;
+                    border-radius: 999px;
+                    background: rgba(48, 209, 88, 0.08);
+                    border: 1px solid rgba(48, 209, 88, 0.18);
+                    color: #48dc71;
+                }
+
+                .celeb-partner-trust-icon {
+                    width: 14px;
+                    height: 14px;
+                    background: transparent;
+                    box-shadow: none;
+                    color: currentColor;
+                }
+
+                .celeb-partner-trust-icon svg {
+                    width: 10px;
+                    height: 10px;
+                }
+
+                .celeb-partner-body {
+                    grid-template-columns: repeat(2, minmax(0, 1fr));
+                    gap: 18px;
+                }
+
+                .celeb-partner-col {
+                    padding: 18px 18px 16px;
+                    border-radius: 18px;
+                    background: linear-gradient(180deg, rgba(255, 255, 255, 0.035), rgba(255, 255, 255, 0.02));
+                    border: 1px solid rgba(255, 255, 255, 0.07);
+                    box-shadow:
+                        inset 0 1px 0 rgba(255, 255, 255, 0.03),
+                        0 16px 34px rgba(4, 8, 16, 0.18);
+                }
+
+                .celeb-partner-col-left {
+                    background:
+                        radial-gradient(circle at 0% 0%, rgba(90, 130, 255, 0.11), transparent 38%),
+                        linear-gradient(180deg, rgba(20, 28, 54, 0.34), rgba(18, 21, 34, 0.5));
+                    border-color: rgba(108, 144, 255, 0.14);
+                }
+
+                .celeb-partner-col-right {
+                    background:
+                        radial-gradient(circle at 0% 0%, rgba(255, 90, 130, 0.1), transparent 38%),
+                        linear-gradient(180deg, rgba(54, 20, 40, 0.34), rgba(22, 20, 33, 0.5));
+                    border-color: rgba(255, 124, 165, 0.14);
+                }
+
+                .celeb-partner-col-header {
+                    width: 100%;
+                    align-items: center;
+                    justify-content: space-between;
+                    gap: 10px;
+                    margin-bottom: 10px;
+                    padding-right: 0;
+                }
+
+                .celeb-partner-col-title {
+                    font-size: 1rem;
+                    font-weight: 800;
+                    letter-spacing: 0.12em;
+                    color: rgba(255, 255, 255, 0.98);
+                }
+
+                .celeb-partner-col-subtitle {
+                    max-width: none;
+                    font-size: 0.86rem;
+                    color: rgba(255, 255, 255, 0.7);
+                    line-height: 1.5;
+                }
+
+                .celeb-partner-btn-icon {
+                    position: static;
+                    display: inline-flex;
+                    align-items: center;
+                    gap: 5px;
+                    padding: 8px 11px;
+                    border-radius: 8px;
+                    border: 1px solid rgba(255, 255, 255, 0.12);
+                    background: rgba(255, 255, 255, 0.07);
+                    opacity: 1;
+                    color: rgba(255, 255, 255, 0.94);
+                    transition: transform 0.18s ease, background-color 0.18s ease, border-color 0.18s ease;
+                }
+
+                .celeb-partner-btn:hover .celeb-partner-btn-icon {
+                    transform: translateY(-1px);
+                    background: rgba(255, 255, 255, 0.11);
+                    border-color: rgba(255, 255, 255, 0.18);
+                }
+
+                .celeb-partner-btn-icon svg {
+                    width: 12px;
+                    height: 12px;
+                }
+
+                .celeb-partner-btn-label {
+                    font-size: 0.67rem;
+                    font-weight: 700;
+                    letter-spacing: 0.1em;
+                    text-transform: uppercase;
+                }
+
+                .celeb-partner-tag-grid {
+                    gap: 8px;
+                    margin-bottom: 0;
+                }
+
+                .celeb-partner-tag {
+                    min-height: 40px;
+                    padding: 0 14px;
+                    border-radius: 11px;
+                    background: rgba(255, 255, 255, 0.05);
+                    border-color: rgba(255, 255, 255, 0.1);
+                    font-size: 0.8rem;
+                    color: rgba(255, 255, 255, 0.92);
+                    transition:
+                        transform 0.18s ease,
+                        background-color 0.18s ease,
+                        border-color 0.18s ease,
+                        box-shadow 0.18s ease;
+                }
+
+                .celeb-partner-tag:hover {
+                    transform: translateY(-1px);
+                    background: rgba(255, 255, 255, 0.08);
+                    border-color: rgba(255, 255, 255, 0.15);
+                    box-shadow: 0 12px 26px rgba(4, 8, 16, 0.16);
+                }
+
+                .celeb-partner-tag-icon {
+                    margin-right: 7px;
+                    color: rgba(255, 255, 255, 0.72);
+                }
+
+                .celeb-cta-panel {
+                    display: flex;
+                    align-items: center;
+                    justify-content: space-between;
+                    gap: 20px;
+                    margin-top: 18px;
+                    padding: 28px 34px;
+                    border-radius: 24px;
+                    border: 1px solid rgba(229, 9, 20, 0.16);
+                    background:
+                        radial-gradient(circle at 0% 0%, rgba(229, 9, 20, 0.16), transparent 34%),
+                        linear-gradient(135deg, rgba(46, 14, 18, 0.92), rgba(24, 8, 12, 0.96));
+                    box-shadow: 0 24px 60px rgba(48, 8, 12, 0.26);
+                }
+
+                .celeb-cta-copy {
+                    display: block;
+                }
+
+                .celeb-cta-copy h2 {
+                    font-size: 1.55rem;
+                    font-weight: 800;
+                    letter-spacing: -0.03em;
+                }
+
+                .celeb-cta-copy p {
+                    margin-top: 6px;
+                    font-size: 0.86rem;
+                    color: rgba(255, 255, 255, 0.54);
+                }
+
+                .celeb-btn {
+                    width: auto;
+                    min-width: 210px;
+                    min-height: 48px;
+                    margin: 0;
+                    padding: 0 22px;
+                    border-radius: 12px;
+                    justify-content: center;
+                    font-size: 0.92rem;
+                    font-weight: 700;
+                    color: #ffffff;
+                    background: linear-gradient(180deg, #ff3b30, #e50914);
+                    border: none;
+                    box-shadow: 0 14px 36px rgba(229, 9, 20, 0.26);
+                }
+
+                .celeb-btn:disabled {
+                    color: rgba(255, 255, 255, 0.82);
+                    background: linear-gradient(180deg, rgba(126, 32, 36, 0.8), rgba(95, 18, 22, 0.84));
+                    opacity: 1;
+                }
+
+                .celeb-btn:not(:disabled):hover {
+                    transform: translateY(-1px);
+                    background: linear-gradient(180deg, #ff4b41, #f3111d);
+                    box-shadow: 0 18px 40px rgba(229, 9, 20, 0.3);
+                }
+
+                .celeb-btn-icon {
+                    display: inline-flex;
+                    align-items: center;
+                    justify-content: center;
+                    width: 28px;
+                    height: 28px;
+                    border-radius: 999px;
+                    background: rgba(255, 255, 255, 0.12);
+                }
+
+                .celeb-btn-countdown {
+                    font-weight: 600;
+                    opacity: 0.76;
+                }
+            }
+
+            @media (min-width: 601px) and (max-width: 900px) {
+                .celeb-content {
+                    padding: 0;
+                }
+
+                .celeb-top-cards {
+                    grid-template-columns: 1fr;
+                    grid-template-areas:
+                        "study"
+                        "message"
+                        "partner";
+                }
+
+                .celeb-partner-body {
+                    grid-template-columns: 1fr;
+                }
+
+                .celeb-hero-main {
+                    grid-template-columns: 1fr;
+                    gap: 18px;
+                }
+
+                .celeb-hero-copy {
+                    align-items: center;
+                    text-align: center;
+                }
+
+                .celeb-desc {
+                    max-width: 36rem;
+                    margin-left: 0;
+                    text-align: center;
+                }
+
+                .celeb-cta-panel {
+                    flex-direction: column;
+                    align-items: flex-start;
+                    padding: 24px;
+                }
+
+                .celeb-btn {
+                    width: 100%;
+                }
+            }
+             
             /* Mobile only text - hidden on desktop */
             .celeb-mobile-only {
                 display: none;
@@ -3386,7 +4884,17 @@ function showCelebrationModal(celebrationData, token, user) {
                 .celeb-top-cards {
                     display: contents;
                 }
-                
+
+                .celeb-study-card .celeb-info-summary-title-plain,
+                .celeb-message-card .celeb-info-summary-title-plain {
+                    padding: 0;
+                    border: none;
+                    border-radius: 0;
+                    background: transparent;
+                    box-shadow: none;
+                    text-shadow: none;
+                }
+                 
                 .celeb-feature {
                     flex-direction: column;
                     text-align: center;
@@ -3399,7 +4907,11 @@ function showCelebrationModal(celebrationData, token, user) {
                 .celeb-grid-info {
                     grid-template-columns: 1fr;
                 }
-                
+
+                .celeb-download-arrow {
+                    display: none;
+                }
+                 
                 .celeb-mobile-only {
                     display: inline;
                 }
@@ -3460,9 +4972,9 @@ function showCelebrationModal(celebrationData, token, user) {
     // Update button text
     function updateBtnText() {
         if (countdown > 0) {
-            btn.innerHTML = `<span class="celeb-btn-icon" aria-hidden="true">${svgIcons.briefcase}</span><span class="celeb-btn-text">Đợi một chút...</span><span class="celeb-btn-countdown">${countdown}s</span>`;
+            btn.innerHTML = `<span class="celeb-btn-icon" aria-hidden="true">${svgIcons.arrowRight}</span><span class="celeb-btn-text">Đợi một chút...</span><span class="celeb-btn-countdown">${countdown}s</span>`;
         } else {
-            btn.innerHTML = `<span class="celeb-btn-icon" aria-hidden="true">${svgIcons.briefcase}</span><span class="celeb-btn-text">Vào Tiệm Bánh ngay</span>`;
+            btn.innerHTML = `<span class="celeb-btn-icon" aria-hidden="true">${svgIcons.arrowRight}</span><span class="celeb-btn-text">Vào Tiệm Bánh ngay</span>`;
             btn.disabled = false;
         }
     }
@@ -3618,7 +5130,9 @@ function showModal({ icon = 'ℹ️', title = 'Thông báo', message = '', butto
     const modalFooter = document.getElementById('customModalFooter');
 
     // Set icon and title
-    modalIcon.textContent = icon;
+    const iconMarkup = resolveAuthModalIcon(icon);
+    modalIcon.innerHTML = iconMarkup;
+    modalIcon.style.display = iconMarkup ? 'inline-flex' : 'none';
     modalTitle.textContent = title;
 
     // Set body content
@@ -4372,7 +5886,7 @@ function createReferralModalHTML() {
     <div class="verification-modal-overlay" id="referralModalOverlay" style="display: none;">
         <div class="verification-modal-dialog">
             <div class="verification-modal-header">
-                <span class="verification-modal-icon">🎁</span>
+                <span class="verification-modal-icon">${resolveAuthModalIcon('🎁')}</span>
                 <div class="verification-modal-title">Mã Giới Thiệu</div>
             </div>
             <div class="verification-modal-body">

@@ -43,6 +43,7 @@ const elements = {
     watchAsGuestBtn: document.getElementById('watchAsGuestBtn'),
 
     // Step status
+    statusIcon: document.getElementById('statusIcon'),
     statusMessage: document.getElementById('statusMessage'),
 
     // Plan modal
@@ -62,6 +63,20 @@ const elements = {
     cancelBtn: document.getElementById('cancelBtn'),
     startWatchingBtn: document.getElementById('startWatchingBtn')
 };
+
+function getStatusIconSvg(type) {
+    switch (type) {
+        case 'success':
+            return '<svg class="icon" style="width:18px;height:18px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"></circle><path d="m9 12 2 2 4-4"></path></svg>';
+        case 'error':
+            return '<svg class="icon" style="width:18px;height:18px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"></circle><path d="m15 9-6 6"></path><path d="m9 9 6 6"></path></svg>';
+        case 'warning':
+            return '<svg class="icon" style="width:18px;height:18px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0Z"></path><path d="M12 9v4"></path><path d="M12 17h.01"></path></svg>';
+        case 'info':
+        default:
+            return '<svg class="icon" style="width:18px;height:18px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"></circle><path d="M12 8v4"></path><path d="M12 16h.01"></path></svg>';
+    }
+}
 
 // ========================================
 // STATE
@@ -1246,17 +1261,79 @@ async function refreshNetflixTabViaExtension() {
 function showStepStatus(stepNumber, type, message) {
     // Remove all emojis and icons from message
     const cleanMessage = message.replace(/[\u{1F300}-\u{1F9FF}]|[\u{2600}-\u{26FF}]|[\u{2700}-\u{27BF}]|❌|✅|🔄|⚠️|📊/gu, '').trim();
+    const statusColor = type === 'error' ? '#ef4444' : type === 'success' ? '#4ade80' : type === 'warning' ? '#fbbf24' : '#a78bfa';
 
     // Update main status message
     if (elements.statusMessage) {
         elements.statusMessage.textContent = cleanMessage;
-        elements.statusMessage.style.color = type === 'error' ? '#ef4444' : type === 'success' ? '#4ade80' : '#facc00';
+        elements.statusMessage.style.color = statusColor;
+    }
+
+    const statusCaption = document.querySelector('.status-panel .status-caption');
+    if (statusCaption) {
+        statusCaption.style.color = statusColor;
+    }
+
+    if (elements.statusIcon) {
+        elements.statusIcon.innerHTML = getStatusIconSvg(type);
+        elements.statusIcon.style.color = statusColor;
+        elements.statusIcon.style.background = type === 'error'
+            ? 'rgba(239, 68, 68, 0.12)'
+            : type === 'success'
+                ? 'rgba(34, 197, 94, 0.12)'
+                : type === 'warning'
+                    ? 'rgba(251, 191, 36, 0.12)'
+                    : 'rgba(139, 92, 246, 0.12)';
+        elements.statusIcon.style.borderColor = type === 'error'
+            ? 'rgba(239, 68, 68, 0.2)'
+            : type === 'success'
+                ? 'rgba(34, 197, 94, 0.2)'
+                : type === 'warning'
+                    ? 'rgba(251, 191, 36, 0.2)'
+                    : 'rgba(139, 92, 246, 0.2)';
     }
 }
 
 /**
  * Ẩn status cho step (no longer needed, kept for compatibility)
  */
+function showStepStatus(stepNumber, type, message) {
+    const cleanMessage = String(message || '')
+        .replace(/[\p{Extended_Pictographic}\u{2300}-\u{23FF}\u{2600}-\u{27BF}\uFE0F]/gu, '')
+        .replace(/\s{2,}/g, ' ')
+        .trim();
+    const statusColor = type === 'error' ? '#ef4444' : type === 'success' ? '#4ade80' : type === 'warning' ? '#fbbf24' : '#a78bfa';
+
+    if (elements.statusMessage) {
+        elements.statusMessage.textContent = cleanMessage;
+        elements.statusMessage.style.color = statusColor;
+    }
+
+    const statusCaption = document.querySelector('.status-panel .status-caption');
+    if (statusCaption) {
+        statusCaption.style.color = statusColor;
+    }
+
+    if (elements.statusIcon) {
+        elements.statusIcon.innerHTML = getStatusIconSvg(type);
+        elements.statusIcon.style.color = statusColor;
+        elements.statusIcon.style.background = type === 'error'
+            ? 'rgba(239, 68, 68, 0.12)'
+            : type === 'success'
+                ? 'rgba(34, 197, 94, 0.12)'
+                : type === 'warning'
+                    ? 'rgba(251, 191, 36, 0.12)'
+                    : 'rgba(139, 92, 246, 0.12)';
+        elements.statusIcon.style.borderColor = type === 'error'
+            ? 'rgba(239, 68, 68, 0.2)'
+            : type === 'success'
+                ? 'rgba(34, 197, 94, 0.2)'
+                : type === 'warning'
+                    ? 'rgba(251, 191, 36, 0.2)'
+                    : 'rgba(139, 92, 246, 0.2)';
+    }
+}
+
 function hideStepStatus(stepNumber) {
     // Elements are now removed, function kept for compatibility
     // Status updates are now handled via showStepStatus() only
