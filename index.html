@@ -233,7 +233,30 @@
             }
 
             #userType {
+                display: inline-flex;
+                align-items: center;
+                justify-content: center;
+                padding: 5px 12px;
+                border-radius: 999px;
                 font-size: 1rem !important;
+                font-weight: 700 !important;
+                line-height: 1;
+                letter-spacing: 0.03em;
+                text-transform: uppercase;
+            }
+
+            #userType.badge-free {
+                background: rgba(96, 165, 250, 0.16);
+                border: 1px solid rgba(96, 165, 250, 0.32);
+                color: #93c5fd !important;
+                box-shadow: inset 0 1px 0 rgba(219, 234, 254, 0.08);
+            }
+
+            #userType.badge-pro {
+                background: rgba(251, 191, 36, 0.16);
+                border: 1px solid rgba(251, 191, 36, 0.32);
+                color: #fbbf24 !important;
+                box-shadow: inset 0 1px 0 rgba(255, 243, 205, 0.08);
             }
 
             /* Buttons mobile style */
@@ -525,6 +548,27 @@
                 color: #cbd5e1;
             }
 
+            .partner-mini-card--chatgpt .partner-mini-icon {
+                color: rgba(255, 255, 255, 0.95);
+                background: transparent;
+            }
+
+            .partner-mini-card--chatgpt .partner-mini-title {
+                color: #fff;
+            }
+
+            .partner-mini-card--chatgpt .partner-mini-sub {
+                color: #cbd5e1;
+            }
+
+            .partner-mini-openai-mark {
+                width: 16px;
+                height: 16px;
+                display: block;
+                filter: brightness(0) invert(1);
+                opacity: 0.94;
+            }
+
             .partner-mini-card--lunakey .partner-mini-icon {
                 color: rgba(255, 255, 255, 0.95);
                 background: transparent;
@@ -705,6 +749,53 @@
             #purchaseCreditsModal .modal-content>div:first-child p {
                 font-size: 0.65rem !important;
                 margin-bottom: 6px !important;
+            }
+
+            #purchaseCreditsModal .purchase-credits-login-cards {
+                display: grid !important;
+                grid-template-columns: 1fr !important;
+                gap: 8px !important;
+                margin: 0 0 10px 0 !important;
+            }
+
+            #purchaseCreditsModal .purchase-login-card {
+                min-width: 0 !important;
+                width: 100% !important;
+                padding: 10px 12px !important;
+                display: grid !important;
+                grid-template-columns: minmax(0, 1fr) auto !important;
+                grid-template-areas:
+                    "head cost"
+                    "status cost" !important;
+                column-gap: 12px !important;
+                row-gap: 2px !important;
+                align-items: center !important;
+                text-align: left !important;
+            }
+
+            #purchaseCreditsModal .purchase-login-card-head {
+                grid-area: head;
+                margin-bottom: 0 !important;
+                font-size: 0.66rem !important;
+                letter-spacing: 0.06em !important;
+            }
+
+            #purchaseCreditsModal .purchase-login-card-head svg {
+                width: 13px !important;
+                height: 13px !important;
+            }
+
+            #purchaseCreditsModal .purchase-login-card-status {
+                grid-area: status;
+                font-size: 0.7rem !important;
+                line-height: 1.35 !important;
+            }
+
+            #purchaseCreditsModal .purchase-login-card-cost {
+                grid-area: cost;
+                margin-top: 0 !important;
+                font-size: 0.92rem !important;
+                white-space: nowrap !important;
             }
 
             /* Conversion rate section */
@@ -1269,6 +1360,38 @@
             }
         }
 
+        @media (max-width: 600px) {
+            .custom-modal-icon {
+                width: auto !important;
+                height: auto !important;
+                padding: 0 !important;
+                border-radius: 0 !important;
+                background: transparent !important;
+                border: none !important;
+                box-shadow: none !important;
+            }
+
+            .custom-modal-icon svg {
+                width: 20px !important;
+                height: 20px !important;
+            }
+
+            #confirmModal #confirmModalIcon {
+                width: auto !important;
+                height: auto !important;
+                padding: 0 !important;
+                border-radius: 0 !important;
+                background: transparent !important;
+                border: none !important;
+                box-shadow: none !important;
+            }
+
+            #confirmModal #confirmModalIcon svg {
+                width: 28px !important;
+                height: 28px !important;
+            }
+        }
+
         h1 {
             font-size: 3rem;
             margin-bottom: 5px;
@@ -1526,31 +1649,839 @@
         .modal {
             display: none;
             position: fixed;
-            top: 0;
-            left: 0;
+            inset: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0, 0, 0, 0.98);
+            background:
+                radial-gradient(circle at top, rgba(96, 165, 250, 0.1), transparent 35%),
+                rgba(2, 6, 23, 0.84);
+            backdrop-filter: blur(18px) saturate(1.1);
             z-index: 10000000;
             justify-content: center;
+            padding: 26px 18px;
         }
 
         .modal.active {
             display: flex;
             overflow-y: auto;
-            padding: 20px 0;
-            align-items: flex-start;
+            align-items: center;
         }
 
         .modal-content {
             max-width: 800px;
-            width: 90%;
-            background: #000;
-            border-radius: 12px;
+            width: min(100%, 980px);
+            max-height: calc(100vh - 52px);
+            background: linear-gradient(180deg, rgba(15, 23, 42, 0.96), rgba(2, 6, 23, 0.98));
+            border-radius: 24px;
             padding: 30px;
             position: relative;
             margin: auto;
             flex-shrink: 0;
+            overflow: auto;
+            border: 1px solid rgba(148, 163, 184, 0.18);
+            box-shadow: 0 40px 120px rgba(2, 6, 23, 0.78), inset 0 1px 0 rgba(255, 255, 255, 0.06);
+        }
+
+        .modal-content::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background:
+                radial-gradient(circle at top left, rgba(96, 165, 250, 0.18), transparent 32%),
+                radial-gradient(circle at top right, rgba(251, 191, 36, 0.12), transparent 26%);
+            pointer-events: none;
+        }
+
+        .modal-content > * {
+            position: relative;
+            z-index: 1;
+        }
+
+        .premium-modal-shell {
+            border-radius: 24px !important;
+            border: 1px solid rgba(148, 163, 184, 0.18) !important;
+            box-shadow: 0 40px 120px rgba(2, 6, 23, 0.78), inset 0 1px 0 rgba(255, 255, 255, 0.06) !important;
+            background: linear-gradient(180deg, rgba(15, 23, 42, 0.96), rgba(2, 6, 23, 0.98)) !important;
+        }
+
+        .premium-modal-shell--compact {
+            max-width: 430px !important;
+        }
+
+        #reportIssueModal .modal-content {
+            width: min(calc(100% - 32px), 580px);
+            max-width: 580px !important;
+        }
+
+        .premium-modal-shell--wide {
+            max-width: 920px !important;
+        }
+
+        .premium-modal-shell--xwide {
+            max-width: 1200px !important;
+        }
+
+        .premium-modal-hero {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            margin-bottom: 20px;
+            padding-bottom: 18px;
+            border-bottom: 1px solid rgba(148, 163, 184, 0.18);
+        }
+
+        .premium-modal-icon-badge {
+            width: 54px;
+            height: 54px;
+            border-radius: 18px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            color: #bfdbfe;
+            background: linear-gradient(135deg, rgba(96, 165, 250, 0.16), rgba(251, 191, 36, 0.1));
+            border: 1px solid rgba(148, 163, 184, 0.22);
+            box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.08), 0 16px 30px rgba(15, 23, 42, 0.35);
+        }
+
+        .premium-modal-icon-badge svg {
+            width: 24px;
+            height: 24px;
+        }
+
+        .premium-modal-copy {
+            min-width: 0;
+            flex: 1;
+        }
+
+        .premium-modal-kicker {
+            display: block;
+            font-size: 0.72rem;
+            font-weight: 700;
+            letter-spacing: 0.18em;
+            text-transform: uppercase;
+            color: #93c5fd;
+            margin-bottom: 6px;
+        }
+
+        .premium-modal-title {
+            margin: 0;
+            font-size: clamp(1.2rem, 2vw, 1.7rem);
+            font-weight: 800;
+            letter-spacing: -0.03em;
+            color: #f8fafc;
+        }
+
+        .premium-modal-subtitle {
+            margin: 8px 0 0;
+            color: #94a3b8;
+            font-size: 0.92rem;
+            line-height: 1.6;
+        }
+
+        .premium-modal-panel {
+            background: transparent;
+            border: none;
+            border-left: 2px solid rgba(148, 163, 184, 0.24);
+            border-radius: 0;
+            padding: 6px 0 6px 16px;
+            box-shadow: none;
+        }
+
+        .premium-modal-note {
+            background: linear-gradient(90deg, rgba(148, 163, 184, 0.08), transparent 72%);
+            border: none;
+            border-left: 2px solid rgba(148, 163, 184, 0.24);
+            border-radius: 0;
+            padding: 6px 0 6px 16px;
+        }
+
+        .premium-modal-note--warn {
+            background: linear-gradient(90deg, rgba(251, 191, 36, 0.1), transparent 72%);
+            border-left-color: rgba(251, 191, 36, 0.34);
+        }
+
+        .premium-modal-note--info {
+            background: linear-gradient(90deg, rgba(96, 165, 250, 0.1), transparent 72%);
+            border-left-color: rgba(96, 165, 250, 0.34);
+        }
+
+        .premium-watching-shell {
+            position: relative;
+            padding: 30px;
+            border-radius: 24px;
+            background: linear-gradient(180deg, rgba(17, 24, 39, 0.96), rgba(10, 15, 27, 0.98));
+            border: 1px solid rgba(148, 163, 184, 0.12);
+            box-shadow: 0 28px 60px rgba(2, 6, 23, 0.34), inset 0 1px 0 rgba(255, 255, 255, 0.04);
+            overflow: hidden;
+        }
+
+        .premium-watching-shell::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background:
+                radial-gradient(circle at top left, rgba(96, 165, 250, 0.14), transparent 34%),
+                radial-gradient(circle at top right, rgba(245, 158, 11, 0.12), transparent 28%);
+            pointer-events: none;
+        }
+
+        .premium-watching-shell > * {
+            position: relative;
+            z-index: 1;
+        }
+
+        .premium-watching-head {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 16px;
+            margin-bottom: 22px;
+            text-align: left;
+        }
+
+        .premium-watching-icon {
+            width: 56px;
+            height: 56px;
+            border-radius: 18px;
+            color: #fbbf24;
+            background: linear-gradient(135deg, rgba(251, 191, 36, 0.18), rgba(59, 130, 246, 0.12));
+            border: 1px solid rgba(251, 191, 36, 0.22);
+            box-shadow: 0 16px 30px rgba(15, 23, 42, 0.28);
+        }
+
+        .premium-watching-copy {
+            min-width: 0;
+        }
+
+        .premium-watching-kicker {
+            margin: 0 0 6px;
+            color: #fbbf24;
+            font-size: 0.72rem;
+            font-weight: 700;
+            letter-spacing: 0.16em;
+            text-transform: uppercase;
+        }
+
+        .premium-watching-title {
+            margin: 0;
+            font-size: 2rem;
+            font-weight: 800;
+            letter-spacing: -0.035em;
+            color: #f8fafc;
+        }
+
+        .premium-watching-track {
+            width: 100%;
+            height: 8px;
+            margin-bottom: 22px;
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            border-radius: 999px;
+            overflow: hidden;
+            box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.04);
+        }
+
+        .premium-watching-fill {
+            height: 100%;
+            width: 0%;
+            border-radius: inherit;
+            background: linear-gradient(90deg, #e50914 0%, #f97316 58%, #fbbf24 100%);
+            box-shadow: 0 0 26px rgba(229, 9, 20, 0.34);
+            animation: loading 2s ease-in-out infinite;
+        }
+
+        .premium-watching-note {
+            display: grid;
+            gap: 12px;
+            margin-bottom: 22px;
+        }
+
+        .premium-watching-alert {
+            display: grid;
+            grid-template-columns: auto 1fr;
+            gap: 12px;
+            align-items: start;
+            padding: 14px 16px;
+            border-radius: 18px;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(148, 163, 184, 0.12);
+            text-align: left;
+        }
+
+        .premium-watching-alert-icon {
+            width: 20px;
+            height: 20px;
+            color: #93c5fd;
+            flex: 0 0 20px;
+            margin-top: 1px;
+        }
+
+        .premium-watching-alert-copy {
+            color: #dbe4f0;
+            font-size: 0.95rem;
+            line-height: 1.65;
+        }
+
+        .premium-watching-alert-copy strong {
+            color: #f8fafc;
+        }
+
+        .premium-watching-alert--warn {
+            border-color: rgba(248, 113, 113, 0.16);
+            background: linear-gradient(90deg, rgba(127, 29, 29, 0.18), transparent 80%);
+        }
+
+        .premium-watching-alert--warn .premium-watching-alert-icon {
+            color: #f87171;
+        }
+
+        .premium-watching-alert--gold {
+            border-color: rgba(251, 191, 36, 0.18);
+            background: linear-gradient(90deg, rgba(120, 53, 15, 0.18), transparent 80%);
+        }
+
+        .premium-watching-alert--gold .premium-watching-alert-icon {
+            color: #fbbf24;
+        }
+
+        .premium-watching-shop {
+            padding-top: 20px;
+            border-top: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        .premium-watching-shop-title {
+            margin: 0 0 14px;
+            color: #fbbf24;
+            font-size: 0.98rem;
+            font-weight: 700;
+            text-align: center;
+        }
+
+        .premium-watching-shop-link {
+            margin: 14px 0 0;
+            color: #94a3b8;
+            font-size: 0.92rem;
+            text-align: center;
+        }
+
+        .premium-watching-shop-link a {
+            color: #fbbf24;
+            font-weight: 700;
+            text-decoration: none;
+        }
+
+        .premium-watching-shop-link a:hover {
+            color: #fde68a;
+        }
+
+        #watchingSection .ad-content {
+            position: relative;
+            padding: 30px !important;
+            border-radius: 24px !important;
+            background: linear-gradient(180deg, rgba(17, 24, 39, 0.96), rgba(10, 15, 27, 0.98)) !important;
+            border: 1px solid rgba(148, 163, 184, 0.12) !important;
+            box-shadow: 0 28px 60px rgba(2, 6, 23, 0.34), inset 0 1px 0 rgba(255, 255, 255, 0.04) !important;
+            overflow: hidden;
+        }
+
+        #watchingSection .ad-content::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background:
+                radial-gradient(circle at top left, rgba(96, 165, 250, 0.14), transparent 34%),
+                radial-gradient(circle at top right, rgba(245, 158, 11, 0.12), transparent 28%);
+            pointer-events: none;
+        }
+
+        #watchingSection .ad-content > * {
+            position: relative;
+            z-index: 1;
+        }
+
+        #watchingSection #watchingProgress {
+            margin: 0 0 22px !important;
+            color: #f8fafc !important;
+            font-size: 2rem !important;
+            font-weight: 800 !important;
+            letter-spacing: -0.035em;
+            text-align: center !important;
+        }
+
+        #watchingSection #watchingProgress::before {
+            content: "";
+            display: block;
+            width: 52px;
+            height: 52px;
+            margin: 0 auto 14px;
+            border-radius: 18px;
+            border: 1px solid rgba(251, 191, 36, 0.24);
+            background-color: rgba(15, 23, 42, 0.84);
+            background-image: radial-gradient(circle at 30% 28%, rgba(251, 191, 36, 0.12), transparent 62%), url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23fbbf24' stroke-width='2.1' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='12' cy='12' r='8.5'/%3E%3Cpath d='M12 7.2v4.8l2.9 2.9'/%3E%3C/svg%3E");
+            background-position: center, center;
+            background-repeat: no-repeat, no-repeat;
+            background-size: cover, 22px 22px;
+            box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.04), 0 14px 28px rgba(15, 23, 42, 0.26);
+        }
+
+        #watchingSection #watchingProgress::after {
+            content: "Netflix Guest Session";
+            display: block;
+            margin-top: 8px;
+            color: #fbbf24;
+            font-size: 0.72rem;
+            font-weight: 700;
+            letter-spacing: 0.16em;
+            text-transform: uppercase;
+        }
+
+        #watchingSection #loadingBarContainer {
+            height: 8px !important;
+            margin-bottom: 22px !important;
+            background: rgba(255, 255, 255, 0.08) !important;
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            border-radius: 999px !important;
+            box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.04);
+        }
+
+        #watchingSection #loadingBarContainer > div {
+            border-radius: inherit;
+            background: linear-gradient(90deg, #e50914 0%, #f97316 58%, #fbbf24 100%) !important;
+            box-shadow: 0 0 26px rgba(229, 9, 20, 0.34);
+        }
+
+        #watchingSection .ad-content > div[style*="text-align: left"] {
+            display: grid;
+            gap: 12px;
+            margin-bottom: 22px !important;
+            text-align: left !important;
+            color: #dbe4f0 !important;
+        }
+
+        #watchingSection .ad-content > div[style*="text-align: left"] p {
+            margin: 0 !important;
+            padding: 14px 16px;
+            border-radius: 18px;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(148, 163, 184, 0.12);
+            font-size: 0.95rem !important;
+            line-height: 1.65 !important;
+        }
+
+        #watchingSection .ad-content > div[style*="text-align: left"] p:first-child {
+            padding: 0 !important;
+            border: none !important;
+            background: transparent !important;
+            color: #fbbf24 !important;
+            font-size: 0.72rem !important;
+            font-weight: 700 !important;
+            letter-spacing: 0.16em;
+            text-transform: uppercase;
+        }
+
+        #watchingSection .ad-content > div[style*="text-align: left"] p:nth-child(2) {
+            background: linear-gradient(90deg, rgba(30, 64, 175, 0.18), transparent 80%);
+            border-color: rgba(96, 165, 250, 0.14);
+        }
+
+        #watchingSection .ad-content > div[style*="text-align: left"] p:nth-child(3) {
+            background: linear-gradient(90deg, rgba(127, 29, 29, 0.18), transparent 80%);
+            border-color: rgba(248, 113, 113, 0.16);
+        }
+
+        #watchingSection .ad-content > div[style*="text-align: left"] p:nth-child(4) {
+            background: linear-gradient(90deg, rgba(120, 53, 15, 0.18), transparent 80%);
+            border-color: rgba(251, 191, 36, 0.18);
+        }
+
+        #watchingSection .ad-content > div[style*="padding-top: 20px"] {
+            padding-top: 20px !important;
+            border-top: 1px solid rgba(255, 255, 255, 0.08) !important;
+        }
+
+        #watchingSection .ad-content > div[style*="padding-top: 20px"] > p:first-child {
+            margin-bottom: 14px !important;
+            font-size: 0.98rem !important;
+            font-weight: 700 !important;
+        }
+
+        #watchingSection .ad-content > div[style*="padding-top: 20px"] > p:last-child {
+            margin-top: 14px !important;
+            font-size: 0.92rem !important;
+            color: #94a3b8 !important;
+        }
+
+        #watchingSection .ad-content > div[style*="padding-top: 20px"] > p:last-child a {
+            color: #fbbf24 !important;
+            font-weight: 700 !important;
+            text-decoration: none !important;
+        }
+
+        #teamModal .modal-content {
+            width: min(100%, 700px) !important;
+            max-width: 700px !important;
+            max-height: min(calc(100vh - 48px), 680px) !important;
+            padding: 18px 18px 16px !important;
+            overflow-y: auto !important;
+            scrollbar-width: none;
+            -ms-overflow-style: none;
+        }
+
+        #teamModal .modal-content::-webkit-scrollbar {
+            width: 0;
+            height: 0;
+            display: none;
+        }
+
+        #teamModal #messageSection > h2 {
+            margin-bottom: 14px !important;
+            gap: 10px !important;
+            font-size: 1.55rem !important;
+            line-height: 1.2;
+        }
+
+        #teamModal #messageSection > h2 .premium-modal-icon-badge {
+            width: 40px !important;
+            height: 40px !important;
+            border-radius: 13px !important;
+        }
+
+        #teamModal #messageSection > h2 .premium-modal-icon-badge svg {
+            width: 21px;
+            height: 21px;
+        }
+
+        #teamModal #messageSection > div[style*="border-radius: 12px"] {
+            padding: 14px !important;
+            margin-bottom: 14px !important;
+            border-radius: 16px !important;
+        }
+
+        #teamModal #messageSection > div[style*="border-radius: 12px"] > p:first-child {
+            margin-bottom: 12px !important;
+            font-size: 0.84rem !important;
+            line-height: 1.56 !important;
+        }
+
+        #teamModal #messageSection > div[style*="border-left: 3px solid #fbbf24"] {
+            padding: 9px 12px !important;
+            border-radius: 10px !important;
+        }
+
+        #teamModal #messageSection > div[style*="border-radius: 12px"] > p[style*="text-align: center"] {
+            margin-bottom: 10px !important;
+            font-size: 0.79rem !important;
+        }
+
+        #teamModal #modalProductsGrid1,
+        #teamModal #modalProductsGrid2 {
+            gap: 8px !important;
+            margin-bottom: 10px !important;
+        }
+
+        #teamModal #modalProductsGrid1 > a,
+        #teamModal #modalProductsGrid2 > a {
+            padding: 7px !important;
+            gap: 7px !important;
+            border-radius: 11px !important;
+        }
+
+        #teamModal #modalProductsGrid1 > a img,
+        #teamModal #modalProductsGrid2 > a img {
+            width: 38px !important;
+            height: 38px !important;
+            border-radius: 8px !important;
+        }
+
+        #teamModal #modalProductsGrid1 > a p:first-child,
+        #teamModal #modalProductsGrid2 > a p:first-child {
+            margin-bottom: 2px !important;
+            font-size: 0.75rem !important;
+            line-height: 1.22 !important;
+        }
+
+        #teamModal #modalProductsGrid1 > a p:last-child,
+        #teamModal #modalProductsGrid2 > a p:last-child {
+            font-size: 0.76rem !important;
+            line-height: 1.18 !important;
+        }
+
+        #teamModal .modal-actions {
+            gap: 12px;
+        }
+
+        #teamModal .modal-actions .btn {
+            min-width: 0;
+            flex: 1;
+            padding: 12px 14px;
+        }
+
+        #watchingSection .ad-content {
+            max-width: 620px;
+            margin: 0 auto;
+            padding: 18px !important;
+            border-radius: 18px !important;
+        }
+
+        #watchingSection #watchingProgress {
+            margin: 0 0 14px !important;
+            font-size: 1.48rem !important;
+            line-height: 1.14;
+        }
+
+        #watchingSection #watchingProgress::before {
+            width: 42px;
+            height: 42px;
+            margin: 0 auto 10px;
+            border-radius: 14px;
+            background-size: cover, 18px 18px;
+        }
+
+        #watchingSection #watchingProgress::after {
+            margin-top: 5px;
+            font-size: 0.62rem;
+            letter-spacing: 0.14em;
+        }
+
+        #watchingSection #loadingBarContainer {
+            height: 5px !important;
+            margin-bottom: 14px !important;
+        }
+
+        #watchingSection .ad-content > div[style*="text-align: left"] {
+            gap: 8px;
+            margin-bottom: 14px !important;
+        }
+
+        #watchingSection .ad-content > div[style*="text-align: left"] p {
+            padding: 10px 12px;
+            border-radius: 12px;
+            font-size: 0.84rem !important;
+            line-height: 1.48 !important;
+        }
+
+        #watchingSection .ad-content > div[style*="padding-top: 20px"] {
+            padding-top: 14px !important;
+        }
+
+        #watchingSection .ad-content > div[style*="padding-top: 20px"] > p:first-child {
+            margin-bottom: 8px !important;
+            font-size: 0.86rem !important;
+        }
+
+        #watchingSection .ad-content > div[style*="padding-top: 20px"] > p:last-child {
+            margin-top: 8px !important;
+        }
+
+        #teamModal .custom-modal-body,
+        #teamModal .custom-modal-body pre,
+        #teamModal .referral-history-list,
+        #teamModal .account-help-sheet,
+        .custom-modal-body {
+            scrollbar-width: none;
+            -ms-overflow-style: none;
+        }
+
+        #teamModal .custom-modal-body::-webkit-scrollbar,
+        #teamModal .custom-modal-body pre::-webkit-scrollbar,
+        #teamModal .referral-history-list::-webkit-scrollbar,
+        #teamModal .account-help-sheet::-webkit-scrollbar,
+        .custom-modal-body::-webkit-scrollbar {
+            width: 0;
+            height: 0;
+            display: none;
+        }
+
+        .referral-history-list {
+            display: grid;
+            gap: 0;
+        }
+
+        .account-help-sheet {
+            width: min(100%, 468px);
+            max-height: 56vh;
+            overflow-y: auto;
+            text-align: left;
+            line-height: 1.7;
+        }
+
+        .account-help-sheet p {
+            margin: 0 0 18px;
+        }
+
+        .account-help-sheet p:last-child {
+            margin-bottom: 0;
+        }
+
+        .account-help-code {
+            display: block;
+            margin-top: 14px;
+            padding-top: 14px;
+            border-top: 1px solid rgba(148, 163, 184, 0.14);
+        }
+
+        .custom-modal-body div[style*="max-height:200px"][style*="overflow-y:auto"],
+        .custom-modal-body div[style*="width: 400px"] {
+            scrollbar-width: none;
+            -ms-overflow-style: none;
+        }
+
+        .custom-modal-body div[style*="max-height:200px"][style*="overflow-y:auto"] {
+            padding-right: 6px;
+        }
+
+        .custom-modal-body div[style*="max-height:200px"][style*="overflow-y:auto"]::-webkit-scrollbar,
+        .custom-modal-body div[style*="width: 400px"]::-webkit-scrollbar {
+            width: 0;
+            height: 0;
+            display: none;
+        }
+
+        .custom-modal-body div[style*="width: 400px"] {
+            width: min(100%, 468px) !important;
+            max-height: 56vh;
+            overflow-y: auto;
+            padding-right: 6px;
+        }
+
+        .custom-modal-body div[style*="width: 400px"] p {
+            margin-bottom: 18px !important;
+        }
+
+        .custom-modal-body div[style*="width: 400px"] p:last-child {
+            margin-bottom: 0 !important;
+        }
+
+        #teamModal #startWatchingBtn:disabled {
+            background: rgba(255, 255, 255, 0.06);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            color: rgba(226, 232, 240, 0.58);
+            box-shadow: none;
+            opacity: 1;
+        }
+
+        #teamModal #startWatchingBtn:not(:disabled) {
+            border: none;
+            color: #23170a;
+            background: linear-gradient(135deg, #f8d06b 0%, #f5b942 42%, #ea9b13 100%);
+            box-shadow: 0 18px 34px rgba(234, 155, 19, 0.26), inset 0 1px 0 rgba(255, 255, 255, 0.35);
+        }
+
+        #teamModal #startWatchingBtn:not(:disabled):hover {
+            background: linear-gradient(135deg, #fbe08a 0%, #f6c453 42%, #eea61d 100%);
+            color: #1b1207;
+            box-shadow: 0 22px 40px rgba(234, 155, 19, 0.34), inset 0 1px 0 rgba(255, 255, 255, 0.4);
+        }
+
+        @media (max-width: 900px) {
+            .premium-watching-head {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .premium-watching-copy {
+                text-align: center;
+            }
+        }
+
+        .premium-suspended-notice {
+            position: relative;
+            overflow: hidden;
+            border-radius: 22px !important;
+            border: 1px solid rgba(148, 163, 184, 0.18) !important;
+            box-shadow: 0 40px 120px rgba(2, 6, 23, 0.78), inset 0 1px 0 rgba(255, 255, 255, 0.06) !important;
+            background:
+                radial-gradient(circle at top left, rgba(251, 191, 36, 0.18), transparent 34%),
+                radial-gradient(circle at top right, rgba(229, 9, 20, 0.12), transparent 30%),
+                linear-gradient(180deg, rgba(15, 23, 42, 0.96), rgba(2, 6, 23, 0.98)) !important;
+        }
+
+        .premium-suspended-notice::before {
+            display: none;
+        }
+
+        .premium-suspended-symbol {
+            display: grid;
+            place-items: center;
+            width: 70px;
+            height: 70px;
+            margin: 0 auto 14px;
+            border-radius: 22px;
+            background: linear-gradient(135deg, rgba(251, 191, 36, 0.16), rgba(229, 9, 20, 0.06));
+            border: 1px solid rgba(251, 191, 36, 0.24);
+            box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.08), 0 18px 35px rgba(0, 0, 0, 0.28);
+        }
+
+        .premium-suspended-symbol svg {
+            width: 30px;
+            height: 30px;
+            color: #fbbf24;
+        }
+
+        .premium-suspended-kicker {
+            display: flex;
+            width: fit-content;
+            margin: 0 auto 16px;
+            padding: 6px 12px;
+            border-radius: 999px;
+            color: #f6d77d;
+            font-size: 0.72rem;
+            font-weight: 700;
+            line-height: 1;
+            letter-spacing: 0.14em;
+            text-transform: uppercase;
+            background: rgba(251, 191, 36, 0.08);
+            border: 1px solid rgba(251, 191, 36, 0.16);
+            position: relative;
+            z-index: 1;
+        }
+
+        .premium-suspended-notice h2 {
+            margin-bottom: 12px !important;
+            color: #f8fafc !important;
+            font-size: 1.42rem !important;
+            letter-spacing: -0.03em;
+        }
+
+        .premium-suspended-body {
+            margin-bottom: 18px !important;
+            color: #cbd5e1 !important;
+            line-height: 1.7 !important;
+            font-size: 0.96rem;
+        }
+
+        .premium-suspended-body strong {
+            color: #f87171;
+            font-weight: 700;
+        }
+
+        .premium-suspended-note {
+            margin-bottom: 26px !important;
+            padding: 15px 16px;
+            border-radius: 16px;
+            border: 1px solid rgba(251, 191, 36, 0.22);
+            background: linear-gradient(180deg, rgba(120, 53, 15, 0.28), rgba(69, 26, 3, 0.32));
+            font-size: 0.88rem;
+            line-height: 1.7;
+            color: #fde68a;
+        }
+
+        .premium-suspended-notice button {
+            min-width: 170px;
+            border-radius: 14px !important;
+            color: #fff !important;
+            background: linear-gradient(135deg, #ff5b63 0%, #e50914 58%, #a50710 100%) !important;
+            border: 1px solid rgba(255, 122, 134, 0.28) !important;
+            box-shadow: 0 18px 40px rgba(229, 9, 20, 0.18);
+            transition: transform 0.24s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.24s ease, border-color 0.24s ease, background 0.24s ease;
+        }
+
+        .premium-suspended-notice button:hover {
+            transform: translateY(-2px);
+            background: linear-gradient(135deg, #ff6971 0%, #f01722 58%, #b70a13 100%) !important;
+            border-color: rgba(255, 148, 158, 0.4) !important;
+            box-shadow: 0 22px 42px rgba(229, 9, 20, 0.24);
         }
 
         .video-container {
@@ -1743,12 +2674,14 @@
         .custom-modal-overlay {
             display: none;
             position: fixed;
-            top: 0;
-            left: 0;
+            inset: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0, 0, 0, 0.8);
-            backdrop-filter: blur(5px);
+            padding: 24px 18px;
+            background:
+                radial-gradient(circle at top, rgba(96, 165, 250, 0.12), transparent 32%),
+                rgba(2, 6, 23, 0.82);
+            backdrop-filter: blur(16px) saturate(1.1);
             z-index: 10001;
             animation: fadeIn 0.2s ease-out;
         }
@@ -1760,79 +2693,100 @@
         }
 
         .custom-modal-dialog {
-            background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
-            border-radius: 16px;
+            background: linear-gradient(180deg, rgba(15, 23, 42, 0.97), rgba(2, 6, 23, 0.99));
+            border-radius: 24px;
             padding: 0;
-            max-width: 500px;
-            width: 90%;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.9);
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            max-width: 540px;
+            width: min(100%, 540px);
+            max-height: calc(100vh - 48px);
+            box-shadow: 0 40px 120px rgba(2, 6, 23, 0.78), inset 0 1px 0 rgba(255, 255, 255, 0.06);
+            border: 1px solid rgba(148, 163, 184, 0.18);
             animation: slideUp 0.3s ease-out;
             overflow: hidden;
         }
 
         .custom-modal-header {
-            padding: 24px 28px;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 24px 26px 18px;
+            border-bottom: 1px solid rgba(148, 163, 184, 0.16);
             display: flex;
             align-items: center;
-            gap: 12px;
+            gap: 14px;
+            background: linear-gradient(180deg, rgba(148, 163, 184, 0.06), transparent);
         }
 
         .custom-modal-icon {
-            font-size: 28px;
+            width: 52px;
+            height: 52px;
+            border-radius: 18px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            color: #bfdbfe;
+            background: linear-gradient(135deg, rgba(96, 165, 250, 0.16), rgba(251, 191, 36, 0.1));
+            border: 1px solid rgba(148, 163, 184, 0.22);
+            box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.08), 0 16px 30px rgba(15, 23, 42, 0.35);
             line-height: 1;
         }
 
+        .custom-modal-icon svg {
+            width: 23px;
+            height: 23px;
+        }
+
         .custom-modal-title {
-            font-size: 1.3rem;
-            font-weight: 600;
-            color: #fff;
+            font-size: 1.25rem;
+            font-weight: 800;
+            letter-spacing: -0.03em;
+            color: #f8fafc;
             flex: 1;
         }
 
         .custom-modal-body {
-            padding: 28px;
-            color: #ddd;
-            line-height: 1.6;
+            padding: 22px 26px;
+            color: #cbd5e1;
+            line-height: 1.7;
             max-height: 60vh;
             overflow-y: auto;
         }
 
         .custom-modal-body pre {
-            background: rgba(0, 0, 0, 0.3);
-            padding: 16px;
-            border-radius: 8px;
-            border-left: 3px solid #60a5fa;
-            white-space: pre-wrap;
+            background: transparent;
+            padding: 0;
+            border-radius: 0;
+            border: none;
+            box-shadow: none;
+            white-space: pre-line;
             word-wrap: break-word;
             font-family: 'Segoe UI', sans-serif;
-            font-size: 0.95rem;
+            font-size: 0.98rem;
             margin: 0;
+            color: inherit;
         }
 
         .custom-modal-footer {
-            padding: 20px 28px;
-            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 18px 26px 24px;
+            border-top: 1px solid rgba(148, 163, 184, 0.14);
             display: flex;
             gap: 12px;
             justify-content: flex-end;
         }
 
         .custom-modal-btn {
-            padding: 10px 24px;
-            border: none;
-            border-radius: 8px;
+            padding: 12px 24px;
+            border: 1px solid transparent;
+            border-radius: 14px;
             font-size: 0.95rem;
-            font-weight: 600;
+            font-weight: 700;
             cursor: pointer;
             transition: all 0.2s ease;
             font-family: inherit;
         }
 
         .custom-modal-btn-primary {
-            background: linear-gradient(135deg, #60a5fa, #3b82f6);
+            background: linear-gradient(135deg, #60a5fa, #2563eb);
             color: white;
+            border-color: rgba(147, 197, 253, 0.2);
         }
 
         .custom-modal-btn-primary:hover {
@@ -1842,8 +2796,9 @@
         }
 
         .custom-modal-btn-secondary {
-            background: rgba(255, 255, 255, 0.1);
-            color: #fff;
+            background: rgba(148, 163, 184, 0.12);
+            color: #e2e8f0;
+            border-color: rgba(148, 163, 184, 0.2);
         }
 
         .custom-modal-btn-secondary:hover {
@@ -1851,8 +2806,9 @@
         }
 
         .custom-modal-btn-danger {
-            background: linear-gradient(135deg, #ef4444, #dc2626);
+            background: linear-gradient(135deg, #ef4444, #b91c1c);
             color: white;
+            border-color: rgba(248, 113, 113, 0.2);
         }
 
         .custom-modal-btn-danger:hover {
@@ -1904,13 +2860,13 @@
         }
 
         .referral-notification-modal {
-            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
-            border-radius: 20px;
+            background: linear-gradient(180deg, rgba(15, 23, 42, 0.98), rgba(8, 15, 32, 0.99));
+            border-radius: 24px;
             padding: 0;
             max-width: 480px;
             width: 90%;
-            box-shadow: 0 25px 80px rgba(0, 0, 0, 0.9), 0 0 40px rgba(251, 191, 36, 0.15);
-            border: 1px solid rgba(251, 191, 36, 0.3);
+            box-shadow: 0 40px 120px rgba(2, 6, 23, 0.78), 0 0 40px rgba(251, 191, 36, 0.14);
+            border: 1px solid rgba(251, 191, 36, 0.22);
             animation: slideUp 0.4s ease-out;
             overflow: hidden;
         }
@@ -1922,10 +2878,23 @@
         }
 
         .referral-notification-icon {
-            font-size: 56px;
-            line-height: 1;
-            margin-bottom: 12px;
+            width: 70px;
+            height: 70px;
+            margin: 0 auto 14px;
+            border-radius: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #fbbf24;
+            background: linear-gradient(135deg, rgba(251, 191, 36, 0.18), rgba(96, 165, 250, 0.1));
+            border: 1px solid rgba(251, 191, 36, 0.24);
+            box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.08), 0 16px 34px rgba(15, 23, 42, 0.32);
             animation: celebrateBounce 0.6s ease-out;
+        }
+
+        .referral-notification-icon svg {
+            width: 30px;
+            height: 30px;
         }
 
         @keyframes celebrateBounce {
@@ -2088,6 +3057,1562 @@
 
             100% {
                 width: 100%;
+            }
+        }
+    </style>
+    <style id="desktop-home-theme">
+        @font-face {
+            font-family: "SF Pro Web";
+            src: url("https://db.onlinewebfonts.com/t/1c45e28f8e86cc89876f003b953cc3e9.woff2") format("woff2"),
+            url("https://db.onlinewebfonts.com/t/1c45e28f8e86cc89876f003b953cc3e9.woff") format("woff");
+            font-weight: 400;
+            font-style: normal;
+            font-display: swap;
+        }
+
+        @font-face {
+            font-family: "SF Pro Web";
+            src: url("https://db.onlinewebfonts.com/t/1bd3de6fcdd9ba7750e5a353dc6ef6e3.woff2") format("woff2"),
+            url("https://db.onlinewebfonts.com/t/1bd3de6fcdd9ba7750e5a353dc6ef6e3.woff") format("woff");
+            font-weight: 500;
+            font-style: normal;
+            font-display: swap;
+        }
+
+        @font-face {
+            font-family: "SF Pro Web";
+            src: url("https://db.onlinewebfonts.com/t/d6243b42d786410a86f0bafee83d503a.woff2") format("woff2"),
+            url("https://db.onlinewebfonts.com/t/d6243b42d786410a86f0bafee83d503a.woff") format("woff");
+            font-weight: 600;
+            font-style: normal;
+            font-display: swap;
+        }
+
+        @font-face {
+            font-family: "SF Pro Web";
+            src: url("https://db.onlinewebfonts.com/t/28adc6c6fd652123c3e173389a8be17f.woff2") format("woff2"),
+            url("https://db.onlinewebfonts.com/t/28adc6c6fd652123c3e173389a8be17f.woff") format("woff");
+            font-weight: 700;
+            font-style: normal;
+            font-display: swap;
+        }
+
+        :root {
+            --desktop-home-font-family: "SF Pro Web", "Segoe UI", sans-serif;
+            --desktop-home-bg: #030407;
+            --desktop-home-bg-soft: #0a0b10;
+            --desktop-home-surface: rgba(15, 17, 21, 0.7);
+            --desktop-home-surface-2: rgba(22, 25, 33, 0.8);
+            --desktop-home-surface-3: rgba(255, 255, 255, 0.03);
+            --desktop-home-border: rgba(255, 255, 255, 0.08);
+            --desktop-home-border-strong: rgba(255, 255, 255, 0.15);
+            --desktop-home-text: #f8fafc;
+            --desktop-home-muted: #94a3b8;
+            --desktop-home-netflix: #e50914;
+            --desktop-home-netflix-2: #ff4d57;
+            --desktop-home-gold: #fbbf24;
+            --desktop-home-blue: #3b82f6;
+            --desktop-home-purple: #8b5cf6;
+            --desktop-home-green: #10b981;
+            --desktop-home-danger: #ef4444;
+            --desktop-home-radius-xl: 24px;
+            --desktop-home-radius-lg: 16px;
+            --desktop-home-radius-md: 12px;
+        }
+
+        body.desktop-home-v2 {
+            min-height: 100vh;
+            padding: 0;
+            overflow: hidden;
+            position: relative;
+            font-family: var(--desktop-home-font-family);
+            font-synthesis: none;
+            color: var(--desktop-home-text);
+            background-color: var(--desktop-home-bg);
+            background-image: radial-gradient(circle at 15% 0%, rgba(229, 9, 20, 0.08) 0%, transparent 40%), radial-gradient(circle at 85% 100%, rgba(59, 130, 246, 0.06) 0%, transparent 42%);
+        }
+
+        body.desktop-home-v2 > footer {
+            display: none !important;
+        }
+
+        body.desktop-home-v2::before,
+        body.desktop-home-v2::after {
+            content: "";
+            position: fixed;
+            pointer-events: none;
+            z-index: 0;
+            filter: blur(90px);
+            opacity: 0.8;
+        }
+
+        body.desktop-home-v2::before {
+            top: -120px;
+            right: 10%;
+            width: 420px;
+            height: 420px;
+            background: radial-gradient(circle, rgba(255, 115, 122, 0.18) 0%, transparent 64%);
+        }
+
+        body.desktop-home-v2::after {
+            left: 24%;
+            bottom: -160px;
+            width: 560px;
+            height: 340px;
+            background: radial-gradient(circle at 35% 45%, rgba(251, 191, 36, 0.12) 0%, transparent 42%), radial-gradient(circle at 68% 35%, rgba(59, 130, 246, 0.12) 0%, transparent 48%);
+        }
+
+        body.desktop-home-v2 .main-wrapper {
+            min-height: 100vh;
+            position: relative;
+            z-index: 1;
+            isolation: isolate;
+        }
+
+        body.desktop-home-v2 .main-content {
+            align-items: stretch;
+            justify-content: stretch;
+        }
+
+        body.desktop-home-v2 .container {
+            max-width: none;
+            width: 100%;
+            height: 100vh;
+        }
+
+        body.desktop-home-v2 .header {
+            display: none;
+        }
+
+        body.desktop-home-v2 .main-layout {
+            display: grid;
+            grid-template-columns: 456px minmax(0, 1fr);
+            gap: 0;
+            height: 100vh;
+        }
+
+        body.desktop-home-v2 .sidebar,
+        body.desktop-home-v2 .features-area {
+            height: 100vh;
+            border: none;
+            border-radius: 0;
+            box-shadow: none;
+            backdrop-filter: none;
+            margin: 0;
+        }
+
+        body.desktop-home-v2 .sidebar {
+            order: -1;
+            padding: 0;
+            background: var(--desktop-home-bg-soft);
+            box-shadow: 1px 0 0 0 var(--desktop-home-border);
+            overflow-y: auto;
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+
+        body.desktop-home-v2 .features-area {
+            padding: 0 28px 56px;
+            background: transparent;
+            overflow-y: auto;
+        }
+
+        body.desktop-home-v2 .sidebar::-webkit-scrollbar {
+            width: 0;
+            height: 0;
+            display: none;
+        }
+
+        body.desktop-home-v2 .features-area::-webkit-scrollbar {
+            width: 4px;
+        }
+
+        body.desktop-home-v2 .features-area::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.08);
+            border-radius: 99px;
+        }
+
+        body.desktop-home-v2 .features-area:hover::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.15);
+        }
+
+        body.desktop-home-v2 .features-area {
+            scrollbar-width: thin;
+            scrollbar-color: rgba(255, 255, 255, 0.08) transparent;
+        }
+
+        body.desktop-home-v2 a {
+            color: inherit;
+            text-decoration: none;
+        }
+
+        body.desktop-home-v2 button,
+        body.desktop-home-v2 input {
+            font: inherit;
+            outline: none;
+        }
+
+        body.desktop-home-v2 .mobile-only {
+            display: none !important;
+        }
+
+        body.desktop-home-v2 .icon {
+            width: 20px;
+            height: 20px;
+            fill: none;
+            stroke: currentColor;
+            stroke-width: 2;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+            flex-shrink: 0;
+        }
+    </style>
+    <style id="desktop-home-sidebar">
+        body.desktop-home-v2 .sidebar-header {
+            position: sticky;
+            top: 0;
+            z-index: 2;
+            padding: 20px 26px;
+            background: var(--desktop-home-bg-soft);
+            border-bottom: 1px solid var(--desktop-home-border);
+        }
+
+        body.desktop-home-v2 .sidebar-body {
+            padding: 24px 26px;
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+        }
+
+        body.desktop-home-v2 .brand {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        body.desktop-home-v2 .brand-mark {
+            width: 44px;
+            height: 44px;
+            display: grid;
+            place-items: center;
+            border-radius: 12px;
+            color: var(--desktop-home-netflix-2);
+            background: linear-gradient(135deg, rgba(229, 9, 20, 0.2), rgba(255, 77, 87, 0.05));
+            border: 1px solid rgba(229, 9, 20, 0.3);
+        }
+
+        body.desktop-home-v2 .brand-kicker {
+            margin-bottom: 2px;
+            color: var(--desktop-home-gold);
+            font-size: 0.7rem;
+            font-weight: 700;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+
+        body.desktop-home-v2 .brand-title {
+            font-size: 1.15rem;
+            font-weight: 700;
+        }
+
+        body.desktop-home-v2 .brand-subtitle {
+            color: var(--desktop-home-muted);
+            font-size: 0.8rem;
+        }
+
+        body.desktop-home-v2 .panel {
+            position: relative;
+            overflow: hidden;
+            background: linear-gradient(180deg, rgba(15, 17, 21, 0.9), rgba(10, 12, 16, 0.78));
+            border: 1px solid rgba(255, 255, 255, 0.07);
+            border-radius: var(--desktop-home-radius-xl);
+            backdrop-filter: blur(14px);
+            box-shadow: 0 22px 48px rgba(0, 0, 0, 0.22), inset 0 1px 0 rgba(255, 255, 255, 0.05);
+        }
+
+        body.desktop-home-v2 .panel::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            pointer-events: none;
+            opacity: 0.75;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.06), transparent 24%, transparent 74%, rgba(255, 255, 255, 0.03));
+        }
+
+        body.desktop-home-v2 .panel::after {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 28px;
+            right: 28px;
+            height: 1px;
+            pointer-events: none;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.26), transparent);
+        }
+
+        body.desktop-home-v2 .account-card {
+            padding: 0;
+        }
+
+        body.desktop-home-v2 .account-header {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        body.desktop-home-v2 .account-title-icon {
+            width: 42px;
+            height: 42px;
+            display: grid;
+            place-items: center;
+            flex-shrink: 0;
+            border-radius: 14px;
+            color: #ffb4ba;
+            background: linear-gradient(135deg, rgba(229, 9, 20, 0.18), rgba(139, 92, 246, 0.1));
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        body.desktop-home-v2 .account-title-wrap {
+            min-width: 0;
+        }
+
+        body.desktop-home-v2 .account-title {
+            margin-bottom: 3px;
+            font-size: 1.2rem;
+            font-weight: 700;
+        }
+
+        body.desktop-home-v2 .account-subtitle {
+            color: var(--desktop-home-muted);
+            font-size: 0.82rem;
+        }
+
+        body.desktop-home-v2 .capsule {
+            margin-bottom: 16px;
+            padding: 24px;
+            border-radius: var(--desktop-home-radius-lg);
+            background: var(--desktop-home-surface-2);
+            border: 1px solid var(--desktop-home-border);
+        }
+
+        body.desktop-home-v2 .profile-hero {
+            text-align: center;
+            background: linear-gradient(180deg, rgba(255, 255, 255, 0.05) 0%, transparent 100%);
+        }
+
+        body.desktop-home-v2 .profile-kicker {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            margin-bottom: 12px;
+            padding: 5px 10px;
+            border-radius: 999px;
+            background: rgba(16, 185, 129, 0.12);
+            border: 1px solid rgba(16, 185, 129, 0.18);
+            color: #86efac;
+            font-size: 0.68rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        body.desktop-home-v2 .avatar-ring {
+            width: 80px;
+            height: 80px;
+            margin: 0 auto 16px;
+            padding: 3px;
+            border-radius: 24px;
+            background: linear-gradient(135deg, var(--desktop-home-netflix), var(--desktop-home-purple));
+        }
+
+        body.desktop-home-v2 .avatar-inner {
+            width: 100%;
+            height: 100%;
+            display: grid;
+            place-items: center;
+            border-radius: 21px;
+            background: var(--desktop-home-bg);
+        }
+
+        body.desktop-home-v2 #userAvatar {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            height: 100%;
+        }
+
+        body.desktop-home-v2 .user-name {
+            margin-bottom: 2px;
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: var(--desktop-home-text) !important;
+        }
+
+        body.desktop-home-v2 .user-email {
+            margin: 0;
+            color: var(--desktop-home-muted) !important;
+            font-size: 0.85rem !important;
+        }
+
+        body.desktop-home-v2 .user-badges {
+            display: flex;
+            justify-content: center;
+            gap: 8px;
+            margin-top: 12px;
+        }
+
+        body.desktop-home-v2 .badge-pro,
+        body.desktop-home-v2 .badge-free,
+        body.desktop-home-v2 #userType {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 4px 10px;
+            border-radius: 6px;
+            font-size: 0.7rem !important;
+            font-weight: 700 !important;
+            text-transform: uppercase;
+            letter-spacing: 0.02em;
+        }
+
+        body.desktop-home-v2 .badge-pro,
+        body.desktop-home-v2 #userType.badge-pro {
+            background: rgba(251, 191, 36, 0.15);
+            border: 1px solid rgba(251, 191, 36, 0.3);
+            color: var(--desktop-home-gold) !important;
+            box-shadow: inset 0 1px 0 rgba(255, 243, 205, 0.08);
+        }
+
+        body.desktop-home-v2 .badge-free,
+        body.desktop-home-v2 #userType.badge-free {
+            background: rgba(96, 165, 250, 0.12);
+            border: 1px solid rgba(96, 165, 250, 0.24);
+            color: #9dc8ff !important;
+            box-shadow: inset 0 1px 0 rgba(219, 234, 254, 0.06);
+        }
+
+        body.desktop-home-v2 .badge-verified,
+        body.desktop-home-v2 #verifiedBadge {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 4px 10px;
+            border-radius: 6px;
+            background: rgba(16, 185, 129, 0.15);
+            border: 1px solid rgba(16, 185, 129, 0.3);
+            color: var(--desktop-home-green) !important;
+            font-size: 0.7rem !important;
+            font-weight: 700 !important;
+            text-transform: uppercase;
+        }
+
+        body.desktop-home-v2 .stats-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+
+        body.desktop-home-v2 .stat-card {
+            padding: 16px;
+            text-align: center;
+            border-radius: var(--desktop-home-radius-md);
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid var(--desktop-home-border);
+        }
+
+        body.desktop-home-v2 .stat-label {
+            margin-bottom: 6px;
+            color: var(--desktop-home-muted);
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+
+        body.desktop-home-v2 .stat-value {
+            font-size: 1.2rem;
+            font-weight: 700;
+        }
+    </style>
+    <style id="desktop-home-main">
+        body.desktop-home-v2 .hud-details {
+            margin-bottom: 16px;
+            padding: 18px;
+            border-radius: var(--desktop-home-radius-md);
+            background: rgba(0, 0, 0, 0.4);
+            border: 1px solid var(--desktop-home-border);
+        }
+
+        body.desktop-home-v2 .hud-header {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            gap: 12px;
+            margin-bottom: 14px;
+        }
+
+        body.desktop-home-v2 .hud-kicker {
+            margin-bottom: 3px;
+            color: var(--desktop-home-blue);
+            font-size: 0.66rem;
+            font-weight: 700;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+        }
+
+        body.desktop-home-v2 .hud-heading-text {
+            font-size: 0.92rem;
+            font-weight: 700;
+            color: var(--desktop-home-text);
+        }
+
+        body.desktop-home-v2 .account-help-trigger {
+            width: 32px;
+            height: 32px;
+            padding: 0;
+            display: grid;
+            place-items: center;
+            flex-shrink: 0;
+            cursor: pointer;
+            appearance: none;
+            color: var(--desktop-home-muted);
+            border-radius: 10px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            transition: 0.2s;
+        }
+
+        body.desktop-home-v2 .account-help-trigger:hover {
+            color: var(--desktop-home-text);
+            background: rgba(255, 255, 255, 0.08);
+            border-color: rgba(255, 255, 255, 0.14);
+        }
+
+        body.desktop-home-v2 .hud-row {
+            display: grid;
+            grid-template-columns: minmax(0, 1fr) auto;
+            align-items: center;
+            gap: 16px;
+            padding: 12px 0;
+            border-bottom: 1px dashed rgba(255, 255, 255, 0.08);
+            font-size: 0.9rem;
+        }
+
+        body.desktop-home-v2 .hud-label {
+            color: var(--desktop-home-muted);
+            line-height: 1.35;
+        }
+
+        body.desktop-home-v2 .hud-value {
+            font-weight: 700;
+            justify-self: end;
+            text-align: right;
+            line-height: 1.35;
+            min-width: 118px;
+            font-variant-numeric: tabular-nums;
+            white-space: nowrap;
+        }
+
+        body.desktop-home-v2 .val-green {
+            color: var(--desktop-home-green);
+        }
+
+        body.desktop-home-v2 .hud-footer {
+            display: flex;
+            justify-content: flex-end;
+            margin-top: 12px;
+        }
+
+        body.desktop-home-v2 .help-link {
+            color: var(--desktop-home-blue);
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+
+        body.desktop-home-v2 #loginSection {
+            padding: 0 !important;
+            width: 100%;
+        }
+
+        body.desktop-home-v2 .login-state-card {
+            padding: 0;
+            max-width: 340px;
+            margin: 0 auto;
+        }
+
+        body.desktop-home-v2 .login-state-top {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            margin-bottom: 14px;
+            text-align: left;
+        }
+
+        body.desktop-home-v2 .login-state-copy-wrap {
+            min-width: 0;
+        }
+
+        body.desktop-home-v2 .login-state-icon {
+            width: 46px;
+            height: 46px;
+            display: grid;
+            place-items: center;
+            flex-shrink: 0;
+            border-radius: 14px;
+            color: #ffb4ba;
+            background: rgba(229, 9, 20, 0.12);
+            border: 1px solid rgba(229, 9, 20, 0.2);
+        }
+
+        body.desktop-home-v2 .login-state-title {
+            margin-bottom: 3px;
+            font-size: 1.2rem;
+            font-weight: 700;
+            line-height: 1.15;
+        }
+
+        body.desktop-home-v2 .login-state-copy {
+            margin: 0;
+            color: var(--desktop-home-muted);
+            font-size: 0.84rem;
+            line-height: 1.45;
+        }
+
+        body.desktop-home-v2 .login-state-btn {
+            width: 100%;
+        }
+
+        @supports selector(.sidebar-body:has(#loginSection)) {
+            body.desktop-home-v2 .sidebar-body:has(#loginSection[style*="display:block"]),
+            body.desktop-home-v2 .sidebar-body:has(#loginSection[style*="display: block"]) {
+                min-height: calc(100vh - 86px);
+            }
+
+            body.desktop-home-v2 .account-card:has(#loginSection[style*="display:block"]),
+            body.desktop-home-v2 .account-card:has(#loginSection[style*="display: block"]) {
+                flex: 1;
+                display: flex;
+            }
+
+            body.desktop-home-v2 .account-card:has(#loginSection[style*="display:block"]) #userProfileSection,
+            body.desktop-home-v2 .account-card:has(#loginSection[style*="display: block"]) #userProfileSection {
+                flex: 1;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+        }
+
+        body.desktop-home-v2 .menu-grid {
+            display: grid;
+            gap: 12px;
+        }
+
+        body.desktop-home-v2 .menu-btn {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            padding: 16px;
+            text-align: left;
+            color: white;
+            cursor: pointer;
+            border-radius: var(--desktop-home-radius-md);
+            background: var(--desktop-home-surface-3);
+            border: 1px solid var(--desktop-home-border);
+            transition: 0.2s;
+        }
+
+        body.desktop-home-v2 .menu-grid>.menu-btn,
+        body.desktop-home-v2 #purchaseCreditsBtn {
+            display: flex !important;
+        }
+
+        body.desktop-home-v2 .menu-btn:hover {
+            background: rgba(255, 255, 255, 0.08);
+        }
+
+        body.desktop-home-v2 .menu-icon {
+            width: 36px;
+            height: 36px;
+            display: grid;
+            place-items: center;
+            flex-shrink: 0;
+            border-radius: 10px;
+        }
+
+        body.desktop-home-v2 .menu-copy strong {
+            display: block;
+            margin-bottom: 2px;
+            font-size: 0.95rem;
+        }
+
+        body.desktop-home-v2 .menu-copy span {
+            color: var(--desktop-home-muted);
+            font-size: 0.8rem;
+        }
+
+        body.desktop-home-v2 .main-topbar {
+            position: sticky;
+            top: 0;
+            z-index: 30;
+            isolation: isolate;
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+            padding: 14px 0 12px;
+        }
+
+        body.desktop-home-v2 .main-topbar::before {
+            content: "";
+            position: absolute;
+            inset: 0 -24px;
+            z-index: -1;
+            pointer-events: none;
+            background: linear-gradient(to bottom, rgba(3, 4, 7, 0.72) 0%, rgba(3, 4, 7, 0.34) 52%, rgba(3, 4, 7, 0) 100%);
+            backdrop-filter: blur(12px);
+        }
+
+        body.desktop-home-v2 .nav-pill {
+            position: relative;
+            overflow: hidden;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 16px;
+            border-radius: 999px;
+            color: var(--desktop-home-muted);
+            font-size: 0.85rem;
+            font-weight: 600;
+            background: var(--desktop-home-surface-3);
+            border: 1px solid var(--desktop-home-border);
+            transition: 0.2s;
+            backdrop-filter: blur(12px);
+        }
+
+        body.desktop-home-v2 .nav-pill:hover {
+            color: var(--desktop-home-text);
+            background: rgba(255, 255, 255, 0.08);
+            border-color: var(--desktop-home-border-strong);
+        }
+
+        body.desktop-home-v2 .nav-pill::after {
+            content: "";
+            position: absolute;
+            inset: 0;
+            opacity: 0.7;
+            pointer-events: none;
+            background: linear-gradient(120deg, rgba(255, 255, 255, 0.12), transparent 28%, transparent 72%, rgba(255, 255, 255, 0.04));
+        }
+
+        body.desktop-home-v2 .hero {
+            position: relative;
+            margin-bottom: 28px;
+            padding: 14px 0 20px;
+        }
+
+        body.desktop-home-v2 .hero::after {
+            content: "";
+            position: absolute;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            height: 1px;
+            opacity: 0.85;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.08), transparent);
+        }
+
+        body.desktop-home-v2 .hero-main {
+            position: relative;
+            display: grid;
+            grid-template-columns: minmax(0, 1.2fr) minmax(320px, 0.8fr);
+            gap: 28px;
+            align-items: end;
+            padding: 18px 0 0;
+        }
+
+        body.desktop-home-v2 .hero-main::before {
+            content: "";
+            position: absolute;
+            top: -90px;
+            right: -30px;
+            width: 520px;
+            height: 320px;
+            opacity: 0.78;
+            pointer-events: none;
+            border-radius: 50%;
+            filter: blur(12px);
+            background: radial-gradient(circle at 35% 40%, rgba(255, 255, 255, 0.16) 0%, transparent 28%), radial-gradient(circle at 48% 45%, rgba(251, 191, 36, 0.14) 0%, transparent 42%), linear-gradient(135deg, rgba(229, 9, 20, 0.14), rgba(59, 130, 246, 0.03));
+        }
+
+        body.desktop-home-v2 .hero-main>* {
+            position: relative;
+            z-index: 1;
+        }
+
+        body.desktop-home-v2 .hero-copy {
+            max-width: 900px;
+            padding-right: 24px;
+        }
+
+        body.desktop-home-v2 .eyebrow {
+            display: inline-flex;
+            padding: 6px 12px;
+            border-radius: 999px;
+            color: var(--desktop-home-gold);
+            font-size: 0.75rem;
+            font-weight: 700;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--desktop-home-border);
+        }
+
+        body.desktop-home-v2 .hero-title {
+            margin-top: 14px;
+            color: var(--desktop-home-text);
+            font-size: clamp(3rem, 6vw, 5.2rem);
+            font-weight: 700;
+            line-height: 1.05;
+            letter-spacing: -0.05em;
+            text-shadow: 0 12px 32px rgba(0, 0, 0, 0.35);
+            background: none;
+            -webkit-text-fill-color: currentColor;
+        }
+
+        body.desktop-home-v2 .hero-kicker {
+            margin-top: 16px;
+            color: #b7c2d1;
+            font-size: clamp(1.25rem, 2.4vw, 2.1rem);
+            font-weight: 700;
+            line-height: 1.16;
+            letter-spacing: -0.04em;
+            opacity: 0.9;
+        }
+
+        body.desktop-home-v2 .hero-description {
+            max-width: 60ch;
+            margin-top: 18px;
+            color: var(--desktop-home-muted);
+            font-size: 1rem;
+            line-height: 1.7;
+            text-align: justify;
+            text-align-last: left;
+        }
+
+        body.desktop-home-v2 .hero-actions {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+            margin-top: 24px;
+        }
+    </style>
+    <style id="desktop-home-components">
+        body.desktop-home-v2 .hero-metrics,
+        body.desktop-home-v2 .content-stack,
+        body.desktop-home-v2 .task-list,
+        body.desktop-home-v2 .stacked-actions,
+        body.desktop-home-v2 .input-shell {
+            display: grid;
+            gap: 12px;
+        }
+
+        body.desktop-home-v2 .hero-metrics {
+            gap: 16px;
+            align-self: stretch;
+            padding-top: 26px;
+        }
+
+        body.desktop-home-v2 .content-stack {
+            gap: 24px;
+            margin-top: 8px;
+        }
+
+        body.desktop-home-v2 .service-card,
+        body.desktop-home-v2 .spotlight-card,
+        body.desktop-home-v2 .guest-intro,
+        body.desktop-home-v2 .method-card,
+        body.desktop-home-v2 .status-panel {
+            position: relative;
+            overflow: hidden;
+            transition: transform 0.28s cubic-bezier(0.22, 1, 0.36, 1), border-color 0.28s ease, box-shadow 0.28s ease, background 0.28s ease;
+            will-change: transform;
+        }
+
+        body.desktop-home-v2 .service-card {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            min-height: 108px;
+            padding: 20px;
+            border-radius: 20px;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        body.desktop-home-v2 .service-card:hover,
+        body.desktop-home-v2 .method-card:hover {
+            transform: translateY(-3px);
+            border-color: var(--desktop-home-border-strong);
+        }
+
+        body.desktop-home-v2 .service-icon,
+        body.desktop-home-v2 .method-icon {
+            display: grid;
+            place-items: center;
+            flex-shrink: 0;
+        }
+
+        body.desktop-home-v2 .service-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 14px;
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        body.desktop-home-v2 .store .service-icon {
+            color: var(--desktop-home-gold);
+        }
+
+        body.desktop-home-v2 .study .service-icon {
+            color: var(--desktop-home-green);
+        }
+
+        body.desktop-home-v2 .chatgpt .service-icon {
+            color: #e8fff4;
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.16), rgba(255, 255, 255, 0.04));
+            border: 1px solid rgba(16, 185, 129, 0.18);
+        }
+
+        body.desktop-home-v2 .chatgpt-mark {
+            width: 22px;
+            height: 22px;
+            display: block;
+            filter: brightness(0) invert(1);
+            opacity: 0.94;
+        }
+
+        body.desktop-home-v2 .service-copy h3 {
+            margin-bottom: 4px;
+            font-size: 1rem;
+            font-weight: 700;
+        }
+
+        body.desktop-home-v2 .service-copy p,
+        body.desktop-home-v2 .guest-description,
+        body.desktop-home-v2 .method-description {
+            margin: 0;
+            color: var(--desktop-home-muted);
+        }
+
+        body.desktop-home-v2 .service-copy p {
+            font-size: 0.85rem;
+        }
+
+        body.desktop-home-v2 .spotlight-card {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 20px;
+            flex-wrap: wrap;
+            margin-bottom: 20px;
+            padding: 24px;
+            border-radius: var(--desktop-home-radius-lg);
+            background: linear-gradient(135deg, rgba(229, 9, 20, 0.12), rgba(255, 255, 255, 0.02));
+            border: 1px solid rgba(229, 9, 20, 0.16);
+        }
+
+        body.desktop-home-v2 .premium-label {
+            display: block;
+            margin-bottom: 8px;
+            color: var(--desktop-home-gold);
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+
+        body.desktop-home-v2 .popular-label {
+            display: block;
+            margin-bottom: 8px;
+            color: #f2cf73;
+            font-size: 0.75rem;
+            font-weight: 700;
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+        }
+
+        body.desktop-home-v2 .spotlight-title,
+        body.desktop-home-v2 .guest-title,
+        body.desktop-home-v2 .method-title {
+            font-weight: 700;
+            letter-spacing: -0.02em;
+        }
+
+        body.desktop-home-v2 .spotlight-title {
+            margin-bottom: 4px;
+            font-size: 1.2rem;
+        }
+
+        body.desktop-home-v2 .spotlight-note {
+            display: inline-flex;
+            padding: 6px 12px;
+            border-radius: 8px;
+            color: #ffccd0;
+            font-size: 0.8rem;
+            background: rgba(229, 9, 20, 0.15);
+            border: 1px solid rgba(229, 9, 20, 0.2);
+        }
+
+        body.desktop-home-v2 .guest-intro {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 16px;
+            margin-bottom: 16px;
+            padding: 18px 20px;
+            border-radius: var(--desktop-home-radius-lg);
+            background:
+                    radial-gradient(circle at 82% 24%, rgba(251, 191, 36, 0.12), transparent 28%),
+                    linear-gradient(135deg, rgba(82, 58, 18, 0.42), rgba(24, 17, 9, 0.9) 56%, rgba(255, 255, 255, 0.02));
+            border: 1px solid rgba(251, 191, 36, 0.16);
+            box-shadow: inset 0 1px 0 rgba(255, 236, 179, 0.06);
+        }
+
+        body.desktop-home-v2 .guest-kicker,
+        body.desktop-home-v2 .mini-badge {
+            display: inline-flex;
+            align-items: center;
+            border-radius: 999px;
+            font-size: 0.72rem;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+
+        body.desktop-home-v2 .guest-kicker {
+            padding: 5px 10px;
+            color: #f7dc88;
+            letter-spacing: 0.06em;
+            background: rgba(251, 191, 36, 0.12);
+            border: 1px solid rgba(251, 191, 36, 0.2);
+            box-shadow: inset 0 1px 0 rgba(255, 243, 205, 0.08);
+        }
+
+        body.desktop-home-v2 .guest-title {
+            margin-top: 10px;
+            font-size: 1.18rem;
+            color: #fff4d2;
+        }
+
+        body.desktop-home-v2 .guest-description {
+            font-size: 0.92rem;
+            line-height: 1.6;
+            color: rgba(243, 227, 190, 0.82);
+        }
+
+        body.desktop-home-v2 .guest-points {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            justify-content: flex-end;
+        }
+
+        body.desktop-home-v2 .guest-chip {
+            display: inline-flex;
+            align-items: center;
+            padding: 8px 12px;
+            border-radius: 999px;
+            font-size: 0.82rem;
+            font-weight: 700;
+            color: #f8ebc6;
+            background: linear-gradient(180deg, rgba(251, 191, 36, 0.11), rgba(251, 191, 36, 0.05));
+            border: 1px solid rgba(251, 191, 36, 0.16);
+            box-shadow: inset 0 1px 0 rgba(255, 241, 204, 0.08);
+        }
+
+        body.desktop-home-v2 .segmented-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+        }
+
+        body.desktop-home-v2 .method-card {
+            display: flex;
+            flex-direction: column;
+            gap: 18px;
+            padding: 24px;
+            border-radius: var(--desktop-home-radius-lg);
+            background: linear-gradient(180deg, rgba(255, 255, 255, 0.032), rgba(255, 255, 255, 0.018));
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.03);
+            isolation: isolate;
+            transform: translateY(0);
+        }
+
+        body.desktop-home-v2 .method-card::before,
+        body.desktop-home-v2 .method-card::after {
+            content: "";
+            position: absolute;
+            inset: 0;
+            pointer-events: none;
+            z-index: 0;
+            transition: opacity 0.3s ease, transform 0.3s ease;
+        }
+
+        body.desktop-home-v2 .method-card::before {
+            opacity: 0.62;
+        }
+
+        body.desktop-home-v2 .method-card::after {
+            inset: 1px;
+            border-radius: calc(var(--desktop-home-radius-lg) - 1px);
+            background: linear-gradient(180deg, rgba(255, 255, 255, 0.03), transparent 22%);
+            opacity: 0.38;
+        }
+
+        body.desktop-home-v2 .method-card:hover::before {
+            opacity: 0.84;
+            transform: scale(1.01);
+        }
+
+        body.desktop-home-v2 .method-card:hover::after {
+            opacity: 0.56;
+        }
+
+        body.desktop-home-v2 .method-card > * {
+            position: relative;
+            z-index: 1;
+        }
+
+        body.desktop-home-v2 .method-card.pc {
+            border-color: rgba(59, 130, 246, 0.11);
+            background: linear-gradient(180deg, rgba(11, 16, 28, 0.96), rgba(9, 12, 18, 0.96));
+            box-shadow: inset 0 1px 0 rgba(147, 197, 253, 0.03), 0 14px 28px rgba(7, 12, 24, 0.12);
+        }
+
+        body.desktop-home-v2 .method-card.pc:hover {
+            border-color: rgba(96, 165, 250, 0.24);
+            box-shadow: inset 0 1px 0 rgba(147, 197, 253, 0.06), 0 20px 38px rgba(7, 12, 24, 0.22);
+        }
+
+        body.desktop-home-v2 .method-card.pc::before {
+            background:
+                radial-gradient(circle at 14% 16%, rgba(96, 165, 250, 0.12), transparent 32%),
+                radial-gradient(circle at 88% 100%, rgba(37, 99, 235, 0.06), transparent 36%),
+                linear-gradient(135deg, rgba(147, 197, 253, 0.03), transparent 34%, transparent 74%, rgba(59, 130, 246, 0.025));
+        }
+
+        body.desktop-home-v2 .method-card.tv {
+            border-color: rgba(139, 92, 246, 0.12);
+            background: linear-gradient(180deg, rgba(17, 14, 29, 0.96), rgba(10, 12, 18, 0.96));
+            box-shadow: inset 0 1px 0 rgba(196, 181, 253, 0.03), 0 14px 28px rgba(12, 8, 24, 0.13);
+        }
+
+        body.desktop-home-v2 .method-card.tv:hover {
+            border-color: rgba(167, 139, 250, 0.24);
+            box-shadow: inset 0 1px 0 rgba(196, 181, 253, 0.06), 0 20px 38px rgba(12, 8, 24, 0.24);
+        }
+
+        body.desktop-home-v2 .method-card.tv::before {
+            background:
+                radial-gradient(circle at 18% 16%, rgba(167, 139, 250, 0.12), transparent 32%),
+                radial-gradient(circle at 90% 100%, rgba(109, 40, 217, 0.06), transparent 36%),
+                linear-gradient(135deg, rgba(196, 181, 253, 0.03), transparent 34%, transparent 74%, rgba(139, 92, 246, 0.025));
+        }
+
+        body.desktop-home-v2 .method-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 12px;
+        }
+
+        body.desktop-home-v2 .method-title-wrap {
+            display: flex;
+            gap: 16px;
+            flex: 1;
+            min-width: 0;
+        }
+
+        body.desktop-home-v2 .method-icon {
+            width: 44px;
+            height: 44px;
+            border-radius: 12px;
+            transition: transform 0.28s ease, border-color 0.28s ease, background 0.28s ease, box-shadow 0.28s ease;
+        }
+
+        body.desktop-home-v2 .method-card:hover .method-icon {
+            transform: translateY(-1px) scale(1.03);
+        }
+
+        body.desktop-home-v2 .pc .method-icon {
+            color: var(--desktop-home-blue);
+            background: rgba(59, 130, 246, 0.1);
+            border: 1px solid rgba(59, 130, 246, 0.2);
+        }
+
+        body.desktop-home-v2 .tv .method-icon {
+            color: var(--desktop-home-purple);
+            background: rgba(139, 92, 246, 0.1);
+            border: 1px solid rgba(139, 92, 246, 0.2);
+        }
+
+        body.desktop-home-v2 .method-super {
+            margin-bottom: 6px;
+            color: var(--desktop-home-muted);
+            font-size: 0.72rem;
+            letter-spacing: 0.07em;
+            text-transform: uppercase;
+        }
+
+        body.desktop-home-v2 .method-description {
+            font-size: 0.85rem;
+            line-height: 1.5;
+        }
+
+        body.desktop-home-v2 .mini-badge {
+            padding: 4px 8px;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--desktop-home-border);
+            transition: transform 0.28s ease, border-color 0.28s ease, background 0.28s ease;
+        }
+
+        body.desktop-home-v2 .method-card:hover .mini-badge {
+            transform: translateY(-1px);
+        }
+
+        body.desktop-home-v2 .pc .mini-badge {
+            color: #bfdbfe;
+            background: rgba(59, 130, 246, 0.08);
+            border-color: rgba(59, 130, 246, 0.24);
+        }
+
+        body.desktop-home-v2 .tv .mini-badge {
+            color: #ddd6fe;
+            background: rgba(139, 92, 246, 0.08);
+            border-color: rgba(139, 92, 246, 0.24);
+        }
+
+        body.desktop-home-v2 .info-strip {
+            padding: 12px;
+            text-align: center;
+            color: #fde68a;
+            font-size: 0.85rem;
+            border-radius: 8px;
+            background: rgba(251, 191, 36, 0.1);
+            border: 1px solid rgba(251, 191, 36, 0.2);
+        }
+
+        body.desktop-home-v2 .input-shell.is-locked {
+            opacity: 0.78;
+        }
+
+        body.desktop-home-v2 #tvActivationStatus {
+            display: none !important;
+        }
+
+        body.desktop-home-v2 .task {
+            display: flex;
+            gap: 12px;
+            align-items: flex-start;
+            color: var(--desktop-home-muted);
+            font-size: 0.85rem;
+        }
+
+        body.desktop-home-v2 .task-index {
+            width: 20px;
+            height: 20px;
+            display: grid;
+            place-items: center;
+            flex-shrink: 0;
+            border-radius: 6px;
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            font-size: 0.75rem;
+            font-weight: 700;
+        }
+
+        body.desktop-home-v2 .n-input,
+        body.desktop-home-v2 .btn {
+            width: 100%;
+            border-radius: var(--desktop-home-radius-md);
+        }
+
+        body.desktop-home-v2 .n-input {
+            padding: 14px 16px;
+            color: white;
+            font-size: 1.1rem;
+            font-weight: 700;
+            text-align: center;
+            letter-spacing: 4px;
+            background: rgba(0, 0, 0, 0.4);
+            border: 1px solid var(--desktop-home-border);
+        }
+
+        body.desktop-home-v2 .n-input:focus {
+            border-color: var(--desktop-home-purple);
+            box-shadow: 0 0 0 4px rgba(139, 92, 246, 0.15);
+        }
+
+        body.desktop-home-v2 .n-input:disabled {
+            color: rgba(255, 255, 255, 0.45);
+            cursor: not-allowed;
+            background: rgba(0, 0, 0, 0.22);
+            border-color: rgba(255, 255, 255, 0.08);
+            box-shadow: none;
+        }
+
+        body.desktop-home-v2 .btn {
+            position: relative;
+            overflow: hidden;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 14px 20px;
+            color: white;
+            font-size: 0.95rem;
+            font-weight: 700;
+            cursor: pointer;
+            border: 1px solid transparent;
+            background: rgba(255, 255, 255, 0.06);
+            transform: translateY(0) translateZ(0);
+            backface-visibility: hidden;
+            transition: transform 0.24s cubic-bezier(0.22, 1, 0.36, 1), background 0.24s ease, border-color 0.24s ease, box-shadow 0.24s ease, color 0.24s ease;
+        }
+
+        body.desktop-home-v2 .btn:hover:not(:disabled) {
+            transform: translateY(-2px);
+            background: rgba(255, 255, 255, 0.08);
+            box-shadow: none;
+        }
+
+        body.desktop-home-v2 .btn-brand {
+            background: linear-gradient(135deg, #ff5962 0%, var(--desktop-home-netflix) 58%, #a30710 100%);
+            border-color: rgba(255, 116, 128, 0.28);
+            box-shadow: 0 12px 28px rgba(229, 9, 20, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.16);
+        }
+
+        body.desktop-home-v2 .btn-brand:hover:not(:disabled) {
+            background: linear-gradient(135deg, #ff6770 0%, #f01520 58%, #b50a13 100%);
+            border-color: rgba(255, 137, 146, 0.38);
+            box-shadow: 0 16px 32px rgba(229, 9, 20, 0.28), inset 0 1px 0 rgba(255, 255, 255, 0.18);
+        }
+
+        body.desktop-home-v2 .btn-outline {
+            background: var(--desktop-home-surface-3);
+            border-color: var(--desktop-home-border);
+        }
+
+        body.desktop-home-v2 .btn-outline:hover:not(:disabled) {
+            border-color: var(--desktop-home-border-strong);
+        }
+
+        body.desktop-home-v2 .btn-premium {
+            color: #231607;
+            background: linear-gradient(135deg, #f5df9c, #c99533);
+            border-color: rgba(255, 223, 145, 0.42);
+            box-shadow: 0 12px 28px rgba(191, 137, 43, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.38);
+        }
+
+        body.desktop-home-v2 .btn-premium:hover:not(:disabled) {
+            background: linear-gradient(135deg, #f8e6ae, #d7a646);
+            border-color: rgba(255, 232, 170, 0.5);
+            box-shadow: 0 16px 30px rgba(191, 137, 43, 0.24), inset 0 1px 0 rgba(255, 255, 255, 0.42);
+        }
+
+        body.desktop-home-v2 .btn-blue {
+            color: #93c5fd;
+            background: rgba(59, 130, 246, 0.15);
+            border-color: rgba(59, 130, 246, 0.3);
+        }
+
+        body.desktop-home-v2 .btn-blue:hover:not(:disabled) {
+            background: rgba(59, 130, 246, 0.22);
+            border-color: rgba(59, 130, 246, 0.36);
+        }
+
+        body.desktop-home-v2 .btn-purple {
+            color: #efe7ff;
+            background: linear-gradient(135deg, rgba(139, 92, 246, 0.22), rgba(18, 20, 28, 0.96));
+            border-color: rgba(139, 92, 246, 0.22);
+        }
+
+        body.desktop-home-v2 .btn-purple:hover:not(:disabled) {
+            background: linear-gradient(135deg, rgba(139, 92, 246, 0.28), rgba(18, 20, 28, 0.98));
+            border-color: rgba(139, 92, 246, 0.35);
+        }
+
+        body.desktop-home-v2 #tvActivateBtn.is-loading > .icon {
+            display: none;
+        }
+
+        body.desktop-home-v2 .btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+            background: rgba(255, 255, 255, 0.08);
+        }
+    </style>
+    <style id="desktop-home-state">
+        body.desktop-home-v2 .extension-banner {
+            display: none;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 0;
+            padding: 11px 12px;
+            border-radius: 12px;
+            background: rgba(255, 255, 255, 0.025);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+        }
+
+        body.desktop-home-v2 .extension-banner.show {
+            display: flex;
+        }
+
+        body.desktop-home-v2 .extension-copy {
+            display: grid;
+            gap: 3px;
+            flex: 1;
+            min-width: 0;
+        }
+
+        body.desktop-home-v2 .extension-top {
+            display: block;
+        }
+
+        body.desktop-home-v2 .extension-icon {
+            width: 24px;
+            height: 24px;
+            display: grid;
+            place-items: center;
+            flex-shrink: 0;
+            border-radius: 8px;
+            background: rgba(251, 191, 36, 0.12);
+            color: var(--desktop-home-gold);
+        }
+
+        body.desktop-home-v2 .extension-state {
+            color: #facc15;
+            font-size: 0.86rem;
+            font-weight: 700;
+            letter-spacing: 0.02em;
+            text-transform: none;
+        }
+
+        body.desktop-home-v2 .extension-note {
+            margin: 0;
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 4px 10px;
+            color: var(--desktop-home-muted);
+            font-size: 0.86rem;
+            line-height: 1.45;
+        }
+
+        body.desktop-home-v2 .extension-note br {
+            display: none;
+        }
+
+        body.desktop-home-v2 .extension-banner a {
+            display: inline-flex;
+            align-items: center;
+            color: #f5d97a !important;
+            text-decoration: none !important;
+            font-weight: 600 !important;
+            line-height: 1.2;
+            border-bottom: 1px solid currentColor;
+        }
+
+        body.desktop-home-v2 .extension-banner.success {
+            background: rgba(16, 185, 129, 0.05);
+            border-color: rgba(16, 185, 129, 0.14);
+        }
+
+        body.desktop-home-v2 .extension-banner.success .extension-icon {
+            color: var(--desktop-home-green);
+            background: rgba(16, 185, 129, 0.12);
+        }
+
+        body.desktop-home-v2 .extension-banner.success .extension-state {
+            color: #86efac;
+        }
+
+        body.desktop-home-v2 .extension-banner.error {
+            background: rgba(251, 191, 36, 0.05);
+            border-color: rgba(251, 191, 36, 0.14);
+        }
+
+        body.desktop-home-v2 .status-panel {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 24px;
+            padding: 16px 20px;
+            border-radius: var(--desktop-home-radius-lg);
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.1), rgba(255, 255, 255, 0.03));
+            border: 1px solid rgba(16, 185, 129, 0.2);
+        }
+
+        body.desktop-home-v2 .status-left {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        body.desktop-home-v2 .status-icon {
+            width: 40px;
+            height: 40px;
+            display: grid;
+            place-items: center;
+            flex-shrink: 0;
+            border-radius: 12px;
+            color: var(--desktop-home-green);
+            background: rgba(16, 185, 129, 0.12);
+            border: 1px solid rgba(16, 185, 129, 0.18);
+        }
+
+        body.desktop-home-v2 .status-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: var(--desktop-home-green);
+            box-shadow: 0 0 10px var(--desktop-home-green);
+        }
+
+        body.desktop-home-v2 .status-caption {
+            margin-bottom: 2px;
+            color: var(--desktop-home-green);
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+
+        @media (min-width: 1025px) and (max-width: 1340px) {
+            body.desktop-home-v2 .main-layout {
+                grid-template-columns: 408px minmax(0, 1fr);
+            }
+
+            body.desktop-home-v2 .hero-main {
+                grid-template-columns: 1fr;
+            }
+
+            body.desktop-home-v2 .hero-copy {
+                padding-right: 0;
+            }
+
+            body.desktop-home-v2 .hero-metrics {
+                grid-template-columns: 1fr 1fr;
+                padding-top: 0;
+            }
+        }
+
+        @media (min-width: 1025px) and (max-width: 1180px) {
+            body.desktop-home-v2 .segmented-grid {
+                grid-template-columns: 1fr;
             }
         }
     </style>
@@ -2844,6 +5369,23 @@
                                         <div class="partner-mini-arrow" aria-hidden="true">→</div>
                                     </a>
 
+                                    <a class="partner-mini-card partner-mini-card--chatgpt"
+                                        href="https://www.facebook.com/tiembanh4k/" target="_blank" rel="noopener noreferrer"
+                                        aria-label="Mở ChatGPT Plus (tab mới)">
+                                        <div class="partner-mini-left">
+                                            <div class="partner-mini-icon" aria-hidden="true">
+                                                <img class="partner-mini-openai-mark"
+                                                    src="https://upload.wikimedia.org/wikipedia/commons/6/66/OpenAI_logo_2025_%28symbol%29.svg"
+                                                    alt="">
+                                            </div>
+                                            <div class="partner-mini-text">
+                                                <div class="partner-mini-title">ChatGPT Plus</div>
+                                                <div class="partner-mini-sub">145.000đ/tháng, nâng cấp chính chủ,<br>bảo hành toàn thời gian</div>
+                                            </div>
+                                        </div>
+                                        <div class="partner-mini-arrow" aria-hidden="true">→</div>
+                                    </a>
+
                                     <a class="partner-mini-card partner-mini-card--lunasub"
                                         href="https://lunasub.com/" target="_blank" rel="noopener noreferrer"
                                         aria-label="Mở LunaSub.com (tab mới)">
@@ -3183,7 +5725,7 @@
 
     <!-- Purchase Credits Modal -->
     <div class="modal" id="purchaseCreditsModal">
-        <div class="modal-content"
+        <div class="modal-content premium-modal-shell premium-modal-shell--wide"
             style="max-width: 640px; background: linear-gradient(180deg, #1a1a1a 0%, #0f0f0f 100%); border-radius: 16px; border: 1px solid rgba(251, 191, 36, 0.15); box-shadow: 0 25px 80px rgba(0, 0, 0, 0.8); padding: 26px;">
 
             <!-- Header -->
@@ -3191,7 +5733,60 @@
                 <h2
                     style="margin: 0 0 8px 0; font-size: 1.8rem; background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; font-weight: 900; letter-spacing: -1px;">
                     Mua thêm Credits</h2>
-                <p style="color: #fbbf24; font-size: 0.88rem; margin: 0 0 10px 0; font-weight: 600;">
+                <div class="purchase-credits-login-cards"
+                    style="display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; margin: 0 0 12px 0;">
+                    <div class="purchase-login-card purchase-login-card--pc"
+                        style="min-width: 142px; padding: 10px 12px; border-radius: 12px; text-align: left; background: linear-gradient(180deg, rgba(59, 130, 246, 0.1), rgba(15, 23, 42, 0.4)); border: 1px solid rgba(96, 165, 250, 0.16); box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.04);">
+                        <div class="purchase-login-card-head"
+                            style="display: flex; align-items: center; gap: 6px; margin-bottom: 6px; color: #93c5fd; font-size: 0.68rem; font-weight: 800; letter-spacing: 0.08em; text-transform: uppercase;">
+                            <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor"
+                                stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <rect x="3" y="4" width="18" height="12" rx="2"></rect>
+                                <path d="M8 20h8"></path>
+                                <path d="M12 16v4"></path>
+                            </svg>
+                            <span>Netflix PC</span>
+                        </div>
+                        <div class="purchase-login-card-status" style="color: #cbd5e1; font-size: 0.74rem; line-height: 1.35;">Đăng nhập thành công</div>
+                        <div class="purchase-login-card-cost" style="margin-top: 5px; color: #fbbf24; font-size: 0.95rem; font-weight: 800;">-1 credit</div>
+                    </div>
+                    <div class="purchase-login-card purchase-login-card--tv"
+                        style="min-width: 142px; padding: 10px 12px; border-radius: 12px; text-align: left; background: linear-gradient(180deg, rgba(168, 85, 247, 0.1), rgba(15, 23, 42, 0.4)); border: 1px solid rgba(192, 132, 252, 0.16); box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.04);">
+                        <div class="purchase-login-card-head"
+                            style="display: flex; align-items: center; gap: 6px; margin-bottom: 6px; color: #d8b4fe; font-size: 0.68rem; font-weight: 800; letter-spacing: 0.08em; text-transform: uppercase;">
+                            <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor"
+                                stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <rect x="2" y="7" width="20" height="12" rx="2"></rect>
+                                <path d="M8 21h8"></path>
+                                <path d="M12 19v2"></path>
+                            </svg>
+                            <span>Netflix TV</span>
+                        </div>
+                        <div class="purchase-login-card-status" style="color: #cbd5e1; font-size: 0.74rem; line-height: 1.35;">Đăng nhập thành công</div>
+                        <div class="purchase-login-card-cost" style="margin-top: 5px; color: #fbbf24; font-size: 0.95rem; font-weight: 800;">-5 credits</div>
+                    </div>
+                    <div class="purchase-login-card purchase-login-card--mobile"
+                        style="min-width: 142px; padding: 10px 12px; border-radius: 12px; text-align: left; background: linear-gradient(180deg, rgba(16, 185, 129, 0.1), rgba(15, 23, 42, 0.4)); border: 1px solid rgba(52, 211, 153, 0.16); box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.04);">
+                        <div class="purchase-login-card-head"
+                            style="display: flex; align-items: center; gap: 6px; margin-bottom: 6px; color: #6ee7b7; font-size: 0.68rem; font-weight: 800; letter-spacing: 0.08em; text-transform: uppercase;">
+                            <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor"
+                                stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <rect x="7" y="2" width="10" height="20" rx="2"></rect>
+                                <path d="M11 18h2"></path>
+                            </svg>
+                            <span>Netflix Mobile</span>
+                        </div>
+                        <div class="purchase-login-card-status" style="color: #cbd5e1; font-size: 0.74rem; line-height: 1.35;">Đăng nhập thành công</div>
+                        <div class="purchase-login-card-cost" style="margin-top: 5px; color: #fbbf24; font-size: 0.95rem; font-weight: 800;">-5 credits</div>
+                    </div>
+                </div>
+                <p id="purchaseCreditsUsageHint"
+                    style="display: none; color: #fbbf24; font-size: 0; line-height: 1.55; margin: 0 0 10px 0; font-weight: 600;">
+                    <span style="font-size: 0.82rem;">
+                        Đăng nhập thành công Netflix PC -1 credit<br>
+                        Đăng nhập thành công Netflix TV -5 credits<br>
+                        Đăng nhập thành công Netflix Mobile -5 credits
+                    </span>
                     1 credit = 1 lần đăng nhập thành công Netflix
                 </p>
                 <div style="height: 1px; background: rgba(251, 191, 36, 0.2); margin: 0 auto; max-width: 420px;"></div>
@@ -3328,7 +5923,7 @@
 
     <!-- Plan Selection Modal -->
     <div class="modal" id="planModal">
-        <div class="modal-content" style="max-width: 900px;">
+        <div class="modal-content premium-modal-shell premium-modal-shell--wide" style="max-width: 900px;">
             <h2 style="margin-bottom: 25px; text-align: center;">Chọn gói xem phim</h2>
 
             <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px;">
@@ -3363,11 +5958,14 @@
 
                 <!-- Option 2: Pro Plan -->
                 <div
-                    style="background: linear-gradient(135deg, rgba(229, 9, 20, 0.2), rgba(255, 107, 107, 0.2)); border: 2px solid #e50914; border-radius: 12px; padding: 25px; display: flex; flex-direction: column;">
+                    style="background: linear-gradient(135deg, rgba(229, 9, 20, 0.2), rgba(255, 107, 107, 0.2)); border: 2px solid #e50914; border-radius: 12px; padding: 25px; display: flex; flex-direction: column; position: relative;">
+                    <div
+                        style="position: absolute; top: -12px; left: 50%; transform: translateX(-50%); background: #ffc107; color: #000; padding: 4px 14px; border-radius: 12px; font-size: 0.75rem; font-weight: 700; white-space: nowrap; box-shadow: 0 8px 18px rgba(255, 193, 7, 0.28);">
+                        HOT</div>
                     <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 15px;">
                         <h3 style="font-size: 1.4rem; margin: 0;">Pro Plan - Không quảng cáo</h3>
                         <span
-                            style="background: #ffc107; color: #000; padding: 4px 12px; border-radius: 12px; font-size: 0.8rem; font-weight: 700;">HOT</span>
+                            style="display: none; background: #ffc107; color: #000; padding: 4px 12px; border-radius: 12px; font-size: 0.8rem; font-weight: 700;">HOT</span>
                     </div>
 
                     <div
@@ -3407,7 +6005,7 @@
 
     <!-- Official Package Modal -->
     <div class="modal" id="officialPackageModal">
-        <div class="modal-content"
+        <div class="modal-content premium-modal-shell premium-modal-shell--xwide"
             style="max-width: 1200px; background: linear-gradient(135deg, rgba(20, 20, 20, 0.98) 0%, rgba(26, 26, 26, 0.98) 100%), url('Background.webp') center/cover; backdrop-filter: blur(10px);">
             <h2 style="margin-bottom: 10px; text-align: center; font-size: 2rem; color: #e50914;">ĐĂNG KÝ CHÍNH CHỦ</h2>
             <p style="text-align: center; color: #4ade80; margin-bottom: 35px; font-size: 0.9rem; font-weight: 600;">Xem
@@ -3611,7 +6209,7 @@
 
     <!-- Report Issue Modal -->
     <div class="modal" id="reportIssueModal">
-        <div class="modal-content" style="max-width: 500px;">
+        <div class="modal-content premium-modal-shell premium-modal-shell--compact">
             <h2 style="margin-bottom: 20px; text-align: center;">Báo hỏng và đổi tài khoản Netflix</h2>
 
             <div
@@ -3649,11 +6247,19 @@
 
     <!-- Team Message Modal (tránh ad blocker) -->
     <div class="modal" id="teamModal">
-        <div class="modal-content">
+        <div class="modal-content premium-modal-shell premium-modal-shell--wide">
             <!-- Message Section (Free users) -->
             <div id="messageSection">
-                <h2 style="margin-bottom: 20px; text-align: center; color: #fbbf24;">💌 Gửi các thực khách thân yêu của
-                    Tiệm Bánh</h2>
+                <h2 style="margin-bottom: 20px; text-align: center; color: #fbbf24; display: flex; align-items: center; justify-content: center; gap: 12px;">
+                    <span class="premium-modal-icon-badge" style="width: 44px; height: 44px; border-radius: 14px;">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="#fbbf24" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="m4 7 8 5 8-5"></path>
+                            <rect x="3" y="5" width="18" height="14" rx="2"></rect>
+                            <path d="m9 11 3 3 3-3"></path>
+                        </svg>
+                    </span>
+                    <span>Gửi các thực khách thân yêu của Tiệm Bánh</span>
+                </h2>
 
                 <div
                     style="background: rgba(255, 255, 255, 0.05); border-radius: 12px; padding: 20px; margin-bottom: 20px; border: 1px solid rgba(251, 191, 36, 0.3);">
@@ -3690,7 +6296,12 @@
                             hãy <a href="/contact/" target="_blank"
                                 style="color: #60a5fa; font-weight: 700; text-decoration: underline;">liên hệ với chúng
                                 mình tại đây</a> nhé!
-                            Mọi đóng góp đều được <strong style="color: #fbbf24;">ghi nhận và trân trọng</strong>. ❤️
+                            Mọi đóng góp đều được <strong style="color: #fbbf24;">ghi nhận và trân trọng</strong>.
+                            <span style="display: inline-flex; width: 18px; height: 18px; vertical-align: -3px; color: #f87171;">
+                                <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                                    <path d="M12 21.35 10.55 20C5.4 15.24 2 12.09 2 8.23 2 5.08 4.42 2.7 7.44 2.7c1.72 0 3.37.8 4.56 2.05C13.19 3.5 14.84 2.7 16.56 2.7 19.58 2.7 22 5.08 22 8.23c0 3.86-3.4 7.01-8.55 11.77L12 21.35Z"></path>
+                                </svg>
+                            </span>
                         </p>
                     </div>
                 </div>
@@ -3987,6 +6598,68 @@
         // CUSTOM MODAL DIALOG SYSTEM
         // ========================================
 
+        function resolvePremiumModalIcon(icon) {
+            if (typeof icon !== 'string') return '';
+            const trimmed = icon.trim();
+            if (!trimmed) return '';
+            if (trimmed.includes('<svg')) return trimmed;
+
+            const iconMap = {
+                'ℹ️': 'info',
+                'ℹ': 'info',
+                '❓': 'help',
+                '❔': 'help',
+                '⚠️': 'warning',
+                '⚠': 'warning',
+                '❌': 'error',
+                '✅': 'success',
+                '🎁': 'gift',
+                '📋': 'clipboard',
+                '🚫': 'ban',
+                '💳': 'card',
+                '📺': 'tv',
+                '📱': 'phone',
+                '🚪': 'logout',
+                '🔄': 'refresh'
+            };
+
+            const paletteMap = {
+                info: '#60a5fa',
+                help: '#60a5fa',
+                warning: '#fbbf24',
+                error: '#f87171',
+                success: '#4ade80',
+                gift: '#fbbf24',
+                clipboard: '#93c5fd',
+                ban: '#f87171',
+                card: '#fbbf24',
+                tv: '#60a5fa',
+                phone: '#60a5fa',
+                logout: '#cbd5e1',
+                refresh: '#93c5fd'
+            };
+
+            const name = iconMap[trimmed] || 'info';
+            const stroke = paletteMap[name];
+            const icons = {
+                info: `<svg viewBox="0 0 24 24" fill="none" stroke="${stroke}" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"></circle><path d="M12 10v5"></path><path d="M12 7h.01"></path></svg>`,
+                help: `<svg viewBox="0 0 24 24" fill="none" stroke="${stroke}" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"></circle><path d="M9.5 9a2.5 2.5 0 1 1 4.42 1.63c-.7.8-1.92 1.43-1.92 2.87"></path><path d="M12 17h.01"></path></svg>`,
+                warning: `<svg viewBox="0 0 24 24" fill="none" stroke="${stroke}" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0Z"></path><path d="M12 9v4"></path><path d="M12 17h.01"></path></svg>`,
+                error: `<svg viewBox="0 0 24 24" fill="none" stroke="${stroke}" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"></circle><path d="m15 9-6 6"></path><path d="m9 9 6 6"></path></svg>`,
+                success: `<svg viewBox="0 0 24 24" fill="none" stroke="${stroke}" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"></circle><path d="m8.8 12.5 2.2 2.2 4.7-5"></path></svg>`,
+                gift: `<svg viewBox="0 0 24 24" fill="none" stroke="${stroke}" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="8" width="18" height="13" rx="2"></rect><path d="M12 8v13"></path><path d="M19 8a2 2 0 0 0 0-4c-2.2 0-3.7 2.1-4.4 4"></path><path d="M5 8a2 2 0 1 1 0-4c2.2 0 3.7 2.1 4.4 4"></path></svg>`,
+                clipboard: `<svg viewBox="0 0 24 24" fill="none" stroke="${stroke}" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"><rect x="8" y="4" width="13" height="16" rx="2"></rect><path d="M16 4V2H8v2"></path><path d="M5 8H3a1 1 0 0 0-1 1v11a2 2 0 0 0 2 2h10"></path></svg>`,
+                ban: `<svg viewBox="0 0 24 24" fill="none" stroke="${stroke}" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"></circle><path d="M8.5 8.5 15.5 15.5"></path><path d="M15.5 8.5 8.5 15.5"></path></svg>`,
+                card: `<svg viewBox="0 0 24 24" fill="none" stroke="${stroke}" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="5" width="20" height="14" rx="2"></rect><path d="M2 10h20"></path><path d="M7 15h2"></path></svg>`,
+                tv: `<svg viewBox="0 0 24 24" fill="none" stroke="${stroke}" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="7" width="18" height="12" rx="2"></rect><path d="m9 3 3 4 3-4"></path></svg>`,
+                phone: `<svg viewBox="0 0 24 24" fill="none" stroke="${stroke}" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"><rect x="7" y="2.5" width="10" height="19" rx="2"></rect><path d="M11.5 18h1"></path></svg>`,
+                logout: `<svg viewBox="0 0 24 24" fill="none" stroke="${stroke}" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"></path><path d="M10 17l5-5-5-5"></path><path d="M15 12H3"></path></svg>`,
+                refresh: `<svg viewBox="0 0 24 24" fill="none" stroke="${stroke}" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 1 1-3.2-6.9"></path><path d="M21 3v6h-6"></path></svg>`
+            };
+
+            return icons[name] || icons.info;
+        }
+
         function showCustomModal(options) {
             const {
                 icon = 'ℹ️',
@@ -4001,7 +6674,9 @@
             const modalBody = document.getElementById('customModalBody');
             const modalFooter = document.getElementById('customModalFooter');
 
-            modalIcon.innerHTML = icon;
+            const iconMarkup = resolvePremiumModalIcon(icon);
+            modalIcon.innerHTML = iconMarkup;
+            modalIcon.style.display = iconMarkup ? 'inline-flex' : 'none';
             modalTitle.textContent = title;
 
             if (message.includes('\n') || message.includes('•')) {
@@ -4024,6 +6699,64 @@
 
             modalOverlay.classList.add('active');
 
+            modalOverlay.onclick = (e) => {
+                if (e.target === modalOverlay) {
+                    closeCustomModal();
+                }
+            };
+
+            const escHandler = (e) => {
+                if (e.key === 'Escape') {
+                    closeCustomModal();
+                    document.removeEventListener('keydown', escHandler);
+                }
+            };
+            document.addEventListener('keydown', escHandler);
+        }
+
+        function showCustomModal(options) {
+            const {
+                icon = 'â„¹ï¸',
+                title = 'ThÃ´ng bÃ¡o',
+                message = '',
+                buttons = [{ text: 'OK', type: 'primary', onClick: null }]
+            } = options;
+
+            const modalOverlay = document.getElementById('customModalOverlay');
+            const modalIcon = document.getElementById('customModalIcon');
+            const modalTitle = document.getElementById('customModalTitle');
+            const modalBody = document.getElementById('customModalBody');
+            const modalFooter = document.getElementById('customModalFooter');
+
+            const iconMarkup = resolvePremiumModalIcon(icon);
+            modalIcon.innerHTML = iconMarkup;
+            modalIcon.style.display = iconMarkup ? 'inline-flex' : 'none';
+            modalTitle.textContent = title;
+
+            const trimmedMessage = typeof message === 'string' ? message.trim() : '';
+            const hasHtmlMarkup = /^<[\s\S]+>$/.test(trimmedMessage) || /<\/?[a-z][\s\S]*>/i.test(trimmedMessage);
+
+            if (hasHtmlMarkup) {
+                modalBody.innerHTML = message;
+            } else if (message.includes('\n') || message.includes('â€¢')) {
+                modalBody.innerHTML = `<pre>${message}</pre>`;
+            } else {
+                modalBody.innerHTML = message;
+            }
+
+            modalFooter.innerHTML = '';
+            buttons.forEach(btn => {
+                const button = document.createElement('button');
+                button.className = `custom-modal-btn custom-modal-btn-${btn.type || 'primary'}`;
+                button.textContent = btn.text;
+                button.onclick = () => {
+                    closeCustomModal();
+                    if (btn.onClick) btn.onClick();
+                };
+                modalFooter.appendChild(button);
+            });
+
+            modalOverlay.classList.add('active');
             modalOverlay.onclick = (e) => {
                 if (e.target === modalOverlay) {
                     closeCustomModal();
@@ -4453,7 +7186,7 @@
             const userEmail = currentUser.email || 'email của bạn';
 
             showCustomModal({
-                icon: '',
+                icon: 'â„¹ï¸',
                 title: 'Giải thích thông tin tài khoản',
                 message: `<div style="text-align: justify; line-height: 1.5; width: 400px;">
 <p style="margin: 0 0 6px 0;"><strong style="color: #fbbf24;">Credits:</strong> Số lượt đăng nhập Netflix còn lại. Mỗi lần bấm "Watch as Guest" thành công sẽ trừ 1 credit.</p>
@@ -4828,9 +7561,9 @@ Bạn có thể:
                 title: 'HẾT LƯỢT ĐỔI TÀI KHOẢN',
                 message: `Bạn đã sử dụng hết 2 lượt đổi tài khoản Netflix của gói Free trong tháng này.
 Nâng cấp lên Pro để nhận nhiều quyền lợi:
-• Nhận ngay 60 credits (1 credit = 1 lần đăng nhập thành công Netflix)
+• Nhận ngay 60 credits
 • Tăng lượt đổi tài khoản Netflix lên 5 lượt/tháng
-• Xem phim không quảng cáo
+• Xem Netflix trên Mobile App
 • Ưu tiên hỗ trợ khi có sự cố`,
                 confirmText: 'Nâng cấp Pro - 30.000đ/tháng',
                 cancelText: 'Đóng'
@@ -4930,12 +7663,7 @@ Nếu cần thêm lượt đổi tài khoản, vui lòng liên hệ Support qua 
                             document.getElementById('loginSection').style.display = 'block';
                             document.getElementById('userProfileCard').style.display = 'none';
                             document.getElementById('partnerCards')?.classList.remove('active');
-                            const loginRequired = document.getElementById('loginRequired');
-                            if (loginRequired) loginRequired.style.display = 'block';
-                            const openBtn = document.getElementById('openNetflixBtn');
-                            const guestBtn = document.getElementById('watchAsGuestBtn');
-                            if (openBtn) openBtn.disabled = true;
-                            if (guestBtn) guestBtn.disabled = true;
+                            syncGuestFeatureAccess(false);
                             console.log('⚠️ Session expired - User must login again');
                             return;
                         }
@@ -4965,9 +7693,11 @@ Nếu cần thêm lượt đổi tài khoản, vui lòng liên hệ Support qua 
 
                 // Update account type based on plan
                 const accountType = user.plan === 'pro' ? 'PRO PLAN' : 'FREE PLAN';
-                const accountTypeColor = user.plan === 'pro' ? '#f5cd05' : '#4ade80';
-                document.getElementById('userType').textContent = accountType;
-                document.getElementById('userType').style.color = accountTypeColor;
+                const userTypeBadge = document.getElementById('userType');
+                userTypeBadge.textContent = accountType;
+                userTypeBadge.classList.remove('badge-pro', 'badge-free');
+                userTypeBadge.classList.add(user.plan === 'pro' ? 'badge-pro' : 'badge-free');
+                userTypeBadge.style.color = '';
 
                 // Show Pro info if Pro plan
                 if (user.plan === 'pro') {
@@ -5021,13 +7751,7 @@ Nếu cần thêm lượt đổi tài khoản, vui lòng liên hệ Support qua 
                 // Không cần auto-refresh mỗi 30s nữa
 
                 // Enable guest section
-                const loginRequired = document.getElementById('loginRequired');
-                if (loginRequired) loginRequired.style.display = 'none';
-
-                const openBtn = document.getElementById('openNetflixBtn');
-                const guestBtn = document.getElementById('watchAsGuestBtn');
-                if (openBtn) openBtn.disabled = false;
-                if (guestBtn) guestBtn.disabled = false;
+                syncGuestFeatureAccess(true);
 
                 console.log('✅ User logged in:', user.email, 'Plan:', user.plan);
             } else {
@@ -5040,13 +7764,7 @@ Nếu cần thêm lượt đổi tài khoản, vui lòng liên hệ Support qua 
                 document.getElementById('userProfileCard').style.display = 'none';
                 document.getElementById('partnerCards')?.classList.remove('active');
 
-                const loginRequired = document.getElementById('loginRequired');
-                if (loginRequired) loginRequired.style.display = 'block';
-
-                const openBtn = document.getElementById('openNetflixBtn');
-                const guestBtn = document.getElementById('watchAsGuestBtn');
-                if (openBtn) openBtn.disabled = true;
-                if (guestBtn) guestBtn.disabled = true;
+                syncGuestFeatureAccess(false);
 
                 console.log('⚠️ User not logged in - Guest features disabled');
             }
@@ -5066,6 +7784,7 @@ Nếu cần thêm lượt đổi tài khoản, vui lòng liên hệ Support qua 
                 localStorage.removeItem('current_user');
                 localStorage.removeItem('currentUser');
                 sessionStorage.removeItem('logged_in');
+                syncGuestFeatureAccess(false);
 
                 showCustomModal({
                     icon: '✅',
@@ -5267,7 +7986,7 @@ Nếu cần thêm lượt đổi tài khoản, vui lòng liên hệ Support qua 
             // Tạo modal thông báo
             const noticeHTML = `
                 <div class="modal active" id="suspendedNoticeModal" style="z-index: 10001;">
-                    <div class="modal-content" style="max-width: 500px; text-align: center; padding: 40px 30px;">
+                    <div class="modal-content premium-suspended-notice" style="max-width: 500px; text-align: center; padding: 40px 30px;">
                         <div style="font-size: 4rem; margin-bottom: 20px;">⚠️</div>
                         <h2 style="color: #fbbf24; margin-bottom: 15px; font-size: 1.4rem;">Tạm ngưng phát hành</h2>
                         <p style="color: #ccc; line-height: 1.7; margin-bottom: 25px; font-size: 0.95rem;">
@@ -5286,6 +8005,37 @@ Nếu cần thêm lượt đổi tài khoản, vui lòng liên hệ Support qua 
             `;
 
             // Thêm modal vào body
+            document.body.insertAdjacentHTML('beforeend', noticeHTML);
+            document.body.style.overflow = 'hidden';
+        }
+
+        function showSuspendedNotice() {
+            const noticeHTML = `
+                <div class="modal active" id="suspendedNoticeModal" style="z-index: 10001;">
+                    <div class="modal-content premium-suspended-notice" style="max-width: 520px; text-align: center; padding: 36px 32px 30px;">
+                        <div class="premium-suspended-symbol" aria-hidden="true">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0Z"></path>
+                                <path d="M12 9v4"></path>
+                                <path d="M12 17h.01"></path>
+                            </svg>
+                        </div>
+                        <span class="premium-suspended-kicker">G\u00f3i ch\u00ednh ch\u1ee7</span>
+                        <h2>T\u1ea1m ng\u1eebng ph\u00e1t h\u00e0nh</h2>
+                        <p class="premium-suspended-body">
+                            Hi\u1ec7n t\u1ea1i Ti\u1ec7m B\u00e1nh \u0111ang <strong>t\u1ea1m ng\u1eebng ph\u00e1t h\u00e0nh c\u00e1c g\u00f3i Netflix ch\u00ednh ch\u1ee7</strong>
+                            do m\u1ed9t s\u1ed1 thay \u0111\u1ed5i trong ch\u00ednh s\u00e1ch c\u1ee7a Netflix.
+                        </p>
+                        <p class="premium-suspended-note">
+                            B\u1ecdn m\u00ecnh s\u1ebd th\u00f4ng b\u00e1o ngay khi d\u1ecbch v\u1ee5 m\u1edf l\u1ea1i. C\u1ea3m \u01a1n b\u1ea1n \u0111\u00e3 th\u00f4ng c\u1ea3m v\u00e0 ti\u1ebfp t\u1ee5c \u0111\u1ed3ng h\u00e0nh c\u00f9ng Ti\u1ec7m B\u00e1nh.
+                        </p>
+                        <button onclick="closeSuspendedNotice()" class="btn" style="padding: 13px 34px; font-size: 0.98rem;">
+                            \u0110\u00e3 hi\u1ec3u
+                        </button>
+                    </div>
+                </div>
+            `;
+
             document.body.insertAdjacentHTML('beforeend', noticeHTML);
             document.body.style.overflow = 'hidden';
         }
@@ -5479,11 +8229,17 @@ Nếu cần thêm lượt đổi tài khoản, vui lòng liên hệ Support qua 
 
     <!-- Confirm Modal (Xác nhận chung) -->
     <div class="modal" id="confirmModal" style="z-index: 10003;">
-        <div class="modal-content"
+        <div class="modal-content premium-modal-shell premium-modal-shell--compact"
             style="max-width: 400px; background: rgba(0, 0, 0, 0.95); border-radius: 16px; border: 1px solid rgba(255, 255, 255, 0.1); padding: 0; overflow: hidden;">
             <div style="padding: 24px 24px 20px; border-bottom: 1px solid rgba(255, 255, 255, 0.1);">
                 <div style="text-align: center; margin-bottom: 12px;">
-                    <span id="confirmModalIcon" style="font-size: 3rem; line-height: 1;">⚠️</span>
+                    <span id="confirmModalIcon" style="display: inline-flex; align-items: center; justify-content: center; width: 62px; height: 62px; border-radius: 20px; background: linear-gradient(135deg, rgba(251, 191, 36, 0.16), rgba(96, 165, 250, 0.1)); border: 1px solid rgba(251, 191, 36, 0.22); color: #fbbf24;">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="width: 28px; height: 28px;">
+                            <path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0Z"></path>
+                            <path d="M12 9v4"></path>
+                            <path d="M12 17h.01"></path>
+                        </svg>
+                    </span>
                 </div>
                 <h3 id="confirmModalTitle" style="margin: 0; text-align: center; font-size: 1.1rem; color: #fff;">Xác
                     nhận</h3>
@@ -5509,7 +8265,7 @@ Nếu cần thêm lượt đổi tài khoản, vui lòng liên hệ Support qua 
 
     <!-- Payment Modal -->
     <div class="modal" id="paymentModal">
-        <div class="modal-content" style="max-width: 900px;">
+        <div class="modal-content premium-modal-shell premium-modal-shell--wide" style="max-width: 900px;">
             <h2 style="margin-bottom: 25px; text-align: center; display: flex; align-items: center; justify-content: center; gap: 10px;">
                 <span style="display: inline-flex; align-items: center; justify-content: center; width: 32px; height: 32px; border-radius: 999px; background: rgba(96, 165, 250, 0.15); color: #60a5fa;">
                     <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none"
@@ -5582,7 +8338,7 @@ Nếu cần thêm lượt đổi tài khoản, vui lòng liên hệ Support qua 
 
                         <div class="payment-alert-card" style="margin-top: 12px;">
                             <p style="margin: 0; font-size: 0.9rem; color: #fbbf24;">
-                                <strong>⚠️ Lưu ý quan trọng:</strong><br>
+                                <strong>Lưu ý quan trọng:</strong><br>
                                 Vui lòng <strong>không chỉnh sửa</strong> nội dung chuyển khoản. Hệ thống dựa vào nội
                                 dung này để cộng credits / kích hoạt gói cho bạn.
                             </p>
@@ -5615,7 +8371,16 @@ Nếu cần thêm lượt đổi tài khoản, vui lòng liên hệ Support qua 
     <div class="referral-notification-overlay" id="referralNotificationOverlay">
         <div class="referral-notification-modal">
             <div class="referral-notification-header">
-                <div class="referral-notification-icon">🎉</div>
+                <div class="referral-notification-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M4 13.5 9.5 8"></path>
+                        <path d="M14.5 19 20 13.5"></path>
+                        <path d="m14 4 6 6"></path>
+                        <path d="m4 20 6-6"></path>
+                        <path d="M10 14 6 10"></path>
+                        <path d="M14 10 9.5 5.5"></path>
+                    </svg>
+                </div>
                 <div class="referral-notification-title">Tin vui!</div>
                 <div class="referral-notification-subtitle">Có người đã nhập mã giới thiệu của bạn</div>
             </div>
@@ -5635,7 +8400,13 @@ Nếu cần thêm lượt đổi tài khoản, vui lòng liên hệ Support qua 
     <div class="custom-modal-overlay" id="customModalOverlay">
         <div class="custom-modal-dialog">
             <div class="custom-modal-header">
-                <span class="custom-modal-icon" id="customModalIcon">ℹ️</span>
+                <span class="custom-modal-icon" id="customModalIcon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="#60a5fa" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="9"></circle>
+                        <path d="M12 10v5"></path>
+                        <path d="M12 7h.01"></path>
+                    </svg>
+                </span>
                 <div class="custom-modal-title" id="customModalTitle">Thông báo</div>
             </div>
             <div class="custom-modal-body" id="customModalBody">
@@ -6245,6 +9016,7 @@ Nếu cần thêm lượt đổi tài khoản, vui lòng liên hệ Support qua 
             const expiresText = document.getElementById('creditsExpires');
 
             if (!expiresRow || !expiresText) return;
+            const isDesktopHudRow = expiresRow.classList.contains('hud-row');
 
             // Chỉ hiện cho Free plan
             if (user.plan !== 'free') {
@@ -6264,21 +9036,21 @@ Nếu cần thêm lượt đổi tài khoản, vui lòng liên hệ Support qua 
             const expireDateStr = expireDate.toLocaleDateString('vi-VN', { day: '2-digit', month: '2-digit', year: 'numeric' });
 
             // Hiển thị row
-            expiresRow.style.display = 'flex';
+            expiresRow.style.display = isDesktopHudRow ? 'grid' : 'flex';
 
             // Cập nhật text và màu sắc
             if (daysLeft <= 0 || user.credits <= 0) {
                 // Đã hết hạn - hiện ngày hết hạn
-                expiresText.textContent = `Expired (${expireDateStr})`;
+                expiresText.textContent = isDesktopHudRow ? `Hết hạn (${expireDateStr})` : `Expired (${expireDateStr})`;
                 expiresText.style.color = '#ef4444'; // Đỏ
             } else if (daysLeft === 1) {
-                expiresText.textContent = '1 day left';
+                expiresText.textContent = isDesktopHudRow ? 'Còn 1 ngày' : '1 day left';
                 expiresText.style.color = '#ef4444'; // Đỏ
             } else if (daysLeft <= 3) {
-                expiresText.textContent = `${daysLeft} days left`;
+                expiresText.textContent = isDesktopHudRow ? `Còn ${daysLeft} ngày` : `${daysLeft} days left`;
                 expiresText.style.color = '#f59e0b'; // Cam
             } else {
-                expiresText.textContent = `${daysLeft} days left`;
+                expiresText.textContent = isDesktopHudRow ? `Còn ${daysLeft} ngày` : `${daysLeft} days left`;
                 expiresText.style.color = '#22c55e'; // Xanh
             }
         }
@@ -6418,6 +9190,184 @@ Nếu cần thêm lượt đổi tài khoản, vui lòng liên hệ Support qua 
             return `Bạn cần ${required} credits để kích hoạt TV. Hiện tại bạn có ${current} credits. <span class="earn-credits-link" onclick="openEarnCreditsModal()">Cách để kiếm thêm credits?</span>`;
         }
 
+        function getDesktopGuestStatusVisual(type = 'info') {
+            switch (type) {
+                case 'success':
+                    return {
+                        color: '#4ade80',
+                        background: 'rgba(34, 197, 94, 0.12)',
+                        borderColor: 'rgba(34, 197, 94, 0.2)',
+                        icon: '<svg class="icon" style="width:18px;height:18px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"></circle><path d="m9 12 2 2 4-4"></path></svg>'
+                    };
+                case 'error':
+                    return {
+                        color: '#f87171',
+                        background: 'rgba(239, 68, 68, 0.12)',
+                        borderColor: 'rgba(239, 68, 68, 0.2)',
+                        icon: '<svg class="icon" style="width:18px;height:18px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"></circle><path d="m15 9-6 6"></path><path d="m9 9 6 6"></path></svg>'
+                    };
+                case 'warning':
+                    return {
+                        color: '#fbbf24',
+                        background: 'rgba(251, 191, 36, 0.12)',
+                        borderColor: 'rgba(251, 191, 36, 0.2)',
+                        icon: '<svg class="icon" style="width:18px;height:18px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0Z"></path><path d="M12 9v4"></path><path d="M12 17h.01"></path></svg>'
+                    };
+                case 'info':
+                default:
+                    return {
+                        color: '#a78bfa',
+                        background: 'rgba(139, 92, 246, 0.12)',
+                        borderColor: 'rgba(139, 92, 246, 0.2)',
+                        icon: '<svg class="icon" style="width:18px;height:18px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"></circle><path d="M12 8v4"></path><path d="M12 16h.01"></path></svg>'
+                    };
+            }
+        }
+
+        function extractPlainStatusText(message) {
+            if (typeof message !== 'string') return '';
+            const temp = document.createElement('div');
+            temp.innerHTML = message;
+            return temp.textContent.replace(/\s+/g, ' ').trim();
+        }
+
+        function updateDesktopGuestStatusPanel(message, type = 'info') {
+            if (!document.body.classList.contains('desktop-home-v2')) return;
+
+            const statusMessage = document.getElementById('statusMessage');
+            const statusIcon = document.getElementById('statusIcon');
+            const statusCaption = document.querySelector('.status-panel .status-caption');
+            if (!statusMessage || !statusIcon) return;
+
+            const visual = getDesktopGuestStatusVisual(type);
+            const cleanMessage = extractPlainStatusText(message);
+            if (!cleanMessage) return;
+
+            statusMessage.textContent = cleanMessage;
+            statusMessage.style.color = visual.color;
+            statusIcon.innerHTML = visual.icon;
+            statusIcon.style.color = visual.color;
+            statusIcon.style.background = visual.background;
+            statusIcon.style.borderColor = visual.borderColor;
+
+            if (statusCaption) {
+                statusCaption.style.color = visual.color;
+            }
+        }
+
+        function isGuestFeatureSessionReady() {
+            return !!(localStorage.getItem('auth_token') && (localStorage.getItem('current_user') || localStorage.getItem('currentUser')));
+        }
+
+        function syncDesktopExtensionBanner(hasExtension) {
+            const banner = document.getElementById('extensionBanner');
+            const bannerTitle = document.getElementById('bannerTitle');
+            const bannerText = document.getElementById('bannerText');
+            const iconWrap = banner ? banner.querySelector('.extension-icon') : null;
+            if (!banner || !bannerTitle || !bannerText || !iconWrap) return;
+
+            banner.classList.add('show');
+            banner.classList.toggle('success', hasExtension);
+            banner.classList.toggle('error', !hasExtension);
+
+            if (hasExtension) {
+                bannerTitle.textContent = 'Extension: \u0111\u00e3 s\u1eb5n s\u00e0ng';
+                bannerText.textContent = 'Extension \u0111\u00e3 k\u1ebft n\u1ed1i. B\u1ea1n c\u00f3 th\u1ec3 m\u1edf Netflix v\u00e0 Watch as Guest ngay tr\u00ean PC.';
+                iconWrap.innerHTML = '<svg class="icon" style="width:16px;height:16px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"></circle><path d="m8.5 12 2.3 2.3L15.8 9.3"></path></svg>';
+                return;
+            }
+
+            bannerTitle.textContent = 'Extension: ch\u01b0a c\u00e0i \u0111\u1eb7t';
+            bannerText.innerHTML = 'Vui l\u00f2ng c\u00e0i \u0111\u1eb7t Extension Ti\u1ec7m B\u00e1nh Netflix \u0111\u1ec3 s\u1eed d\u1ee5ng. <a href="/install-guide/">Xem h\u01b0\u1edbng d\u1eabn c\u00e0i \u0111\u1eb7t</a>';
+            iconWrap.innerHTML = '<svg class="icon" style="width:16px;height:16px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0Z"></path><path d="M12 9v4"></path><path d="M12 17h.01"></path></svg>';
+        }
+
+        function syncGuestFeatureAccess(isLoggedIn) {
+            const loginRequired = document.getElementById('loginRequired');
+            const tvLoginRequired = document.getElementById('tvLoginRequired');
+            const openBtn = document.getElementById('openNetflixBtn');
+            const guestBtn = document.getElementById('watchAsGuestBtn');
+            const tvCodeInput = document.getElementById('tvCodeInput');
+            const tvActivateBtn = document.getElementById('tvActivateBtn');
+            const tvActivateBtnText = document.getElementById('tvActivateBtnText');
+            const tvActivationForm = document.getElementById('tvActivationForm');
+            const tvActivationStatus = document.getElementById('tvActivationStatus');
+            const hasExtension = !!extensionDetected;
+            const canUseDesktopGuest = isLoggedIn && hasExtension;
+            const desktopLockReason = !isLoggedIn
+                ? 'Vui l\u00f2ng \u0111\u0103ng nh\u1eadp \u0111\u1ec3 s\u1eed d\u1ee5ng.'
+                : 'C\u1ea7n c\u00e0i Extension Ti\u1ec7m B\u00e1nh Netflix \u0111\u1ec3 s\u1eed d\u1ee5ng.';
+
+            if (loginRequired) loginRequired.style.display = isLoggedIn ? 'none' : 'block';
+            if (tvLoginRequired) tvLoginRequired.style.display = isLoggedIn ? 'none' : 'block';
+            if (openBtn) {
+                openBtn.disabled = !canUseDesktopGuest;
+                openBtn.title = canUseDesktopGuest ? '' : desktopLockReason;
+            }
+            if (guestBtn) {
+                guestBtn.disabled = !canUseDesktopGuest;
+                guestBtn.title = canUseDesktopGuest ? '' : desktopLockReason;
+            }
+
+            if (tvCodeInput) {
+                tvCodeInput.disabled = !isLoggedIn;
+                if (!isLoggedIn) tvCodeInput.value = '';
+            }
+
+            if (tvActivateBtn) tvActivateBtn.disabled = !isLoggedIn;
+            if (tvActivateBtnText && !isLoggedIn) tvActivateBtnText.textContent = 'Kích hoạt TV';
+            if (tvActivationForm) tvActivationForm.classList.toggle('is-locked', !isLoggedIn);
+
+            if (tvActivationStatus) {
+                tvActivationStatus.style.display = 'none';
+                tvActivationStatus.innerHTML = '';
+                tvActivationStatus.style.background = '';
+                tvActivationStatus.style.color = '';
+                tvActivationStatus.style.borderLeft = '';
+            }
+
+            syncDesktopExtensionBanner(hasExtension);
+
+            if (!isLoggedIn) {
+                updateDesktopGuestStatusPanel(
+                    'Vui l\u00f2ng \u0111\u0103ng nh\u1eadp \u0111\u1ec3 d\u00f9ng Watch as Guest tr\u00ean PC ho\u1eb7c k\u00edch ho\u1ea1t TV.',
+                    'warning'
+                );
+                return;
+            }
+
+            if (!hasExtension) {
+                updateDesktopGuestStatusPanel(
+                    'Ch\u01b0a ph\u00e1t hi\u1ec7n Extension Ti\u1ec7m B\u00e1nh Netflix. C\u00e0i extension \u0111\u1ec3 m\u1edf Netflix v\u00e0 Watch as Guest tr\u00ean PC.',
+                    'warning'
+                );
+                return;
+            }
+
+            updateDesktopGuestStatusPanel(
+                'H\u1ec7 th\u1ed1ng s\u1eb5n s\u00e0ng. M\u1edf Netflix ho\u1eb7c nh\u1eadp m\u00e3 TV \u0111\u1ec3 b\u1eaft \u0111\u1ea7u.',
+                'success'
+            );
+            return;
+
+            updateDesktopGuestStatusPanel(
+                isLoggedIn
+                    ? 'Hệ thống sẵn sàng. Mở Netflix hoặc nhập mã TV để bắt đầu.'
+                    : 'Vui lòng đăng nhập để dùng Watch as Guest trên PC hoặc kích hoạt TV.',
+                isLoggedIn ? 'success' : 'warning'
+            );
+        }
+
+        window.addEventListener('NetflixGuestExtensionReady', function () {
+            extensionDetected = true;
+            syncGuestFeatureAccess(isGuestFeatureSessionReady());
+        });
+
+        window.addEventListener('NetflixGuestExtensionNotFound', function () {
+            extensionDetected = false;
+            syncGuestFeatureAccess(isGuestFeatureSessionReady());
+        });
+
         // Export functions
         window.openEarnCreditsModal = openEarnCreditsModal;
         window.closeEarnCreditsModal = closeEarnCreditsModal;
@@ -6436,7 +9386,6 @@ Nếu cần thêm lượt đổi tài khoản, vui lòng liên hệ Support qua 
             const codeInput = document.getElementById('tvCodeInput');
             const activateBtn = document.getElementById('tvActivateBtn');
             const btnText = document.getElementById('tvActivateBtnText');
-            const statusDiv = document.getElementById('tvActivationStatus');
 
             const code = codeInput.value.replace(/-/g, '').trim(); // Loại bỏ dấu "-"
 
@@ -6477,6 +9426,7 @@ Nếu cần thêm lượt đổi tài khoản, vui lòng liên hệ Support qua 
 
             // Disable button và hiện loading
             activateBtn.disabled = true;
+            activateBtn.classList.add('is-loading');
             btnText.innerHTML = '<span class="spinner" style="display: inline-block; width: 14px; height: 14px; border: 2px solid #fff; border-top-color: transparent; border-radius: 50%; animation: spin 0.8s linear infinite;"></span> Đang kích hoạt Netflix TV...';
             showTvStatus('Đang kết nối đến Netflix...', 'info');
 
@@ -6557,8 +9507,11 @@ Nếu cần thêm lượt đổi tài khoản, vui lòng liên hệ Support qua 
                 console.error('❌ TV activation error:', error);
                 showTvStatus('Lỗi kết nối. Vui lòng kiểm tra mạng và thử lại.', 'error');
             } finally {
-                // Re-enable button
-                activateBtn.disabled = false;
+                const stillLoggedIn = !!localStorage.getItem('auth_token');
+                activateBtn.disabled = !stillLoggedIn;
+                activateBtn.classList.remove('is-loading');
+                codeInput.disabled = !stillLoggedIn;
+                document.getElementById('tvActivationForm')?.classList.toggle('is-locked', !stillLoggedIn);
                 btnText.textContent = 'Kích hoạt TV';
             }
         }
@@ -6568,46 +9521,48 @@ Nếu cần thêm lượt đổi tài khoản, vui lòng liên hệ Support qua 
          */
         function showTvStatus(message, type = 'info') {
             const statusDiv = document.getElementById('tvActivationStatus');
-            if (!statusDiv) return;
+            if (statusDiv) {
+                statusDiv.style.display = 'block';
+                statusDiv.textContent = message;
 
-            statusDiv.style.display = 'block';
-            statusDiv.textContent = message;
+                // Reset styles
+                statusDiv.style.background = '';
+                statusDiv.style.color = '';
+                statusDiv.style.borderLeft = '';
 
-            // Reset styles
-            statusDiv.style.background = '';
-            statusDiv.style.color = '';
-            statusDiv.style.borderLeft = '';
+                switch (type) {
+                    case 'success':
+                        statusDiv.style.background = 'rgba(34, 197, 94, 0.15)';
+                        statusDiv.style.color = '#4ade80';
+                        statusDiv.style.borderLeft = '3px solid #22c55e';
+                        break;
+                    case 'error':
+                        statusDiv.style.background = 'rgba(239, 68, 68, 0.15)';
+                        statusDiv.style.color = '#f87171';
+                        statusDiv.style.borderLeft = '3px solid #ef4444';
+                        break;
+                    case 'warning':
+                        statusDiv.style.background = 'rgba(251, 191, 36, 0.15)';
+                        statusDiv.style.color = '#fbbf24';
+                        statusDiv.style.borderLeft = '3px solid #f59e0b';
+                        break;
+                    case 'info':
+                    default:
+                        statusDiv.style.background = 'rgba(139, 92, 246, 0.15)';
+                        statusDiv.style.color = '#a78bfa';
+                        statusDiv.style.borderLeft = '3px solid #8b5cf6';
+                        break;
+                }
 
-            switch (type) {
-                case 'success':
-                    statusDiv.style.background = 'rgba(34, 197, 94, 0.15)';
-                    statusDiv.style.color = '#4ade80';
-                    statusDiv.style.borderLeft = '3px solid #22c55e';
-                    break;
-                case 'error':
-                    statusDiv.style.background = 'rgba(239, 68, 68, 0.15)';
-                    statusDiv.style.color = '#f87171';
-                    statusDiv.style.borderLeft = '3px solid #ef4444';
-                    break;
-                case 'warning':
-                    statusDiv.style.background = 'rgba(251, 191, 36, 0.15)';
-                    statusDiv.style.color = '#fbbf24';
-                    statusDiv.style.borderLeft = '3px solid #f59e0b';
-                    break;
-                case 'info':
-                default:
-                    statusDiv.style.background = 'rgba(139, 92, 246, 0.15)';
-                    statusDiv.style.color = '#a78bfa';
-                    statusDiv.style.borderLeft = '3px solid #8b5cf6';
-                    break;
+                // Auto-hide after 10 seconds for success
+                if (type === 'success') {
+                    setTimeout(() => {
+                        statusDiv.style.display = 'none';
+                    }, 10000);
+                }
             }
 
-            // Auto-hide after 10 seconds for success
-            if (type === 'success') {
-                setTimeout(() => {
-                    statusDiv.style.display = 'none';
-                }, 10000);
-            }
+            updateDesktopGuestStatusPanel(message, type);
         }
 
         /**
@@ -6616,39 +9571,41 @@ Nếu cần thêm lượt đổi tài khoản, vui lòng liên hệ Support qua 
          */
         function showTvStatusWithHtml(htmlMessage, type = 'info') {
             const statusDiv = document.getElementById('tvActivationStatus');
-            if (!statusDiv) return;
+            if (statusDiv) {
+                statusDiv.style.display = 'block';
+                statusDiv.innerHTML = htmlMessage; // Dùng innerHTML thay vì textContent
 
-            statusDiv.style.display = 'block';
-            statusDiv.innerHTML = htmlMessage; // Dùng innerHTML thay vì textContent
+                // Reset styles
+                statusDiv.style.background = '';
+                statusDiv.style.color = '';
+                statusDiv.style.borderLeft = '';
 
-            // Reset styles
-            statusDiv.style.background = '';
-            statusDiv.style.color = '';
-            statusDiv.style.borderLeft = '';
-
-            switch (type) {
-                case 'success':
-                    statusDiv.style.background = 'rgba(34, 197, 94, 0.15)';
-                    statusDiv.style.color = '#4ade80';
-                    statusDiv.style.borderLeft = '3px solid #22c55e';
-                    break;
-                case 'error':
-                    statusDiv.style.background = 'rgba(239, 68, 68, 0.15)';
-                    statusDiv.style.color = '#f87171';
-                    statusDiv.style.borderLeft = '3px solid #ef4444';
-                    break;
-                case 'warning':
-                    statusDiv.style.background = 'rgba(251, 191, 36, 0.15)';
-                    statusDiv.style.color = '#fbbf24';
-                    statusDiv.style.borderLeft = '3px solid #f59e0b';
-                    break;
-                case 'info':
-                default:
-                    statusDiv.style.background = 'rgba(139, 92, 246, 0.15)';
-                    statusDiv.style.color = '#a78bfa';
-                    statusDiv.style.borderLeft = '3px solid #8b5cf6';
-                    break;
+                switch (type) {
+                    case 'success':
+                        statusDiv.style.background = 'rgba(34, 197, 94, 0.15)';
+                        statusDiv.style.color = '#4ade80';
+                        statusDiv.style.borderLeft = '3px solid #22c55e';
+                        break;
+                    case 'error':
+                        statusDiv.style.background = 'rgba(239, 68, 68, 0.15)';
+                        statusDiv.style.color = '#f87171';
+                        statusDiv.style.borderLeft = '3px solid #ef4444';
+                        break;
+                    case 'warning':
+                        statusDiv.style.background = 'rgba(251, 191, 36, 0.15)';
+                        statusDiv.style.color = '#fbbf24';
+                        statusDiv.style.borderLeft = '3px solid #f59e0b';
+                        break;
+                    case 'info':
+                    default:
+                        statusDiv.style.background = 'rgba(139, 92, 246, 0.15)';
+                        statusDiv.style.color = '#a78bfa';
+                        statusDiv.style.borderLeft = '3px solid #8b5cf6';
+                        break;
+                }
             }
+
+            updateDesktopGuestStatusPanel(htmlMessage, type);
         }
 
         /**
@@ -7206,6 +10163,18 @@ Nếu cần thêm lượt đổi tài khoản, vui lòng liên hệ Support qua 
                                 <span style="flex-shrink:0;font-size:0.72rem;font-weight:600;color:#60a5fa;padding:5px 10px;border:1px solid rgba(96,165,250,0.4);border-radius:6px;white-space:nowrap;">Liên hệ</span>
                             </a>
 
+                            <!-- ChatGPT Plus -->
+                            <a href="https://www.facebook.com/tiembanh4k/" target="_blank" rel="noopener noreferrer" class="promo-card" style="display:flex;align-items:center;gap:12px;padding:12px 14px;background:rgba(16,185,129,0.07);border:1px solid rgba(16,185,129,0.28);border-radius:14px;text-decoration:none;border-left:3px solid #10b981;">
+                                <div style="flex-shrink:0;width:34px;height:34px;background:linear-gradient(135deg,rgba(16,185,129,0.16),rgba(255,255,255,0.04));border-radius:8px;display:flex;align-items:center;justify-content:center;border:1px solid rgba(16,185,129,0.18);">
+                                    <img src="https://upload.wikimedia.org/wikipedia/commons/6/66/OpenAI_logo_2025_%28symbol%29.svg" alt="" style="width:18px;height:18px;display:block;filter:brightness(0) invert(1);opacity:0.94;">
+                                </div>
+                                <div style="flex:1;min-width:0;">
+                                    <div style="font-size:0.78rem;font-weight:700;color:#34d399;margin-bottom:2px;">ChatGPT Plus</div>
+                                    <div style="font-size:0.7rem;color:#fff;">Chính chủ, bảo hành toàn thời gian</div>
+                                </div>
+                                <span style="flex-shrink:0;font-size:0.72rem;font-weight:700;color:#34d399;padding:5px 10px;border:1px solid rgba(16,185,129,0.4);border-radius:6px;white-space:nowrap;">Liên hệ</span>
+                            </a>
+
                             <!-- Capcut Pro -->
                             <div class="promo-card" style="background:rgba(167,139,250,0.04);border:1px solid rgba(167,139,250,0.25);border-radius:14px;padding:14px 14px 12px;border-left:3px solid #a78bfa;">
                                 <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;">
@@ -7726,6 +10695,233 @@ Nếu cần thêm lượt đổi tài khoản, vui lòng liên hệ Support qua 
 
         // Chạy khi DOM ready
         document.addEventListener('DOMContentLoaded', renderFeaturedProducts);
+    </script>
+    <script type="text/plain" id="desktopFeaturesTemplate">
+        <div class="main-topbar">
+            <a href="/install-guide/" class="nav-pill"><svg class="icon" style="width:16px;height:16px;"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg> Tải Extension</a>
+            <a href="https://youtu.be/vrVgwrjUbpo" target="_blank" class="nav-pill"><svg class="icon" style="width:16px;height:16px;"><circle cx="12" cy="12" r="10"/><polygon points="10 8 16 12 10 16 10 8"/></svg> Hướng dẫn</a>
+            <a href="https://www.facebook.com/tiembanh4k/" target="_blank" class="nav-pill"><svg class="icon" style="width:16px;height:16px;"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg> Hỗ trợ</a>
+        </div>
+        <section class="hero">
+            <div class="hero-main">
+                <div class="hero-copy">
+                    <div class="eyebrow">Hỗ trợ Netflix đa nền tảng • PC • TV • Mobile</div>
+                    <h1 class="hero-title">TIỆM BÁNH NETFLIX</h1>
+                    <div class="hero-kicker">Giải trí • Chất lượng cao • Giá rẻ</div>
+                    <p class="hero-description">Tiệm Bánh Netflix là nền tảng hỗ trợ người dùng đăng ký các gói tài khoản Netflix chính chủ với chi phí hợp lý. Bên cạnh đó, nền tảng còn cung cấp dịch vụ Watch as Guest miễn phí, mang đến giải pháp trải nghiệm Netflix linh hoạt, tiện lợi và phù hợp với những người có nhu cầu xem phim không thường xuyên.</p>
+                    <div class="hero-actions">
+                        <button class="btn btn-brand" style="width:auto;" onclick="showOfficialPackageModal()"><svg class="icon"><path d="M20.91 8.84 8.56 21.19a2 2 0 0 1-2.83 0L2 17.46a2 2 0 0 1 0-2.83L14.35 2.28a2 2 0 0 1 1.41-.58H20a2 2 0 0 1 2 2v4.24a2 2 0 0 1-.59 1.42Z"/><path d="M7 7h.01"/></svg> Mua gói chính chủ</button>
+                        <button type="button" class="btn btn-premium" style="width:auto;" onclick="document.getElementById('guestSection').scrollIntoView({behavior:'smooth', block:'start'});"><svg class="icon"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg> Watch as Guest miễn phí</button>
+                    </div>
+                </div>
+                <div class="hero-metrics">
+                    <a href="/shop/" class="service-card store">
+                        <div class="service-icon"><svg class="icon"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z"/><line x1="3" y1="6" x2="21" y2="6"/></svg></div>
+                        <div class="service-copy"><h3>Quầy lưu niệm</h3><p>Sản phẩm dễ thương, giá rẻ từ Tiệm Bánh Netflix.</p></div>
+                    </a>
+                    <a href="/study/" class="service-card study">
+                        <div class="service-icon"><svg class="icon"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1 0-5H20"/></svg></div>
+                        <div class="service-copy"><h3>Góc học tập</h3><p>Dịch vụ hỗ trợ định dạng báo cáo, tiểu luận và các loại văn bản khác.</p></div>
+                    </a>
+                    <a href="https://www.facebook.com/tiembanh4k/" target="_blank" rel="noopener noreferrer" class="service-card chatgpt" aria-label="ChatGPT Plus">
+                        <div class="service-icon">
+                            <img class="chatgpt-mark" src="https://upload.wikimedia.org/wikipedia/commons/6/66/OpenAI_logo_2025_%28symbol%29.svg" alt="ChatGPT">
+                        </div>
+                        <div class="service-copy">
+                            <h3>ChatGPT Plus - 145.000đ/tháng</h3>
+                            <p>Nâng cấp chính chủ, bảo hành toàn thời gian.</p>
+                        </div>
+                    </a>
+                </div>
+            </div>
+        </section>
+        <div class="content-stack">
+            <section id="guestSection">
+                <div class="spotlight-card">
+                    <div>
+                        <span class="premium-label">Ưu tiên</span>
+                        <div class="spotlight-title">Mua gói chính chủ</div>
+                        <p style="font-size:0.9rem;color:var(--desktop-home-muted);margin-bottom:12px;">Ổn định, riêng tư, đầy đủ tính năng và sử dụng lâu dài.</p>
+                    </div>
+                    <button class="btn btn-brand" style="width:auto;" onclick="showOfficialPackageModal()"><svg class="icon"><path d="M20.91 8.84 8.56 21.19a2 2 0 0 1-2.83 0L2 17.46a2 2 0 0 1 0-2.83L14.35 2.28a2 2 0 0 1 1.41-.58H20a2 2 0 0 1 2 2v4.24a2 2 0 0 1-.59 1.42Z"/><path d="M7 7h.01"/></svg> Xem gói chính chủ</button>
+                </div>
+                <div class="guest-intro">
+                    <div>
+                        <span class="popular-label">Phổ biến</span>
+                        <div class="guest-title">WATCH AS GUEST</div>
+                        <p class="guest-description">Phương thức trải nghiệm Netflix 4K miễn phí thông qua Extensions của Tiệm Bánh.</p>
+                    </div>
+                    <div class="guest-points">
+                        <div class="guest-chip">Miễn phí</div>
+                        <div class="guest-chip">Tối ưu</div>
+                        <div class="guest-chip">Chất lượng cao</div>
+                    </div>
+                </div>
+                <div class="segmented-grid">
+                    <div class="method-card pc">
+                        <div class="method-header">
+                            <div class="method-title-wrap">
+                                <div class="method-icon"><svg class="icon"><rect width="20" height="14" x="2" y="3" rx="2"/><line x1="8" x2="16" y1="21" y2="21"/><line x1="12" x2="12" y1="17" y2="21"/></svg></div>
+                                <div><div class="method-super">watch as guest</div><div class="method-title">Xem trên PC</div><div class="method-description">Miễn phí cho khách Tiệm Bánh. Yêu cầu cài đặt Extension!</div></div>
+                            </div>
+                            <div class="mini-badge">HOT</div>
+                        </div>
+                        <div id="loginRequired" class="info-strip">Vui lòng <a href="/auth/" style="text-decoration:underline;color:#fff;">đăng nhập</a> để sử dụng.</div>
+                        <div id="extensionBanner" class="extension-banner">
+                            <div class="extension-icon"><svg class="icon" style="width:16px;height:16px;"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg></div>
+                            <div class="extension-copy">
+                                <div class="extension-top"><div id="bannerTitle" class="extension-state">Extension: chưa cài đặt</div></div>
+                                <p id="bannerText" class="extension-note">Tải và cài đặt extension để sử dụng chế độ Watch as Guest.</p>
+                            </div>
+                        </div>
+                        <div class="stacked-actions">
+                            <button class="btn btn-outline" id="openNetflixBtn" disabled><svg class="icon"><rect x="3" y="4" width="18" height="14" rx="2"/><path d="M8 20h8"/><path d="M12 18v2"/></svg> Bước 1: Mở Netflix</button>
+                            <button class="btn btn-blue" id="watchAsGuestBtn" disabled><svg class="icon"><path d="M16 21v-2a4 4 0 0 0-4-4H7a4 4 0 0 0-4 4v2"/><circle cx="9.5" cy="7" r="4"/><path d="M20 8v6"/><path d="m17 11 3 3 3-3"/></svg> Bước 2: Watch as Guest</button>
+                        </div>
+                    </div>
+                    <div class="method-card tv">
+                        <div class="method-header">
+                            <div class="method-title-wrap">
+                                <div class="method-icon"><svg class="icon"><rect width="20" height="15" x="2" y="7" rx="2" ry="2"/><polyline points="17 2 12 7 7 2"/></svg></div>
+                                <div><div class="method-super">watch as guest</div><div class="method-title">Kích hoạt TV</div><div class="method-description">Miễn phí cho khách Tiệm Bánh. Nhập mã 8 số hiển thị trên TV để liên kết.</div></div>
+                            </div>
+                            <div class="mini-badge">STABLE</div>
+                        </div>
+                        <div id="tvLoginRequired" class="info-strip">Vui lòng <a href="/auth/" style="text-decoration:underline;color:#fff;">đăng nhập</a> để kích hoạt TV.</div>
+                        <div id="tvActivationForm" class="input-shell is-locked">
+                            <input type="text" id="tvCodeInput" class="n-input" placeholder="XXXX-XXXX" maxlength="9" pattern="[0-9]*" inputmode="numeric" oninput="this.value = this.value.replace(/[^0-9-]/g, '').slice(0, 9)" disabled>
+                            <button id="tvActivateBtn" class="btn btn-purple" onclick="handleTvActivation()" disabled><svg class="icon"><rect x="2" y="6" width="20" height="12" rx="2"/><path d="M8 20h8"/><path d="M12 18v2"/><path d="m15 10-3 3-3-3"/></svg> <span id="tvActivateBtnText">Kích hoạt TV</span></button>
+                            <div id="tvActivationStatus" style="display:none;font-size:0.85rem;text-align:center;color:var(--desktop-home-muted);"></div>
+                        </div>
+                        <div class="task-list">
+                            <div class="task"><div class="task-index">1</div><span>Mở <strong>Netflix TV</strong> và chọn cách đăng nhập "Dùng điện thoại".</span></div>
+                            <div class="task"><div class="task-index">2</div><span>Nhập mã TV 8 số và nhấn Kích hoạt để hoàn tất.</span></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="status-panel">
+                    <div class="status-left">
+                        <div class="status-icon" id="statusIcon" aria-hidden="true"><svg class="icon" style="width:18px;height:18px;"><path d="M12 8v4"/><path d="M12 16h.01"/><circle cx="12" cy="12" r="9"/></svg></div>
+                        <div><div class="status-caption">Trạng thái</div><div id="statusMessage" style="font-size:0.95rem;font-weight:700;">Hệ thống sẵn sàng. Mở Netflix hoặc nhập mã TV để bắt đầu.</div></div>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </script>
+    <script type="text/plain" id="desktopSidebarTemplate">
+        <div class="sidebar-header">
+            <a href="/" class="brand" aria-label="Tiệm Bánh 4K">
+                <div class="brand-mark"><svg class="icon"><path d="M22 8l-6 4 6 4V8z"/><rect x="2" y="6" width="14" height="12" rx="2" ry="2"/></svg></div>
+                <div><div class="brand-kicker">Nền tảng giải trí chất lượng cao</div><div class="brand-title">TIỆM BÁNH NETFLIX</div><div class="brand-subtitle">Lựa chọn hàng đầu để Netflix and Chill</div></div>
+            </a>
+        </div>
+        <div class="sidebar-body">
+            <section class="account-card">
+                <div id="userProfileSection">
+                    <div id="loginSection" style="display:block;">
+                        <div class="login-state-card">
+                            <div class="login-state-top">
+                                <div class="login-state-icon" aria-hidden="true">
+                                    <svg class="icon" style="width:22px;height:22px;">
+                                        <path d="M15 7h6"></path>
+                                        <path d="M18 4v6"></path>
+                                        <rect x="3" y="5" width="12" height="16" rx="2"></rect>
+                                        <path d="M8 17h2"></path>
+                                    </svg>
+                                </div>
+                                <div class="login-state-copy-wrap">
+                                    <div class="login-state-title">Chưa đăng nhập</div>
+                                    <p class="login-state-copy">Đăng nhập để dùng Watch as Guest.</p>
+                                </div>
+                            </div>
+                            <a href="/auth/" class="btn btn-outline login-state-btn"><svg class="icon"><path d="M15 7h6"></path><path d="M18 4v6"></path><rect x="3" y="5" width="12" height="16" rx="2"></rect><path d="M8 17h2"></path></svg> Đăng nhập / Đăng ký</a>
+                        </div>
+                    </div>
+                    <div id="userProfileCard" style="display:none;">
+                        <div class="capsule profile-hero">
+                            <div class="profile-kicker"><svg class="icon" style="width:14px;height:14px;"><circle cx="12" cy="12" r="8.5"></circle><path d="m8.5 12 2.3 2.3 4.7-4.8"></path></svg> Đã kết nối</div>
+                            <div class="avatar-ring"><div class="avatar-inner"><span id="userAvatar"><img src="../favicon.svg" alt="Avatar" width="40" height="40" style="display:block;"></span></div></div>
+                            <div id="userDisplayName" class="user-name">User Name</div>
+                            <p id="userEmail" class="user-email">email@example.com</p>
+                            <div class="user-badges">
+                                <div id="userType" class="badge-free">GÓI FREE</div>
+                                <div id="verifiedBadge" class="badge-verified" style="display:none;">Đã xác minh</div>
+                            </div>
+                        </div>
+                        <div class="stats-grid">
+                            <div class="stat-card"><div class="stat-label">Credits hiện có</div><div id="userCredits" class="stat-value" style="color:var(--desktop-home-green);">5</div></div>
+                            <div class="stat-card"><div class="stat-label">Lượt đổi còn lại</div><div id="reportLimit" class="stat-value">2/2</div></div>
+                        </div>
+                        <div id="userInfoCard" class="hud-details">
+                            <div class="hud-header">
+                                <div>
+                                    <div class="hud-kicker">Thông tin</div>
+                                    <div class="hud-heading-text">Tài khoản Tiệm Bánh</div>
+                                </div>
+                                <button type="button" class="account-help-trigger" onclick="showAccountHelpModal()" aria-label="Thông tin tài khoản">
+                                    <svg class="icon" style="width:16px;height:16px;"><circle cx="12" cy="12" r="10"></circle><path d="M12 16v-4"></path><path d="M12 8h.01"></path></svg>
+                                </button>
+                            </div>
+                            <div id="proExpiresContainer" style="display:none;">
+                                <div class="hud-row"><span class="hud-label">Kích hoạt</span><span id="proUpgradedDate" class="hud-value val-green">-</span></div>
+                                <div class="hud-row"><span class="hud-label">Hết hạn</span><span id="proExpiresDate" class="hud-value" style="color:var(--desktop-home-danger);">-</span></div>
+                            </div>
+                            <div id="netflixInfoBorder">
+                                <div class="hud-row" id="creditsExpiresRow" style="display:none;"><span class="hud-label">Hạn credits</span><span id="creditsExpires" class="hud-value val-green">Còn 7 ngày</span></div>
+                                <div class="hud-row" id="pcAccountRow"><span class="hud-label">Tài khoản Netflix số</span><span id="assignedCookie" class="hud-value val-green">-</span></div>
+                                <div class="hud-row mobile-only" id="tvAccountRow" style="display:none !important;"><span class="hud-label">Tài khoản TV</span><span id="assignedTvCookie" class="hud-value" style="color:var(--desktop-home-purple);">-</span></div>
+                                <div class="hud-row"><span class="hud-label">Lượt giới thiệu</span><span id="referralsRemaining" class="hud-value val-green">2/2</span></div>
+                                <div class="hud-footer"><a href="javascript:void(0)" onclick="showReferralHistoryModal()" class="help-link">Xem lịch sử giới thiệu →</a></div>
+                            </div>
+                        </div>
+                        <div id="partnerCards" style="display:none;"></div>
+                        <div id="mobileAppLoginForm" class="capsule mobile-only" style="border-color:rgba(16,185,129,0.3);background:rgba(16,185,129,0.05);">
+                            <div style="font-size:0.75rem;font-weight:800;text-transform:uppercase;color:var(--desktop-home-green);text-align:center;margin-bottom:12px;">Đăng nhập Netflix App</div>
+                            <button type="button" class="btn btn-outline" id="mobileAppLoginBtn" onclick="handleMobileAppLogin()" style="border-color:var(--desktop-home-green);color:var(--desktop-home-green);"><svg class="icon"><path d="M15 7h6"/><path d="M18 4v6"/><rect x="3" y="5" width="12" height="16" rx="2"/><path d="M8 17h2"/></svg><span id="mobileAppLoginBtnText">Tạo link đăng nhập</span></button>
+                            <div id="mobileAppLoginStatus" style="font-size:0.75rem;text-align:center;margin-top:10px;color:var(--desktop-home-muted);"></div>
+                        </div>
+                        <div id="mobileTvForm" class="capsule mobile-only" style="border-color:rgba(139,92,246,0.3);background:rgba(139,92,246,0.05);">
+                            <div style="font-size:0.75rem;font-weight:800;text-transform:uppercase;color:var(--desktop-home-purple);text-align:center;margin-bottom:12px;">Kích hoạt TV</div>
+                            <div class="input-shell">
+                                <input type="text" id="mobileTvCodeInput" class="n-input" placeholder="MÃ 8 SỐ">
+                                <button class="btn btn-purple" onclick="handleMobileTvActivation()"><svg class="icon"><rect x="2" y="6" width="20" height="12" rx="2"/><path d="M8 20h8"/><path d="M12 18v2"/><path d="m15 10-3 3-3-3"/></svg> Kích hoạt TV</button>
+                            </div>
+                            <div id="mobileTvStatus" style="font-size:0.75rem;text-align:center;margin-top:10px;color:var(--desktop-home-muted);"></div>
+                        </div>
+                        <div class="menu-grid">
+                            <button id="purchaseCreditsBtn" class="menu-btn" onclick="openPurchaseCreditsModal()"><div class="menu-icon" style="background:rgba(251,191,36,0.1);color:var(--desktop-home-gold);"><svg class="icon"><circle cx="8" cy="8" r="6"/><path d="M18.09 10.37A6 6 0 1 1 10.34 18"/><path d="M7 6h1v4"/><path d="m16.71 13.88.7.71-2.82 2.82"/></svg></div><div class="menu-copy"><strong>Mua thêm credits</strong><span>Và quyền truy cập Netflix Mobile App.</span></div></button>
+                            <button id="switchTvAccountBtn" class="menu-btn mobile-only" style="display:none !important;" onclick="switchMobileTvAccount()"><div class="menu-icon" style="background:rgba(139,92,246,0.1);color:var(--desktop-home-purple);"><svg class="icon"><path d="M21 12a9 9 0 0 0-9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/><path d="M3 12a9 9 0 0 0 9 9 9.75 9.75 0 0 0 6.74-2.74L21 16"/><path d="M16 21v-5h5"/></svg></div><div class="menu-copy"><strong>Đổi tài khoản Netflix</strong><span>Chuyển tài khoản TV.</span></div></button>
+                            <button class="menu-btn" onclick="showReportIssueModal()"><div class="menu-icon" style="background:rgba(239,68,68,0.1);color:var(--desktop-home-danger);"><svg class="icon"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg></div><div class="menu-copy"><strong>Báo hỏng / đổi tài khoản</strong><span>Khi gặp tài khoản Netflix lỗi.</span></div></button>
+                            <button class="menu-btn" onclick="handleLogout()"><div class="menu-icon"><svg class="icon"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" x2="9" y1="12" y2="12"/></svg></div><div class="menu-copy"><strong>Đăng xuất</strong><span>Thoát phiên hiện tại.</span></div></button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </script>
+    <script>
+        (function mountDesktopHomeLayout() {
+            const isDesktopViewport = typeof window.matchMedia === 'function' && window.matchMedia('(min-width: 1025px)').matches;
+            if (!isDesktopViewport || window.__isMobile) return;
+            if (document.body.classList.contains('desktop-home-v2')) return;
+
+            const featuresArea = document.querySelector('.features-area');
+            const sidebar = document.querySelector('.sidebar');
+            const featuresTemplate = document.getElementById('desktopFeaturesTemplate');
+            const sidebarTemplate = document.getElementById('desktopSidebarTemplate');
+
+            if (!featuresArea || !sidebar || !featuresTemplate || !sidebarTemplate) return;
+
+            document.body.classList.add('desktop-home-v2');
+            featuresArea.innerHTML = featuresTemplate.textContent.trim();
+            sidebar.innerHTML = sidebarTemplate.textContent.trim();
+
+            if (typeof checkAuth === 'function') {
+                Promise.resolve(checkAuth()).catch((error) => {
+                    console.error('Desktop remount auth sync failed:', error);
+                });
+            }
+        })();
     </script>
     <script src="app.js"></script>
 </body>

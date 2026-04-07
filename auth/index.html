@@ -42,6 +42,26 @@
     <link rel="icon" type="image/png" sizes="192x192" href="../favicon.png">
     <link rel="icon" type="image/png" sizes="512x512" href="../favicon-512.png">
     <link rel="apple-touch-icon" sizes="180x180" href="../favicon.png">
+    <script>
+        (function () {
+            function isMobileDevice() {
+                const userAgent = navigator.userAgent || navigator.vendor || window.opera || '';
+                const mobileRegex = /android|webos|iphone|ipod|blackberry|iemobile|opera mini|mobile/i;
+                const isIOS = /iPad|iPhone|iPod/.test(userAgent) && !window.MSStream;
+                const isAndroid = /Android/i.test(userAgent);
+                const isTouchDevice = ('ontouchstart' in window) || (navigator.maxTouchPoints > 0);
+                const screenWidth = window.innerWidth || screen.width;
+                const isTabletScreen = screenWidth <= 1024;
+                const isIPadOS = /Macintosh/i.test(userAgent) && isTouchDevice && navigator.maxTouchPoints > 1;
+
+                return isIOS || isIPadOS || isAndroid || mobileRegex.test(userAgent) || (isTouchDevice && isTabletScreen);
+            }
+
+            if (!isMobileDevice()) {
+                document.documentElement.classList.add('auth-desktop-v2');
+            }
+        })();
+    </script>
     <style>
         * {
             margin: 0;
@@ -945,14 +965,15 @@
         .custom-modal-overlay {
             display: none;
             position: fixed;
-            top: 0;
-            left: 0;
+            inset: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0, 0, 0, 0.8);
-            backdrop-filter: blur(5px);
+            padding: 24px 18px;
+            background:
+                radial-gradient(circle at top, rgba(96, 165, 250, 0.12), transparent 32%),
+                rgba(2, 6, 23, 0.82);
+            backdrop-filter: blur(16px) saturate(1.1);
             z-index: 10002;
-            /* Cao hơn verification modal (10001) để hiển thị lỗi phía trên */
             animation: fadeIn 0.2s ease-out;
         }
 
@@ -963,79 +984,100 @@
         }
 
         .custom-modal-dialog {
-            background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
-            border-radius: 16px;
+            background: linear-gradient(180deg, rgba(15, 23, 42, 0.97), rgba(2, 6, 23, 0.99));
+            border-radius: 24px;
             padding: 0;
-            max-width: 500px;
-            width: 90%;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.9);
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            max-width: 540px;
+            width: min(100%, 540px);
+            max-height: calc(100vh - 48px);
+            box-shadow: 0 40px 120px rgba(2, 6, 23, 0.78), inset 0 1px 0 rgba(255, 255, 255, 0.06);
+            border: 1px solid rgba(148, 163, 184, 0.18);
             animation: slideUp 0.3s ease-out;
             overflow: hidden;
         }
 
         .custom-modal-header {
-            padding: 24px 28px;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 24px 26px 18px;
+            border-bottom: 1px solid rgba(148, 163, 184, 0.16);
             display: flex;
             align-items: center;
-            gap: 12px;
+            gap: 14px;
+            background: linear-gradient(180deg, rgba(148, 163, 184, 0.06), transparent);
         }
 
         .custom-modal-icon {
-            font-size: 28px;
+            width: 52px;
+            height: 52px;
+            border-radius: 18px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            color: #bfdbfe;
+            background: linear-gradient(135deg, rgba(96, 165, 250, 0.16), rgba(251, 191, 36, 0.1));
+            border: 1px solid rgba(148, 163, 184, 0.22);
+            box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.08), 0 16px 30px rgba(15, 23, 42, 0.35);
             line-height: 1;
         }
 
+        .custom-modal-icon svg {
+            width: 23px;
+            height: 23px;
+        }
+
         .custom-modal-title {
-            font-size: 1.3rem;
-            font-weight: 600;
-            color: #fff;
+            font-size: 1.25rem;
+            font-weight: 800;
+            letter-spacing: -0.03em;
+            color: #f8fafc;
             flex: 1;
         }
 
         .custom-modal-body {
-            padding: 28px;
-            color: #ddd;
-            line-height: 1.6;
+            padding: 22px 26px;
+            color: #cbd5e1;
+            line-height: 1.7;
             max-height: 60vh;
             overflow-y: auto;
         }
 
         .custom-modal-body pre {
-            background: rgba(0, 0, 0, 0.3);
-            padding: 16px;
-            border-radius: 8px;
-            border-left: 3px solid #60a5fa;
-            white-space: pre-wrap;
+            background: transparent;
+            padding: 0;
+            border-radius: 0;
+            border: none;
+            box-shadow: none;
+            white-space: pre-line;
             word-wrap: break-word;
             font-family: 'Segoe UI', sans-serif;
-            font-size: 0.95rem;
+            font-size: 0.98rem;
             margin: 0;
+            color: inherit;
         }
 
         .custom-modal-footer {
-            padding: 20px 28px;
-            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 18px 26px 24px;
+            border-top: 1px solid rgba(148, 163, 184, 0.14);
             display: flex;
             gap: 12px;
             justify-content: flex-end;
         }
 
         .custom-modal-btn {
-            padding: 10px 24px;
-            border: none;
-            border-radius: 8px;
+            padding: 12px 24px;
+            border: 1px solid transparent;
+            border-radius: 14px;
             font-size: 0.95rem;
-            font-weight: 600;
+            font-weight: 700;
             cursor: pointer;
             transition: all 0.2s ease;
             font-family: inherit;
         }
 
         .custom-modal-btn-primary {
-            background: linear-gradient(135deg, #60a5fa, #3b82f6);
+            background: linear-gradient(135deg, #60a5fa, #2563eb);
             color: white;
+            border-color: rgba(147, 197, 253, 0.2);
         }
 
         .custom-modal-btn-primary:hover {
@@ -1045,8 +1087,9 @@
         }
 
         .custom-modal-btn-secondary {
-            background: rgba(255, 255, 255, 0.1);
-            color: #fff;
+            background: rgba(148, 163, 184, 0.12);
+            color: #e2e8f0;
+            border-color: rgba(148, 163, 184, 0.2);
         }
 
         .custom-modal-btn-secondary:hover {
@@ -1054,8 +1097,9 @@
         }
 
         .custom-modal-btn-danger {
-            background: linear-gradient(135deg, #ef4444, #dc2626);
+            background: linear-gradient(135deg, #ef4444, #b91c1c);
             color: white;
+            border-color: rgba(248, 113, 113, 0.2);
         }
 
         .custom-modal-btn-danger:hover {
@@ -1280,8 +1324,11 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0, 0, 0, 0.9);
-            backdrop-filter: blur(8px);
+            padding: 24px 18px;
+            background:
+                radial-gradient(circle at top, rgba(251, 191, 36, 0.12), transparent 32%),
+                rgba(2, 6, 23, 0.84);
+            backdrop-filter: blur(16px) saturate(1.08);
             z-index: 10001;
             display: flex;
             align-items: center;
@@ -1290,21 +1337,20 @@
         }
 
         .verification-modal-dialog {
-            background: rgba(0, 0, 0, 0.95);
-            border-radius: 16px;
+            background: linear-gradient(180deg, rgba(15, 23, 42, 0.97), rgba(2, 6, 23, 0.99));
+            border-radius: 24px;
             max-width: 500px;
-            width: 90%;
-            border: 2px solid rgba(251, 191, 36, 0.3);
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.8),
-                0 0 40px rgba(251, 191, 36, 0.1);
+            width: min(100%, 500px);
+            border: 1px solid rgba(251, 191, 36, 0.24);
+            box-shadow: 0 40px 120px rgba(2, 6, 23, 0.78), 0 0 40px rgba(251, 191, 36, 0.1);
             animation: slideUp 0.4s ease-out;
             overflow: hidden;
         }
 
         .verification-modal-header {
-            padding: 30px 32px 20px;
-            background: linear-gradient(135deg, rgba(251, 191, 36, 0.1) 0%, rgba(245, 158, 11, 0.05) 100%);
-            border-bottom: 1px solid rgba(251, 191, 36, 0.2);
+            padding: 26px 28px 20px;
+            background: linear-gradient(180deg, rgba(251, 191, 36, 0.1), rgba(96, 165, 250, 0.04));
+            border-bottom: 1px solid rgba(251, 191, 36, 0.18);
             display: flex;
             align-items: center;
             gap: 15px;
@@ -1336,16 +1382,33 @@
             transform: rotate(90deg);
         }
 
-        .verification-modal-icon {
-            font-size: 2.5rem;
-            filter: drop-shadow(0 0 10px rgba(251, 191, 36, 0.5));
+        .verification-modal-icon,
+        .forgot-password-modal-icon {
+            width: 54px;
+            height: 54px;
+            border-radius: 18px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            background: linear-gradient(135deg, rgba(251, 191, 36, 0.16), rgba(96, 165, 250, 0.08));
+            border: 1px solid rgba(251, 191, 36, 0.22);
+            box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.08), 0 16px 30px rgba(15, 23, 42, 0.35);
+            color: #fbbf24;
+        }
+
+        .verification-modal-icon svg,
+        .forgot-password-modal-icon svg {
+            width: 24px;
+            height: 24px;
         }
 
         .verification-modal-title {
-            font-size: 1.5rem;
-            font-weight: 700;
-            color: #fbbf24;
-            text-shadow: 0 0 10px rgba(251, 191, 36, 0.3);
+            font-size: 1.45rem;
+            font-weight: 800;
+            letter-spacing: -0.03em;
+            color: #f8fafc;
+            text-shadow: none;
         }
 
         .verification-modal-body {
@@ -1461,8 +1524,11 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0, 0, 0, 0.9);
-            backdrop-filter: blur(8px);
+            padding: 24px 18px;
+            background:
+                radial-gradient(circle at top, rgba(251, 191, 36, 0.12), transparent 32%),
+                rgba(2, 6, 23, 0.84);
+            backdrop-filter: blur(16px) saturate(1.08);
             z-index: 10001;
             display: flex;
             align-items: center;
@@ -1471,21 +1537,20 @@
         }
 
         .forgot-password-modal-dialog {
-            background: rgba(0, 0, 0, 0.95);
-            border-radius: 16px;
+            background: linear-gradient(180deg, rgba(15, 23, 42, 0.97), rgba(2, 6, 23, 0.99));
+            border-radius: 24px;
             max-width: 500px;
-            width: 90%;
-            border: 2px solid rgba(251, 191, 36, 0.3);
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.8),
-                0 0 40px rgba(251, 191, 36, 0.1);
+            width: min(100%, 500px);
+            border: 1px solid rgba(251, 191, 36, 0.24);
+            box-shadow: 0 40px 120px rgba(2, 6, 23, 0.78), 0 0 40px rgba(251, 191, 36, 0.1);
             animation: slideUp 0.4s ease-out;
             overflow: hidden;
         }
 
         .forgot-password-modal-header {
-            padding: 30px 32px 20px;
-            background: linear-gradient(135deg, rgba(251, 191, 36, 0.1) 0%, rgba(245, 158, 11, 0.05) 100%);
-            border-bottom: 1px solid rgba(251, 191, 36, 0.2);
+            padding: 26px 28px 20px;
+            background: linear-gradient(180deg, rgba(251, 191, 36, 0.1), rgba(96, 165, 250, 0.04));
+            border-bottom: 1px solid rgba(251, 191, 36, 0.18);
             display: flex;
             align-items: center;
             gap: 15px;
@@ -1517,16 +1582,12 @@
             transform: rotate(90deg);
         }
 
-        .forgot-password-modal-icon {
-            font-size: 2.5rem;
-            filter: drop-shadow(0 0 10px rgba(251, 191, 36, 0.5));
-        }
-
         .forgot-password-modal-title {
-            font-size: 1.5rem;
-            font-weight: 700;
-            color: #fbbf24;
-            text-shadow: 0 0 10px rgba(251, 191, 36, 0.3);
+            font-size: 1.45rem;
+            font-weight: 800;
+            letter-spacing: -0.03em;
+            color: #f8fafc;
+            text-shadow: none;
         }
 
         .forgot-password-modal-body {
@@ -1625,6 +1686,21 @@
                 width: 95%;
             }
 
+            .custom-modal-icon {
+                width: auto !important;
+                height: auto !important;
+                padding: 0 !important;
+                border-radius: 0 !important;
+                background: transparent !important;
+                border: none !important;
+                box-shadow: none !important;
+            }
+
+            .custom-modal-icon svg {
+                width: 20px !important;
+                height: 20px !important;
+            }
+
             .verification-modal-header {
                 padding: 20px;
             }
@@ -1665,13 +1741,13 @@
         }
 
         .referral-notification-modal {
-            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
-            border-radius: 20px;
+            background: linear-gradient(180deg, rgba(15, 23, 42, 0.98), rgba(8, 15, 32, 0.99));
+            border-radius: 24px;
             padding: 0;
             max-width: 480px;
             width: 90%;
-            box-shadow: 0 25px 80px rgba(0, 0, 0, 0.9), 0 0 40px rgba(251, 191, 36, 0.15);
-            border: 1px solid rgba(251, 191, 36, 0.3);
+            box-shadow: 0 40px 120px rgba(2, 6, 23, 0.78), 0 0 40px rgba(251, 191, 36, 0.14);
+            border: 1px solid rgba(251, 191, 36, 0.22);
             animation: slideUp 0.4s ease-out;
             overflow: hidden;
         }
@@ -1683,10 +1759,23 @@
         }
 
         .referral-notification-icon {
-            font-size: 56px;
-            line-height: 1;
-            margin-bottom: 12px;
+            width: 70px;
+            height: 70px;
+            margin: 0 auto 14px;
+            border-radius: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #fbbf24;
+            background: linear-gradient(135deg, rgba(251, 191, 36, 0.18), rgba(96, 165, 250, 0.1));
+            border: 1px solid rgba(251, 191, 36, 0.24);
+            box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.08), 0 16px 34px rgba(15, 23, 42, 0.32);
             animation: celebrateBounce 0.6s ease-out;
+        }
+
+        .referral-notification-icon svg {
+            width: 30px;
+            height: 30px;
         }
 
         @keyframes celebrateBounce {
@@ -1828,6 +1917,2529 @@
             box-shadow: 0 8px 20px rgba(251, 191, 36, 0.4);
         }
     </style>
+    <style id="auth-desktop-v2-theme">
+        @font-face {
+            font-family: "SF Pro Web";
+            src: url("https://db.onlinewebfonts.com/t/1c45e28f8e86cc89876f003b953cc3e9.woff2") format("woff2"),
+                url("https://db.onlinewebfonts.com/t/1c45e28f8e86cc89876f003b953cc3e9.woff") format("woff");
+            font-weight: 400;
+            font-style: normal;
+            font-display: swap;
+        }
+
+        @font-face {
+            font-family: "SF Pro Web";
+            src: url("https://db.onlinewebfonts.com/t/1bd3de6fcdd9ba7750e5a353dc6ef6e3.woff2") format("woff2"),
+                url("https://db.onlinewebfonts.com/t/1bd3de6fcdd9ba7750e5a353dc6ef6e3.woff") format("woff");
+            font-weight: 500;
+            font-style: normal;
+            font-display: swap;
+        }
+
+        @font-face {
+            font-family: "SF Pro Web";
+            src: url("https://db.onlinewebfonts.com/t/d6243b42d786410a86f0bafee83d503a.woff2") format("woff2"),
+                url("https://db.onlinewebfonts.com/t/d6243b42d786410a86f0bafee83d503a.woff") format("woff");
+            font-weight: 600;
+            font-style: normal;
+            font-display: swap;
+        }
+
+        @font-face {
+            font-family: "SF Pro Web";
+            src: url("https://db.onlinewebfonts.com/t/28adc6c6fd652123c3e173389a8be17f.woff2") format("woff2"),
+                url("https://db.onlinewebfonts.com/t/28adc6c6fd652123c3e173389a8be17f.woff") format("woff");
+            font-weight: 700;
+            font-style: normal;
+            font-display: swap;
+        }
+
+        .auth-shell {
+            width: 100%;
+        }
+
+        .auth-page-brand,
+        .auth-panel-heading,
+        .auth-panel-pill,
+        .auth-showcase,
+        .auth-brand-mark,
+        .auth-brand-kicker,
+        .logo p {
+            display: none;
+        }
+
+        html.auth-desktop-v2 {
+            --auth-font-family: "SF Pro Web", "Segoe UI", sans-serif;
+            --auth-bg: #030407;
+            --auth-bg-soft: #090b11;
+            --auth-surface: rgba(12, 15, 21, 0.86);
+            --auth-surface-2: rgba(16, 19, 27, 0.94);
+            --auth-surface-3: rgba(255, 255, 255, 0.03);
+            --auth-border: rgba(255, 255, 255, 0.08);
+            --auth-border-strong: rgba(255, 255, 255, 0.14);
+            --auth-text: #f8fafc;
+            --auth-muted: #94a3b8;
+            --auth-muted-soft: rgba(224, 231, 255, 0.72);
+            --auth-red: #e50914;
+            --auth-red-2: #ff4d57;
+            --auth-gold: #fbbf24;
+            --auth-gold-soft: #f7dc88;
+            --auth-green: #10b981;
+            --auth-blue: #60a5fa;
+            --auth-radius-xl: 30px;
+            --auth-radius-lg: 22px;
+            --auth-radius-md: 16px;
+        }
+
+        html.auth-desktop-v2 body {
+            min-height: 100vh;
+            padding: 0;
+            overflow-x: hidden;
+            position: relative;
+            font-family: var(--auth-font-family);
+            font-synthesis: none;
+            color: var(--auth-text);
+            background: var(--auth-bg);
+        }
+
+        html.auth-desktop-v2 body::before,
+        html.auth-desktop-v2 body::after {
+            content: "";
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+        }
+
+        html.auth-desktop-v2 body::before {
+            z-index: 0;
+            background:
+                radial-gradient(circle at 14% 18%, rgba(229, 9, 20, 0.18), transparent 26%),
+                radial-gradient(circle at 84% 12%, rgba(251, 191, 36, 0.12), transparent 22%),
+                radial-gradient(circle at 72% 84%, rgba(96, 165, 250, 0.08), transparent 22%),
+                linear-gradient(135deg, #020305 0%, #05070c 42%, #090b12 100%);
+        }
+
+        html.auth-desktop-v2 body::after {
+            z-index: 0;
+            background:
+                linear-gradient(90deg, rgba(255, 255, 255, 0.02), rgba(255, 255, 255, 0) 18%, rgba(255, 255, 255, 0.03) 56%, rgba(255, 255, 255, 0) 100%);
+            opacity: 0.72;
+        }
+
+        html.auth-desktop-v2 .main-wrapper,
+        html.auth-desktop-v2 .main-content {
+            position: relative;
+            z-index: 1;
+        }
+
+        html.auth-desktop-v2 .main-wrapper {
+            min-height: 100vh;
+        }
+
+        html.auth-desktop-v2 .main-content {
+            width: 100%;
+            max-width: none;
+            margin: 0;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: stretch;
+            justify-content: stretch;
+        }
+
+        html.auth-desktop-v2 .auth-page-brand {
+            display: none !important;
+        }
+
+        html.auth-desktop-v2 .auth-page-brand-link {
+            width: fit-content;
+            color: #ff2a34;
+            font-size: clamp(2rem, 4vw, 3rem);
+            font-weight: 700;
+            letter-spacing: -0.05em;
+            line-height: 1;
+            text-decoration: none;
+            text-transform: uppercase;
+        }
+
+        html.auth-desktop-v2 .auth-page-brand-note {
+            width: fit-content;
+            padding: 9px 14px;
+            border-radius: 999px;
+            border: 1px solid rgba(229, 9, 20, 0.22);
+            background: rgba(229, 9, 20, 0.12);
+            color: #ff8b91;
+            font-size: 0.78rem;
+            font-weight: 700;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.04);
+        }
+
+        html.auth-desktop-v2 .auth-shell {
+            width: 100%;
+            display: grid;
+            grid-template-columns: minmax(0, 1fr) minmax(520px, 560px);
+            align-items: stretch;
+            gap: 0;
+            min-height: 100vh;
+        }
+
+        html.auth-desktop-v2 .auth-showcase {
+            display: grid !important;
+            grid-template-rows: 1fr;
+            align-content: stretch;
+            gap: 0;
+            min-height: 100vh;
+            padding: 0;
+            position: relative;
+            overflow: hidden;
+            background: #05070b;
+        }
+
+        html.auth-desktop-v2 .auth-showcase::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            pointer-events: none;
+            background:
+                radial-gradient(circle at 10% 18%, rgba(229, 9, 20, 0.12), transparent 24%),
+                linear-gradient(180deg, rgba(255, 255, 255, 0.02), rgba(255, 255, 255, 0));
+        }
+
+        html.auth-desktop-v2 .auth-showcase>*,
+        html.auth-desktop-v2 .auth-container>* {
+            position: relative;
+            z-index: 1;
+        }
+
+        html.auth-desktop-v2 .auth-showcase-top {
+            display: grid;
+            gap: 18px;
+            max-width: 720px;
+        }
+
+        html.auth-desktop-v2 .auth-showcase-kicker {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: fit-content;
+            gap: 8px;
+            padding: 8px 14px 8px 30px;
+            border-radius: 999px;
+            background: rgba(251, 191, 36, 0.12);
+            border: 1px solid rgba(251, 191, 36, 0.18);
+            color: var(--auth-gold-soft);
+            font-size: 0.76rem;
+            font-weight: 700;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            box-shadow: inset 0 1px 0 rgba(255, 243, 205, 0.08);
+            position: relative;
+        }
+
+        html.auth-desktop-v2 .auth-showcase-kicker::before {
+            content: "";
+            position: absolute;
+            top: 50%;
+            left: 12px;
+            width: 9px;
+            height: 9px;
+            border-radius: 999px;
+            background: #ef4444;
+            box-shadow: 0 0 18px rgba(239, 68, 68, 0.56);
+            transform: translateY(-50%);
+            animation: authShowcaseLiveDotPulse 1.8s ease-in-out infinite;
+            will-change: transform, opacity, box-shadow;
+        }
+
+        html.auth-desktop-v2 .auth-showcase-state {
+            display: grid;
+            align-content: center;
+            justify-items: center;
+            width: 100%;
+            min-height: 100vh;
+            padding: clamp(34px, 4vw, 58px);
+            color: #f8fafc;
+            font-size: 1rem;
+            line-height: 1.7;
+        }
+
+        html.auth-desktop-v2 .auth-showcase-state[hidden],
+        html.auth-desktop-v2 .auth-showcase-card[hidden] {
+            display: none !important;
+        }
+
+        html.auth-desktop-v2 .auth-showcase-state-shell {
+            position: relative;
+            width: min(100%, 860px);
+            display: grid;
+            grid-template-columns: minmax(0, 1.08fr) minmax(260px, 0.82fr);
+            gap: clamp(24px, 3vw, 42px);
+            padding: clamp(28px, 3vw, 40px);
+            border-radius: 34px;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            background:
+                radial-gradient(circle at top left, rgba(251, 191, 36, 0.16), transparent 30%),
+                radial-gradient(circle at bottom right, rgba(229, 9, 20, 0.18), transparent 34%),
+                linear-gradient(160deg, rgba(15, 18, 26, 0.96), rgba(5, 7, 11, 0.98));
+            box-shadow: 0 36px 90px rgba(0, 0, 0, 0.52);
+            overflow: hidden;
+        }
+
+        html.auth-desktop-v2 .auth-showcase-state-shell::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            pointer-events: none;
+            background:
+                linear-gradient(120deg, rgba(255, 255, 255, 0.05), transparent 28%, transparent 72%, rgba(255, 255, 255, 0.04)),
+                radial-gradient(circle at top right, rgba(96, 165, 250, 0.12), transparent 22%);
+            opacity: 0.95;
+        }
+
+        html.auth-desktop-v2 .auth-showcase-state-copy,
+        html.auth-desktop-v2 .auth-showcase-state-preview {
+            position: relative;
+            z-index: 1;
+        }
+
+        html.auth-desktop-v2 .auth-showcase-state-copy {
+            display: grid;
+            align-content: center;
+            gap: 18px;
+        }
+
+        html.auth-desktop-v2 .auth-showcase-state-kicker {
+            display: inline-flex;
+            align-items: center;
+            width: fit-content;
+            padding: 8px 14px;
+            border-radius: 999px;
+            border: 1px solid rgba(251, 191, 36, 0.18);
+            background: rgba(251, 191, 36, 0.08);
+            color: #f7dc88;
+            font-size: 0.74rem;
+            font-weight: 700;
+            letter-spacing: 0.14em;
+            text-transform: uppercase;
+        }
+
+        html.auth-desktop-v2 .auth-showcase-state-head {
+            display: flex;
+            align-items: flex-start;
+            gap: 16px;
+        }
+
+        html.auth-desktop-v2 .auth-showcase-state-icon {
+            width: 64px;
+            height: 64px;
+            border-radius: 20px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            color: #fbbf24;
+            background: linear-gradient(135deg, rgba(251, 191, 36, 0.18), rgba(229, 9, 20, 0.08));
+            border: 1px solid rgba(251, 191, 36, 0.22);
+            box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.08), 0 18px 36px rgba(0, 0, 0, 0.26);
+        }
+
+        html.auth-desktop-v2 .auth-showcase-state-icon svg {
+            width: 28px;
+            height: 28px;
+        }
+
+        html.auth-desktop-v2 .auth-showcase-state-title {
+            margin: 0;
+            font-size: clamp(2rem, 3.1vw, 3.35rem);
+            line-height: 0.96;
+            letter-spacing: -0.06em;
+            font-weight: 760;
+            color: #fff;
+        }
+
+        html.auth-desktop-v2 .auth-showcase-state-subtitle {
+            margin: 12px 0 0;
+            max-width: 52ch;
+            color: rgba(224, 231, 255, 0.72);
+            font-size: 1rem;
+            line-height: 1.72;
+            text-wrap: pretty;
+        }
+
+        html.auth-desktop-v2 .auth-showcase-state-status {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            width: fit-content;
+            padding: 10px 14px;
+            border-radius: 999px;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            background: rgba(255, 255, 255, 0.04);
+            color: rgba(248, 250, 252, 0.84);
+            font-size: 0.84rem;
+            font-weight: 600;
+        }
+
+        html.auth-desktop-v2 .auth-showcase-state-status span {
+            width: 9px;
+            height: 9px;
+            border-radius: 999px;
+            background: #fbbf24;
+            box-shadow: 0 0 20px rgba(251, 191, 36, 0.58);
+            animation: authShowcaseStatePulse 1.6s ease-in-out infinite;
+        }
+
+        html.auth-desktop-v2 .auth-showcase-state.is-error .auth-showcase-state-kicker {
+            border-color: rgba(96, 165, 250, 0.18);
+            background: rgba(96, 165, 250, 0.08);
+            color: #bfdbfe;
+        }
+
+        html.auth-desktop-v2 .auth-showcase-state.is-error .auth-showcase-state-icon {
+            color: #93c5fd;
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.18), rgba(229, 9, 20, 0.08));
+            border-color: rgba(96, 165, 250, 0.22);
+        }
+
+        html.auth-desktop-v2 .auth-showcase-state.is-error .auth-showcase-state-status span {
+            background: #60a5fa;
+            box-shadow: 0 0 20px rgba(96, 165, 250, 0.5);
+        }
+
+        html.auth-desktop-v2 .auth-showcase-state-lines {
+            display: grid;
+            gap: 12px;
+            max-width: 34rem;
+        }
+
+        html.auth-desktop-v2 .auth-showcase-state-line,
+        html.auth-desktop-v2 .auth-showcase-state-hero,
+        html.auth-desktop-v2 .auth-showcase-state-poster {
+            position: relative;
+            overflow: hidden;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.02));
+            border: 1px solid rgba(255, 255, 255, 0.06);
+        }
+
+        html.auth-desktop-v2 .auth-showcase-state-line::after,
+        html.auth-desktop-v2 .auth-showcase-state-hero::after,
+        html.auth-desktop-v2 .auth-showcase-state-poster::after {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(110deg, transparent 0%, rgba(255, 255, 255, 0.09) 42%, transparent 78%);
+            transform: translateX(-100%);
+            animation: authShowcaseStateShimmer 2.15s ease-in-out infinite;
+        }
+
+        html.auth-desktop-v2 .auth-showcase-state-line {
+            height: 14px;
+            border-radius: 999px;
+        }
+
+        html.auth-desktop-v2 .auth-showcase-state-line--wide {
+            width: 100%;
+        }
+
+        html.auth-desktop-v2 .auth-showcase-state-line--mid {
+            width: 82%;
+        }
+
+        html.auth-desktop-v2 .auth-showcase-state-line--short {
+            width: 58%;
+        }
+
+        html.auth-desktop-v2 .auth-showcase-state-chips {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        html.auth-desktop-v2 .auth-showcase-state-chip {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 8px 12px;
+            border-radius: 999px;
+            border: 1px solid rgba(96, 165, 250, 0.18);
+            background: rgba(96, 165, 250, 0.08);
+            color: rgba(219, 234, 254, 0.84);
+            font-size: 0.76rem;
+            font-weight: 650;
+            letter-spacing: 0.04em;
+        }
+
+        html.auth-desktop-v2 .auth-showcase-state-preview {
+            display: grid;
+            gap: 14px;
+            align-content: center;
+        }
+
+        html.auth-desktop-v2 .auth-showcase-state-hero {
+            height: 320px;
+            border-radius: 28px;
+            background:
+                radial-gradient(circle at 20% 20%, rgba(229, 9, 20, 0.22), transparent 30%),
+                radial-gradient(circle at 78% 18%, rgba(251, 191, 36, 0.18), transparent 26%),
+                linear-gradient(150deg, rgba(19, 22, 31, 0.96), rgba(8, 10, 14, 0.94));
+            box-shadow: inset 0 -80px 120px rgba(0, 0, 0, 0.3);
+        }
+
+        html.auth-desktop-v2 .auth-showcase-state-hero::before {
+            content: "";
+            position: absolute;
+            inset: auto 18px 18px 18px;
+            height: 84px;
+            border-radius: 22px;
+            background:
+                linear-gradient(180deg, rgba(255, 255, 255, 0.09), rgba(255, 255, 255, 0.02)),
+                linear-gradient(90deg, rgba(251, 191, 36, 0.1), rgba(96, 165, 250, 0.08));
+            border: 1px solid rgba(255, 255, 255, 0.06);
+        }
+
+        html.auth-desktop-v2 .auth-showcase-state-rail {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 12px;
+        }
+
+        html.auth-desktop-v2 .auth-showcase-state-poster {
+            aspect-ratio: 0.76;
+            border-radius: 22px;
+            background:
+                linear-gradient(180deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.02)),
+                linear-gradient(135deg, rgba(96, 165, 250, 0.08), rgba(229, 9, 20, 0.08));
+        }
+
+        @keyframes authShowcaseStateShimmer {
+            to {
+                transform: translateX(118%);
+            }
+        }
+
+        @keyframes authShowcaseStatePulse {
+            0%,
+            100% {
+                transform: scale(1);
+                opacity: 1;
+            }
+
+            50% {
+                transform: scale(1.28);
+                opacity: 0.72;
+            }
+        }
+
+        @keyframes authShowcaseLiveDotPulse {
+            0%,
+            100% {
+                transform: translateY(-50%) scale(1);
+                opacity: 0.96;
+                box-shadow: 0 0 12px rgba(239, 68, 68, 0.38);
+            }
+
+            50% {
+                transform: translateY(-50%) scale(1.28);
+                opacity: 1;
+                box-shadow: 0 0 22px rgba(239, 68, 68, 0.72);
+            }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            html.auth-desktop-v2 .auth-showcase-kicker::before {
+                animation: none;
+            }
+        }
+
+        html.auth-desktop-v2 .auth-showcase-kicker svg,
+        html.auth-desktop-v2 .auth-feature-icon svg,
+        html.auth-desktop-v2 .auth-link-card-icon svg,
+        html.auth-desktop-v2 .auth-brand-mark svg {
+            width: 18px;
+            height: 18px;
+        }
+
+        html.auth-desktop-v2 .auth-showcase-title {
+            --auth-showcase-title-max-lines: 4;
+            max-width: min(12ch, 100%);
+            font-size: clamp(4rem, 5.4vw, 6rem);
+            line-height: 0.96;
+            letter-spacing: -0.06em;
+            font-weight: 700;
+            text-wrap: balance;
+            overflow-wrap: anywhere;
+        }
+
+        @media (min-width: 1181px) {
+            html.auth-desktop-v2 .auth-showcase-title {
+                max-height: calc(var(--auth-showcase-title-max-lines) * 1em * 0.96);
+                overflow: hidden;
+            }
+        }
+
+        html.auth-desktop-v2 .auth-showcase-copy {
+            max-width: 62ch;
+            color: var(--auth-muted-soft);
+            font-size: 1.08rem;
+            line-height: 1.74;
+            text-align: justify;
+            text-justify: inter-word;
+            text-wrap: pretty;
+        }
+
+        html.auth-desktop-v2 .auth-showcase-card {
+            display: block;
+            min-height: 100vh;
+            width: 100%;
+            padding: 0;
+            background: none;
+            border: none;
+            box-shadow: none;
+        }
+
+        html.auth-desktop-v2 .auth-showcase-media {
+            position: relative;
+            display: grid;
+            grid-template-columns: minmax(0, 0.9fr) minmax(360px, 0.92fr);
+            align-items: center;
+            gap: clamp(28px, 3vw, 48px);
+            width: 100%;
+            min-height: 100vh;
+            padding: clamp(42px, 5vh, 74px) clamp(34px, 4vw, 64px);
+            overflow: hidden;
+            isolation: isolate;
+            background: #04060a;
+        }
+
+        html.auth-desktop-v2 .auth-showcase-media::before,
+        html.auth-desktop-v2 .auth-showcase-media::after {
+            content: "";
+            position: absolute;
+            inset: 0;
+            pointer-events: none;
+        }
+
+        html.auth-desktop-v2 .auth-showcase-media::before {
+            z-index: 1;
+            background:
+                linear-gradient(90deg, rgba(4, 6, 10, 0.96) 0%, rgba(4, 6, 10, 0.9) 26%, rgba(4, 6, 10, 0.72) 48%, rgba(4, 6, 10, 0.42) 66%, rgba(4, 6, 10, 0.2) 100%),
+                linear-gradient(180deg, rgba(4, 6, 10, 0.18) 0%, rgba(4, 6, 10, 0.12) 46%, rgba(4, 6, 10, 0.8) 100%);
+        }
+
+        html.auth-desktop-v2 .auth-showcase-media::after {
+            z-index: 1;
+            background:
+                radial-gradient(circle at 12% 18%, rgba(255, 92, 92, 0.18), transparent 26%),
+                radial-gradient(circle at 84% 18%, rgba(229, 9, 20, 0.18), transparent 20%),
+                radial-gradient(circle at 74% 78%, rgba(251, 191, 36, 0.12), transparent 18%),
+                radial-gradient(circle at 54% 56%, rgba(96, 165, 250, 0.08), transparent 22%),
+                linear-gradient(120deg, rgba(255, 255, 255, 0.06), rgba(255, 255, 255, 0) 28%, rgba(255, 255, 255, 0.03) 46%, rgba(255, 255, 255, 0) 72%);
+            opacity: 0.9;
+        }
+
+        html.auth-desktop-v2 .auth-showcase-backdrop {
+            position: absolute;
+            inset: -12%;
+            width: 124%;
+            height: 124%;
+            max-width: none;
+            object-fit: cover;
+            object-position: center 20%;
+            border: none;
+            background: rgba(255, 255, 255, 0.03);
+            opacity: 0.78;
+            filter: blur(34px) saturate(1.08) contrast(1.02) brightness(0.36);
+            transform: scale(1.18);
+            transition: opacity 0.35s ease, filter 0.35s ease, transform 0.35s ease;
+        }
+
+        html.auth-desktop-v2 .auth-showcase-visual {
+            display: none !important;
+        }
+
+        html.auth-desktop-v2 .auth-showcase-content {
+            position: relative;
+            z-index: 2;
+            display: grid;
+            align-content: center;
+            gap: 20px;
+            width: min(100%, 560px);
+            padding: clamp(8px, 1vw, 18px) 0;
+        }
+
+        html.auth-desktop-v2 .auth-showcase-bottom {
+            position: relative;
+            z-index: 2;
+            display: grid;
+            gap: 18px;
+            width: min(100%, 560px);
+            justify-self: end;
+            align-self: center;
+            padding: clamp(18px, 2vw, 24px);
+            border-radius: 32px;
+            background: linear-gradient(180deg, rgba(8, 10, 16, 0.54), rgba(8, 10, 16, 0.24));
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            box-shadow: 0 30px 80px rgba(0, 0, 0, 0.28), inset 0 1px 0 rgba(255, 255, 255, 0.04);
+            backdrop-filter: blur(16px) saturate(0.86);
+            -webkit-backdrop-filter: blur(16px) saturate(0.86);
+        }
+
+        html.auth-desktop-v2 .auth-showcase-bottom::before {
+            content: "";
+            position: absolute;
+            inset: 1px;
+            z-index: 0;
+            border-radius: inherit;
+            background:
+                radial-gradient(circle at 84% 14%, rgba(255, 211, 122, 0.12), transparent 24%),
+                linear-gradient(135deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0) 26%);
+            pointer-events: none;
+        }
+
+        html.auth-desktop-v2 .auth-showcase-content>*,
+        html.auth-desktop-v2 .auth-showcase-bottom>* {
+            position: relative;
+            z-index: 1;
+        }
+
+        html.auth-desktop-v2 .auth-showcase-meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        html.auth-desktop-v2 .auth-showcase-meta-chip {
+            display: inline-flex;
+            align-items: center;
+            min-height: 34px;
+            padding: 0 14px;
+            border-radius: 999px;
+            background: rgba(255, 255, 255, 0.06);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: rgba(248, 250, 252, 0.92);
+            font-size: 0.82rem;
+            font-weight: 650;
+            letter-spacing: -0.01em;
+            box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.03);
+        }
+
+        html.auth-desktop-v2 .auth-showcase-rail-head {
+            display: grid;
+            gap: 10px;
+            max-width: 34rem;
+            padding-inline: 4px;
+        }
+
+        html.auth-desktop-v2 .auth-showcase-rail-title {
+            color: #fff4d2;
+            font-size: 0.82rem;
+            font-weight: 800;
+            letter-spacing: 0.18em;
+            text-transform: uppercase;
+        }
+
+        html.auth-desktop-v2 .auth-showcase-rail-copy {
+            color: rgba(226, 231, 255, 0.78);
+            font-size: 0.94rem;
+            line-height: 1.6;
+        }
+
+        html.auth-desktop-v2 .auth-showcase-rail {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 16px;
+            width: 100%;
+        }
+
+        html.auth-desktop-v2 .auth-showcase-thumb {
+            position: relative;
+            display: block;
+            aspect-ratio: 0.72;
+            min-height: 0;
+            overflow: hidden;
+            border-radius: 26px;
+            background: linear-gradient(180deg, rgba(13, 16, 22, 0.94), rgba(7, 9, 13, 1));
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            box-shadow: 0 24px 60px rgba(0, 0, 0, 0.34);
+            isolation: isolate;
+            transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        html.auth-desktop-v2 .auth-showcase-thumb-media {
+            position: relative;
+            height: 100%;
+            border-radius: inherit;
+            overflow: hidden;
+        }
+
+        html.auth-desktop-v2 .auth-showcase-thumb:nth-child(odd) {
+            transform: translateY(-10px);
+        }
+
+        html.auth-desktop-v2 .auth-showcase-thumb:nth-child(even) {
+            transform: translateY(12px);
+        }
+
+        html.auth-desktop-v2 .auth-showcase-thumb:nth-child(1) {
+            color: inherit;
+        }
+
+        html.auth-desktop-v2 .auth-showcase-thumb:nth-child(1) {
+            border-color: rgba(251, 191, 36, 0.24);
+            box-shadow: 0 30px 74px rgba(0, 0, 0, 0.42);
+        }
+
+        html.auth-desktop-v2 .auth-showcase-thumb:hover {
+            transform: translateY(-8px) scale(1.015);
+        }
+
+        html.auth-desktop-v2 .auth-showcase-thumb:hover {
+            border-color: rgba(251, 191, 36, 0.18);
+            box-shadow: 0 30px 74px rgba(0, 0, 0, 0.38);
+        }
+
+        html.auth-desktop-v2 .auth-showcase-thumb img,
+        html.auth-desktop-v2 .auth-showcase-thumb-media img {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+            background: rgba(255, 255, 255, 0.03);
+            filter: saturate(1.06) contrast(1.04) brightness(0.94);
+        }
+
+        html.auth-desktop-v2 .auth-showcase-thumb::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            z-index: 1;
+            border-radius: inherit;
+            background:
+                linear-gradient(180deg, rgba(6, 8, 12, 0.05) 0%, rgba(6, 8, 12, 0.14) 52%, rgba(6, 8, 12, 0.84) 100%);
+            pointer-events: none;
+        }
+
+        html.auth-desktop-v2 .auth-showcase-thumb::after {
+            content: "";
+            position: absolute;
+            inset: 0;
+            z-index: 2;
+            border-radius: inherit;
+            box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.12);
+            pointer-events: none;
+        }
+
+        html.auth-desktop-v2 .auth-showcase-thumb-badge {
+            position: absolute;
+            top: 14px;
+            left: 14px;
+            z-index: 3;
+            display: inline-flex;
+            align-items: center;
+            min-height: 32px;
+            padding: 0 12px;
+            border-radius: 999px;
+            background: rgba(33, 25, 18, 0.82);
+            border: 1px solid rgba(255, 226, 158, 0.18);
+            color: #fff4d2;
+            font-size: 0.78rem;
+            font-weight: 800;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            backdrop-filter: blur(14px);
+            -webkit-backdrop-filter: blur(14px);
+        }
+
+        html.auth-desktop-v2 .auth-showcase-thumb-body {
+            position: absolute;
+            inset: auto 0 0;
+            z-index: 3;
+            display: grid;
+            gap: 7px;
+            padding: 72px 16px 16px;
+            background: linear-gradient(180deg, rgba(7, 9, 13, 0) 0%, rgba(7, 9, 13, 0.2) 16%, rgba(7, 9, 13, 0.94) 100%);
+        }
+
+        html.auth-desktop-v2 .auth-showcase-thumb-title {
+            color: #ffffff;
+            font-size: 1.02rem;
+            font-weight: 700;
+            line-height: 1.16;
+            letter-spacing: -0.02em;
+        }
+
+        html.auth-desktop-v2 .auth-showcase-thumb-meta {
+            color: rgba(247, 231, 176, 0.96);
+            font-size: 0.85rem;
+            font-weight: 750;
+            line-height: 1.35;
+            letter-spacing: 0.01em;
+            text-shadow: 0 8px 18px rgba(0, 0, 0, 0.4);
+        }
+
+        html.auth-desktop-v2 .auth-showcase-footer {
+            display: none;
+        }
+
+        html.auth-desktop-v2 .auth-showcase-attribution {
+            color: rgba(248, 250, 252, 0.72);
+            text-decoration: none;
+        }
+
+        html.auth-desktop-v2 .auth-showcase-attribution:hover {
+            color: #fff4d2;
+        }
+
+        html.auth-desktop-v2 .auth-showcase-top,
+        html.auth-desktop-v2 .auth-showcase-panel,
+        html.auth-desktop-v2 .auth-showcase-links {
+            display: none !important;
+        }
+
+        html.auth-desktop-v2 .auth-showcase-panel {
+            display: grid;
+            gap: 18px;
+            padding: 24px;
+            border-radius: 24px;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.04);
+        }
+
+        html.auth-desktop-v2 .auth-showcase-panel-head {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        html.auth-desktop-v2 .auth-pill {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 7px 12px;
+            border-radius: 999px;
+            font-size: 0.76rem;
+            font-weight: 700;
+            letter-spacing: 0.04em;
+        }
+
+        html.auth-desktop-v2 .auth-pill-gold {
+            color: #f8ebc6;
+            background: rgba(251, 191, 36, 0.12);
+            border: 1px solid rgba(251, 191, 36, 0.18);
+        }
+
+        html.auth-desktop-v2 .auth-pill-green {
+            color: #9cedc8;
+            background: rgba(16, 185, 129, 0.12);
+            border: 1px solid rgba(16, 185, 129, 0.18);
+        }
+
+        html.auth-desktop-v2 .auth-feature-list {
+            display: grid;
+            gap: 16px;
+        }
+
+        html.auth-desktop-v2 .auth-feature-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 14px;
+        }
+
+        html.auth-desktop-v2 .auth-feature-icon {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            flex: 0 0 46px;
+            width: 46px;
+            height: 46px;
+            border-radius: 15px;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            background: rgba(255, 255, 255, 0.03);
+            box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.04);
+        }
+
+        html.auth-desktop-v2 .auth-feature-icon-blue {
+            color: var(--auth-blue);
+            background: rgba(96, 165, 250, 0.09);
+            border-color: rgba(96, 165, 250, 0.16);
+        }
+
+        html.auth-desktop-v2 .auth-feature-icon-gold {
+            color: var(--auth-gold);
+            background: rgba(251, 191, 36, 0.09);
+            border-color: rgba(251, 191, 36, 0.16);
+        }
+
+        html.auth-desktop-v2 .auth-feature-icon-green {
+            color: var(--auth-green);
+            background: rgba(16, 185, 129, 0.09);
+            border-color: rgba(16, 185, 129, 0.16);
+        }
+
+        html.auth-desktop-v2 .auth-feature-copy-wrap {
+            display: grid;
+            gap: 4px;
+            padding-top: 2px;
+        }
+
+        html.auth-desktop-v2 .auth-feature-title {
+            color: var(--auth-text);
+            font-size: 1rem;
+            font-weight: 650;
+            letter-spacing: -0.01em;
+        }
+
+        html.auth-desktop-v2 .auth-feature-copy {
+            color: var(--auth-muted);
+            font-size: 0.92rem;
+            line-height: 1.58;
+        }
+
+        html.auth-desktop-v2 .auth-showcase-links {
+            display: flex;
+            gap: 14px;
+        }
+
+        html.auth-desktop-v2 .auth-link-card {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            padding: 18px 20px;
+            border-radius: 20px;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            text-decoration: none;
+            color: var(--auth-text);
+            transition: transform 0.2s ease, border-color 0.2s ease, background 0.2s ease;
+        }
+
+        html.auth-desktop-v2 .auth-link-card:hover {
+            transform: translateY(-2px);
+            border-color: rgba(251, 191, 36, 0.18);
+            background: rgba(255, 255, 255, 0.04);
+        }
+
+        html.auth-desktop-v2 .auth-link-card-icon {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            flex: 0 0 44px;
+            width: 44px;
+            height: 44px;
+            border-radius: 15px;
+            color: var(--auth-gold-soft);
+            background: rgba(251, 191, 36, 0.1);
+            border: 1px solid rgba(251, 191, 36, 0.14);
+        }
+
+        html.auth-desktop-v2 .auth-link-card-copy {
+            display: grid;
+            gap: 4px;
+        }
+
+        html.auth-desktop-v2 .auth-link-card-copy span {
+            color: var(--auth-muted);
+            font-size: 0.74rem;
+            font-weight: 700;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+        }
+
+        html.auth-desktop-v2 .auth-link-card-copy strong {
+            font-size: 0.98rem;
+            font-weight: 650;
+            letter-spacing: -0.01em;
+        }
+
+        .auth-topbar,
+        .auth-panel-divider,
+        .auth-panel-title-desktop {
+            display: none;
+        }
+
+        html.auth-desktop-v2 .auth-container {
+            width: 100%;
+            max-width: none;
+            min-height: 100vh;
+            padding: 72px 56px 40px;
+            display: flex;
+            flex-direction: column;
+            border-radius: 0;
+            background: linear-gradient(180deg, rgba(10, 12, 17, 0.94), rgba(6, 8, 12, 0.99));
+            border: none;
+            border-left: 1px solid rgba(255, 255, 255, 0.08);
+            box-shadow: none;
+            backdrop-filter: none;
+            position: relative;
+            overflow: visible;
+        }
+
+        html.auth-desktop-v2 .auth-container::before {
+            content: "";
+            position: absolute;
+            inset: 0 0 auto 0;
+            height: 240px;
+            background:
+                radial-gradient(circle at 78% 10%, rgba(251, 191, 36, 0.12), transparent 28%),
+                radial-gradient(circle at 18% 0%, rgba(229, 9, 20, 0.16), transparent 30%);
+            pointer-events: none;
+        }
+
+        html.auth-desktop-v2 .logo {
+            margin-bottom: 16px;
+            text-align: left;
+        }
+
+        html.auth-desktop-v2 .auth-topbar {
+            position: sticky;
+            top: 0;
+            z-index: 8;
+            display: flex;
+            align-items: center;
+            gap: 28px;
+            width: auto;
+            margin: -72px -56px 28px;
+            padding: 18px 56px 14px;
+            background: linear-gradient(180deg, rgba(10, 12, 17, 0.94) 0%, rgba(10, 12, 17, 0.82) 68%, rgba(10, 12, 17, 0) 100%);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+            backdrop-filter: blur(18px);
+            -webkit-backdrop-filter: blur(18px);
+        }
+
+        html.auth-desktop-v2 .auth-topbar-link {
+            position: relative;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            min-height: 44px;
+            padding: 0 0 10px;
+            border: none;
+            border-radius: 0;
+            background: transparent;
+            color: rgba(226, 232, 240, 0.76);
+            font-size: 0.92rem;
+            font-weight: 650;
+            letter-spacing: -0.01em;
+            text-decoration: none;
+            box-shadow: none;
+            transition: color 0.2s ease, opacity 0.2s ease;
+        }
+
+        html.auth-desktop-v2 .auth-topbar-link::after {
+            content: "";
+            position: absolute;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            height: 2px;
+            border-radius: 999px;
+            background: linear-gradient(90deg, rgba(251, 191, 36, 0.92), rgba(255, 255, 255, 0));
+            opacity: 0;
+            transform: translateY(4px);
+            transition: opacity 0.2s ease, transform 0.2s ease;
+        }
+
+        html.auth-desktop-v2 .auth-topbar-link:hover {
+            color: #fff4d2;
+        }
+
+        html.auth-desktop-v2 .auth-topbar-link:hover::after {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        html.auth-desktop-v2 .auth-topbar-link svg {
+            width: 16px;
+            height: 16px;
+            flex: 0 0 auto;
+            opacity: 0.88;
+        }
+
+        html.auth-desktop-v2 .auth-brand {
+            display: flex;
+            gap: 0;
+            align-items: center;
+        }
+
+        html.auth-desktop-v2 .auth-brand-mark {
+            display: none !important;
+        }
+
+        html.auth-desktop-v2 .auth-brand-copy {
+            display: block;
+        }
+
+        html.auth-desktop-v2 .auth-brand-kicker {
+            display: none !important;
+        }
+
+        html.auth-desktop-v2 .logo h1 {
+            color: #ff2a34;
+            font-size: clamp(1.9rem, 3vw, 2.25rem);
+            line-height: 1;
+            letter-spacing: -0.04em;
+            text-transform: uppercase;
+        }
+
+        html.auth-desktop-v2 .logo p {
+            display: none;
+            color: var(--auth-muted);
+            font-size: 0.92rem;
+            line-height: 1.65;
+            margin-top: 10px;
+            max-width: 42ch;
+        }
+
+        html.auth-desktop-v2 .auth-panel-heading {
+            display: grid;
+            gap: 10px;
+            margin-bottom: 24px;
+        }
+
+        html.auth-desktop-v2 .auth-panel-pill {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: fit-content;
+            padding: 7px 12px;
+            border-radius: 999px;
+            border: 1px solid rgba(251, 191, 36, 0.18);
+            background: rgba(251, 191, 36, 0.1);
+            color: #f7dc88;
+            font-size: 0.74rem;
+            font-weight: 700;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+        }
+
+        html.auth-desktop-v2 .auth-panel-title {
+            font-size: clamp(2.25rem, 4vw, 3rem);
+            line-height: 1;
+            letter-spacing: -0.05em;
+            font-weight: 700;
+            color: var(--auth-text);
+        }
+
+        html.auth-desktop-v2 .auth-panel-title-default {
+            display: none;
+        }
+
+        html.auth-desktop-v2 .auth-panel-title-desktop {
+            display: block;
+        }
+
+        html.auth-desktop-v2 .auth-panel-copy {
+            display: none;
+        }
+
+        html.auth-desktop-v2 .auth-panel-divider {
+            display: block;
+            position: relative;
+            width: min(116px, 26vw);
+            height: 1px;
+            margin-top: 6px;
+            background: linear-gradient(90deg, rgba(255, 255, 255, 0), rgba(251, 191, 36, 0.78) 38%, rgba(255, 255, 255, 0.16) 100%);
+        }
+
+        html.auth-desktop-v2 .auth-panel-divider::after {
+            display: none;
+        }
+
+        html.auth-desktop-v2 .tabs {
+            gap: 34px;
+            padding: 0;
+            margin-bottom: 22px;
+            border-radius: 0;
+            background: transparent;
+            border: none;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+            box-shadow: none;
+        }
+
+        html.auth-desktop-v2 .tab {
+            flex: 0 0 auto;
+            padding: 0 0 16px;
+            border-radius: 0;
+            color: var(--auth-muted);
+            font-size: 0.96rem;
+            font-weight: 650;
+            letter-spacing: -0.01em;
+            position: relative;
+            transition: color 0.2s ease;
+        }
+
+        html.auth-desktop-v2 .tab:hover {
+            color: rgba(248, 250, 252, 0.9);
+            background: transparent;
+        }
+
+        html.auth-desktop-v2 .tab.active {
+            color: #fff4d2;
+            background: transparent;
+            box-shadow: none;
+        }
+
+        html.auth-desktop-v2 .tab.active::after {
+            content: "";
+            position: absolute;
+            left: 0;
+            right: 0;
+            bottom: -1px;
+            height: 2px;
+            border-radius: 999px;
+            background: linear-gradient(90deg, #e50914, #ff4d57);
+        }
+
+        html.auth-desktop-v2 .auth-form-stage {
+            display: block;
+            flex: 1;
+            position: relative;
+            min-height: 0;
+            padding: 8px 0 0;
+            background: transparent;
+            border: none;
+            border-radius: 0;
+            box-shadow: none;
+            overflow: visible;
+            transition: min-height 0.24s ease;
+        }
+
+        html.auth-desktop-v2 .form-group {
+            margin-bottom: 18px;
+        }
+
+        html.auth-desktop-v2 .form-section {
+            display: block;
+            position: absolute;
+            inset: 0;
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+            transform: translateY(8px);
+            transition: opacity 0.18s ease, transform 0.18s ease, visibility 0.18s ease;
+            height: 100%;
+            z-index: 1;
+        }
+
+        html.auth-desktop-v2 .form-section.active {
+            position: relative;
+            inset: auto;
+            opacity: 1;
+            visibility: visible;
+            pointer-events: auto;
+            transform: translateY(0);
+        }
+
+        html.auth-desktop-v2 .form-section form {
+            min-height: 100%;
+            display: grid;
+            align-content: start;
+        }
+
+        html.auth-desktop-v2 .form-group label {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+            margin-bottom: 10px;
+            font-size: 0.76rem;
+            line-height: 1;
+            font-weight: 700;
+            color: var(--auth-muted-soft);
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+        }
+
+        html.auth-desktop-v2 .form-group input {
+            min-height: 56px;
+            padding: 15px 16px 15px 46px;
+            font-family: var(--auth-font-family);
+            font-size: 1rem;
+            font-weight: 500;
+            line-height: 1.35;
+            border-radius: 16px;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.03);
+            color: var(--auth-text);
+            background-repeat: no-repeat;
+            background-position: 16px center;
+            background-size: 18px 18px;
+        }
+
+        html.auth-desktop-v2 .form-group input::placeholder {
+            color: rgba(148, 163, 184, 0.52);
+        }
+
+        html.auth-desktop-v2 .form-group input:focus {
+            border-color: rgba(251, 191, 36, 0.46);
+            background-color: rgba(255, 255, 255, 0.04);
+            box-shadow: 0 0 0 4px rgba(251, 191, 36, 0.08);
+        }
+
+        html.auth-desktop-v2 .form-group.is-valid label::after,
+        html.auth-desktop-v2 .form-group.is-invalid label::after {
+            display: inline-flex;
+            align-items: center;
+            min-height: 24px;
+            padding: 0 9px;
+            border-radius: 999px;
+            font-size: 0.66rem;
+            font-weight: 700;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+        }
+
+        html.auth-desktop-v2 .form-group.is-valid label::after {
+            content: "Đã khớp";
+            color: #9cedc8;
+            background: rgba(16, 185, 129, 0.12);
+            border: 1px solid rgba(16, 185, 129, 0.2);
+        }
+
+        html.auth-desktop-v2 .form-group.is-invalid label::after {
+            content: "Chưa khớp";
+            color: #ffb4b4;
+            background: rgba(239, 68, 68, 0.1);
+            border: 1px solid rgba(239, 68, 68, 0.18);
+        }
+
+        html.auth-desktop-v2 .form-group:has(#registerConfirmPassword) label {
+            justify-content: flex-start;
+            gap: 6px;
+            min-height: 0;
+        }
+
+        html.auth-desktop-v2 .form-group:has(#registerConfirmPassword) label::after {
+            content: "";
+            display: inline-block;
+            width: 14px;
+            height: 14px;
+            min-width: 14px;
+            min-height: 14px;
+            flex: 0 0 14px;
+            padding: 0;
+            border: none;
+            border-radius: 0;
+            background-color: transparent;
+            background-repeat: no-repeat;
+            background-position: center;
+            background-size: 14px 14px;
+            box-shadow: none;
+            font-size: 0;
+            line-height: 0;
+            margin: 0 0 0 2px;
+            transform: translateY(0);
+            opacity: 0;
+            transition: opacity 0.18s ease, transform 0.18s ease;
+        }
+
+        html.auth-desktop-v2 .form-group:has(#registerConfirmPassword).is-valid label::after {
+            opacity: 1;
+            transform: scale(1);
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%239cedc8' stroke-width='2.6' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m4.5 12 4.2 4.2L19.5 5.8'/%3E%3C/svg%3E");
+        }
+
+        html.auth-desktop-v2 .form-group:has(#registerConfirmPassword).is-invalid label::after {
+            opacity: 1;
+            transform: scale(1);
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23ff9f9f' stroke-width='2.6' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M18 6 6 18'/%3E%3Cpath d='m6 6 12 12'/%3E%3C/svg%3E");
+        }
+
+        html.auth-desktop-v2 .form-group.is-valid input {
+            border-color: rgba(16, 185, 129, 0.32);
+            box-shadow: 0 0 0 4px rgba(16, 185, 129, 0.08);
+        }
+
+        html.auth-desktop-v2 .form-group.is-invalid input {
+            border-color: rgba(239, 68, 68, 0.28);
+            box-shadow: 0 0 0 4px rgba(239, 68, 68, 0.07);
+        }
+
+        html.auth-desktop-v2 .form-group input:-webkit-autofill,
+        html.auth-desktop-v2 .form-group input:-webkit-autofill:hover,
+        html.auth-desktop-v2 .form-group input:autofill {
+            -webkit-text-fill-color: var(--auth-text);
+            caret-color: var(--auth-text);
+            font-family: var(--auth-font-family);
+            font-size: 1rem;
+            font-weight: 500;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            -webkit-box-shadow: 0 0 0 1000px #141821 inset;
+            box-shadow: 0 0 0 1000px #141821 inset;
+            transition: background-color 99999s ease-out 0s, color 99999s ease-out 0s;
+        }
+
+        html.auth-desktop-v2 .form-group input:-webkit-autofill:focus {
+            -webkit-text-fill-color: var(--auth-text);
+            caret-color: var(--auth-text);
+            font-family: var(--auth-font-family);
+            font-size: 1rem;
+            font-weight: 500;
+            border: 1px solid rgba(251, 191, 36, 0.46);
+            -webkit-box-shadow: 0 0 0 1000px #151922 inset, 0 0 0 4px rgba(251, 191, 36, 0.08);
+            box-shadow: 0 0 0 1000px #151922 inset, 0 0 0 4px rgba(251, 191, 36, 0.08);
+        }
+
+        html.auth-desktop-v2 .password-toggle {
+            top: 41px;
+            right: 16px;
+            color: #93a4b8;
+            opacity: 1;
+        }
+
+        html.auth-desktop-v2 .form-group:has(#loginEmail)::after,
+        html.auth-desktop-v2 .form-group:has(#registerEmail)::after,
+        html.auth-desktop-v2 .form-group:has(#loginPassword)::after,
+        html.auth-desktop-v2 .form-group:has(#registerPassword)::after,
+        html.auth-desktop-v2 .form-group:has(#registerConfirmPassword)::after,
+        html.auth-desktop-v2 .form-group:has(#registerName)::after {
+            content: "";
+            position: absolute;
+            left: 16px;
+            top: 41px;
+            width: 18px;
+            height: 18px;
+            background-repeat: no-repeat;
+            background-position: center;
+            background-size: 18px 18px;
+            opacity: 0.92;
+            pointer-events: none;
+            z-index: 2;
+        }
+
+        html.auth-desktop-v2 .form-group:has(#loginEmail)::after,
+        html.auth-desktop-v2 .form-group:has(#registerEmail)::after {
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='18' height='18' viewBox='0 0 24 24' fill='none' stroke='%237b8797' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect x='3' y='5' width='18' height='14' rx='2'/%3E%3Cpath d='m3 7 9 6 9-6'/%3E%3C/svg%3E");
+        }
+
+        html.auth-desktop-v2 .form-group:has(#loginPassword)::after,
+        html.auth-desktop-v2 .form-group:has(#registerPassword)::after,
+        html.auth-desktop-v2 .form-group:has(#registerConfirmPassword)::after {
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='18' height='18' viewBox='0 0 24 24' fill='none' stroke='%237b8797' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect x='4' y='11' width='16' height='9' rx='2'/%3E%3Cpath d='M8 11V8a4 4 0 1 1 8 0v3'/%3E%3C/svg%3E");
+        }
+
+        html.auth-desktop-v2 .form-group:has(#registerName)::after {
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='18' height='18' viewBox='0 0 24 24' fill='none' stroke='%237b8797' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M20 21a8 8 0 0 0-16 0'/%3E%3Ccircle cx='12' cy='8' r='4'/%3E%3C/svg%3E");
+        }
+
+        html.auth-desktop-v2 .password-toggle:hover {
+            color: #fff4d2;
+        }
+
+        html.auth-desktop-v2 .auth-strength-heading {
+            display: block;
+            margin: 12px 0 10px;
+            color: var(--auth-muted-soft);
+            font-size: 0.76rem;
+            line-height: 1;
+            font-weight: 700;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+        }
+
+        html.auth-desktop-v2 .password-strength {
+            width: 100%;
+            box-sizing: border-box;
+            margin-top: 0;
+            padding: 12px 14px;
+            border-radius: 16px;
+            background: linear-gradient(180deg, rgba(255, 255, 255, 0.04), rgba(255, 255, 255, 0.02));
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.03);
+            display: grid;
+            grid-template-columns: minmax(0, 1fr) auto;
+            align-items: center;
+            gap: 12px;
+        }
+
+        html.auth-desktop-v2 .password-strength::before {
+            content: "Độ mạnh mật khẩu";
+            grid-area: label;
+            color: rgba(226, 231, 255, 0.72);
+            font-size: 0.72rem;
+            font-weight: 700;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+        }
+
+        html.auth-desktop-v2 .strength-bar {
+            grid-area: bar;
+            height: 6px;
+            margin-top: 0;
+            background: rgba(255, 255, 255, 0.08);
+            border-radius: 999px;
+        }
+
+        html.auth-desktop-v2 .strength-fill {
+            border-radius: inherit;
+            transition: width 0.25s ease, background 0.25s ease;
+            box-shadow: 0 0 18px rgba(0, 0, 0, 0.18);
+        }
+
+        html.auth-desktop-v2 #strengthText {
+            grid-area: state;
+            justify-self: end;
+            align-self: center;
+            display: inline-flex;
+            align-items: center;
+            min-height: 24px;
+            padding: 0 10px;
+            border-radius: 999px;
+            background: rgba(255, 255, 255, 0.05);
+            color: rgba(255, 255, 255, 0.72) !important;
+            font-size: 0.76rem !important;
+            font-weight: 700;
+            line-height: 1;
+            letter-spacing: 0.04em;
+            text-transform: uppercase;
+        }
+
+        html.auth-desktop-v2 .password-strength[data-state="weak"] #strengthText {
+            background: rgba(239, 68, 68, 0.12);
+            color: #ffb4b4 !important;
+        }
+
+        html.auth-desktop-v2 .password-strength[data-state="medium"] #strengthText {
+            background: rgba(251, 191, 36, 0.14);
+            color: #f7dc88 !important;
+        }
+
+        html.auth-desktop-v2 .password-strength[data-state="strong"] #strengthText {
+            background: rgba(16, 185, 129, 0.12);
+            color: #9cedc8 !important;
+        }
+
+        html.auth-desktop-v2 .forgot-link {
+            color: #9fc2ff !important;
+            font-size: 0.9rem !important;
+            text-decoration: none !important;
+            font-weight: 600;
+            transition: color 0.2s ease;
+        }
+
+        html.auth-desktop-v2 .forgot-link:hover {
+            color: #fff4d2 !important;
+        }
+
+        html.auth-desktop-v2 .btn {
+            margin-top: 8px;
+            margin-bottom: 0;
+            padding: 16px;
+            border-radius: 16px;
+            font-size: 1rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #e50914, #ff4d57);
+            box-shadow: 0 14px 30px rgba(229, 9, 20, 0.22);
+        }
+
+        html.auth-desktop-v2 .btn:hover {
+            background: linear-gradient(135deg, #f0212c, #ff6467);
+            transform: translateY(-1px);
+            box-shadow: 0 18px 34px rgba(229, 9, 20, 0.28);
+        }
+
+        html.auth-desktop-v2 .btn:disabled {
+            background: linear-gradient(135deg, rgba(107, 114, 128, 0.86), rgba(75, 85, 99, 0.86));
+            box-shadow: none;
+        }
+
+        html.auth-desktop-v2 .error-msg,
+        html.auth-desktop-v2 .success-msg {
+            padding: 14px 16px;
+            border-radius: 16px;
+            margin-bottom: 18px;
+            font-size: 0.92rem;
+        }
+
+        html.auth-desktop-v2 .error-msg {
+            background: rgba(239, 68, 68, 0.08);
+            border: 1px solid rgba(239, 68, 68, 0.18);
+            color: #ffb4b4;
+        }
+
+        html.auth-desktop-v2 .success-msg {
+            background: rgba(16, 185, 129, 0.08);
+            border: 1px solid rgba(16, 185, 129, 0.18);
+            color: #9cedc8;
+        }
+
+        html.auth-desktop-v2 .captcha-box {
+            margin: 16px 0 22px;
+            padding: 18px 18px;
+            border-radius: 18px;
+            background: linear-gradient(180deg, rgba(255, 255, 255, 0.04), rgba(255, 255, 255, 0.02));
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            display: grid;
+            grid-template-columns: auto minmax(0, 1fr) auto;
+            align-items: center;
+            gap: 14px;
+            position: relative;
+            overflow: visible;
+            box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.03);
+            transition: border-color 0.2s ease, background 0.2s ease, transform 0.2s ease;
+        }
+
+        html.auth-desktop-v2 .captcha-box::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(circle at 100% 0%, rgba(251, 191, 36, 0.1), transparent 28%);
+            pointer-events: none;
+        }
+
+        html.auth-desktop-v2 .captcha-box::after {
+            content: "Secure Step";
+            position: relative;
+            z-index: 1;
+            justify-self: end;
+            display: inline-flex;
+            align-items: center;
+            min-height: 28px;
+            padding: 0 12px;
+            border-radius: 999px;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            background: rgba(255, 255, 255, 0.04);
+            color: #f7dc88;
+            font-size: 0.7rem;
+            font-weight: 700;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+        }
+
+        html.auth-desktop-v2 .captcha-box:hover {
+            border-color: rgba(251, 191, 36, 0.22);
+            transform: translateY(-1px);
+        }
+
+        html.auth-desktop-v2 .captcha-box.verified {
+            background: rgba(16, 185, 129, 0.08);
+            border-color: rgba(16, 185, 129, 0.28);
+        }
+
+        html.auth-desktop-v2 .captcha-box.verified::after {
+            content: "Verified";
+            color: #9cedc8;
+            background: rgba(16, 185, 129, 0.12);
+            border-color: rgba(16, 185, 129, 0.24);
+        }
+
+        html.auth-desktop-v2 .captcha-box.is-pending::after {
+            content: "Đang kiểm tra";
+        }
+
+        html.auth-desktop-v2 .captcha-box span {
+            position: relative;
+            z-index: 1;
+            display: grid;
+            gap: 4px;
+            color: var(--auth-text);
+            font-size: 0.98rem;
+            font-weight: 650;
+            line-height: 1.2;
+        }
+
+        html.auth-desktop-v2 .captcha-box span::after {
+            content: "Xác minh nhanh trước khi tạo tài khoản.";
+            color: var(--auth-muted);
+            font-size: 0.76rem;
+            font-weight: 500;
+        }
+
+        html.auth-desktop-v2 .captcha-box.verified span::after {
+            content: "Thiết bị đã được xác thực, bạn có thể tiếp tục đăng ký.";
+            color: #9cedc8;
+        }
+
+        html.auth-desktop-v2 .checkbox {
+            position: relative;
+            z-index: 1;
+            width: 28px;
+            height: 28px;
+            border-radius: 8px;
+            border-color: rgba(255, 255, 255, 0.55);
+            background: rgba(255, 255, 255, 0.02);
+            transition: transform 0.2s ease, border-color 0.2s ease, background 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        html.auth-desktop-v2 .checkbox.checked {
+            color: #04140d;
+            background: linear-gradient(135deg, #10b981, #34d399);
+            border-color: transparent;
+            box-shadow: 0 10px 24px rgba(16, 185, 129, 0.22);
+        }
+
+        html.auth-desktop-v2 .captcha-box::after {
+            content: "Xác minh nhanh";
+        }
+
+        html.auth-desktop-v2 .captcha-box.is-pending::after {
+            content: "Đang kiểm tra";
+        }
+
+        html.auth-desktop-v2 .captcha-box.verified::after {
+            content: "Đã xác minh";
+        }
+
+        html.auth-desktop-v2 .captcha-box span::after {
+            content: "Xác minh nhanh trước khi tạo tài khoản.";
+        }
+
+        html.auth-desktop-v2 .captcha-box.is-pending span::after {
+            content: "Hệ thống đang kiểm tra bảo mật thiết bị của bạn.";
+            color: #f7dc88;
+        }
+
+        html.auth-desktop-v2 .captcha-box.verified span::after {
+            content: "Thiết bị đã được xác minh, bạn có thể tiếp tục đăng ký.";
+            color: #9cedc8;
+        }
+
+        html.auth-desktop-v2 .checkbox {
+            color: #f7dc88;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        html.auth-desktop-v2 .checkbox svg {
+            width: 16px;
+            height: 16px;
+            display: block;
+        }
+
+        html.auth-desktop-v2 .checkbox.is-loading {
+            border-color: rgba(251, 191, 36, 0.26);
+            background: rgba(251, 191, 36, 0.08);
+            box-shadow: 0 0 0 4px rgba(251, 191, 36, 0.06);
+        }
+
+        html.auth-desktop-v2 .checkbox.is-loading svg {
+            animation: authCaptchaSpin 0.9s linear infinite;
+        }
+
+        html.auth-desktop-v2 .footer-link {
+            display: none !important;
+        }
+
+        @keyframes authCaptchaSpin {
+            from {
+                transform: rotate(0deg);
+            }
+
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        html.auth-desktop-v2 .footer-link {
+            display: none !important;
+        }
+
+        html.auth-desktop-v2 .auth-topbar::before {
+            display: none;
+        }
+
+        html.auth-desktop-v2 .auth-topbar-link {
+            background: transparent;
+            border: none;
+            box-shadow: none;
+        }
+
+        html.auth-desktop-v2 .auth-panel-divider::after {
+            display: none;
+        }
+
+        html.auth-desktop-v2 .form-group input,
+        html.auth-desktop-v2 .form-group input:-webkit-autofill,
+        html.auth-desktop-v2 .form-group input:-webkit-autofill:hover,
+        html.auth-desktop-v2 .form-group input:-webkit-autofill:focus,
+        html.auth-desktop-v2 .form-group input:autofill {
+            font-family: var(--auth-font-family);
+            font-size: 1rem;
+            font-weight: 500;
+        }
+
+        html.auth-desktop-v2 .password-strength {
+            min-height: 56px;
+            padding: 0 14px;
+        }
+
+        html.auth-desktop-v2 .captcha-box {
+            width: 100%;
+            box-sizing: border-box;
+            min-height: 56px;
+            margin: 0 0 18px;
+            padding: 0 18px;
+            overflow: hidden;
+        }
+
+        html.auth-desktop-v2 .password-strength::before {
+            content: none;
+            display: none;
+        }
+
+        html.auth-desktop-v2 .strength-bar {
+            grid-area: auto;
+            width: 100%;
+        }
+
+        html.auth-desktop-v2 #strengthText {
+            grid-area: auto;
+        }
+
+        html.auth-desktop-v2 .captcha-box::before {
+            border-radius: inherit;
+        }
+
+        html.auth-desktop-v2 .captcha-box::after {
+            content: attr(data-status);
+            display: inline-flex;
+            font-size: 0.76rem;
+            letter-spacing: 0.02em;
+            text-transform: none;
+            white-space: nowrap;
+        }
+
+        html.auth-desktop-v2 .captcha-box.is-pending::after {
+            content: attr(data-status);
+            display: inline-flex;
+        }
+
+        html.auth-desktop-v2 .captcha-box.verified::after {
+            content: attr(data-status);
+            display: inline-flex;
+        }
+
+        html.auth-desktop-v2 .captcha-box span {
+            display: block;
+        }
+
+        html.auth-desktop-v2 .captcha-box span::after,
+        html.auth-desktop-v2 .captcha-box.is-pending span::after,
+        html.auth-desktop-v2 .captcha-box.verified span::after {
+            content: none !important;
+            display: none !important;
+        }
+
+        html.auth-desktop-v2 .checkbox {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #f7dc88;
+        }
+
+        html.auth-desktop-v2 .checkbox svg {
+            width: 16px;
+            height: 16px;
+            display: block;
+        }
+
+        html.auth-desktop-v2 .checkbox.is-loading {
+            border-color: rgba(251, 191, 36, 0.26);
+            background: rgba(251, 191, 36, 0.08);
+            box-shadow: 0 0 0 4px rgba(251, 191, 36, 0.06);
+        }
+
+        html.auth-desktop-v2 .checkbox.is-loading svg {
+            animation: authCaptchaSpin 0.9s linear infinite;
+        }
+
+        html.auth-desktop-v2 footer {
+            display: none !important;
+        }
+
+        html.auth-desktop-v2 .custom-modal-overlay,
+        html.auth-desktop-v2 .verification-modal-overlay,
+        html.auth-desktop-v2 .forgot-password-modal-overlay {
+            background: rgba(3, 5, 10, 0.78);
+            backdrop-filter: blur(18px);
+        }
+
+        html.auth-desktop-v2 .custom-modal-dialog,
+        html.auth-desktop-v2 .verification-modal-dialog,
+        html.auth-desktop-v2 .forgot-password-modal-dialog,
+        html.auth-desktop-v2 .tiembanh-message-dialog {
+            border-radius: 24px;
+            background: linear-gradient(180deg, rgba(12, 15, 21, 0.96), rgba(8, 10, 14, 0.99));
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            box-shadow: 0 32px 80px rgba(0, 0, 0, 0.58), 0 0 0 1px rgba(251, 191, 36, 0.08);
+        }
+
+        html.auth-desktop-v2 .custom-modal-header,
+        html.auth-desktop-v2 .verification-modal-header,
+        html.auth-desktop-v2 .forgot-password-modal-header,
+        html.auth-desktop-v2 .tiembanh-message-header {
+            padding: 26px 28px 20px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+            background: linear-gradient(135deg, rgba(251, 191, 36, 0.1), rgba(229, 9, 20, 0.06));
+        }
+
+        html.auth-desktop-v2 .custom-modal-title,
+        html.auth-desktop-v2 .verification-modal-title,
+        html.auth-desktop-v2 .forgot-password-modal-title,
+        html.auth-desktop-v2 .tiembanh-message-title {
+            color: #fff4d2;
+            text-shadow: none;
+        }
+
+        html.auth-desktop-v2 .custom-modal-body,
+        html.auth-desktop-v2 .verification-modal-body,
+        html.auth-desktop-v2 .forgot-password-modal-body,
+        html.auth-desktop-v2 .tiembanh-message-body {
+            color: var(--auth-muted-soft);
+        }
+
+        html.auth-desktop-v2 .custom-modal-footer,
+        html.auth-desktop-v2 .tiembanh-message-footer {
+            border-top: 1px solid rgba(255, 255, 255, 0.08);
+            background: rgba(255, 255, 255, 0.02);
+        }
+
+        html.auth-desktop-v2 .custom-modal-btn {
+            border-radius: 14px;
+            padding: 12px 22px;
+        }
+
+        html.auth-desktop-v2 .custom-modal-btn-primary,
+        html.auth-desktop-v2 .btn-verify,
+        html.auth-desktop-v2 .tiembanh-message-btn:not(:disabled) {
+            color: #20160a;
+            background: linear-gradient(135deg, #fbbf24, #e2a921);
+            box-shadow: 0 12px 28px rgba(251, 191, 36, 0.22);
+        }
+
+        html.auth-desktop-v2 .custom-modal-btn-primary:hover,
+        html.auth-desktop-v2 .btn-verify:hover,
+        html.auth-desktop-v2 .tiembanh-message-btn:not(:disabled):hover {
+            background: linear-gradient(135deg, #ffd15d, #f0b43a);
+            box-shadow: 0 16px 32px rgba(251, 191, 36, 0.26);
+        }
+
+        html.auth-desktop-v2 .custom-modal-btn-secondary,
+        html.auth-desktop-v2 .btn-resend {
+            color: var(--auth-text);
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        html.auth-desktop-v2 .custom-modal-btn-secondary:hover,
+        html.auth-desktop-v2 .btn-resend:hover {
+            background: rgba(255, 255, 255, 0.06);
+            border-color: rgba(251, 191, 36, 0.18);
+        }
+
+        html.auth-desktop-v2 .otp-input,
+        html.auth-desktop-v2 .forgot-password-modal-body input,
+        html.auth-desktop-v2 .password-input-wrapper input {
+            border-width: 1px;
+            border-color: rgba(255, 255, 255, 0.08);
+            background: rgba(255, 255, 255, 0.03);
+            color: #fff4d2;
+            box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.03);
+        }
+
+        html.auth-desktop-v2 .otp-input:focus,
+        html.auth-desktop-v2 .forgot-password-modal-body input:focus,
+        html.auth-desktop-v2 .password-input-wrapper input:focus {
+            border-color: rgba(251, 191, 36, 0.46);
+            background: rgba(255, 255, 255, 0.04);
+            box-shadow: 0 0 0 4px rgba(251, 191, 36, 0.08);
+        }
+
+        html.auth-desktop-v2 .verification-modal-close,
+        html.auth-desktop-v2 .forgot-password-modal-close {
+            color: rgba(255, 255, 255, 0.62);
+        }
+
+        html.auth-desktop-v2 .verification-modal-close:hover,
+        html.auth-desktop-v2 .forgot-password-modal-close:hover {
+            color: #fff;
+            background: rgba(255, 255, 255, 0.06);
+        }
+
+        @media (min-width: 1181px) and (max-width: 1600px),
+        (min-width: 1181px) and (max-width: 1800px) and (max-height: 920px) {
+            html.auth-desktop-v2 .auth-shell {
+                grid-template-columns: minmax(0, 1fr) minmax(420px, 472px);
+            }
+
+            html.auth-desktop-v2 .auth-showcase-state {
+                padding: clamp(24px, 2.6vw, 36px);
+            }
+
+            html.auth-desktop-v2 .auth-showcase-state-shell {
+                width: min(100%, 780px);
+                grid-template-columns: minmax(0, 1fr) minmax(220px, 0.74fr);
+                gap: 18px;
+                padding: 24px;
+                border-radius: 28px;
+            }
+
+            html.auth-desktop-v2 .auth-showcase-state-kicker {
+                padding: 7px 12px;
+                font-size: 0.68rem;
+            }
+
+            html.auth-desktop-v2 .auth-showcase-state-head {
+                gap: 14px;
+            }
+
+            html.auth-desktop-v2 .auth-showcase-state-icon {
+                width: 56px;
+                height: 56px;
+                border-radius: 18px;
+            }
+
+            html.auth-desktop-v2 .auth-showcase-state-icon svg {
+                width: 24px;
+                height: 24px;
+            }
+
+            html.auth-desktop-v2 .auth-showcase-state-title {
+                font-size: clamp(1.72rem, 2.25vw, 2.4rem);
+            }
+
+            html.auth-desktop-v2 .auth-showcase-state-subtitle {
+                margin-top: 10px;
+                font-size: 0.94rem;
+                line-height: 1.58;
+            }
+
+            html.auth-desktop-v2 .auth-showcase-state-status {
+                gap: 8px;
+                padding: 9px 12px;
+                font-size: 0.78rem;
+            }
+
+            html.auth-desktop-v2 .auth-showcase-state-lines {
+                gap: 10px;
+            }
+
+            html.auth-desktop-v2 .auth-showcase-state-line {
+                height: 12px;
+            }
+
+            html.auth-desktop-v2 .auth-showcase-state-chip {
+                padding: 7px 11px;
+                font-size: 0.72rem;
+            }
+
+            html.auth-desktop-v2 .auth-showcase-state-preview {
+                gap: 12px;
+            }
+
+            html.auth-desktop-v2 .auth-showcase-state-hero {
+                height: 250px;
+                border-radius: 24px;
+            }
+
+            html.auth-desktop-v2 .auth-showcase-state-hero::before {
+                inset: auto 14px 14px 14px;
+                height: 68px;
+                border-radius: 18px;
+            }
+
+            html.auth-desktop-v2 .auth-showcase-state-rail {
+                gap: 10px;
+            }
+
+            html.auth-desktop-v2 .auth-showcase-state-poster {
+                border-radius: 18px;
+            }
+
+            html.auth-desktop-v2 .auth-showcase-media {
+                grid-template-columns: minmax(0, 0.92fr) minmax(300px, 0.84fr);
+                gap: 24px;
+                padding: clamp(32px, 4vh, 52px) clamp(26px, 3vw, 44px);
+            }
+
+            html.auth-desktop-v2 .auth-showcase-content {
+                gap: 16px;
+                width: min(100%, 460px);
+            }
+
+            html.auth-desktop-v2 .auth-showcase-title {
+                max-width: min(11ch, 100%);
+                font-size: clamp(2.9rem, 4.2vw, 4.4rem);
+            }
+
+            html.auth-desktop-v2 .auth-showcase-copy {
+                max-width: 54ch;
+                font-size: 0.96rem;
+                line-height: 1.58;
+            }
+
+            html.auth-desktop-v2 .auth-showcase-meta {
+                gap: 8px;
+            }
+
+            html.auth-desktop-v2 .auth-showcase-meta-chip {
+                min-height: 30px;
+                padding: 0 12px;
+                font-size: 0.76rem;
+            }
+
+            html.auth-desktop-v2 .auth-showcase-bottom {
+                gap: 14px;
+                width: min(100%, 470px);
+                padding: 18px;
+                border-radius: 24px;
+            }
+
+            html.auth-desktop-v2 .auth-showcase-rail-title {
+                font-size: 0.74rem;
+                letter-spacing: 0.14em;
+            }
+
+            html.auth-desktop-v2 .auth-showcase-rail-copy {
+                font-size: 0.82rem;
+                line-height: 1.45;
+            }
+
+            html.auth-desktop-v2 .auth-showcase-rail {
+                gap: 12px;
+            }
+
+            html.auth-desktop-v2 .auth-showcase-thumb {
+                border-radius: 20px;
+                box-shadow: 0 18px 44px rgba(0, 0, 0, 0.3);
+            }
+
+            html.auth-desktop-v2 .auth-showcase-thumb:nth-child(odd) {
+                transform: translateY(-6px);
+            }
+
+            html.auth-desktop-v2 .auth-showcase-thumb:nth-child(even) {
+                transform: translateY(8px);
+            }
+
+            html.auth-desktop-v2 .auth-showcase-thumb:hover {
+                transform: translateY(-6px) scale(1.01);
+            }
+
+            html.auth-desktop-v2 .auth-showcase-thumb-badge {
+                top: 12px;
+                left: 12px;
+                min-height: 28px;
+                padding: 0 10px;
+                font-size: 0.72rem;
+            }
+
+            html.auth-desktop-v2 .auth-showcase-thumb-body {
+                gap: 6px;
+                padding: 60px 14px 14px;
+            }
+
+            html.auth-desktop-v2 .auth-showcase-thumb-title {
+                font-size: 0.92rem;
+            }
+
+            html.auth-desktop-v2 .auth-showcase-thumb-meta {
+                font-size: 0.78rem;
+                line-height: 1.3;
+            }
+
+            html.auth-desktop-v2 .auth-container {
+                padding: 52px 40px 28px;
+            }
+
+            html.auth-desktop-v2 .auth-topbar {
+                margin: -52px -40px 20px;
+                padding: 14px 40px 10px;
+                gap: 20px;
+            }
+
+            html.auth-desktop-v2 .auth-topbar-link {
+                min-height: 38px;
+                gap: 8px;
+                padding-bottom: 8px;
+                font-size: 0.86rem;
+            }
+
+            html.auth-desktop-v2 .logo {
+                margin-bottom: 12px;
+            }
+
+            html.auth-desktop-v2 .logo h1 {
+                font-size: clamp(1.55rem, 2vw, 1.9rem);
+            }
+
+            html.auth-desktop-v2 .auth-panel-heading {
+                gap: 8px;
+                margin-bottom: 18px;
+            }
+
+            html.auth-desktop-v2 .auth-panel-pill {
+                padding: 6px 10px;
+                font-size: 0.68rem;
+            }
+
+            html.auth-desktop-v2 .auth-panel-title {
+                font-size: clamp(1.8rem, 2.5vw, 2.35rem);
+            }
+
+            html.auth-desktop-v2 .auth-panel-divider {
+                width: min(88px, 22vw);
+            }
+
+            html.auth-desktop-v2 .tabs {
+                gap: 24px;
+                margin-bottom: 16px;
+            }
+
+            html.auth-desktop-v2 .tab {
+                padding-bottom: 13px;
+                font-size: 0.9rem;
+            }
+
+            html.auth-desktop-v2 .auth-form-stage {
+                padding-top: 4px;
+            }
+
+            html.auth-desktop-v2 .form-group {
+                margin-bottom: 14px;
+            }
+
+            html.auth-desktop-v2 .form-group label {
+                margin-bottom: 8px;
+                font-size: 0.72rem;
+            }
+
+            html.auth-desktop-v2 .form-group input,
+            html.auth-desktop-v2 .form-group input:-webkit-autofill,
+            html.auth-desktop-v2 .form-group input:-webkit-autofill:hover,
+            html.auth-desktop-v2 .form-group input:-webkit-autofill:focus,
+            html.auth-desktop-v2 .form-group input:autofill {
+                min-height: 50px;
+                padding: 13px 14px 13px 42px;
+                border-radius: 14px;
+                font-size: 0.95rem;
+                background-position: 14px center;
+                background-size: 16px 16px;
+            }
+
+            html.auth-desktop-v2 .password-toggle {
+                top: 37px;
+                right: 14px;
+            }
+
+            html.auth-desktop-v2 .form-group:has(#loginEmail)::after,
+            html.auth-desktop-v2 .form-group:has(#registerEmail)::after,
+            html.auth-desktop-v2 .form-group:has(#loginPassword)::after,
+            html.auth-desktop-v2 .form-group:has(#registerPassword)::after,
+            html.auth-desktop-v2 .form-group:has(#registerConfirmPassword)::after,
+            html.auth-desktop-v2 .form-group:has(#registerName)::after {
+                top: 37px;
+                left: 14px;
+                width: 16px;
+                height: 16px;
+                background-size: 16px 16px;
+            }
+
+            html.auth-desktop-v2 .auth-strength-heading {
+                margin: 10px 0 8px;
+                font-size: 0.72rem;
+            }
+
+            html.auth-desktop-v2 .password-strength {
+                min-height: 50px;
+                padding: 0 12px;
+                border-radius: 14px;
+            }
+
+            html.auth-desktop-v2 .strength-bar {
+                height: 5px;
+            }
+
+            html.auth-desktop-v2 #strengthText {
+                min-height: 22px;
+                padding: 0 9px;
+                font-size: 0.7rem !important;
+            }
+
+            html.auth-desktop-v2 .forgot-link {
+                font-size: 0.84rem !important;
+            }
+
+            html.auth-desktop-v2 .btn {
+                margin-top: 6px;
+                padding: 14px;
+                border-radius: 14px;
+                font-size: 0.95rem;
+            }
+
+            html.auth-desktop-v2 .error-msg,
+            html.auth-desktop-v2 .success-msg {
+                padding: 12px 14px;
+                border-radius: 14px;
+                margin-bottom: 14px;
+                font-size: 0.86rem;
+            }
+
+            html.auth-desktop-v2 .captcha-box {
+                min-height: 50px;
+                margin: 0 0 16px;
+                padding: 0 16px;
+                border-radius: 15px;
+                gap: 12px;
+            }
+
+            html.auth-desktop-v2 .captcha-box::after {
+                min-height: 26px;
+                padding: 0 10px;
+                font-size: 0.68rem;
+            }
+
+            html.auth-desktop-v2 .captcha-box span {
+                font-size: 0.92rem;
+            }
+
+            html.auth-desktop-v2 .checkbox {
+                width: 22px;
+                height: 22px;
+            }
+
+            html.auth-desktop-v2 .checkbox svg {
+                width: 14px;
+                height: 14px;
+            }
+        }
+
+        @media (max-width: 1180px) {
+            html.auth-desktop-v2 .auth-shell {
+                grid-template-columns: 1fr;
+                gap: 0;
+            }
+
+            html.auth-desktop-v2 .auth-showcase {
+                min-height: auto;
+                padding: 0;
+            }
+
+            html.auth-desktop-v2 .auth-showcase-state {
+                min-height: auto;
+                padding: 28px 20px 20px;
+            }
+
+            html.auth-desktop-v2 .auth-showcase-state-shell {
+                grid-template-columns: 1fr;
+                gap: 22px;
+                padding: 24px;
+                border-radius: 28px;
+            }
+
+            html.auth-desktop-v2 .auth-showcase-state-head {
+                gap: 14px;
+            }
+
+            html.auth-desktop-v2 .auth-showcase-state-icon {
+                width: 56px;
+                height: 56px;
+                border-radius: 18px;
+            }
+
+            html.auth-desktop-v2 .auth-showcase-state-title {
+                font-size: clamp(1.8rem, 7.5vw, 2.8rem);
+            }
+
+            html.auth-desktop-v2 .auth-showcase-state-subtitle {
+                max-width: none;
+                font-size: 0.95rem;
+            }
+
+            html.auth-desktop-v2 .auth-showcase-state-hero {
+                height: 220px;
+                border-radius: 24px;
+            }
+
+            html.auth-desktop-v2 .auth-showcase-state-rail {
+                grid-template-columns: repeat(3, minmax(0, 1fr));
+            }
+
+            html.auth-desktop-v2 .auth-showcase-media {
+                grid-template-columns: 1fr;
+                min-height: auto;
+                gap: 24px;
+                padding: 28px 20px 32px;
+            }
+
+            html.auth-desktop-v2 .auth-showcase-media::before {
+                background:
+                    linear-gradient(180deg, rgba(4, 6, 10, 0.88) 0%, rgba(4, 6, 10, 0.76) 32%, rgba(4, 6, 10, 0.48) 62%, rgba(4, 6, 10, 0.82) 100%),
+                    linear-gradient(90deg, rgba(4, 6, 10, 0.24) 0%, rgba(4, 6, 10, 0.08) 52%, rgba(4, 6, 10, 0.34) 100%);
+            }
+
+            html.auth-desktop-v2 .auth-showcase-backdrop {
+                inset: -16%;
+                width: 132%;
+                height: 132%;
+                object-position: center top;
+                filter: blur(28px) saturate(1.05) contrast(1.02) brightness(0.34);
+            }
+
+            html.auth-desktop-v2 .auth-showcase-content {
+                width: 100%;
+                max-width: min(100%, 40rem);
+                padding: 0;
+            }
+
+            html.auth-desktop-v2 .auth-showcase-title {
+                max-width: 8ch;
+                font-size: clamp(3.2rem, 12vw, 4.8rem);
+            }
+
+            html.auth-desktop-v2 .auth-showcase-copy {
+                width: 100%;
+                max-width: 100%;
+                text-align: left;
+            }
+
+            html.auth-desktop-v2 .auth-showcase-bottom {
+                width: 100%;
+                justify-self: stretch;
+                padding: 0;
+                border: none;
+                border-radius: 0;
+                background: none;
+                box-shadow: none;
+                backdrop-filter: none;
+                -webkit-backdrop-filter: none;
+            }
+
+            html.auth-desktop-v2 .auth-showcase-rail-head {
+                padding-inline: 0;
+            }
+
+            html.auth-desktop-v2 .auth-showcase-rail {
+                gap: 14px;
+            }
+
+            html.auth-desktop-v2 .auth-showcase-thumb {
+                transform: none !important;
+                border-radius: 22px;
+            }
+
+            html.auth-desktop-v2 .auth-container {
+                min-height: auto;
+                padding: 36px 24px 28px;
+                border-left: none;
+                border-top: 1px solid rgba(255, 255, 255, 0.08);
+            }
+
+            html.auth-desktop-v2 .auth-topbar {
+                margin: -36px -24px 24px;
+                padding: 16px 24px 12px;
+                gap: 20px;
+            }
+        }
+    </style>
 </head>
 
 <body>
@@ -1844,130 +4456,373 @@
 
     <div class="main-wrapper">
         <div class="main-content">
-            <div class="auth-container">
-                <div class="logo">
-                    <h1>TIỆM BÁNH NETFLIX</h1>
-                </div>
-
-                <div class="tabs">
-                    <button class="tab active" onclick="switchTab('login')">Đăng nhập</button>
-                    <button class="tab" onclick="switchTab('register')">Đăng ký</button>
-                </div>
-
-                <div class="error-msg" id="errorMsg"></div>
-                <div class="success-msg" id="successMsg"></div>
-
-                <!-- Login Form -->
-                <div class="form-section active" id="loginForm">
-                    <form onsubmit="handleLogin(event)">
-                        <div class="form-group">
-                            <label>Email</label>
-                            <input type="email" id="loginEmail" required placeholder="email@example.com">
-                        </div>
-                        <div class="form-group">
-                            <label>Mật khẩu</label>
-                            <input type="password" id="loginPassword" required placeholder="Nhập mật khẩu">
-                            <span class="password-toggle" onclick="togglePassword('loginPassword', this)"><svg
-                                    xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24"
-                                    fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                                    stroke-linejoin="round">
-                                    <path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z" />
-                                    <circle cx="12" cy="12" r="3" />
-                                </svg></span>
-                        </div>
-                        <div style="text-align: right; margin: -5px 0 15px 0;">
-                            <a href="javascript:void(0)" onclick="handleForgotPassword()"
-                                style="color: #60a5fa; font-size: 0.9rem; text-decoration: none;">Quên mật khẩu?</a>
-                        </div>
-                        <button type="submit" class="btn"
-                            style="display: flex; align-items: center; justify-content: center; gap: 8px;"><svg
-                                xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"
-                                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                                stroke-linejoin="round">
-                                <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4" />
-                                <polyline points="10 17 15 12 10 7" />
-                                <line x1="15" x2="3" y1="12" y2="12" />
-                            </svg>Đăng nhập</button>
-                    </form>
-                </div>
-
-                <!-- Register Form -->
-                <div class="form-section" id="registerForm">
-                    <form onsubmit="handleRegister(event)">
-                        <div class="form-group">
-                            <label>Họ tên</label>
-                            <input type="text" id="registerName" required placeholder="Nguyễn Văn A" minlength="3">
-                        </div>
-                        <div class="form-group">
-                            <label>Email</label>
-                            <input type="email" id="registerEmail" required placeholder="email@example.com">
-                        </div>
-                        <div class="form-group">
-                            <label>Mật khẩu (tối thiểu 8 ký tự)</label>
-                            <input type="password" id="registerPassword" required minlength="8"
-                                placeholder="Nhập mật khẩu" oninput="checkPasswordStrength()">
-                            <span class="password-toggle" onclick="togglePassword('registerPassword', this)"><svg
-                                    xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24"
-                                    fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                                    stroke-linejoin="round">
-                                    <path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z" />
-                                    <circle cx="12" cy="12" r="3" />
-                                </svg></span>
-                            <div class="password-strength">
-                                <div class="strength-bar">
-                                    <div class="strength-fill" id="strengthFill"></div>
+            <div class="auth-page-brand">
+                <a href="/" class="auth-page-brand-link">Tiệm Bánh Netflix</a>
+                <div class="auth-page-brand-note">Watch as Guest · Credits · Support</div>
+            </div>
+            <div class="auth-shell">
+                <aside class="auth-showcase">
+                    <div class="auth-showcase-state" id="authShowcaseState">
+                        <div class="auth-showcase-state-shell">
+                            <div class="auth-showcase-state-copy">
+                                <div class="auth-showcase-state-kicker">NETFLIX DISCOVERY ENGINE</div>
+                                <div class="auth-showcase-state-head">
+                                    <span class="auth-showcase-state-icon" aria-hidden="true">
+                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+                                            stroke="currentColor" stroke-width="1.9" stroke-linecap="round"
+                                            stroke-linejoin="round">
+                                            <rect x="3" y="4" width="18" height="14" rx="3"></rect>
+                                            <path d="M8 20h8"></path>
+                                            <path d="M12 18v2"></path>
+                                            <path d="M7 9h10"></path>
+                                        </svg>
+                                    </span>
+                                    <div>
+                                        <h3 class="auth-showcase-state-title">&#272;ang t&#7843;i g&#7907;i &#253; Netflix...</h3>
+                                        <p class="auth-showcase-state-subtitle">
+                                            H&#7879; th&#7889;ng &#273;ang ch&#7885;n poster n&#7893;i b&#7853;t, m&#7909;c t&oacute;m t&#7855;t
+                                            v&agrave; b&#7897; s&#432;u t&#7853;p ph&ugrave; h&#7907;p &#273;&#7875; hi&#7875;n th&#7883;
+                                            cho b&#7841;n.
+                                        </p>
+                                    </div>
                                 </div>
-                                <span id="strengthText" style="color: #aaa; font-size: 0.8rem;"></span>
+                                <div class="auth-showcase-state-status"><span></span>&#272;ang &#273;&#7891;ng b&#7897; poster, m&ocirc; t&#7843; v&agrave; danh s&aacute;ch xem ti&#7871;p.</div>
+                                <div class="auth-showcase-state-lines" aria-hidden="true">
+                                    <span class="auth-showcase-state-line auth-showcase-state-line--wide"></span>
+                                    <span class="auth-showcase-state-line auth-showcase-state-line--mid"></span>
+                                    <span class="auth-showcase-state-line auth-showcase-state-line--short"></span>
+                                </div>
+                                <div class="auth-showcase-state-chips" aria-hidden="true">
+                                    <span class="auth-showcase-state-chip">Poster premium</span>
+                                    <span class="auth-showcase-state-chip">Summary sync</span>
+                                    <span class="auth-showcase-state-chip">Curated rail</span>
+                                </div>
+                            </div>
+
+                            <div class="auth-showcase-state-preview" aria-hidden="true">
+                                <div class="auth-showcase-state-hero"></div>
+                                <div class="auth-showcase-state-rail">
+                                    <div class="auth-showcase-state-poster"></div>
+                                    <div class="auth-showcase-state-poster"></div>
+                                    <div class="auth-showcase-state-poster"></div>
+                                </div>
                             </div>
                         </div>
-                        <div class="form-group">
-                            <label>Xác nhận mật khẩu</label>
-                            <input type="password" id="registerConfirmPassword" required minlength="8"
-                                placeholder="Nhập lại mật khẩu">
-                            <span class="password-toggle" onclick="togglePassword('registerConfirmPassword', this)"><svg
-                                    xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24"
-                                    fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                    </div>
+
+                    <div class="auth-showcase-card" id="authShowcaseCard" hidden>
+                        <div class="auth-showcase-media">
+                            <img class="auth-showcase-backdrop" id="authShowcaseBackdrop" alt="">
+                            <div class="auth-showcase-content">
+                                <div class="auth-showcase-kicker" id="authShowcaseKicker">Đang nổi bật trên Netflix</div>
+                                <h2 class="auth-showcase-title" id="authShowcaseTitle">LOADING...</h2>
+                                <div class="auth-showcase-meta" id="authShowcaseMeta"></div>
+                                <p class="auth-showcase-copy" id="authShowcaseCopy">Loading...</p>
+                            </div>
+
+                            <div class="auth-showcase-bottom">
+                                <div class="auth-showcase-rail-head">
+                                    <div class="auth-showcase-rail-title">NETFLIX PREMIERE COLLECTION</div>
+                                    <div class="auth-showcase-rail-copy">Nh&#7919;ng b&#7897; phim &#273;ang thu h&uacute;t &#273;&#432;&#7907;c nhi&#7873;u s&#7921; ch&uacute; &yacute;, m&#7901;i b&#7841;n c&ugrave;ng tr&#7843;i nghi&#7879;m v&#7899;i Ti&#7879;m B&aacute;nh Netflix.</div>
+                            </div>
+                            <div class="auth-showcase-rail" id="authShowcaseRail"></div>
+                        </div>
+                        </div>
+                    </div>
+
+                    <div class="auth-showcase-top">
+                        <div class="auth-showcase-kicker">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+                                stroke="currentColor" stroke-width="1.8" stroke-linecap="round"
+                                stroke-linejoin="round">
+                                <rect x="3" y="4" width="18" height="16" rx="3"></rect>
+                                <path d="M7 8h10"></path>
+                                <path d="M7 12h10"></path>
+                                <path d="M7 16h6"></path>
+                            </svg>
+                            Trung tâm tài khoản
+                        </div>
+                        <h2 class="auth-showcase-title">Tiệm Bánh Netflix</h2>
+                        <p class="auth-showcase-copy">Tiệm Bánh là trung tâm hỗ trợ tài khoản Netflix với giao diện quản lý
+                            tập trung cho khách hàng cần truy cập nhanh, theo dõi trạng thái sử dụng và nhận hỗ trợ khi có
+                            phát sinh.</p>
+                    </div>
+
+                    <div class="auth-showcase-panel">
+                        <div class="auth-showcase-panel-head">
+                            <span class="auth-pill auth-pill-gold">Hỗ trợ đa nền tảng</span>
+                            <span class="auth-pill auth-pill-green">Quản lý tập trung</span>
+                        </div>
+
+                        <div class="auth-feature-list">
+                            <div class="auth-feature-item">
+                                <div class="auth-feature-icon auth-feature-icon-blue">
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+                                        stroke="currentColor" stroke-width="1.8" stroke-linecap="round"
+                                        stroke-linejoin="round">
+                                        <rect x="3" y="4" width="18" height="12" rx="2"></rect>
+                                        <path d="M8 20h8"></path>
+                                        <path d="M12 16v4"></path>
+                                    </svg>
+                                </div>
+                                <div class="auth-feature-copy-wrap">
+                                    <div class="auth-feature-title">Truy cập nhanh trên PC và TV</div>
+                                    <div class="auth-feature-copy">Đăng nhập để đồng bộ quyền dùng Watch as Guest, mở
+                                        Netflix trên PC hoặc kích hoạt TV ngay trong cùng luồng sử dụng.</div>
+                                </div>
+                            </div>
+
+                            <div class="auth-feature-item">
+                                <div class="auth-feature-icon auth-feature-icon-gold">
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+                                        stroke="currentColor" stroke-width="1.8" stroke-linecap="round"
+                                        stroke-linejoin="round">
+                                        <path d="M12 2v20"></path>
+                                        <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
+                                    </svg>
+                                </div>
+                                <div class="auth-feature-copy-wrap">
+                                    <div class="auth-feature-title">Theo dõi credits và lịch sử tài khoản</div>
+                                    <div class="auth-feature-copy">Kiểm tra credits hiện có, số lượt đổi còn lại, thời hạn
+                                        sử dụng và toàn bộ thông tin liên quan đến tài khoản của bạn.</div>
+                                </div>
+                            </div>
+
+                            <div class="auth-feature-item">
+                                <div class="auth-feature-icon auth-feature-icon-green">
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+                                        stroke="currentColor" stroke-width="1.8" stroke-linecap="round"
+                                        stroke-linejoin="round">
+                                        <path d="M4 15a4 4 0 0 1 4-4h8a4 4 0 0 1 4 4"></path>
+                                        <path d="M8 11V7a4 4 0 1 1 8 0v4"></path>
+                                        <rect x="4" y="15" width="16" height="7" rx="2"></rect>
+                                    </svg>
+                                </div>
+                                <div class="auth-feature-copy-wrap">
+                                    <div class="auth-feature-title">Hỗ trợ và bảo mật rõ ràng</div>
+                                    <div class="auth-feature-copy">Xác thực OTP, khôi phục mật khẩu và liên hệ support
+                                        nhanh khi cần xử lý lỗi tài khoản hoặc cần hướng dẫn sử dụng.</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="auth-showcase-links">
+                        <a href="/" class="auth-link-card">
+                            <div class="auth-link-card-icon">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+                                    stroke="currentColor" stroke-width="1.8" stroke-linecap="round"
                                     stroke-linejoin="round">
-                                    <path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z" />
-                                    <circle cx="12" cy="12" r="3" />
-                                </svg></span>
+                                    <path d="m12 19-7-7 7-7"></path>
+                                    <path d="M19 12H5"></path>
+                                </svg>
+                            </div>
+                            <div class="auth-link-card-copy">
+                                <span>Trang chủ</span>
+                                <strong>Quay lại giao diện chính</strong>
+                            </div>
+                        </a>
+
+                        <a href="https://www.facebook.com/tiembanh4k/" target="_blank" rel="noopener noreferrer"
+                            class="auth-link-card">
+                            <div class="auth-link-card-icon">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+                                    stroke="currentColor" stroke-width="1.8" stroke-linecap="round"
+                                    stroke-linejoin="round">
+                                    <path
+                                        d="M3 11h3a2 2 0 0 1 2 2v3a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-5Zm0 0a9 9 0 1 1 18 0m0 0v5a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3Z">
+                                    </path>
+                                </svg>
+                            </div>
+                            <div class="auth-link-card-copy">
+                                <span>Support</span>
+                                <strong>Liên hệ Tiệm Bánh</strong>
+                            </div>
+                        </a>
+                    </div>
+                </aside>
+
+                <div class="auth-container">
+                    <div class="auth-topbar" aria-label="Điều hướng nhanh">
+                        <a href="/" class="auth-topbar-link">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="m3 11 9-7 9 7"></path>
+                                <path d="M5 10v10h14V10"></path>
+                            </svg>
+                            <span>Trang chủ</span>
+                        </a>
+                        <a href="https://youtu.be/vrVgwrjUbpo" target="_blank" rel="noopener noreferrer" class="auth-topbar-link">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M12 6v12"></path>
+                                <path d="M6 12h12"></path>
+                                <path d="M5 5h14v14H5z" opacity="0.35"></path>
+                            </svg>
+                            <span>Hướng dẫn</span>
+                        </a>
+                        <a href="https://www.facebook.com/tiembanh4k/" target="_blank" rel="noopener noreferrer" class="auth-topbar-link">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9"></path>
+                                <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
+                            </svg>
+                            <span>Hỗ trợ</span>
+                        </a>
+                    </div>
+
+                    <div class="logo">
+                        <div class="auth-brand">
+                            <div class="auth-brand-mark">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+                                    stroke="currentColor" stroke-width="1.8" stroke-linecap="round"
+                                    stroke-linejoin="round">
+                                    <rect x="3.5" y="4.5" width="17" height="15" rx="3"></rect>
+                                    <path d="M7.5 9h9"></path>
+                                    <path d="M7.5 13h9"></path>
+                                    <path d="M7.5 17h5"></path>
+                                </svg>
+                            </div>
+                            <div class="auth-brand-copy">
+                                <div class="auth-brand-kicker">Trung tâm tài khoản</div>
+                                <h1>TIỆM BÁNH NETFLIX</h1>
+                            </div>
+                        </div>
+                        <p>Đăng nhập để quản lý Watch as Guest, credits và bảo mật tài khoản.</p>
+                    </div>
+
+                    <div class="auth-panel-heading">
+                        <div class="auth-panel-pill">Giải trí • Chất lượng cao • Đa nền tảng</div>
+                        <div class="auth-panel-title">
+                            <span class="auth-panel-title-default">Chào mừng</span>
+                            <span class="auth-panel-title-desktop">Hi cưng!</span>
+                        </div>
+                        <div class="auth-panel-divider" aria-hidden="true"></div>
+                        <div class="auth-panel-copy">Đăng nhập hoặc tạo tài khoản để tiếp tục với Watch as Guest, credits và các tiện ích hỗ trợ từ Tiệm Bánh.</div>
+                    </div>
+
+                    <div class="tabs">
+                        <button class="tab active" onclick="switchTab('login')">Đăng nhập</button>
+                        <button class="tab" onclick="switchTab('register')">Đăng ký</button>
+                    </div>
+
+                    <div class="error-msg" id="errorMsg"></div>
+                    <div class="success-msg" id="successMsg"></div>
+
+                    <div class="auth-form-stage">
+                        <!-- Login Form -->
+                        <div class="form-section active" id="loginForm">
+                            <form onsubmit="handleLogin(event)">
+                                <div class="form-group">
+                                    <label>Email</label>
+                                    <input type="email" id="loginEmail" required placeholder="email@example.com">
+                                </div>
+                                <div class="form-group">
+                                    <label>Mật khẩu</label>
+                                    <input type="password" id="loginPassword" required placeholder="Nhập mật khẩu">
+                                    <span class="password-toggle" onclick="togglePassword('loginPassword', this)"><svg
+                                            xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24"
+                                            fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                            stroke-linejoin="round">
+                                            <path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z" />
+                                            <circle cx="12" cy="12" r="3" />
+                                        </svg></span>
+                                </div>
+                                <div style="text-align: right; margin: -5px 0 15px 0;">
+                                    <a href="javascript:void(0)" onclick="handleForgotPassword()"
+                                        class="forgot-link">Quên mật khẩu?</a>
+                                </div>
+                                <button type="submit" class="btn"
+                                    style="display: flex; align-items: center; justify-content: center; gap: 8px;"><svg
+                                        xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"
+                                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                        stroke-linejoin="round">
+                                        <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4" />
+                                        <polyline points="10 17 15 12 10 7" />
+                                        <line x1="15" x2="3" y1="12" y2="12" />
+                                    </svg>Đăng nhập</button>
+                            </form>
                         </div>
 
-                        <!-- CAPTCHA -->
-                        <div class="captcha-box" id="captchaBox" onclick="toggleCaptcha()">
-                            <div class="checkbox" id="captchaCheckbox"></div>
-                            <span>Tôi không phải là robot</span>
-                        </div>
+                        <!-- Register Form -->
+                        <div class="form-section" id="registerForm">
+                            <form onsubmit="handleRegister(event)">
+                                <div class="form-group">
+                                    <label>Họ tên</label>
+                                    <input type="text" id="registerName" required placeholder="Nguyễn Văn A" minlength="3">
+                                </div>
+                                <div class="form-group">
+                                    <label>Email</label>
+                                    <input type="email" id="registerEmail" required placeholder="email@example.com">
+                                </div>
+                                <div class="form-group">
+                                    <label>Mật khẩu (tối thiểu 8 ký tự)</label>
+                                    <input type="password" id="registerPassword" required minlength="8"
+                                        placeholder="Nhập mật khẩu" oninput="checkPasswordStrength()">
+                                     <span class="password-toggle" onclick="togglePassword('registerPassword', this)"><svg
+                                             xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24"
+                                             fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                             stroke-linejoin="round">
+                                             <path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z" />
+                                             <circle cx="12" cy="12" r="3" />
+                                         </svg></span>
+                                    <div class="auth-strength-heading">Độ mạnh mật khẩu</div>
+                                     <div class="password-strength">
+                                         <div class="strength-bar">
+                                             <div class="strength-fill" id="strengthFill"></div>
+                                         </div>
+                                         <span id="strengthText" style="color: #aaa; font-size: 0.8rem;"></span>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label>Xác nhận mật khẩu</label>
+                                    <input type="password" id="registerConfirmPassword" required minlength="8"
+                                        placeholder="Nhập lại mật khẩu">
+                                    <span class="password-toggle" onclick="togglePassword('registerConfirmPassword', this)"><svg
+                                            xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24"
+                                            fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                            stroke-linejoin="round">
+                                            <path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z" />
+                                            <circle cx="12" cy="12" r="3" />
+                                        </svg></span>
+                                </div>
 
-                        <button type="submit" class="btn" id="registerBtn"
-                            style="display: flex; align-items: center; justify-content: center; gap: 8px;"><svg
-                                xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"
+                                <!-- CAPTCHA -->
+                                <div class="captcha-box" id="captchaBox" data-status="Xác minh nhanh" onclick="toggleCaptcha()">
+                                    <div class="checkbox" id="captchaCheckbox"></div>
+                                    <span>Tôi không phải là robot</span>
+                                </div>
+
+                                <button type="submit" class="btn" id="registerBtn"
+                                    style="display: flex; align-items: center; justify-content: center; gap: 8px;"><svg
+                                        xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"
+                                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                        stroke-linejoin="round">
+                                        <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" />
+                                        <circle cx="9" cy="7" r="4" />
+                                        <line x1="19" x2="19" y1="8" y2="14" />
+                                        <line x1="22" x2="16" y1="11" y2="11" />
+                                    </svg>Đăng ký</button>
+                            </form>
+                        </div>
+                    </div>
+
+                    <div class="footer-link"
+                        style="display: flex; align-items: center; justify-content: center; gap: 8px; flex-wrap: wrap;">
+                        <a href="/" style="display: inline-flex; align-items: center; gap: 6px;"><svg
+                                xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24"
                                 fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
                                 stroke-linejoin="round">
-                                <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" />
-                                <circle cx="9" cy="7" r="4" />
-                                <line x1="19" x2="19" y1="8" y2="14" />
-                                <line x1="22" x2="16" y1="11" y2="11" />
-                            </svg>Đăng ký</button>
-                    </form>
-                </div>
-
-                <div class="footer-link"
-                    style="display: flex; align-items: center; justify-content: center; gap: 8px; flex-wrap: wrap;">
-                    <a href="/" style="display: inline-flex; align-items: center; gap: 6px;"><svg
-                            xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none"
-                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <path d="m12 19-7-7 7-7" />
-                            <path d="M19 12H5" />
-                        </svg>Quay lại trang chủ</a>
-                    <span style="margin: 0 6px; color: #555;">|</span>
-                    <a href="https://www.facebook.com/tiembanh4k/" target="_blank"
-                        style="display: inline-flex; align-items: center; gap: 6px;"><svg
-                            xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none"
-                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <path
-                                d="M3 11h3a2 2 0 0 1 2 2v3a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-5Zm0 0a9 9 0 1 1 18 0m0 0v5a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3Z" />
-                        </svg>Contact Support</a>
+                                <path d="m12 19-7-7 7-7" />
+                                <path d="M19 12H5" />
+                            </svg>Quay lại trang chủ</a>
+                        <span style="margin: 0 6px; color: #555;">|</span>
+                        <a href="https://www.facebook.com/tiembanh4k/" target="_blank"
+                            style="display: inline-flex; align-items: center; gap: 6px;"><svg
+                                xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24"
+                                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                stroke-linejoin="round">
+                                <path
+                                    d="M3 11h3a2 2 0 0 1 2 2v3a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-5Zm0 0a9 9 0 1 1 18 0m0 0v5a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3Z" />
+                            </svg>Contact Support</a>
+                    </div>
                 </div>
             </div>
             <!-- End Auth Container -->
@@ -1980,7 +4835,13 @@
     <div class="custom-modal-overlay" id="customModalOverlay">
         <div class="custom-modal-dialog">
             <div class="custom-modal-header">
-                <span class="custom-modal-icon" id="customModalIcon">ℹ️</span>
+                <span class="custom-modal-icon" id="customModalIcon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="#60a5fa" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="9"></circle>
+                        <path d="M12 10v5"></path>
+                        <path d="M12 7h.01"></path>
+                    </svg>
+                </span>
                 <div class="custom-modal-title" id="customModalTitle">Thông báo</div>
             </div>
             <div class="custom-modal-body" id="customModalBody">
@@ -2023,7 +4884,12 @@
     <div class="verification-modal-overlay" id="verificationModalOverlay" style="display: none;">
         <div class="verification-modal-dialog">
             <div class="verification-modal-header">
-                <span class="verification-modal-icon">📧</span>
+                <span class="verification-modal-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="#fbbf24" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round">
+                        <rect x="3" y="5" width="18" height="14" rx="2"></rect>
+                        <path d="m4 7 8 5 8-5"></path>
+                    </svg>
+                </span>
                 <div class="verification-modal-title">Xác thực Email</div>
                 <button class="verification-modal-close" onclick="closeVerificationModal()" aria-label="Đóng">×</button>
             </div>
@@ -2065,7 +4931,12 @@
     <div class="forgot-password-modal-overlay" id="forgotPasswordEmailModal" style="display: none;">
         <div class="forgot-password-modal-dialog">
             <div class="forgot-password-modal-header">
-                <span class="forgot-password-modal-icon">🔒</span>
+                <span class="forgot-password-modal-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="#fbbf24" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round">
+                        <rect x="5" y="11" width="14" height="10" rx="2"></rect>
+                        <path d="M8 11V8a4 4 0 1 1 8 0v3"></path>
+                    </svg>
+                </span>
                 <div class="forgot-password-modal-title">Quên Mật Khẩu</div>
                 <button class="forgot-password-modal-close" onclick="closeForgotPasswordEmailModal()"
                     aria-label="Đóng">×</button>
@@ -2095,7 +4966,12 @@
     <div class="forgot-password-modal-overlay" id="forgotPasswordOTPModal" style="display: none;">
         <div class="forgot-password-modal-dialog">
             <div class="forgot-password-modal-header">
-                <span class="forgot-password-modal-icon">📧</span>
+                <span class="forgot-password-modal-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="#fbbf24" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round">
+                        <rect x="3" y="5" width="18" height="14" rx="2"></rect>
+                        <path d="m4 7 8 5 8-5"></path>
+                    </svg>
+                </span>
                 <div class="forgot-password-modal-title">Xác Thực OTP</div>
                 <button class="forgot-password-modal-close" onclick="closeForgotPasswordOTPModal()"
                     aria-label="Đóng">×</button>
@@ -2138,7 +5014,14 @@
     <div class="forgot-password-modal-overlay" id="forgotPasswordNewPasswordModal" style="display: none;">
         <div class="forgot-password-modal-dialog">
             <div class="forgot-password-modal-header">
-                <span class="forgot-password-modal-icon">🔑</span>
+                <span class="forgot-password-modal-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="#fbbf24" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="7.5" cy="15.5" r="5.5"></circle>
+                        <path d="m13 10 8-8"></path>
+                        <path d="m17 6 2 2"></path>
+                        <path d="m15 8 2 2"></path>
+                    </svg>
+                </span>
                 <div class="forgot-password-modal-title">Đặt Mật Khẩu Mới</div>
                 <button class="forgot-password-modal-close" onclick="closeForgotPasswordNewPasswordModal()"
                     aria-label="Đóng">×</button>
@@ -2261,7 +5144,16 @@
     <div class="referral-notification-overlay" id="referralNotificationOverlay">
         <div class="referral-notification-modal">
             <div class="referral-notification-header">
-                <div class="referral-notification-icon">🎉</div>
+                <div class="referral-notification-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M4 13.5 9.5 8"></path>
+                        <path d="M14.5 19 20 13.5"></path>
+                        <path d="m14 4 6 6"></path>
+                        <path d="m4 20 6-6"></path>
+                        <path d="M10 14 6 10"></path>
+                        <path d="M14 10 9.5 5.5"></path>
+                    </svg>
+                </div>
                 <div class="referral-notification-title">Tin vui!</div>
                 <div class="referral-notification-subtitle">Có người đã nhập mã giới thiệu của bạn</div>
             </div>
@@ -2280,6 +5172,906 @@
     <!-- Environment Configuration - Must load first -->
     <script src="../config.js"></script>
     <script src="../auth.js"></script>
+    <script>
+        (function () {
+            if (!document.documentElement.classList.contains('auth-desktop-v2')) return;
+
+            const showcaseState = document.getElementById('authShowcaseState');
+            const showcaseCard = document.getElementById('authShowcaseCard');
+            const showcaseMedia = showcaseCard ? showcaseCard.querySelector('.auth-showcase-media') : null;
+            const backdrop = document.getElementById('authShowcaseBackdrop');
+            const title = document.getElementById('authShowcaseTitle');
+            const kicker = document.getElementById('authShowcaseKicker');
+            const meta = document.getElementById('authShowcaseMeta');
+            const copy = document.getElementById('authShowcaseCopy');
+            const rail = document.getElementById('authShowcaseRail');
+            const railSection = rail ? rail.closest('.auth-showcase-bottom') : null;
+            const showcaseStateTitle = showcaseState.querySelector('.auth-showcase-state-title');
+            const showcaseStateSubtitle = showcaseState.querySelector('.auth-showcase-state-subtitle');
+            const showcaseStateStatus = showcaseState.querySelector('.auth-showcase-state-status');
+            let showcaseTitleFitFrame = 0;
+
+            if (!showcaseState || !showcaseCard || !showcaseMedia || !backdrop || !title || !kicker || !meta || !copy || !rail) {
+                return;
+            }
+
+            function fitShowcaseTitle(node) {
+                if (!node || node.hidden || !node.textContent) return;
+
+                node.style.removeProperty('font-size');
+                node.style.removeProperty('--auth-showcase-title-max-lines');
+
+                const compactDesktopQuery = '(min-width: 1181px) and (max-width: 1600px), (min-width: 1181px) and (max-width: 1800px) and (max-height: 920px)';
+                const isCompactDesktop = typeof window.matchMedia === 'function' && window.matchMedia(compactDesktopQuery).matches;
+                const rootFontSize = parseFloat(getComputedStyle(document.documentElement).fontSize) || 16;
+                const rawTitle = node.textContent.replace(/\s+/g, ' ').trim();
+                let allowedLines = 2;
+
+                if (isCompactDesktop) {
+                    allowedLines = rawTitle.length > 34 ? 4 : 3;
+                } else if (rawTitle.length > 42) {
+                    allowedLines = 4;
+                } else if (rawTitle.length > 24) {
+                    allowedLines = 3;
+                }
+
+                node.style.setProperty('--auth-showcase-title-max-lines', String(allowedLines));
+
+                const computedFontSize = parseFloat(getComputedStyle(node).fontSize) || (isCompactDesktop ? 56 : 72);
+                const minRem = isCompactDesktop
+                    ? (allowedLines >= 4 ? 2.2 : 2.45)
+                    : (allowedLines >= 4 ? 2.4 : allowedLines === 3 ? 2.8 : 3.2);
+                let currentRem = computedFontSize / rootFontSize;
+                let guard = 0;
+
+                while (currentRem > minRem && guard < 32) {
+                    const maxAllowedHeight = parseFloat(getComputedStyle(node).maxHeight);
+                    if (!Number.isFinite(maxAllowedHeight) || maxAllowedHeight <= 0 || node.scrollHeight <= maxAllowedHeight + 1) {
+                        break;
+                    }
+
+                    currentRem -= 0.08;
+                    node.style.fontSize = `${currentRem}rem`;
+                    guard += 1;
+                }
+            }
+
+            function scheduleFitShowcaseTitle() {
+                if (showcaseTitleFitFrame) {
+                    cancelAnimationFrame(showcaseTitleFitFrame);
+                }
+
+                showcaseTitleFitFrame = requestAnimationFrame(() => {
+                    fitShowcaseTitle(title);
+                });
+            }
+
+            function createMetaChip(text) {
+                const chip = document.createElement('span');
+                chip.className = 'auth-showcase-meta-chip';
+                chip.textContent = text;
+                return chip;
+            }
+
+            function setShowcaseStateMessage(message, tone = 'loading') {
+                showcaseState.hidden = false;
+                showcaseCard.hidden = true;
+                showcaseState.classList.toggle('is-error', tone === 'error');
+
+                if (!showcaseStateTitle || !showcaseStateSubtitle || !showcaseStateStatus) {
+                    showcaseState.textContent = message;
+                    return;
+                }
+
+                showcaseStateTitle.textContent = message;
+
+                if (tone === 'error') {
+                    showcaseStateSubtitle.textContent = 'Hiện chưa thể tải danh sách nổi bật từ Netflix. Bạn vẫn có thể đăng nhập hoặc đăng ký bình thường.';
+                    showcaseStateStatus.innerHTML = '<span></span>Sẽ thử lại khi bạn tải lại trang hoặc quay lại sau ít phút.';
+                } else {
+                    showcaseStateSubtitle.textContent = 'Hệ thống đang chọn poster nổi bật, mục tóm tắt và bộ sưu tập phù hợp để hiển thị cho bạn.';
+                    showcaseStateStatus.innerHTML = '<span></span>Đang đồng bộ poster, mô tả và danh sách xem tiếp.';
+                }
+            }
+
+            function renderRail(items) {
+                rail.innerHTML = '';
+                if (!Array.isArray(items) || !items.length) {
+                    if (railSection) railSection.hidden = true;
+                    setShowcaseStateMessage('Chưa thể tải gợi ý Netflix lúc này.', 'error');
+                    return;
+                }
+
+                if (railSection) railSection.hidden = false;
+                items.slice(0, 4).forEach((item) => {
+                    const frame = document.createElement('article');
+                    frame.className = 'auth-showcase-thumb';
+
+                    const media = document.createElement('div');
+                    media.className = 'auth-showcase-thumb-media';
+
+                    const image = document.createElement('img');
+                    image.loading = 'lazy';
+                    image.decoding = 'async';
+                    image.alt = item.title || 'Netflix';
+                    image.src = getImageUrl(item);
+
+                    const body = document.createElement('div');
+                    body.className = 'auth-showcase-thumb-body';
+
+                    const titleNode = document.createElement('div');
+                    titleNode.className = 'auth-showcase-thumb-title';
+                    titleNode.textContent = item.title || 'Netflix';
+
+                    const metaNode = document.createElement('div');
+                    metaNode.className = 'auth-showcase-thumb-meta';
+                    metaNode.textContent = buildRailCardMeta(item) || item.meta || 'Netflix';
+
+                    media.appendChild(image);
+                    body.appendChild(titleNode);
+                    body.appendChild(metaNode);
+                    frame.appendChild(media);
+                    frame.appendChild(body);
+                    rail.appendChild(frame);
+                });
+            }
+
+            function renderShowcase(payload) {
+                const item = payload && payload.item ? payload.item : null;
+                if (!item) {
+                    setShowcaseStateMessage('Chưa thể tải gợi ý Netflix lúc này.', 'error');
+                    return;
+                    setShowcaseStateMessage('Chưa thể tải gợi ý Netflix lúc này.', 'error');
+                    return;
+                    showcaseState.textContent = 'Ch\u01b0a th\u1ec3 t\u1ea3i g\u1ee3i \u00fd Netflix l\u00fac n\u00e0y.';
+                    showcaseState.textContent = 'Chưa thể tải gợi ý Netflix lúc này.';
+                    return;
+                }
+
+                showcaseState.hidden = true;
+                showcaseCard.hidden = false;
+                backdrop.src = item.heroImage || '';
+                backdrop.alt = item.title || 'Netflix featured title';
+                kicker.textContent = item.kicker || '\u0110ang n\u1ed5i b\u1eadt tr\u00ean Netflix';
+                title.textContent = item.title || 'Netflix n\u1ed5i b\u1eadt';
+                copy.textContent = item.summary || 'G\u1ee3i \u00fd Netflix s\u1ebd \u0111\u01b0\u1ee3c c\u1eadp nh\u1eadt t\u1ef1 \u0111\u1ed9ng t\u1eeb backend.';
+                kicker.textContent = item.kicker || 'Đang nổi bật trên Netflix';
+                title.textContent = item.title || 'Netflix nổi bật';
+                copy.textContent = item.summary || 'Gợi ý Netflix sẽ được cập nhật tự động từ backend.';
+                meta.innerHTML = '';
+                (Array.isArray(item.meta) ? item.meta : []).filter(Boolean).slice(0, 5).forEach((entry) => {
+                    meta.appendChild(createMetaChip(entry));
+                });
+
+                renderRail(Array.isArray(item.rail) ? item.rail : []);
+            }
+
+            async function loadAuthShowcase() {
+                const backendUrl = window.APP_CONFIG && window.APP_CONFIG.BACKEND_URL
+                    ? window.APP_CONFIG.BACKEND_URL
+                    : 'https://backend-c0r3-7xpq9zn2025.onrender.com';
+
+                try {
+                    const response = await fetch(`${backendUrl}/api/auth-showcase`);
+                    if (!response.ok) {
+                        throw new Error(`HTTP ${response.status}`);
+                    }
+
+                    const payload = await response.json();
+                    renderShowcase(payload);
+                } catch (error) {
+                    console.error('[auth-showcase] failed to load', error);
+                    setShowcaseStateMessage('Chưa thể tải gợi ý Netflix lúc này.', 'error');
+                    return;
+                    showcaseCard.hidden = true;
+                    showcaseState.hidden = false;
+                    setShowcaseStateMessage('Chưa thể tải gợi ý Netflix lúc này.', 'error');
+                    return;
+                    showcaseState.textContent = 'Ch\u01b0a th\u1ec3 t\u1ea3i g\u1ee3i \u00fd Netflix l\u00fac n\u00e0y.';
+                    showcaseState.textContent = 'Chưa thể tải gợi ý Netflix lúc này.';
+                }
+            }
+
+            const DEFAULT_PREFERRED_MARKETS = ['VN', 'KR', 'US'];
+            const REQUIRED_SHOWCASE_MARKETS = ['VN', 'KR'];
+            const DEFAULT_YEAR_RANGE = [2024, 2026];
+            const MARKET_LABELS = {
+                VN: 'Việt Nam',
+                KR: 'Hàn Quốc',
+                US: 'Hoa Kỳ'
+            };
+            const CURATED_SHOWCASE_POOLS = {
+                VN: [
+                    { title: 'Mai', year: 2024, originCode: 'VN', genre: 'Tâm lý', detail: 'Trấn Thành • Tuấn Trần', palette: ['#fb7185', '#3f0d12', '#fecdd3'] },
+                    { title: 'Nhà Bà Nữ', year: 2023, originCode: 'VN', genre: 'Gia đình', detail: 'Trấn Thành', palette: ['#f97316', '#431407', '#fdba74'] },
+                    { title: 'Bố Già', year: 2021, originCode: 'VN', genre: 'Gia đình', detail: 'Trấn Thành • Tuấn Trần', palette: ['#ef4444', '#450a0a', '#fca5a5'] },
+                    { title: 'Cua Lại Vợ Bầu', year: 2019, originCode: 'VN', genre: 'Tình cảm', detail: 'Trấn Thành • Ninh Dương Lan Ngọc', palette: ['#ec4899', '#4a044e', '#f9a8d4'] },
+                    { title: 'Bộ Tứ Báo Thủ', year: 2025, originCode: 'VN', genre: 'Hài', detail: 'Trấn Thành', palette: ['#f43f5e', '#3f0d12', '#fda4af'] },
+                    { title: 'Lật Mặt 6: Tấm Vé Định Mệnh', year: 2023, originCode: 'VN', genre: 'Giật gân', detail: 'Lý Hải', palette: ['#f59e0b', '#451a03', '#fcd34d'] },
+                    { title: 'Lật Mặt 7: Một Điều Ước', year: 2024, originCode: 'VN', genre: 'Gia đình', detail: 'Lý Hải', palette: ['#84cc16', '#1a2e05', '#bef264'] },
+                    { title: 'Cô Gái Từ Quá Khứ', year: 2022, originCode: 'VN', genre: 'Bí ẩn', detail: 'Ninh Dương Lan Ngọc', palette: ['#8b5cf6', '#2e1065', '#c4b5fd'] },
+                    { title: 'Gái Già Lắm Chiêu V', year: 2021, originCode: 'VN', genre: 'Drama', detail: 'Ninh Dương Lan Ngọc', palette: ['#eab308', '#422006', '#fde047'] },
+                    { title: 'Siêu Sao Siêu Ngố', year: 2018, originCode: 'VN', genre: 'Hài', detail: 'Trường Giang', palette: ['#06b6d4', '#083344', '#67e8f9'] }
+                ],
+                KR: [
+                    {
+                        title: 'When Life Gives You Tangerines',
+                        year: 2025,
+                        originCode: 'KR',
+                        genre: 'Chính kịch',
+                        detail: '16 tập',
+                        image: 'https://image.tmdb.org/t/p/w342/1VC3sEFxYXYDqQUCAnvWfUsYg1s.jpg',
+                        heroImage: 'https://image.tmdb.org/t/p/w780/mwczMJeoQrsPERcyP1e900jo3Jv.jpg',
+                        palette: ['#14b8a6', '#0f172a', '#99f6e4']
+                    },
+                    {
+                        title: 'Officer Black Belt',
+                        year: 2024,
+                        originCode: 'KR',
+                        genre: 'Hành động',
+                        detail: '108 phút',
+                        image: 'https://image.tmdb.org/t/p/w342/rEaJSXAlNfdhRpDHiNcJsoUa9qE.jpg',
+                        heroImage: 'https://image.tmdb.org/t/p/w780/wSZbtiFIK1fkKZdSRtn2kz2Ttfd.jpg',
+                        palette: ['#f59e0b', '#422006', '#fde68a']
+                    },
+                    { title: 'The Trauma Code: Heroes on Call', year: 2025, originCode: 'KR', genre: 'Y khoa', detail: '8 tập', palette: ['#60a5fa', '#172554', '#bfdbfe'] },
+                    { title: 'Karma', year: 2025, originCode: 'KR', genre: 'Tội phạm', detail: '6 tập', palette: ['#475569', '#0f172a', '#cbd5e1'] },
+                    { title: 'Weak Hero Class 1', year: 2025, originCode: 'KR', genre: 'Học đường', detail: '8 tập', palette: ['#22c55e', '#052e16', '#86efac'] },
+                    { title: 'A Killer Paradox', year: 2024, originCode: 'KR', genre: 'Thriller', detail: '8 tập', palette: ['#ef4444', '#111827', '#fca5a5'] },
+                    { title: 'The Frog', year: 2024, originCode: 'KR', genre: 'Bí ẩn', detail: '8 tập', palette: ['#22c55e', '#0f3d2e', '#86efac'] },
+                    { title: 'Mr. Plankton', year: 2024, originCode: 'KR', genre: 'Lãng mạn', detail: '10 tập', palette: ['#f97316', '#431407', '#fdba74'] },
+                    { title: 'Squid Game', year: 2024, originCode: 'KR', genre: 'Sinh tồn', detail: 'Mùa mới', palette: ['#ec4899', '#4a044e', '#f9a8d4'] },
+                    { title: 'Gyeongseong Creature', year: 2024, originCode: 'KR', genre: 'Quái vật', detail: 'Mùa mới', palette: ['#a855f7', '#3b0764', '#d8b4fe'] }
+                ]
+            };
+            const SHOWCASE_RAIL_FALLBACKS = [
+                ...CURATED_SHOWCASE_POOLS.VN,
+                ...CURATED_SHOWCASE_POOLS.KR,
+                {
+                    title: 'Back in Action',
+                    year: 2025,
+                    originCode: 'US',
+                    genre: 'Hành động',
+                    palette: ['#3b82f6', '#111827', '#93c5fd']
+                },
+                {
+                    title: 'War Machine',
+                    year: 2026,
+                    originCode: 'US',
+                    genre: 'Science Fiction',
+                    palette: ['#ef4444', '#111827', '#fca5a5']
+                }
+            ];
+
+            function escapeSvgText(value) {
+                return String(value || '')
+                    .replace(/&/g, '&amp;')
+                    .replace(/</g, '&lt;')
+                    .replace(/>/g, '&gt;')
+                    .replace(/"/g, '&quot;')
+                    .replace(/'/g, '&#39;');
+            }
+
+            function createShowcaseFallbackImage(titleText, subtitleText, palette) {
+                const [primary, secondary, accent] = palette;
+                const svg = `
+                    <svg xmlns="http://www.w3.org/2000/svg" width="720" height="1080" viewBox="0 0 720 1080">
+                        <defs>
+                            <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+                                <stop offset="0%" stop-color="${secondary}" />
+                                <stop offset="56%" stop-color="#090b11" />
+                                <stop offset="100%" stop-color="${primary}" />
+                            </linearGradient>
+                            <radialGradient id="glow" cx="78%" cy="20%" r="64%">
+                                <stop offset="0%" stop-color="${accent}" stop-opacity="0.48" />
+                                <stop offset="100%" stop-color="${accent}" stop-opacity="0" />
+                            </radialGradient>
+                        </defs>
+                        <rect width="720" height="1080" rx="36" fill="url(#bg)" />
+                        <rect width="720" height="1080" rx="36" fill="url(#glow)" />
+                        <rect x="40" y="42" width="160" height="40" rx="20" fill="rgba(255,255,255,0.08)" stroke="rgba(255,255,255,0.16)" />
+                        <text x="64" y="68" fill="${accent}" font-family="Segoe UI, Arial, sans-serif" font-size="15" font-weight="700" letter-spacing="1.2">NETFLIX</text>
+                        <text x="48" y="728" fill="#f8fafc" font-family="Segoe UI, Arial, sans-serif" font-size="64" font-weight="800">${escapeSvgText(titleText)}</text>
+                        <text x="50" y="784" fill="rgba(226,232,240,0.82)" font-family="Segoe UI, Arial, sans-serif" font-size="24" font-weight="600">${escapeSvgText(subtitleText)}</text>
+                    </svg>
+                `.trim();
+
+                return `data:image/svg+xml;charset=UTF-8,${encodeURIComponent(svg)}`;
+            }
+
+            function firstNonEmptyText(...values) {
+                for (const value of values) {
+                    if (typeof value === 'string' && value.trim()) return value.trim();
+                }
+
+                return '';
+            }
+
+            function hashString(value) {
+                let hash = 0;
+                const text = String(value || '');
+
+                for (let index = 0; index < text.length; index += 1) {
+                    hash = ((hash << 5) - hash) + text.charCodeAt(index);
+                    hash |= 0;
+                }
+
+                return Math.abs(hash);
+            }
+
+            function pickDailyIndex(length, seed) {
+                if (!length) return 0;
+                const dayKey = new Date().toISOString().slice(0, 10);
+                return hashString(`${dayKey}:${seed}`) % length;
+            }
+
+            function rotateList(values, index) {
+                const list = Array.isArray(values) ? values.slice() : [];
+                if (!list.length) return [];
+
+                const normalizedIndex = ((index % list.length) + list.length) % list.length;
+                return list.slice(normalizedIndex).concat(list.slice(0, normalizedIndex));
+            }
+
+            function normalizeTitleKey(value) {
+                return String(value || '').trim().toLowerCase();
+            }
+
+            function uniqueStrings(values) {
+                const seen = new Set();
+                return (Array.isArray(values) ? values : []).filter((value) => {
+                    const normalized = String(value || '').trim();
+                    const key = normalized.toLowerCase();
+                    if (!normalized || seen.has(key)) return false;
+                    seen.add(key);
+                    return true;
+                });
+            }
+
+            function getImageUrl(item) {
+                return firstNonEmptyText(
+                    item?.image,
+                    item?.heroImage,
+                    item?.backdrop,
+                    item?.backdropUrl,
+                    item?.backdrop_url,
+                    item?.poster,
+                    item?.posterUrl,
+                    item?.poster_url
+                );
+            }
+
+            function parseYear(value) {
+                if (typeof value === 'number' && Number.isFinite(value)) {
+                    const year = Math.trunc(value);
+                    return year >= 1900 && year <= 2100 ? year : null;
+                }
+
+                if (typeof value === 'string') {
+                    const match = value.match(/\b(19|20)\d{2}\b/);
+                    return match ? Number(match[0]) : null;
+                }
+
+                return null;
+            }
+
+            function normalizeMetaParts(value) {
+                if (Array.isArray(value)) {
+                    return value
+                        .map((entry) => String(entry || '').trim())
+                        .filter(Boolean);
+                }
+
+                if (typeof value === 'string') {
+                    return value
+                        .split(/[•·|]/)
+                        .map((entry) => entry.trim())
+                        .filter(Boolean);
+                }
+
+                return [];
+            }
+
+            function extractYearFromMeta(value) {
+                const parts = normalizeMetaParts(value);
+                for (const part of parts) {
+                    const year = parseYear(part);
+                    if (year) return year;
+                }
+
+                return null;
+            }
+
+            function normalizeOriginCode(...values) {
+                for (const value of values) {
+                    const text = String(value || '').trim();
+                    if (!text) continue;
+
+                    const upper = text.toUpperCase();
+                    if (upper === 'VN' || upper === 'KR' || upper === 'US') {
+                        return upper;
+                    }
+
+                    const lower = text.toLowerCase();
+                    if (lower.includes('việt nam') || lower.includes('viet nam')) return 'VN';
+                    if (lower.includes('hàn quốc') || lower.includes('han quoc') || lower.includes('korea')) return 'KR';
+                    if (lower.includes('hoa kỳ') || lower.includes('hoa ky') || lower.includes('united states') || lower === 'mỹ') {
+                        return 'US';
+                    }
+                }
+
+                return '';
+            }
+
+            function normalizeOriginLabel(originCode, fallbackLabel) {
+                return MARKET_LABELS[originCode] || firstNonEmptyText(fallbackLabel, 'Netflix');
+            }
+
+            function getShowcaseSettings(payload) {
+                const markets = Array.isArray(payload?.preferredMarkets) && payload.preferredMarkets.length
+                    ? payload.preferredMarkets.map((entry) => String(entry || '').trim().toUpperCase()).filter(Boolean)
+                    : DEFAULT_PREFERRED_MARKETS;
+                const range = Array.isArray(payload?.preferredYearRange) && payload.preferredYearRange.length === 2
+                    ? payload.preferredYearRange
+                    : DEFAULT_YEAR_RANGE;
+
+                return {
+                    preferredMarkets: markets,
+                    minYear: parseYear(range[0]) || DEFAULT_YEAR_RANGE[0],
+                    maxYear: parseYear(range[1]) || DEFAULT_YEAR_RANGE[1]
+                };
+            }
+
+            function normalizeFeaturedItem(item) {
+                const year = parseYear(item?.year) || extractYearFromMeta(item?.meta);
+                const originCode = normalizeOriginCode(item?.originCode, item?.originLabel, item?.meta);
+                const originLabel = normalizeOriginLabel(originCode, item?.originLabel);
+
+                return {
+                    ...item,
+                    heroImage: getImageUrl(item),
+                    year,
+                    originCode,
+                    originLabel,
+                    meta: normalizeMetaParts(item?.meta)
+                };
+            }
+
+            function normalizeRailItem(item) {
+                const year = parseYear(item?.year) || extractYearFromMeta(item?.meta);
+                const originCode = normalizeOriginCode(item?.originCode, item?.originLabel, item?.badge, item?.meta);
+                const originLabel = normalizeOriginLabel(originCode, item?.originLabel || item?.badge);
+                const metaParts = normalizeMetaParts(item?.meta);
+
+                return {
+                    ...item,
+                    image: getImageUrl(item),
+                    year,
+                    originCode,
+                    originLabel,
+                    badge: originLabel,
+                    meta: metaParts.length ? metaParts.join(' • ') : [year, originLabel].filter(Boolean).join(' • ')
+                };
+            }
+
+            function isAllowedRecommendation(item, settings) {
+                return Boolean(item?.originCode)
+                    && settings.preferredMarkets.includes(item.originCode)
+                    && Number.isInteger(item?.year)
+                    && item.year >= settings.minYear
+                    && item.year <= settings.maxYear;
+            }
+
+            function isPreferredMarketRecommendation(item, settings) {
+                return Boolean(item?.originCode)
+                    && settings.preferredMarkets.includes(item.originCode);
+            }
+
+            function isRelaxedYearRecommendation(item, settings, yearPadding = 1) {
+                return isPreferredMarketRecommendation(item, settings)
+                    && Number.isInteger(item?.year)
+                    && item.year >= (settings.minYear - yearPadding)
+                    && item.year <= settings.maxYear;
+            }
+
+            function compareRecommendations(a, b, settings) {
+                const rankA = settings.preferredMarkets.indexOf(a.originCode);
+                const rankB = settings.preferredMarkets.indexOf(b.originCode);
+                const normalizedRankA = rankA === -1 ? 999 : rankA;
+                const normalizedRankB = rankB === -1 ? 999 : rankB;
+
+                if (normalizedRankA !== normalizedRankB) return normalizedRankA - normalizedRankB;
+                if ((b.year || 0) !== (a.year || 0)) return (b.year || 0) - (a.year || 0);
+                return String(a.title || '').localeCompare(String(b.title || ''), 'vi');
+            }
+
+            function buildFallbackRecommendations(settings, featuredItem) {
+                const featuredTitle = String(featuredItem?.title || '').trim().toLowerCase();
+
+                return SHOWCASE_RAIL_FALLBACKS
+                    .filter((entry) => settings.preferredMarkets.includes(entry.originCode))
+                    .filter((entry) => REQUIRED_SHOWCASE_MARKETS.includes(entry.originCode)
+                        || (entry.year >= settings.minYear && entry.year <= settings.maxYear))
+                    .filter((entry) => String(entry.title || '').trim().toLowerCase() !== featuredTitle)
+                    .map((entry) => ({
+                        title: entry.title,
+                        image: entry.image || createShowcaseFallbackImage(
+                            entry.title,
+                            `${MARKET_LABELS[entry.originCode] || entry.originCode} • ${entry.year}`,
+                            entry.palette
+                        ),
+                        heroImage: entry.heroImage || '',
+                        badge: MARKET_LABELS[entry.originCode] || entry.originCode,
+                        meta: [entry.year, entry.genre, entry.detail].filter(Boolean).join(' • '),
+                        year: entry.year,
+                        originCode: entry.originCode,
+                        originLabel: MARKET_LABELS[entry.originCode] || entry.originCode,
+                        summary: entry.summary || [entry.genre, entry.detail].filter(Boolean).join(' • ')
+                    }))
+                    .sort((a, b) => compareRecommendations(a, b, settings));
+            }
+
+            function mergeRecommendations(primaryItems, fallbackItems, settings, limit) {
+                const merged = [];
+                const seen = new Set();
+
+                [...primaryItems, ...fallbackItems].forEach((item) => {
+                    const titleKey = String(item?.title || '').trim().toLowerCase();
+                    if (!titleKey || seen.has(titleKey)) return;
+                    seen.add(titleKey);
+                    merged.push(item);
+                });
+
+                return merged
+                    .sort((a, b) => compareRecommendations(a, b, settings))
+                    .slice(0, limit);
+            }
+
+            function buildFeaturedMeta(item) {
+                const entries = [];
+                const seen = new Set();
+                const pushEntry = (value) => {
+                    const text = String(value || '').trim();
+                    if (!text) return;
+                    const key = text.toLowerCase();
+                    if (seen.has(key)) return;
+                    seen.add(key);
+                    entries.push(text);
+                };
+
+                pushEntry(normalizeOriginLabel(item?.originCode, item?.originLabel));
+                if (item?.year) pushEntry(String(item.year));
+                normalizeMetaParts(item?.meta).forEach(pushEntry);
+
+                return entries.slice(0, 5);
+            }
+
+            function isOriginMetaPart(value) {
+                const text = String(value || '').trim();
+                if (!text) return false;
+                if (normalizeOriginCode(text)) return true;
+
+                return text.toLowerCase() === 'netflix';
+            }
+
+            function isDetailMetaPart(value) {
+                return /\b(phút|mùa|tập|episode|episodes|season|seasons|movie|series|phim|loạt phim)\b/i.test(String(value || '').trim());
+            }
+
+            function buildRailCardMeta(item) {
+                const metaParts = normalizeMetaParts(item?.meta);
+                const year = parseYear(item?.year) || extractYearFromMeta(metaParts);
+                const contentParts = metaParts
+                    .filter((part) => parseYear(part) !== year)
+                    .filter((part) => !isOriginMetaPart(part));
+                const detailPart = contentParts.find((part) => isDetailMetaPart(part)) || '';
+                const genrePart = contentParts.find((part) => part !== detailPart) || contentParts[0] || '';
+                const thirdPart = detailPart || contentParts.find((part) => part !== genrePart) || '';
+
+                return uniqueStrings([
+                    year ? String(year) : '',
+                    genrePart,
+                    thirdPart
+                ]).filter(Boolean).join(' • ');
+            }
+
+            function createLeadRailItem(item, imageUrl) {
+                const featuredMeta = buildFeaturedMeta(item);
+
+                return normalizeRailItem({
+                    title: item?.title,
+                    image: imageUrl,
+                    badge: normalizeOriginLabel(item?.originCode, item?.originLabel),
+                    meta: featuredMeta.slice(1).join(' • ') || featuredMeta.join(' • '),
+                    meta: buildRailCardMeta(item),
+                    year: item?.year,
+                    originCode: item?.originCode,
+                    originLabel: item?.originLabel
+                });
+            }
+
+            function buildCuratedPosterItems(primaryItems, fallbackItems, featuredItem) {
+                const curatedItems = [];
+                const seenTitles = new Set();
+                const featuredKey = normalizeTitleKey(featuredItem?.title);
+                if (featuredKey) seenTitles.add(featuredKey);
+
+                REQUIRED_SHOWCASE_MARKETS.forEach((marketCode) => {
+                    const primaryPool = (Array.isArray(primaryItems) ? primaryItems : [])
+                        .filter((entry) => entry?.originCode === marketCode)
+                        .filter((entry) => Boolean(getImageUrl(entry)));
+                    const fallbackPool = (Array.isArray(fallbackItems) ? fallbackItems : [])
+                        .filter((entry) => entry?.originCode === marketCode)
+                        .filter((entry) => Boolean(getImageUrl(entry)));
+                    const pool = primaryPool.length ? primaryPool : fallbackPool;
+                    if (!pool.length) return;
+
+                    const rotatedPool = rotateList(pool, pickDailyIndex(pool.length, `${marketCode}:auth-curated-order`));
+                    const selected = rotatedPool.find((entry) => {
+                        const titleKey = normalizeTitleKey(entry?.title);
+                        return titleKey && !seenTitles.has(titleKey);
+                    }) || rotatedPool[0];
+                    const titleKey = normalizeTitleKey(selected?.title);
+
+                    if (!selected || !titleKey || seenTitles.has(titleKey)) return;
+
+                    seenTitles.add(titleKey);
+                    curatedItems.push(selected);
+                });
+
+                return curatedItems;
+            }
+
+            function buildDynamicPosterItems(primaryItems, preferredItems, supplementalItems, fallbackItems, settings, limit, excludedTitles) {
+                if (limit <= 0) return [];
+
+                const posters = [];
+                const seenTitles = new Set((Array.isArray(excludedTitles) ? excludedTitles : [])
+                    .map((titleText) => normalizeTitleKey(titleText))
+                    .filter(Boolean));
+                const primaryCandidates = (Array.isArray(primaryItems) ? primaryItems : [])
+                    .filter((entry) => !REQUIRED_SHOWCASE_MARKETS.includes(entry?.originCode));
+                const candidateItems = [
+                    ...primaryCandidates,
+                    ...mergeRecommendations(
+                        preferredItems,
+                        supplementalItems,
+                        settings,
+                        Math.max(limit * 6, 8)
+                    )
+                ];
+
+                const pushUnique = (entry) => {
+                    if (posters.length >= limit || !getImageUrl(entry)) return false;
+
+                    const titleKey = normalizeTitleKey(entry?.title);
+                    if (!titleKey || seenTitles.has(titleKey)) return false;
+
+                    seenTitles.add(titleKey);
+                    posters.push(entry);
+                    return true;
+                };
+
+                candidateItems.forEach(pushUnique);
+
+                if (posters.length < limit) {
+                    fallbackItems
+                        .filter((entry) => !REQUIRED_SHOWCASE_MARKETS.includes(entry?.originCode))
+                        .forEach(pushUnique);
+                }
+
+                return posters.slice(0, limit);
+            }
+
+            function buildPosterCollection(featuredItem, preferredItems, supplementalItems, fallbackItems, settings, limit) {
+                const leadItem = createLeadRailItem(featuredItem, featuredItem?.heroImage);
+                const primaryRailItems = []
+                    .concat(Array.isArray(preferredItems) ? preferredItems : [])
+                    .concat(Array.isArray(supplementalItems) ? supplementalItems : []);
+                const curatedItems = buildCuratedPosterItems(primaryRailItems, fallbackItems, featuredItem);
+                const dynamicItems = buildDynamicPosterItems(
+                    primaryRailItems,
+                    preferredItems,
+                    supplementalItems,
+                    fallbackItems,
+                    settings,
+                    Math.max(0, limit - 1 - curatedItems.length),
+                    [leadItem?.title, ...curatedItems.map((entry) => entry?.title)]
+                );
+                const posters = [leadItem, ...curatedItems, ...dynamicItems].filter(Boolean);
+
+                if (posters.length < limit) {
+                    const seenTitles = new Set(posters.map((entry) => normalizeTitleKey(entry?.title)).filter(Boolean));
+                    fallbackItems
+                        .filter((entry) => !REQUIRED_SHOWCASE_MARKETS.includes(entry?.originCode))
+                        .forEach((entry) => {
+                        if (posters.length >= limit || !getImageUrl(entry)) return;
+
+                        const titleKey = normalizeTitleKey(entry?.title);
+                        if (!titleKey || seenTitles.has(titleKey)) return;
+
+                        seenTitles.add(titleKey);
+                        posters.push(entry);
+                    });
+                }
+
+                return posters.slice(0, limit);
+            }
+
+            function promoteRailItemToFeatured(featuredItem, railItem, settings) {
+                return {
+                    ...featuredItem,
+                    kicker: 'Ưu tiên mới cập nhật',
+                    title: railItem.title || featuredItem.title,
+                    heroImage: railItem.image || featuredItem.heroImage,
+                    year: railItem.year || featuredItem.year,
+                    originCode: railItem.originCode || featuredItem.originCode,
+                    originLabel: railItem.originLabel || featuredItem.originLabel,
+                    meta: [railItem.originLabel, railItem.year, railItem.meta].filter(Boolean),
+                    summary: railItem.summary || `Gợi ý được làm mới theo ưu tiên ${settings.preferredMarkets.map((code) => MARKET_LABELS[code] || code).join(', ')} trong giai đoạn ${settings.minYear}-${settings.maxYear}.`
+                };
+            }
+
+            function createMetaChip(text) {
+                const chip = document.createElement('span');
+                chip.className = 'auth-showcase-meta-chip';
+                chip.textContent = text;
+                return chip;
+            }
+
+            function renderRail(items) {
+                rail.innerHTML = '';
+                if (!Array.isArray(items) || !items.length) {
+                    if (railSection) railSection.hidden = true;
+                    return;
+                }
+
+                if (railSection) railSection.hidden = false;
+                items.slice(0, 4).forEach((item) => {
+                    const frame = document.createElement('article');
+                    frame.className = 'auth-showcase-thumb';
+
+                    const image = document.createElement('img');
+                    image.loading = 'lazy';
+                    image.decoding = 'async';
+                    image.alt = item.title || 'Netflix';
+                    image.src = getImageUrl(item);
+
+                    const badge = document.createElement('span');
+                    badge.className = 'auth-showcase-thumb-badge';
+                    badge.textContent = item.badge || 'Netflix';
+
+                    const body = document.createElement('div');
+                    body.className = 'auth-showcase-thumb-body';
+
+                    const titleNode = document.createElement('div');
+                    titleNode.className = 'auth-showcase-thumb-title';
+                    titleNode.textContent = item.title || 'Netflix';
+
+                    const metaNode = document.createElement('div');
+                    metaNode.className = 'auth-showcase-thumb-meta';
+                    metaNode.textContent = buildRailCardMeta(item) || item.meta || 'Netflix';
+
+                    body.appendChild(titleNode);
+                    body.appendChild(metaNode);
+                    frame.appendChild(image);
+                    frame.appendChild(badge);
+                    frame.appendChild(body);
+                    rail.appendChild(frame);
+                });
+            }
+
+            function applyShowcaseBackdrop(imageUrl, altText) {
+                if (!backdrop) return;
+
+                if (!imageUrl) {
+                    backdrop.removeAttribute('src');
+                    backdrop.alt = altText || '';
+                    return;
+                }
+
+                backdrop.src = imageUrl;
+                backdrop.alt = altText || 'Netflix featured title';
+            }
+
+            function renderShowcase(payload) {
+                const item = payload && payload.item ? payload.item : null;
+                if (!item) {
+                    setShowcaseStateMessage('Chưa thể tải gợi ý Netflix lúc này.', 'error');
+                    return;
+                }
+
+                const settings = getShowcaseSettings(payload);
+                const featuredItem = normalizeFeaturedItem(item);
+                const fallbackCandidates = buildFallbackRecommendations(settings, featuredItem);
+                const fallbackFeatured = fallbackCandidates[0] || null;
+                const finalFeatured = (featuredItem?.title && getImageUrl(featuredItem))
+                    ? featuredItem
+                    : (fallbackFeatured ? promoteRailItemToFeatured(featuredItem, fallbackFeatured, settings) : featuredItem);
+                const allRailItems = (Array.isArray(item.rail) ? item.rail : [])
+                    .map(normalizeRailItem)
+                    .filter((entry) => Boolean(getImageUrl(entry)));
+                const preferredRailItems = allRailItems
+                    .filter((entry) => isAllowedRecommendation(entry, settings));
+                const relaxedYearRailItems = allRailItems
+                    .filter((entry) => !isAllowedRecommendation(entry, settings))
+                    .filter((entry) => isRelaxedYearRecommendation(entry, settings, 1));
+                const broadMarketRailItems = allRailItems
+                    .filter((entry) => !isAllowedRecommendation(entry, settings))
+                    .filter((entry) => !isRelaxedYearRecommendation(entry, settings, 1))
+                    .filter((entry) => isPreferredMarketRecommendation(entry, settings));
+                const supplementalRailItems = mergeRecommendations(
+                    relaxedYearRailItems,
+                    broadMarketRailItems,
+                    settings,
+                    12
+                );
+                const finalHeroImage = getImageUrl(finalFeatured)
+                    || getImageUrl(preferredRailItems[0])
+                    || getImageUrl(relaxedYearRailItems[0])
+                    || getImageUrl(broadMarketRailItems[0])
+                    || getImageUrl(supplementalRailItems[0])
+                    || getImageUrl(fallbackFeatured);
+                const finalFeaturedWithImage = {
+                    ...finalFeatured,
+                    heroImage: finalHeroImage
+                };
+                const posterItems = buildPosterCollection(
+                    finalFeaturedWithImage,
+                    preferredRailItems,
+                    supplementalRailItems,
+                    fallbackCandidates,
+                    settings,
+                    4
+                );
+
+                showcaseState.hidden = true;
+                showcaseCard.hidden = false;
+                applyShowcaseBackdrop(finalHeroImage, finalFeatured.title || 'Netflix featured title');
+                kicker.textContent = finalFeatured.kicker || 'Đang nổi bật trên Netflix';
+                title.textContent = finalFeatured.title || 'Netflix nổi bật';
+                copy.textContent = finalFeatured.summary || 'Gợi ý Netflix sẽ ưu tiên Việt Nam, Hàn Quốc, Mỹ trong giai đoạn 2024-2026.';
+                meta.innerHTML = '';
+                buildFeaturedMeta(finalFeatured).forEach((entry) => {
+                    meta.appendChild(createMetaChip(entry));
+                });
+                renderRail(posterItems);
+                scheduleFitShowcaseTitle();
+            }
+
+            async function loadAuthShowcase() {
+                const backendUrl = window.APP_CONFIG && window.APP_CONFIG.BACKEND_URL
+                    ? window.APP_CONFIG.BACKEND_URL
+                    : 'https://backend-c0r3-7xpq9zn2025.onrender.com';
+                const requestUrl = new URL(`${backendUrl}/api/auth-showcase`);
+                requestUrl.searchParams.set('country', 'VN');
+                showcaseState.hidden = false;
+                showcaseCard.hidden = true;
+                setShowcaseStateMessage('Đang tải gợi ý Netflix...', 'loading');
+
+                try {
+                    const response = await fetch(requestUrl.toString());
+                    if (!response.ok) {
+                        throw new Error(`HTTP ${response.status}`);
+                    }
+
+                    const payload = await response.json();
+                    renderShowcase(payload);
+                } catch (error) {
+                    console.error('[auth-showcase] failed to load', error);
+                    setShowcaseStateMessage('Chưa thể tải gợi ý Netflix lúc này.', 'error');
+                }
+            }
+
+            if (document.readyState === 'loading') {
+                document.addEventListener('DOMContentLoaded', loadAuthShowcase, { once: true });
+            } else {
+                loadAuthShowcase();
+            }
+
+            window.addEventListener('resize', scheduleFitShowcaseTitle);
+        })();
+    </script>
 
     <!-- Auto switch tab based on query param -->
     <script>
