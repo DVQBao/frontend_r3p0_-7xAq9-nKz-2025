@@ -971,7 +971,7 @@
 
 <script src="../config.js"></script>
 <script>
-const BACKEND_URL = window.APP_CONFIG ? window.APP_CONFIG.BACKEND_URL : 'http://localhost:3000';
+const BACKEND_URL = window.APP_CONFIG && window.APP_CONFIG.BACKEND_URL ? window.APP_CONFIG.BACKEND_URL : '';
 const TOKEN_KEY = 'ctv_token';
 
 let currentTab = 'dashboard';
