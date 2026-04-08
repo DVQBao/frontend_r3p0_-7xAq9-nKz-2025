@@ -6815,7 +6815,7 @@
                 const token = localStorage.getItem('auth_token');
                 if (!token) return;
 
-                const backendUrl = window.APP_CONFIG ? window.APP_CONFIG.BACKEND_URL : 'https://backend-c0r3-7xpq9zn2025.onrender.com';
+                const backendUrl = window.APP_CONFIG ? window.APP_CONFIG.BACKEND_URL : '';
                 const response = await fetch(`${backendUrl}/api/auth/me`, {
                     method: 'GET',
                     headers: {
@@ -6886,7 +6886,7 @@
                 const token = localStorage.getItem('auth_token');
                 if (!token) return;
 
-                const backendUrl = window.APP_CONFIG ? window.APP_CONFIG.BACKEND_URL : 'https://backend-c0r3-7xpq9zn2025.onrender.com';
+                const backendUrl = window.APP_CONFIG ? window.APP_CONFIG.BACKEND_URL : '';
                 const response = await fetch(`${backendUrl}/api/referral/info`, {
                     method: 'GET',
                     headers: {
@@ -6969,7 +6969,7 @@
                 const token = localStorage.getItem('auth_token');
                 if (!token) return;
 
-                const backendUrl = window.APP_CONFIG ? window.APP_CONFIG.BACKEND_URL : 'https://backend-c0r3-7xpq9zn2025.onrender.com';
+                const backendUrl = window.APP_CONFIG ? window.APP_CONFIG.BACKEND_URL : '';
                 await fetch(`${backendUrl}/api/referral/mark-read`, {
                     method: 'POST',
                     headers: {
@@ -7022,7 +7022,7 @@
                     showSmartLoading('Đang tải lịch sử...', 300);
                 }
 
-                const backendUrl = window.APP_CONFIG ? window.APP_CONFIG.BACKEND_URL : 'https://backend-c0r3-7xpq9zn2025.onrender.com';
+                const backendUrl = window.APP_CONFIG ? window.APP_CONFIG.BACKEND_URL : '';
                 const response = await fetch(`${backendUrl}/api/referral/history`, {
                     method: 'GET',
                     headers: {
@@ -7375,7 +7375,7 @@ Bạn đã thử 3 cách trên và vẫn không được?`,
                 showSmartLoading('Đang xử lý...', 500);
 
                 // Call API to report issue
-                const backendUrl = window.APP_CONFIG ? window.APP_CONFIG.BACKEND_URL : 'https://backend-c0r3-7xpq9zn2025.onrender.com';
+                const backendUrl = window.APP_CONFIG ? window.APP_CONFIG.BACKEND_URL : '';
                 const response = await fetch(`${backendUrl}/api/cookies/report-issue`, {
                     method: 'POST',
                     headers: {
@@ -7611,7 +7611,7 @@ Nếu cần thêm lượt đổi tài khoản, vui lòng liên hệ Support qua 
                 console.log('🔄 Fetching fresh user data from backend...');
                 let user = JSON.parse(currentUser);
 
-                const backendUrl = window.APP_CONFIG ? window.APP_CONFIG.BACKEND_URL : 'https://backend-c0r3-7xpq9zn2025.onrender.com';
+                const backendUrl = window.APP_CONFIG ? window.APP_CONFIG.BACKEND_URL : '';
                 const isLocalhost = ['localhost', '127.0.0.1'].includes(window.location.hostname);
                 const backendIsRemoteProd = !backendUrl.includes('localhost') && !backendUrl.includes('127.0.0.1');
 
@@ -9432,7 +9432,7 @@ Nếu cần thêm lượt đổi tài khoản, vui lòng liên hệ Support qua 
 
             try {
                 // Lấy BACKEND_URL từ config
-                const backendUrl = window.APP_CONFIG ? window.APP_CONFIG.BACKEND_URL : 'https://backend-c0r3-7xpq9zn2025.onrender.com';
+                const backendUrl = window.APP_CONFIG ? window.APP_CONFIG.BACKEND_URL : '';
 
                 const response = await fetch(`${backendUrl}/api/tv/activate`, {
                     method: 'POST',
@@ -9651,7 +9651,7 @@ Nếu cần thêm lượt đổi tài khoản, vui lòng liên hệ Support qua 
             statusDiv.innerHTML = '<span style="color: #a3a3a3;">Đang kết nối Netflix, vui lòng đợi...</span>';
 
             try {
-                const backendUrl = window.APP_CONFIG ? window.APP_CONFIG.BACKEND_URL : 'https://backend-c0r3-7xpq9zn2025.onrender.com';
+                const backendUrl = window.APP_CONFIG ? window.APP_CONFIG.BACKEND_URL : '';
 
                 const response = await fetch(`${backendUrl}/api/tv/generate-app-login`, {
                     method: 'POST',
@@ -10370,7 +10370,7 @@ Nếu cần thêm lượt đổi tài khoản, vui lòng liên hệ Support qua 
             statusDiv.innerHTML = '<span style="color: #a78bfa;">Đang kích hoạt Netflix TV...</span>';
 
             try {
-                const backendUrl = window.APP_CONFIG ? window.APP_CONFIG.BACKEND_URL : 'https://backend-c0r3-7xpq9zn2025.onrender.com';
+                const backendUrl = window.APP_CONFIG ? window.APP_CONFIG.BACKEND_URL : '';
 
                 const response = await fetch(`${backendUrl}/api/tv/activate`, {
                     method: 'POST',
@@ -10502,7 +10502,7 @@ Nếu cần thêm lượt đổi tài khoản, vui lòng liên hệ Support qua 
                 const authToken = localStorage.getItem('auth_token');
                 if (!authToken) return;
 
-                const backendUrl = window.APP_CONFIG ? window.APP_CONFIG.BACKEND_URL : 'https://backend-c0r3-7xpq9zn2025.onrender.com';
+                const backendUrl = window.APP_CONFIG ? window.APP_CONFIG.BACKEND_URL : '';
 
                 const response = await fetch(`${backendUrl}/api/cookies/assigned`, {
                     method: 'GET',
@@ -10578,7 +10578,7 @@ Nếu cần thêm lượt đổi tài khoản, vui lòng liên hệ Support qua 
             btn.innerHTML = '⏳ Đang đổi...';
 
             try {
-                const backendUrl = window.APP_CONFIG ? window.APP_CONFIG.BACKEND_URL : 'https://backend-c0r3-7xpq9zn2025.onrender.com';
+                const backendUrl = window.APP_CONFIG ? window.APP_CONFIG.BACKEND_URL : '';
 
                 const response = await fetch(`${backendUrl}/api/cookies/switch-mobile`, {
                     method: 'POST',

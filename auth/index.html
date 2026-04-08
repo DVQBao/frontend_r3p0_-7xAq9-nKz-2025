@@ -5349,7 +5349,7 @@
             async function loadAuthShowcase() {
                 const backendUrl = window.APP_CONFIG && window.APP_CONFIG.BACKEND_URL
                     ? window.APP_CONFIG.BACKEND_URL
-                    : 'https://backend-c0r3-7xpq9zn2025.onrender.com';
+                    : '';
 
                 try {
                     const response = await fetch(`${backendUrl}/api/auth-showcase`);
@@ -6042,7 +6042,7 @@
             async function loadAuthShowcase() {
                 const backendUrl = window.APP_CONFIG && window.APP_CONFIG.BACKEND_URL
                     ? window.APP_CONFIG.BACKEND_URL
-                    : 'https://backend-c0r3-7xpq9zn2025.onrender.com';
+                    : '';
                 const requestUrl = new URL(`${backendUrl}/api/auth-showcase`);
                 requestUrl.searchParams.set('country', 'VN');
                 showcaseState.hidden = false;
