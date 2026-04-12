@@ -2783,13 +2783,26 @@
             font-family: inherit;
         }
 
+        .custom-modal-btn:disabled {
+            cursor: not-allowed;
+            opacity: 1;
+            transform: none !important;
+            box-shadow: none !important;
+        }
+
         .custom-modal-btn-primary {
             background: linear-gradient(135deg, #60a5fa, #2563eb);
             color: white;
             border-color: rgba(147, 197, 253, 0.2);
         }
 
-        .custom-modal-btn-primary:hover {
+        .custom-modal-btn-primary:disabled {
+            background: rgba(59, 130, 246, 0.16);
+            color: rgba(255, 255, 255, 0.55);
+            border-color: rgba(147, 197, 253, 0.12);
+        }
+
+        .custom-modal-btn-primary:hover:not(:disabled) {
             background: linear-gradient(135deg, #3b82f6, #2563eb);
             transform: translateY(-1px);
             box-shadow: 0 4px 12px rgba(59, 130, 246, 0.4);
@@ -2801,7 +2814,13 @@
             border-color: rgba(148, 163, 184, 0.2);
         }
 
-        .custom-modal-btn-secondary:hover {
+        .custom-modal-btn-secondary:disabled {
+            background: rgba(148, 163, 184, 0.08);
+            color: rgba(226, 232, 240, 0.55);
+            border-color: rgba(148, 163, 184, 0.12);
+        }
+
+        .custom-modal-btn-secondary:hover:not(:disabled) {
             background: rgba(255, 255, 255, 0.15);
         }
 
@@ -2811,7 +2830,7 @@
             border-color: rgba(248, 113, 113, 0.2);
         }
 
-        .custom-modal-btn-danger:hover {
+        .custom-modal-btn-danger:hover:not(:disabled) {
             background: linear-gradient(135deg, #dc2626, #b91c1c);
             transform: translateY(-1px);
             box-shadow: 0 4px 12px rgba(239, 68, 68, 0.4);
@@ -4364,6 +4383,66 @@
             box-shadow: none;
         }
 
+        #pcLoginLinkStatus {
+            display: none;
+            margin-top: 10px;
+            font-size: 0.8rem;
+            line-height: 1.5;
+            text-align: center;
+            color: #9ca3af;
+        }
+
+        #pcLoginLinkStatus[data-state="success"] {
+            color: #4ade80;
+        }
+
+        #pcLoginLinkStatus[data-state="warning"] {
+            color: #fbbf24;
+        }
+
+        #pcLoginLinkStatus[data-state="error"] {
+            color: #f87171;
+        }
+
+        #pcLoginLinkStatus a {
+            color: inherit;
+            font-weight: 700;
+            text-decoration: underline;
+        }
+
+        body.desktop-home-v2 .pc-login-alt {
+            display: grid;
+            gap: 10px;
+            margin-top: 2px;
+        }
+
+        body.desktop-home-v2 .pc-login-alt-separator {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--desktop-home-muted);
+            font-size: 0.74rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+        }
+
+        body.desktop-home-v2 .pc-login-alt-separator::before,
+        body.desktop-home-v2 .pc-login-alt-separator::after {
+            content: "";
+            flex: 1;
+            height: 1px;
+            background: rgba(255, 255, 255, 0.08);
+            margin: 0 10px;
+        }
+
+        body.desktop-home-v2 .pc-login-note {
+            color: var(--desktop-home-muted);
+            font-size: 0.78rem;
+            line-height: 1.55;
+            text-align: center;
+        }
+
         body.desktop-home-v2 .btn {
             position: relative;
             overflow: hidden;
@@ -4421,6 +4500,18 @@
             background: linear-gradient(135deg, #f8e6ae, #d7a646);
             border-color: rgba(255, 232, 170, 0.5);
             box-shadow: 0 16px 30px rgba(191, 137, 43, 0.24), inset 0 1px 0 rgba(255, 255, 255, 0.42);
+        }
+
+        body.desktop-home-v2 .pc-login-alt .btn-premium:disabled {
+            opacity: 1;
+            color: rgba(245, 223, 156, 0.76);
+            background: linear-gradient(135deg, rgba(245, 223, 156, 0.16), rgba(201, 149, 51, 0.1));
+            border-color: rgba(255, 223, 145, 0.2);
+            box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.08);
+        }
+
+        body.desktop-home-v2 .pc-login-alt .btn-premium:disabled .icon {
+            opacity: 0.72;
         }
 
         body.desktop-home-v2 .btn-blue {
@@ -4589,6 +4680,13 @@
             font-size: 0.75rem;
             font-weight: 700;
             text-transform: uppercase;
+        }
+
+        body.desktop-home-v2 #statusMessage a {
+            color: inherit;
+            font-weight: 800;
+            text-decoration: underline;
+            text-underline-offset: 2px;
         }
 
         @media (min-width: 1025px) and (max-width: 1340px) {
@@ -5084,6 +5182,17 @@
                                                 style="font-size: 0.85rem; padding: 8px 16px;">
                                                 Bước 2: Watch as Guest
                                             </button>
+                                            <button class="btn" id="pcLoginLinkBtn"
+                                                style="font-size: 0.85rem; padding: 8px 16px; background: rgba(245, 158, 11, 0.12); color: #fbbf24; border: 1px solid rgba(245, 158, 11, 0.32);">
+                                                Táº¡o link Ä‘Äƒng nháº­p PC (Pro / -3 credits)
+                                            </button>
+                                            <div
+                                                style="font-size: 0.75rem; line-height: 1.5; color: #9ca3af; text-align: center;">
+                                                Tạo link nhanh, hạn chế tài khoản lỗi, dùng được trên mọi trình duyệt và chỉ áp dụng cho Pro Plan.
+                                            </div>
+                                            <div id="pcLoginLinkStatus"
+                                                style="display:none; font-size: 0.8rem; text-align: center; color: #9ca3af;">
+                                            </div>
                                             <button
                                                 onclick="window.open('https://www.facebook.com/tiembanh4k/', '_blank')"
                                                 class="btn" style="font-size: 0.85rem; padding: 8px 16px;">
@@ -6660,7 +6769,7 @@
             return icons[name] || icons.info;
         }
 
-        function showCustomModal(options) {
+        function showCustomModalLegacy(options) {
             const {
                 icon = 'ℹ️',
                 title = 'Thông báo',
@@ -6690,7 +6799,12 @@
                 const button = document.createElement('button');
                 button.className = `custom-modal-btn custom-modal-btn-${btn.type || 'primary'}`;
                 button.textContent = btn.text;
+                button.disabled = !!btn.disabled;
                 button.onclick = () => {
+                    if (btn.disabled) {
+                        return;
+                    }
+
                     closeCustomModal();
                     if (btn.onClick) btn.onClick();
                 };
@@ -6716,17 +6830,30 @@
 
         function showCustomModal(options) {
             const {
-                icon = 'â„¹ï¸',
-                title = 'ThÃ´ng bÃ¡o',
+                icon = 'ℹ️',
+                title = 'Thông báo',
                 message = '',
-                buttons = [{ text: 'OK', type: 'primary', onClick: null }]
+                buttons = [{ text: 'OK', type: 'primary', onClick: null }],
+                dialogClass = '',
+                footerClass = ''
             } = options;
 
             const modalOverlay = document.getElementById('customModalOverlay');
+            const modalDialog = modalOverlay.querySelector('.custom-modal-dialog');
             const modalIcon = document.getElementById('customModalIcon');
             const modalTitle = document.getElementById('customModalTitle');
             const modalBody = document.getElementById('customModalBody');
             const modalFooter = document.getElementById('customModalFooter');
+
+            modalDialog.className = 'custom-modal-dialog';
+            if (dialogClass) {
+                dialogClass.split(/\s+/).filter(Boolean).forEach(className => modalDialog.classList.add(className));
+            }
+
+            modalFooter.className = 'custom-modal-footer';
+            if (footerClass) {
+                footerClass.split(/\s+/).filter(Boolean).forEach(className => modalFooter.classList.add(className));
+            }
 
             const iconMarkup = resolvePremiumModalIcon(icon);
             modalIcon.innerHTML = iconMarkup;
@@ -6738,7 +6865,7 @@
 
             if (hasHtmlMarkup) {
                 modalBody.innerHTML = message;
-            } else if (message.includes('\n') || message.includes('â€¢')) {
+            } else if (message.includes('\n') || message.includes('•')) {
                 modalBody.innerHTML = `<pre>${message}</pre>`;
             } else {
                 modalBody.innerHTML = message;
@@ -6748,8 +6875,19 @@
             buttons.forEach(btn => {
                 const button = document.createElement('button');
                 button.className = `custom-modal-btn custom-modal-btn-${btn.type || 'primary'}`;
+                if (btn.className) {
+                    btn.className.split(/\s+/).filter(Boolean).forEach(className => button.classList.add(className));
+                }
                 button.textContent = btn.text;
+                button.disabled = !!btn.disabled;
+                if (btn.style) {
+                    button.style.cssText = btn.style;
+                }
                 button.onclick = () => {
+                    if (btn.disabled) {
+                        return;
+                    }
+
                     closeCustomModal();
                     if (btn.onClick) btn.onClick();
                 };
@@ -7309,6 +7447,163 @@
             });
         }
 
+        async function continueWatchAsGuestAfterReport() {
+            try {
+                if (typeof window.netflixGuestApp !== 'undefined') {
+                    const guestState = window.netflixGuestApp.state;
+                    if (!guestState.netflixTabRef || guestState.netflixTabRef.closed) {
+                        const openNetflixBtn = document.getElementById('openNetflixBtn');
+                        if (openNetflixBtn) {
+                            openNetflixBtn.click();
+                            await new Promise(resolve => setTimeout(resolve, 1000));
+                        }
+                    }
+                }
+
+                if (typeof window.handleWatchAsGuestAfterReport === 'function') {
+                    await window.handleWatchAsGuestAfterReport();
+                    return;
+                }
+
+                throw new Error('Kh\u00f4ng t\u00ecm th\u1ea5y lu\u1ed3ng Watch as Guest tr\u00ean PC.');
+            } catch (error) {
+                console.error('Continue Watch as Guest after report error:', error);
+                showCustomModal({
+                    icon: '❌',
+                    title: 'Kh\u00f4ng th\u1ec3 ti\u1ebfp t\u1ee5c',
+                    message: error.message || 'Kh\u00f4ng th\u1ec3 b\u1eaft \u0111\u1ea7u Watch as Guest sau khi \u0111\u1ed5i t\u00e0i kho\u1ea3n.',
+                    buttons: [{ text: 'OK', type: 'danger' }]
+                });
+            }
+        }
+
+        function showPostReportActionModalLegacy(options = {}) {
+            const {
+                message = '\u0110\u00e3 chuy\u1ec3n sang t\u00e0i kho\u1ea3n Netflix m\u1edbi.',
+                remainingReports = 0,
+                maxLimit = 0,
+                plan = 'free'
+            } = options;
+
+            const isProUser = plan === 'pro';
+            const pcLoginActionText = isProUser
+                ? 'T\u1ea1o link \u0111\u0103ng nh\u1eadp PC'
+                : 'T\u1ea1o link \u0111\u0103ng nh\u1eadp PC (Pro)';
+            const quotaLine = maxLimit > 0
+                ? `<div style="font-size:0.85rem;color:#cbd5e1;margin-bottom:12px;">S\u1ed1 l\u01b0\u1ee3t c\u00f2n l\u1ea1i: <b style="color:#fff;">${remainingReports}/${maxLimit}</b></div>`
+                : '';
+            const featureHint = isProUser
+                ? 'B\u1ea1n v\u1eeba \u0111\u1ed5i t\u00e0i kho\u1ea3n xong, n\u00ean n\u1ebfu ch\u1ecdn t\u1ea1o link PC th\u00ec s\u1ebd kh\u00f4ng b\u1ecb tr\u1eeb th\u00eam credits.'
+                : 'Flow n\u00e0y kh\u00f4ng tr\u1eeb th\u00eam credits sau khi \u0111\u1ed5i t\u00e0i kho\u1ea3n, nh\u01b0ng t\u00ednh n\u0103ng t\u1ea1o link \u0111\u0103ng nh\u1eadp PC ch\u1ec9 d\u00e0nh cho Pro.';
+
+            showCustomModal({
+                icon: '✅',
+                title: '\u0110\u00e3 \u0111\u1ed5i t\u00e0i kho\u1ea3n th\u00e0nh c\u00f4ng',
+                message: `
+                    <div style="text-align:left;line-height:1.6;">
+                        <div style="font-weight:700;color:#fff;margin-bottom:6px;">${message}</div>
+                        ${quotaLine}
+                        <div style="font-size:0.85rem;color:#cbd5e1;margin-bottom:12px;">Ch\u1ecdn c\u00e1ch b\u1ea1n mu\u1ed1n ti\u1ebfp t\u1ee5c tr\u00ean PC:</div>
+                        <div style="display:flex;flex-direction:column;gap:8px;">
+                            <div style="padding:10px 12px;border:1px solid rgba(59,130,246,0.22);border-radius:10px;background:rgba(59,130,246,0.08);font-size:0.82rem;color:#bfdbfe;">Watch as Guest qua Extension, kh\u00f4ng tr\u1eeb th\u00eam credits.</div>
+                            <div style="padding:10px 12px;border:1px solid rgba(245,158,11,0.22);border-radius:10px;background:rgba(245,158,11,0.08);font-size:0.82rem;color:#fde68a;">${featureHint}</div>
+                        </div>
+                    </div>
+                `,
+                buttons: [
+                    {
+                        text: 'Xem qua Extension',
+                        type: 'secondary',
+                        onClick: async () => {
+                            await continueWatchAsGuestAfterReport();
+                        }
+                    },
+                    {
+                        text: pcLoginActionText,
+                        type: 'primary',
+                        onClick: async () => {
+                            if (!isProUser) {
+                                if (typeof window.showFreePlanBlockedModal === 'function') {
+                                    window.showFreePlanBlockedModal({ feature: 'pc-login' });
+                                }
+                                return;
+                            }
+
+                            if (typeof window.handlePcLoginLinkAfterReport === 'function') {
+                                await window.handlePcLoginLinkAfterReport();
+                                return;
+                            }
+
+                            showCustomModal({
+                                icon: '❌',
+                                title: 'Kh\u00f4ng th\u1ec3 ti\u1ebfp t\u1ee5c',
+                                message: 'Kh\u00f4ng t\u00ecm th\u1ea5y lu\u1ed3ng t\u1ea1o link \u0111\u0103ng nh\u1eadp PC.',
+                                buttons: [{ text: 'OK', type: 'danger' }]
+                            });
+                        }
+                    }
+                ]
+            });
+        }
+
+        function showPostReportActionModal(options = {}) {
+            const {
+                message = 'Đã chuyển sang tài khoản Netflix mới.',
+                remainingReports = 0,
+                maxLimit = 0,
+                plan = 'free'
+            } = options;
+
+            const isProUser = plan === 'pro';
+            const quotaLine = maxLimit > 0
+                ? `<div style="font-size:0.85rem;color:#cbd5e1;margin-bottom:12px;">Số lượt còn lại: <b style="color:#fff;">${remainingReports}/${maxLimit}</b></div>`
+                : '';
+
+            const buttons = [
+                {
+                    text: 'Xem qua Extension',
+                    type: 'primary',
+                    onClick: async () => {
+                        await continueWatchAsGuestAfterReport();
+                    }
+                }
+            ];
+
+            if (isProUser) {
+                buttons.push({
+                    text: 'Tạo link login',
+                    type: 'primary',
+                    onClick: async () => {
+                        if (typeof window.handlePcLoginLinkAfterReport === 'function') {
+                            await window.handlePcLoginLinkAfterReport();
+                            return;
+                        }
+
+                        showCustomModal({
+                            icon: 'error',
+                            title: 'Không thể tiếp tục',
+                            message: 'Không tìm thấy luồng tạo link login Netflix PC.',
+                            buttons: [{ text: 'OK', type: 'danger' }]
+                        });
+                    }
+                });
+            }
+
+            showCustomModal({
+                icon: 'success',
+                dialogClass: 'custom-modal-dialog-wide',
+                footerClass: isProUser ? 'custom-modal-footer-split' : '',
+                title: 'Đã đổi tài khoản thành công',
+                message: `
+                    <div style="text-align:left;line-height:1.6;">
+                        <div style="font-weight:700;color:#fff;${quotaLine ? 'margin-bottom:6px;' : ''}">${message}</div>
+                        ${quotaLine}
+                    </div>
+                `,
+                buttons
+            });
+        }
+
         async function confirmReportIssue() {
             const reason = document.getElementById('reportReason').value;
             const customReason = document.getElementById('customReason').value;
@@ -7478,6 +7773,14 @@ Bạn đã thử 3 cách trên và vẫn không được?`,
 
                 // Reload cookie info
                 await loadCookieInfo();
+
+                showPostReportActionModal({
+                    message: data.message,
+                    remainingReports: data.remainingReports,
+                    maxLimit,
+                    plan: currentUser.plan || 'free'
+                });
+                return;
 
                 showCustomModal({
                     icon: '✅',
@@ -9231,7 +9534,7 @@ Nếu cần thêm lượt đổi tài khoản, vui lòng liên hệ Support qua 
             return temp.textContent.replace(/\s+/g, ' ').trim();
         }
 
-        function updateDesktopGuestStatusPanel(message, type = 'info') {
+        function updateDesktopGuestStatusPanel(message, type = 'info', options = {}) {
             if (!document.body.classList.contains('desktop-home-v2')) return;
 
             const statusMessage = document.getElementById('statusMessage');
@@ -9243,7 +9546,11 @@ Nếu cần thêm lượt đổi tài khoản, vui lòng liên hệ Support qua 
             const cleanMessage = extractPlainStatusText(message);
             if (!cleanMessage) return;
 
-            statusMessage.textContent = cleanMessage;
+            if (options.allowHtml && typeof message === 'string') {
+                statusMessage.innerHTML = message;
+            } else {
+                statusMessage.textContent = cleanMessage;
+            }
             statusMessage.style.color = visual.color;
             statusIcon.innerHTML = visual.icon;
             statusIcon.style.color = visual.color;
@@ -9271,22 +9578,25 @@ Nếu cần thêm lượt đổi tài khoản, vui lòng liên hệ Support qua 
             banner.classList.toggle('error', !hasExtension);
 
             if (hasExtension) {
-                bannerTitle.textContent = 'Extension: \u0111\u00e3 s\u1eb5n s\u00e0ng';
-                bannerText.textContent = 'Extension \u0111\u00e3 k\u1ebft n\u1ed1i. B\u1ea1n c\u00f3 th\u1ec3 m\u1edf Netflix v\u00e0 Watch as Guest ngay tr\u00ean PC.';
+                bannerTitle.textContent = 'Extension: \u0111\u00e3 k\u1ebft n\u1ed1i';
+                bannerText.textContent = 'B\u1ea1n c\u00f3 th\u1ec3 ti\u1ebfp t\u1ee5c s\u1eed d\u1ee5ng c\u00e1c d\u1ecbch v\u1ee5 c\u1ee7a Ti\u1ec7m B\u00e1nh.';
                 iconWrap.innerHTML = '<svg class="icon" style="width:16px;height:16px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"></circle><path d="m8.5 12 2.3 2.3L15.8 9.3"></path></svg>';
                 return;
             }
 
             bannerTitle.textContent = 'Extension: ch\u01b0a c\u00e0i \u0111\u1eb7t';
-            bannerText.innerHTML = 'Vui l\u00f2ng c\u00e0i \u0111\u1eb7t Extension Ti\u1ec7m B\u00e1nh Netflix \u0111\u1ec3 s\u1eed d\u1ee5ng. <a href="/install-guide/">Xem h\u01b0\u1edbng d\u1eabn c\u00e0i \u0111\u1eb7t</a>';
+            bannerText.innerHTML = 'Vui l\u00f2ng c\u00e0i \u0111\u1eb7t Extension Ti\u1ec7m B\u00e1nh Netflix \u0111\u1ec3 Watch as Guest ho\u1eb7c t\u1ea1o link \u0111\u0103ng nh\u1eadp PC. <a href="/install-guide/">Xem h\u01b0\u1edbng d\u1eabn c\u00e0i \u0111\u1eb7t</a>';
             iconWrap.innerHTML = '<svg class="icon" style="width:16px;height:16px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0Z"></path><path d="M12 9v4"></path><path d="M12 17h.01"></path></svg>';
         }
 
         function syncGuestFeatureAccess(isLoggedIn) {
+            const desktopPcCard = document.querySelector('.method-card.pc');
             const loginRequired = document.getElementById('loginRequired');
             const tvLoginRequired = document.getElementById('tvLoginRequired');
-            const openBtn = document.getElementById('openNetflixBtn');
-            const guestBtn = document.getElementById('watchAsGuestBtn');
+            const openBtn = desktopPcCard ? desktopPcCard.querySelector('#openNetflixBtn') : document.getElementById('openNetflixBtn');
+            const guestBtn = desktopPcCard ? desktopPcCard.querySelector('#watchAsGuestBtn') : document.getElementById('watchAsGuestBtn');
+            const pcLoginBtn = desktopPcCard ? desktopPcCard.querySelector('#pcLoginLinkBtn') : document.getElementById('pcLoginLinkBtn');
+            const pcLoginStatus = desktopPcCard ? desktopPcCard.querySelector('#pcLoginLinkStatus') : document.getElementById('pcLoginLinkStatus');
             const tvCodeInput = document.getElementById('tvCodeInput');
             const tvActivateBtn = document.getElementById('tvActivateBtn');
             const tvActivateBtnText = document.getElementById('tvActivateBtnText');
@@ -9307,6 +9617,15 @@ Nếu cần thêm lượt đổi tài khoản, vui lòng liên hệ Support qua 
             if (guestBtn) {
                 guestBtn.disabled = !canUseDesktopGuest;
                 guestBtn.title = canUseDesktopGuest ? '' : desktopLockReason;
+            }
+            if (pcLoginBtn) {
+                pcLoginBtn.disabled = !canUseDesktopGuest;
+                pcLoginBtn.title = canUseDesktopGuest ? '' : desktopLockReason;
+            }
+            if (pcLoginStatus && !canUseDesktopGuest) {
+                pcLoginStatus.style.display = 'none';
+                pcLoginStatus.innerHTML = '';
+                pcLoginStatus.dataset.state = '';
             }
 
             if (tvCodeInput) {
@@ -9330,7 +9649,7 @@ Nếu cần thêm lượt đổi tài khoản, vui lòng liên hệ Support qua 
 
             if (!isLoggedIn) {
                 updateDesktopGuestStatusPanel(
-                    'Vui l\u00f2ng \u0111\u0103ng nh\u1eadp \u0111\u1ec3 d\u00f9ng Watch as Guest tr\u00ean PC ho\u1eb7c k\u00edch ho\u1ea1t TV.',
+                    'Vui l\u00f2ng \u0111\u0103ng nh\u1eadp \u0111\u1ec3 d\u00f9ng Watch as Guest, t\u1ea1o link login Netflix PC ho\u1eb7c k\u00edch ho\u1ea1t TV.',
                     'warning'
                 );
                 return;
@@ -9338,14 +9657,14 @@ Nếu cần thêm lượt đổi tài khoản, vui lòng liên hệ Support qua 
 
             if (!hasExtension) {
                 updateDesktopGuestStatusPanel(
-                    'Ch\u01b0a ph\u00e1t hi\u1ec7n Extension Ti\u1ec7m B\u00e1nh Netflix. C\u00e0i extension \u0111\u1ec3 m\u1edf Netflix v\u00e0 Watch as Guest tr\u00ean PC.',
+                    'Ch\u01b0a ph\u00e1t hi\u1ec7n Extension Ti\u1ec7m B\u00e1nh Netflix. C\u00e0i extension \u0111\u1ec3 Watch as Guest ho\u1eb7c t\u1ea1o link login Netflix PC tr\u00ean desktop.',
                     'warning'
                 );
                 return;
             }
 
             updateDesktopGuestStatusPanel(
-                'H\u1ec7 th\u1ed1ng s\u1eb5n s\u00e0ng. M\u1edf Netflix ho\u1eb7c nh\u1eadp m\u00e3 TV \u0111\u1ec3 b\u1eaft \u0111\u1ea7u.',
+                'H\u1ec7 th\u1ed1ng s\u1eb5n s\u00e0ng.',
                 'success'
             );
             return;
@@ -9605,7 +9924,7 @@ Nếu cần thêm lượt đổi tài khoản, vui lòng liên hệ Support qua 
                 }
             }
 
-            updateDesktopGuestStatusPanel(htmlMessage, type);
+            updateDesktopGuestStatusPanel(htmlMessage, type, { allowHtml: true });
         }
 
         /**
@@ -9789,9 +10108,16 @@ Nếu cần thêm lượt đổi tài khoản, vui lòng liên hệ Support qua 
         /**
          * Free Plan Blocked Modal - Thông báo khi Free Plan cố dùng tính năng Pro
          */
-        function showFreePlanBlockedModal() {
+        function showFreePlanBlockedModal(options = {}) {
             const existing = document.getElementById('freePlanBlockedOverlay');
             if (existing) existing.remove();
+
+            const isPcLoginFeature = options.feature === 'pc-login';
+            const blockedFeatureText = isPcLoginFeature
+                ? 'chức năng tạo link login Netflix PC'
+                : 'chức năng tạo link đăng nhập Netflix điện thoại';
+            const exclusiveFeatureLabel = 'Link login Netflix PC';
+            const exclusiveFeatureIcon = (...args) => svgMonitor(...args);
 
             const style = document.createElement('style');
             style.id = 'freePlanBlockedStyle';
@@ -9983,7 +10309,7 @@ Nếu cần thêm lượt đổi tài khoản, vui lòng liên hệ Support qua 
                             <div class="fpb-reason-label">PRO PLAN ONLY</div>
                             <p class="fpb-reason-body">
                                 Để giảm áp lực duy trì Tiệm Bánh và bảo đảm quyền lợi gói Pro,
-                                <b>chức năng tạo link đăng nhập Netflix điện thoại</b> hiện chỉ áp dụng cho Pro Plan.
+                                <b>${blockedFeatureText}</b> hiện chỉ áp dụng cho Pro Plan.
                             </p>
                         </div>
                     </div>
@@ -10037,6 +10363,12 @@ Nếu cần thêm lượt đổi tài khoản, vui lòng liên hệ Support qua 
                         <div class="fpb-tbl-row">
                             <div class="fpb-td free badge-dim">${svgX('#3f3f46')}${svgPhone('#3f3f46', 10)} Mobile App</div>
                             <div class="fpb-td pro  badge-lit">${svgCheck('#4ade80')}${svgPhone('#4ade80', 10)} Mobile App</div>
+                        </div>
+
+                        <!-- Row: Exclusive Pro feature -->
+                        <div class="fpb-tbl-row">
+                            <div class="fpb-td free badge-dim">${svgX('#3f3f46')}${exclusiveFeatureIcon('#3f3f46', 10)} ${exclusiveFeatureLabel}</div>
+                            <div class="fpb-td pro  badge-lit">${svgCheck('#4ade80')}${exclusiveFeatureIcon('#4ade80', 10)} ${exclusiveFeatureLabel}</div>
                         </div>
 
                     </div>
@@ -10802,7 +11134,7 @@ Nếu cần thêm lượt đổi tài khoản, vui lòng liên hệ Support qua 
                 <div class="status-panel">
                     <div class="status-left">
                         <div class="status-icon" id="statusIcon" aria-hidden="true"><svg class="icon" style="width:18px;height:18px;"><path d="M12 8v4"/><path d="M12 16h.01"/><circle cx="12" cy="12" r="9"/></svg></div>
-                        <div><div class="status-caption">Trạng thái</div><div id="statusMessage" style="font-size:0.95rem;font-weight:700;">Hệ thống sẵn sàng. Mở Netflix hoặc nhập mã TV để bắt đầu.</div></div>
+                        <div><div class="status-caption">Trạng thái</div><div id="statusMessage" style="font-size:0.95rem;font-weight:700;">Hệ thống sẵn sàng.</div></div>
                     </div>
                 </div>
             </section>

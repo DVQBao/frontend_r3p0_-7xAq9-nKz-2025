@@ -26,9 +26,47 @@ const CONFIG = {
     EXTENSION_DOWNLOAD_LINK: 'https://drive.google.com/drive/folders/1eozcbA4q54f8Ox46d2HlptSD92tDFHCl?usp=sharing'
 };
 
+const PC_LOGIN_COST = 3;
+
 // ========================================
 // DOM ELEMENTS
 // ========================================
+
+function ensurePcLoginControlsPresent() {
+    const pcMethodCard = document.querySelector('.method-card.pc');
+    const stackedActions = pcMethodCard ? pcMethodCard.querySelector('.stacked-actions') : null;
+    if (!pcMethodCard || !stackedActions || pcMethodCard.querySelector('#pcLoginLinkBtn')) {
+        return;
+    }
+
+    const altActionWrap = document.createElement('div');
+    altActionWrap.className = 'pc-login-alt';
+
+    const separator = document.createElement('div');
+    separator.className = 'pc-login-alt-separator';
+    separator.textContent = 'Ho\u1eb7c';
+
+    const pcLoginBtn = document.createElement('button');
+    pcLoginBtn.id = 'pcLoginLinkBtn';
+    pcLoginBtn.className = 'btn btn-premium';
+    pcLoginBtn.disabled = true;
+    pcLoginBtn.innerHTML = '<svg class="icon"><rect width="20" height="14" x="2" y="3" rx="2"></rect><path d="M8 21h8"></path><path d="M12 17v4"></path></svg> Tạo link login Netflix PC';
+
+    const noteEl = document.createElement('div');
+    noteEl.className = 'pc-login-note';
+    noteEl.innerHTML = 'T\u1ea1o link nhanh, h\u1ea1n ch\u1ebf t\u00e0i kho\u1ea3n l\u1ed7i, d\u00f9ng \u0111\u01b0\u1ee3c tr\u00ean m\u1ecdi tr\u00ecnh duy\u1ec7t, kh\u00f4ng ri\u00eang Chrome v\u00e0 Edge. Ch\u1ec9 \u00e1p d\u1ee5ng cho Pro Plan.';
+
+    const statusEl = document.createElement('div');
+    statusEl.id = 'pcLoginLinkStatus';
+
+    altActionWrap.appendChild(separator);
+    altActionWrap.appendChild(pcLoginBtn);
+    altActionWrap.appendChild(noteEl);
+    altActionWrap.appendChild(statusEl);
+    stackedActions.insertAdjacentElement('afterend', altActionWrap);
+}
+
+ensurePcLoginControlsPresent();
 
 const elements = {
     // Extension banner
@@ -39,8 +77,9 @@ const elements = {
     setupLink: document.getElementById('setupLink'),
 
     // Step buttons
-    openNetflixBtn: document.getElementById('openNetflixBtn'),
-    watchAsGuestBtn: document.getElementById('watchAsGuestBtn'),
+    openNetflixBtn: document.querySelector('.method-card.pc #openNetflixBtn') || document.getElementById('openNetflixBtn'),
+    watchAsGuestBtn: document.querySelector('.method-card.pc #watchAsGuestBtn') || document.getElementById('watchAsGuestBtn'),
+    pcLoginLinkBtn: document.querySelector('.method-card.pc #pcLoginLinkBtn') || document.getElementById('pcLoginLinkBtn'),
 
     // Step status
     statusIcon: document.getElementById('statusIcon'),
@@ -318,6 +357,9 @@ function setupEventListeners() {
     if (elements.watchAsGuestBtn) {
         elements.watchAsGuestBtn.addEventListener('click', handleWatchAsGuest);
     }
+    if (elements.pcLoginLinkBtn) {
+        elements.pcLoginLinkBtn.addEventListener('click', () => handlePcLoginLink());
+    }
     if (elements.cancelBtn) {
         elements.cancelBtn.addEventListener('click', closeTeamModal);
     }
@@ -380,8 +422,8 @@ function onExtensionDetected(details) {
         // Update UI - Success banner
         if (elements.extensionBanner && elements.bannerTitle && elements.bannerText) {
             elements.extensionBanner.className = 'extension-banner show success';
-            elements.bannerTitle.innerHTML = `Extension đã cài đặt - v${currentVersion}`;
-            elements.bannerText.innerHTML = `Bạn có thể tiếp tục Netflix and Chill`;
+            elements.bannerTitle.innerHTML = 'Extension: đã kết nối';
+            elements.bannerText.innerHTML = 'Bạn có thể tiếp tục sử dụng các dịch vụ của Tiệm Bánh.';
         }
     }
 
@@ -556,8 +598,286 @@ async function refreshUserFromDatabase() {
 }
 
 // ========================================
-// STEP 2: WATCH AS GUEST
+// STEP 2: WATCH AS GUEST / PC LOGIN LINK
 // ========================================
+
+function getPcLoginStatusElement() {
+    return document.getElementById('pcLoginLinkStatus');
+}
+
+function setPcLoginStatus(message = '', type = 'info') {
+    const statusEl = getPcLoginStatusElement();
+    if (statusEl) {
+        statusEl.innerHTML = '';
+        statusEl.style.display = 'none';
+        statusEl.dataset.state = '';
+    }
+
+    if (!message) return;
+
+    if (typeof window.updateDesktopGuestStatusPanel === 'function' && document.body.classList.contains('desktop-home-v2')) {
+        window.updateDesktopGuestStatusPanel(message, type, { allowHtml: /<a\b/i.test(message) });
+        return;
+    }
+
+    if (typeof showStepStatus === 'function') {
+        showStepStatus(2, type, message);
+    }
+}
+
+function getPcLoginInsufficientCreditsMessage(required, current) {
+    return `B\u1ea1n c\u1ea7n ${required} credits \u0111\u1ec3 t\u1ea1o link login Netflix PC. Hi\u1ec7n t\u1ea1i b\u1ea1n c\u00f3 ${current} credits.`;
+}
+
+function isExtensionReadyForDesktopAction() {
+    return state.hasExtension && !state.extensionOutdated && !!CONFIG.EXTENSION_ID;
+}
+
+async function requestGuestActionNonce(authToken) {
+    const response = await fetch(`${BACKEND_URL}/api/cookies/nonce`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${authToken}`,
+            'x-ext-infor': getExtensionSignalHeaderValue()
+        }
+    });
+
+    if (!response.ok) {
+        const errorData = await response.json().catch(() => ({}));
+        throw new Error(errorData.error || errorData.message || 'Không thể tạo nonce bảo mật');
+    }
+
+    const data = await response.json().catch(() => ({}));
+    if (!data.nonce) {
+        throw new Error('Phản hồi nonce không hợp lệ');
+    }
+
+    return data.nonce;
+}
+
+async function handlePcLoginLink(options = {}) {
+    const { skipQuotaCheck = false, skipConfirm = false } = options;
+    const isReportBypassFlow = !!skipQuotaCheck;
+    const btn = elements.pcLoginLinkBtn;
+    const originalBtnHtml = btn ? btn.innerHTML : '';
+
+    try {
+        setPcLoginStatus('', 'info');
+
+        if (!isExtensionReadyForDesktopAction()) {
+            const message = state.extensionOutdated
+                ? '⚠️ Extension đã cũ. Vui lòng cập nhật phiên bản mới trước khi tạo link login Netflix PC.'
+                : '⚠️ Cần cài đặt Extension Tiệm Bánh Netflix trước khi tạo link login Netflix PC.';
+
+            setPcLoginStatus(message, 'warning');
+            showToast('Cần Extension để tạo link login Netflix PC', 'warning');
+            return;
+        }
+
+        const authToken = localStorage.getItem('auth_token');
+        if (!authToken) {
+            setPcLoginStatus('Vui lòng đăng nhập lại để tiếp tục.', 'error');
+            showToast('Vui lòng đăng nhập lại', 'warning');
+            return;
+        }
+
+        const freshUser = await refreshUserFromDatabase();
+        if (!freshUser) {
+            setPcLoginStatus('Không thể tải thông tin tài khoản. Vui lòng thử lại.', 'error');
+            return;
+        }
+
+        if (freshUser.plan !== 'pro') {
+            if (typeof window.showFreePlanBlockedModal === 'function') {
+                window.showFreePlanBlockedModal({ feature: 'pc-login' });
+            }
+            return;
+        }
+
+        if (!skipQuotaCheck && freshUser.monthlyReportLimit !== undefined && freshUser.monthlyReportLimit <= 0) {
+            if (typeof window.showLimitExceededProModal === 'function') {
+                window.showLimitExceededProModal();
+            }
+            return;
+        }
+
+        if (!isReportBypassFlow && freshUser.credits !== undefined && freshUser.credits < PC_LOGIN_COST) {
+            let insufficientMessage = typeof window.getInsufficientCreditsMessage === 'function'
+                ? window.getInsufficientCreditsMessage(5, freshUser.credits || 0)
+                : `Bạn cần 5 credits. Hiện tại bạn có ${freshUser.credits || 0} credits.`;
+
+            insufficientMessage = getPcLoginInsufficientCreditsMessage(PC_LOGIN_COST, freshUser.credits || 0);
+            setPcLoginStatus(insufficientMessage, 'error');
+            if (typeof window.showCustomModal === 'function') {
+                window.showCustomModal({
+                    icon: 'card',
+                    title: 'Không đủ credits',
+                    message: insufficientMessage,
+                    buttons: [{ text: 'Đã hiểu', type: 'primary', onClick: null }]
+                });
+            }
+            return;
+        }
+
+        if (!skipConfirm && typeof window.showConfirmCustomModal === 'function') {
+            const confirmed = await window.showConfirmCustomModal({
+                icon: 'card',
+                title: 'T\u1ea1o link login Netflix PC',
+                message: isReportBypassFlow
+                    ? 'H\u1ec7 th\u1ed1ng s\u1ebd t\u1ea1o link login Netflix PC cho b\u1ea1n.\n\nB\u1ea1n \u0111ang trong lu\u1ed3ng \u0111\u1ed5i t\u00e0i kho\u1ea3n, n\u00ean s\u1ebd kh\u00f4ng b\u1ecb tr\u1eeb th\u00eam credits.\n\nB\u1ea1n c\u00f3 mu\u1ed1n ti\u1ebfp t\u1ee5c?'
+                    : `H\u1ec7 th\u1ed1ng s\u1ebd t\u1ea1o link login Netflix PC cho b\u1ea1n.\n\nChi ph\u00ed: ${PC_LOGIN_COST} credits.\n\nB\u1ea1n c\u00f3 mu\u1ed1n ti\u1ebfp t\u1ee5c?`,
+                confirmText: isReportBypassFlow ? 'T\u1ea1o link ngay' : `T\u1ea1o link (-${PC_LOGIN_COST} credits)`,
+                cancelText: 'H\u1ee7y'
+            });
+
+            if (!confirmed) {
+                return;
+            }
+        }
+
+        if (false && !skipConfirm && typeof window.showConfirmCustomModal === 'function') {
+            const confirmMessage = isReportBypassFlow
+                ? 'H\u1ec7 th\u1ed1ng s\u1ebd t\u1ea1o link \u0111\u0103ng nh\u1eadp Netflix cho PC/Laptop c\u1ee7a b\u1ea1n.\n\nB\u1ea1n \u0111ang trong lu\u1ed3ng \u0111\u1ed5i t\u00e0i kho\u1ea3n, n\u00ean s\u1ebd kh\u00f4ng b\u1ecb tr\u1eeb th\u00eam credits.\n\nB\u1ea1n c\u00f3 mu\u1ed1n ti\u1ebfp t\u1ee5c?'
+                : `H\u1ec7 th\u1ed1ng s\u1ebd t\u1ea1o link \u0111\u0103ng nh\u1eadp Netflix cho PC/Laptop c\u1ee7a b\u1ea1n.\n\nChi ph\u00ed: ${PC_LOGIN_COST} credits.\n\nB\u1ea1n c\u00f3 mu\u1ed1n ti\u1ebfp t\u1ee5c?`;
+            const confirmText = isReportBypassFlow
+                ? 'T\u1ea1o link ngay'
+                : `T\u1ea1o link (-${PC_LOGIN_COST} credits)`;
+            const confirmed = await window.showConfirmCustomModal({
+                icon: 'card',
+                title: 'Tạo link login Netflix PC',
+                message: `Hệ thống sẽ tạo link login Netflix PC cho bạn.\n\nChi phí: ${PC_LOGIN_COST} credits.\n\nBạn có muốn tiếp tục?`,
+                confirmText: `Tạo link (-${PC_LOGIN_COST} credits)`,
+                cancelText: 'Hủy'
+            });
+
+            if (!confirmed) {
+                return;
+            }
+        }
+
+        if (btn) {
+            btn.disabled = true;
+            btn.innerHTML = '<span class="spinner" style="display:inline-block;width:14px;height:14px;border:2px solid currentColor;border-top-color:transparent;border-radius:50%;animation:spin 0.8s linear infinite;"></span> Đang tạo link...';
+        }
+
+        setPcLoginStatus('Đang tạo link login Netflix PC...', 'info');
+
+        const nonce = await requestGuestActionNonce(authToken);
+        const response = await fetch(`${BACKEND_URL}/api/cookies/pc-login-link`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${authToken}`,
+                'x-ext-infor': getExtensionSignalHeaderValue(),
+                'x-once-nonce': nonce
+            },
+            body: JSON.stringify({})
+        });
+
+        if (response.status === 401 || response.status === 403) {
+            localStorage.removeItem('auth_token');
+            localStorage.removeItem('current_user');
+            localStorage.removeItem('currentUser');
+            sessionStorage.removeItem('logged_in');
+            setPcLoginStatus('Phiên đăng nhập đã hết hạn. Đang tải lại trang...', 'error');
+            setTimeout(() => window.location.reload(), 1500);
+            return;
+        }
+
+        const data = await response.json().catch(() => ({}));
+
+        if (!response.ok || !data.success) {
+            if (data.code === 'PRO_REQUIRED') {
+                if (typeof window.showFreePlanBlockedModal === 'function') {
+                    window.showFreePlanBlockedModal({ feature: 'pc-login' });
+                }
+                return;
+            }
+
+            if (data.code === 'NO_REPORT_LIMIT') {
+                if (typeof window.showLimitExceededProModal === 'function') {
+                    window.showLimitExceededProModal();
+                }
+                setPcLoginStatus(data.error || 'Bạn đã hết lượt đổi tài khoản trong tháng này.', 'warning');
+                return;
+            }
+
+            if (data.code === 'INSUFFICIENT_CREDITS') {
+                const insufficientMessage = getPcLoginInsufficientCreditsMessage(data.required || PC_LOGIN_COST, data.current || 0);
+                setPcLoginStatus(insufficientMessage, 'error');
+                return;
+            }
+
+            if (false && data.code === 'INSUFFICIENT_CREDITS') {
+                const insufficientMessage = typeof window.getInsufficientCreditsMessage === 'function'
+                    ? window.getInsufficientCreditsMessage(data.required || 5, data.current || 0)
+                    : (data.error || 'Không đủ credits.');
+                setPcLoginStatus(insufficientMessage, 'error');
+                return;
+            }
+
+            const errorMessage = data.error || 'Không thể tạo link login Netflix PC.';
+            setPcLoginStatus(errorMessage, 'error');
+            return;
+        }
+
+        const timeText = data.timeRemaining
+            ? (() => {
+                const hours = Math.floor(data.timeRemaining / 3600);
+                const minutes = Math.max(1, Math.floor((data.timeRemaining % 3600) / 60));
+                if (hours > 0) return ` (hết hạn sau ${hours}h${minutes > 0 ? ` ${minutes}m` : ''})`;
+                return ` (hết hạn sau ${minutes}m)`;
+            })()
+            : '';
+
+        const successHtml = `Thành công! Mở link login <a href="${data.link}" target="_blank" rel="noopener">tại đây</a>${timeText}`;
+        setPcLoginStatus(successHtml, 'success');
+
+        if (typeof window.updateCreditsDisplay === 'function' && data.creditsRemaining !== undefined) {
+            window.updateCreditsDisplay(data.creditsRemaining);
+        }
+
+        if (typeof window.loadCookieInfo === 'function') {
+            await window.loadCookieInfo();
+        }
+
+        let creditsLine = data.creditsDeducted > 0
+            ? `\n\n-${data.creditsDeducted} credits (còn lại: ${data.creditsRemaining})`
+            : '';
+        if (data.usedReportBypass) {
+            creditsLine = '\n\nKh\u00f4ng tr\u1eeb th\u00eam credits v\u00ec b\u1ea1n v\u1eeba \u0111\u1ed5i t\u00e0i kho\u1ea3n.';
+        }
+
+        if (typeof window.showCustomModal === 'function') {
+            window.showCustomModal({
+                icon: 'success',
+                title: 'Tạo link thành công!',
+                message: `Link login Netflix PC đã sẵn sàng.${timeText}${creditsLine}`,
+                buttons: [
+                    {
+                        text: 'Đóng',
+                        type: 'secondary',
+                        onClick: null
+                    },
+                    {
+                        text: 'Mở link',
+                        type: 'primary',
+                        onClick: () => window.open(data.link, '_blank', 'noopener')
+                    }
+                ]
+            });
+        }
+    } catch (error) {
+        console.error('❌ PC login link error:', error);
+        setPcLoginStatus('Lỗi kết nối server. Vui lòng thử lại.', 'error');
+    } finally {
+        if (btn) {
+            btn.disabled = false;
+            btn.innerHTML = originalBtnHtml;
+        }
+    }
+}
 
 /**
  * Internal function - Xử lý Watch as Guest logic (dùng chung)
@@ -727,6 +1047,11 @@ async function handleWatchAsGuest() {
 async function handleWatchAsGuestAfterReport() {
     console.log('🔄 Auto-triggering Watch as Guest after report issue...');
     await _watchAsGuestInternal(true, true); // Skip quota check + Skip ad/plan modal
+}
+
+async function handlePcLoginLinkAfterReport() {
+    console.log('🔗 Triggering PC login link after report issue...');
+    await handlePcLoginLink({ skipQuotaCheck: true, skipConfirm: true });
 }
 
 /**
@@ -1391,11 +1716,14 @@ Extension ID sẽ hiện ở banner màu xanh khi cài thành công.
 window.injectCookieViaExtension = injectCookieViaExtension;
 window.refreshNetflixTabViaExtension = refreshNetflixTabViaExtension;
 window.handleWatchAsGuestAfterReport = handleWatchAsGuestAfterReport;
+window.handlePcLoginLink = handlePcLoginLink;
+window.handlePcLoginLinkAfterReport = handlePcLoginLinkAfterReport;
 window.closeTeamModal = closeTeamModal;
 window.state = state;
 window.CONFIG = CONFIG;
 window.showStepStatus = showStepStatus;
 window.hideStepStatus = hideStepStatus;
+window.getGuestExtensionSignalHeaderValue = getExtensionSignalHeaderValue;
 
 console.log(`
 Welcome to TiemBanhNetFlix
@@ -1408,5 +1736,6 @@ window.netflixGuestApp = {
     elements,
     checkExtension,
     handleOpenNetflix,
-    handleWatchAsGuest
+    handleWatchAsGuest,
+    handlePcLoginLink
 };
