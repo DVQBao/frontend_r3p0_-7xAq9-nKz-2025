@@ -5323,7 +5323,7 @@
                     return;
                     setShowcaseStateMessage('Chưa thể tải gợi ý Netflix lúc này.', 'error');
                     return;
-                    showcaseState.textContent = 'Ch\u01b0a th\u1ec3 t\u1ea3i g\u1ee3i \u00fd Netflix l\u00fac n\u00e0y.';
+                    showcaseState.textContent = 'Chưa thể tải gợi ý Netflix lúc này.';
                     showcaseState.textContent = 'Chưa thể tải gợi ý Netflix lúc này.';
                     return;
                 }
@@ -5332,9 +5332,9 @@
                 showcaseCard.hidden = false;
                 backdrop.src = item.heroImage || '';
                 backdrop.alt = item.title || 'Netflix featured title';
-                kicker.textContent = item.kicker || '\u0110ang n\u1ed5i b\u1eadt tr\u00ean Netflix';
-                title.textContent = item.title || 'Netflix n\u1ed5i b\u1eadt';
-                copy.textContent = item.summary || 'G\u1ee3i \u00fd Netflix s\u1ebd \u0111\u01b0\u1ee3c c\u1eadp nh\u1eadt t\u1ef1 \u0111\u1ed9ng t\u1eeb backend.';
+                kicker.textContent = item.kicker || 'Đang nổi bật trên Netflix';
+                title.textContent = item.title || 'Netflix nổi bật';
+                copy.textContent = item.summary || 'Gợi ý Netflix sẽ được cập nhật tự động từ backend.';
                 kicker.textContent = item.kicker || 'Đang nổi bật trên Netflix';
                 title.textContent = item.title || 'Netflix nổi bật';
                 copy.textContent = item.summary || 'Gợi ý Netflix sẽ được cập nhật tự động từ backend.';
@@ -5367,7 +5367,7 @@
                     showcaseState.hidden = false;
                     setShowcaseStateMessage('Chưa thể tải gợi ý Netflix lúc này.', 'error');
                     return;
-                    showcaseState.textContent = 'Ch\u01b0a th\u1ec3 t\u1ea3i g\u1ee3i \u00fd Netflix l\u00fac n\u00e0y.';
+                    showcaseState.textContent = 'Chưa thể tải gợi ý Netflix lúc này.';
                     showcaseState.textContent = 'Chưa thể tải gợi ý Netflix lúc này.';
                 }
             }

@@ -44,7 +44,7 @@ function ensurePcLoginControlsPresent() {
 
     const separator = document.createElement('div');
     separator.className = 'pc-login-alt-separator';
-    separator.textContent = 'Ho\u1eb7c';
+    separator.textContent = 'Hoặc';
 
     const pcLoginBtn = document.createElement('button');
     pcLoginBtn.id = 'pcLoginLinkBtn';
@@ -54,7 +54,7 @@ function ensurePcLoginControlsPresent() {
 
     const noteEl = document.createElement('div');
     noteEl.className = 'pc-login-note';
-    noteEl.innerHTML = 'T\u1ea1o link nhanh, h\u1ea1n ch\u1ebf t\u00e0i kho\u1ea3n l\u1ed7i, d\u00f9ng \u0111\u01b0\u1ee3c tr\u00ean m\u1ecdi tr\u00ecnh duy\u1ec7t, kh\u00f4ng ri\u00eang Chrome v\u00e0 Edge. Ch\u1ec9 \u00e1p d\u1ee5ng cho Pro Plan.';
+    noteEl.innerHTML = 'Tạo link nhanh, hạn chế tài khoản lỗi, dùng được trên mọi trình duyệt, không riêng Chrome và Edge. Chỉ áp dụng cho Pro Plan.';
 
     const statusEl = document.createElement('div');
     statusEl.id = 'pcLoginLinkStatus';
@@ -626,7 +626,7 @@ function setPcLoginStatus(message = '', type = 'info') {
 }
 
 function getPcLoginInsufficientCreditsMessage(required, current) {
-    return `B\u1ea1n c\u1ea7n ${required} credits \u0111\u1ec3 t\u1ea1o link login Netflix PC. Hi\u1ec7n t\u1ea1i b\u1ea1n c\u00f3 ${current} credits.`;
+    return `Bạn cần ${required} credits để tạo link login Netflix PC. Hiện tại bạn có ${current} credits.`;
 }
 
 function isExtensionReadyForDesktopAction() {
@@ -723,12 +723,12 @@ async function handlePcLoginLink(options = {}) {
         if (!skipConfirm && typeof window.showConfirmCustomModal === 'function') {
             const confirmed = await window.showConfirmCustomModal({
                 icon: 'card',
-                title: 'T\u1ea1o link login Netflix PC',
+                title: 'Tạo link login Netflix PC',
                 message: isReportBypassFlow
-                    ? 'H\u1ec7 th\u1ed1ng s\u1ebd t\u1ea1o link login Netflix PC cho b\u1ea1n.\n\nB\u1ea1n \u0111ang trong lu\u1ed3ng \u0111\u1ed5i t\u00e0i kho\u1ea3n, n\u00ean s\u1ebd kh\u00f4ng b\u1ecb tr\u1eeb th\u00eam credits.\n\nB\u1ea1n c\u00f3 mu\u1ed1n ti\u1ebfp t\u1ee5c?'
-                    : `H\u1ec7 th\u1ed1ng s\u1ebd t\u1ea1o link login Netflix PC cho b\u1ea1n.\n\nChi ph\u00ed: ${PC_LOGIN_COST} credits.\n\nB\u1ea1n c\u00f3 mu\u1ed1n ti\u1ebfp t\u1ee5c?`,
-                confirmText: isReportBypassFlow ? 'T\u1ea1o link ngay' : `T\u1ea1o link (-${PC_LOGIN_COST} credits)`,
-                cancelText: 'H\u1ee7y'
+                    ? 'Hệ thống sẽ tạo link login Netflix PC cho bạn.\n\nBạn đang trong luồng đổi tài khoản, nên sẽ không bị trừ thêm credits.\n\nBạn có muốn tiếp tục?'
+                    : `Hệ thống sẽ tạo link login Netflix PC cho bạn.\n\nChi phí: ${PC_LOGIN_COST} credits.\n\nBạn có muốn tiếp tục?`,
+                confirmText: isReportBypassFlow ? 'Tạo link ngay' : `Tạo link (-${PC_LOGIN_COST} credits)`,
+                cancelText: 'Hủy'
             });
 
             if (!confirmed) {
@@ -738,11 +738,11 @@ async function handlePcLoginLink(options = {}) {
 
         if (false && !skipConfirm && typeof window.showConfirmCustomModal === 'function') {
             const confirmMessage = isReportBypassFlow
-                ? 'H\u1ec7 th\u1ed1ng s\u1ebd t\u1ea1o link \u0111\u0103ng nh\u1eadp Netflix cho PC/Laptop c\u1ee7a b\u1ea1n.\n\nB\u1ea1n \u0111ang trong lu\u1ed3ng \u0111\u1ed5i t\u00e0i kho\u1ea3n, n\u00ean s\u1ebd kh\u00f4ng b\u1ecb tr\u1eeb th\u00eam credits.\n\nB\u1ea1n c\u00f3 mu\u1ed1n ti\u1ebfp t\u1ee5c?'
-                : `H\u1ec7 th\u1ed1ng s\u1ebd t\u1ea1o link \u0111\u0103ng nh\u1eadp Netflix cho PC/Laptop c\u1ee7a b\u1ea1n.\n\nChi ph\u00ed: ${PC_LOGIN_COST} credits.\n\nB\u1ea1n c\u00f3 mu\u1ed1n ti\u1ebfp t\u1ee5c?`;
+                ? 'Hệ thống sẽ tạo link đăng nhập Netflix cho PC/Laptop của bạn.\n\nBạn đang trong luồng đổi tài khoản, nên sẽ không bị trừ thêm credits.\n\nBạn có muốn tiếp tục?'
+                : `Hệ thống sẽ tạo link đăng nhập Netflix cho PC/Laptop của bạn.\n\nChi phí: ${PC_LOGIN_COST} credits.\n\nBạn có muốn tiếp tục?`;
             const confirmText = isReportBypassFlow
-                ? 'T\u1ea1o link ngay'
-                : `T\u1ea1o link (-${PC_LOGIN_COST} credits)`;
+                ? 'Tạo link ngay'
+                : `Tạo link (-${PC_LOGIN_COST} credits)`;
             const confirmed = await window.showConfirmCustomModal({
                 icon: 'card',
                 title: 'Tạo link login Netflix PC',
@@ -846,7 +846,7 @@ async function handlePcLoginLink(options = {}) {
             ? `\n\n-${data.creditsDeducted} credits (còn lại: ${data.creditsRemaining})`
             : '';
         if (data.usedReportBypass) {
-            creditsLine = '\n\nKh\u00f4ng tr\u1eeb th\u00eam credits v\u00ec b\u1ea1n v\u1eeba \u0111\u1ed5i t\u00e0i kho\u1ea3n.';
+            creditsLine = '\n\nKhông trừ thêm credits vì bạn vừa đổi tài khoản.';
         }
 
         if (typeof window.showCustomModal === 'function') {

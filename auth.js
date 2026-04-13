@@ -312,9 +312,9 @@ function setCaptchaVisualState(state) {
     if (!checkbox || !box) return;
 
     const statusMap = {
-        idle: 'X\u00e1c minh nhanh',
-        pending: '\u0110ang ki\u1ec3m tra',
-        verified: '\u0110\u00e3 x\u00e1c minh'
+        idle: 'Xác minh nhanh',
+        pending: 'Đang kiểm tra',
+        verified: 'Đã xác minh'
     };
     box.dataset.status = statusMap[state] || statusMap.idle;
 

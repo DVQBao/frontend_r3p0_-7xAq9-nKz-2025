@@ -7465,13 +7465,13 @@
                     return;
                 }
 
-                throw new Error('Kh\u00f4ng t\u00ecm th\u1ea5y lu\u1ed3ng Watch as Guest tr\u00ean PC.');
+                throw new Error('Không tìm thấy luồng Watch as Guest trên PC.');
             } catch (error) {
                 console.error('Continue Watch as Guest after report error:', error);
                 showCustomModal({
                     icon: '❌',
-                    title: 'Kh\u00f4ng th\u1ec3 ti\u1ebfp t\u1ee5c',
-                    message: error.message || 'Kh\u00f4ng th\u1ec3 b\u1eaft \u0111\u1ea7u Watch as Guest sau khi \u0111\u1ed5i t\u00e0i kho\u1ea3n.',
+                    title: 'Không thể tiếp tục',
+                    message: error.message || 'Không thể bắt đầu Watch as Guest sau khi đổi tài khoản.',
                     buttons: [{ text: 'OK', type: 'danger' }]
                 });
             }
@@ -7479,7 +7479,7 @@
 
         function showPostReportActionModalLegacy(options = {}) {
             const {
-                message = '\u0110\u00e3 chuy\u1ec3n sang t\u00e0i kho\u1ea3n Netflix m\u1edbi.',
+                message = 'Đã chuyển sang tài khoản Netflix mới.',
                 remainingReports = 0,
                 maxLimit = 0,
                 plan = 'free'
@@ -7487,18 +7487,18 @@
 
             const isProUser = plan === 'pro';
             const pcLoginActionText = isProUser
-                ? 'T\u1ea1o link \u0111\u0103ng nh\u1eadp PC'
-                : 'T\u1ea1o link \u0111\u0103ng nh\u1eadp PC (Pro)';
+                ? 'Tạo link đăng nhập PC'
+                : 'Tạo link đăng nhập PC (Pro)';
             const quotaLine = maxLimit > 0
                 ? `<div style="font-size:0.85rem;color:#cbd5e1;margin-bottom:12px;">S\u1ed1 l\u01b0\u1ee3t c\u00f2n l\u1ea1i: <b style="color:#fff;">${remainingReports}/${maxLimit}</b></div>`
                 : '';
             const featureHint = isProUser
-                ? 'B\u1ea1n v\u1eeba \u0111\u1ed5i t\u00e0i kho\u1ea3n xong, n\u00ean n\u1ebfu ch\u1ecdn t\u1ea1o link PC th\u00ec s\u1ebd kh\u00f4ng b\u1ecb tr\u1eeb th\u00eam credits.'
-                : 'Flow n\u00e0y kh\u00f4ng tr\u1eeb th\u00eam credits sau khi \u0111\u1ed5i t\u00e0i kho\u1ea3n, nh\u01b0ng t\u00ednh n\u0103ng t\u1ea1o link \u0111\u0103ng nh\u1eadp PC ch\u1ec9 d\u00e0nh cho Pro.';
+                ? 'Bạn vừa đổi tài khoản xong, nên nếu chọn tạo link PC thì sẽ không bị trừ thêm credits.'
+                : 'Flow này không trừ thêm credits sau khi đổi tài khoản, nhưng tính năng tạo link đăng nhập PC chỉ dành cho Pro.';
 
             showCustomModal({
                 icon: '✅',
-                title: '\u0110\u00e3 \u0111\u1ed5i t\u00e0i kho\u1ea3n th\u00e0nh c\u00f4ng',
+                title: 'Đã đổi tài khoản thành công',
                 message: `
                     <div style="text-align:left;line-height:1.6;">
                         <div style="font-weight:700;color:#fff;margin-bottom:6px;">${message}</div>
@@ -7536,8 +7536,8 @@
 
                             showCustomModal({
                                 icon: '❌',
-                                title: 'Kh\u00f4ng th\u1ec3 ti\u1ebfp t\u1ee5c',
-                                message: 'Kh\u00f4ng t\u00ecm th\u1ea5y lu\u1ed3ng t\u1ea1o link \u0111\u0103ng nh\u1eadp PC.',
+                                title: 'Không thể tiếp tục',
+                                message: 'Không tìm thấy luồng tạo link đăng nhập PC.',
                                 buttons: [{ text: 'OK', type: 'danger' }]
                             });
                         }
@@ -9578,13 +9578,13 @@ Nếu cần thêm lượt đổi tài khoản, vui lòng liên hệ Support qua 
             banner.classList.toggle('error', !hasExtension);
 
             if (hasExtension) {
-                bannerTitle.textContent = 'Extension: \u0111\u00e3 k\u1ebft n\u1ed1i';
-                bannerText.textContent = 'B\u1ea1n c\u00f3 th\u1ec3 ti\u1ebfp t\u1ee5c s\u1eed d\u1ee5ng c\u00e1c d\u1ecbch v\u1ee5 c\u1ee7a Ti\u1ec7m B\u00e1nh.';
+                bannerTitle.textContent = 'Extension: Đã kết nối';
+                bannerText.textContent = 'Bạn có thể tiếp tục sử dụng các dịch vụ của Tiệm Bánh.';
                 iconWrap.innerHTML = '<svg class="icon" style="width:16px;height:16px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"></circle><path d="m8.5 12 2.3 2.3L15.8 9.3"></path></svg>';
                 return;
             }
 
-            bannerTitle.textContent = 'Extension: ch\u01b0a c\u00e0i \u0111\u1eb7t';
+            bannerTitle.textContent = 'Extension: chưa cài đặt';
             bannerText.innerHTML = 'Vui l\u00f2ng c\u00e0i \u0111\u1eb7t Extension Ti\u1ec7m B\u00e1nh Netflix \u0111\u1ec3 Watch as Guest ho\u1eb7c t\u1ea1o link \u0111\u0103ng nh\u1eadp PC. <a href="/install-guide/">Xem h\u01b0\u1edbng d\u1eabn c\u00e0i \u0111\u1eb7t</a>';
             iconWrap.innerHTML = '<svg class="icon" style="width:16px;height:16px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0Z"></path><path d="M12 9v4"></path><path d="M12 17h.01"></path></svg>';
         }
@@ -9605,8 +9605,8 @@ Nếu cần thêm lượt đổi tài khoản, vui lòng liên hệ Support qua 
             const hasExtension = !!extensionDetected;
             const canUseDesktopGuest = isLoggedIn && hasExtension;
             const desktopLockReason = !isLoggedIn
-                ? 'Vui l\u00f2ng \u0111\u0103ng nh\u1eadp \u0111\u1ec3 s\u1eed d\u1ee5ng.'
-                : 'C\u1ea7n c\u00e0i Extension Ti\u1ec7m B\u00e1nh Netflix \u0111\u1ec3 s\u1eed d\u1ee5ng.';
+                ? 'Vui lòng đăng nhập để sử dụng.'
+                : 'Cần cài Extension Tiệm Bánh Netflix để sử dụng.';
 
             if (loginRequired) loginRequired.style.display = isLoggedIn ? 'none' : 'block';
             if (tvLoginRequired) tvLoginRequired.style.display = isLoggedIn ? 'none' : 'block';
@@ -9649,7 +9649,7 @@ Nếu cần thêm lượt đổi tài khoản, vui lòng liên hệ Support qua 
 
             if (!isLoggedIn) {
                 updateDesktopGuestStatusPanel(
-                    'Vui l\u00f2ng \u0111\u0103ng nh\u1eadp \u0111\u1ec3 d\u00f9ng Watch as Guest, t\u1ea1o link login Netflix PC ho\u1eb7c k\u00edch ho\u1ea1t TV.',
+                    'Vui lòng đăng nhập để sử dụng các dịch vụ của Tiệm Bánh!',
                     'warning'
                 );
                 return;
@@ -9657,22 +9657,22 @@ Nếu cần thêm lượt đổi tài khoản, vui lòng liên hệ Support qua 
 
             if (!hasExtension) {
                 updateDesktopGuestStatusPanel(
-                    'Ch\u01b0a ph\u00e1t hi\u1ec7n Extension Ti\u1ec7m B\u00e1nh Netflix. C\u00e0i extension \u0111\u1ec3 Watch as Guest ho\u1eb7c t\u1ea1o link login Netflix PC tr\u00ean desktop.',
+                    'Chưa cài đặt Extension Tiệm Bánh Netflix. Vui lòng cài đặt để sử dụng các dịch vụ của Tiệm Bánh!',
                     'warning'
                 );
                 return;
             }
 
             updateDesktopGuestStatusPanel(
-                'H\u1ec7 th\u1ed1ng s\u1eb5n s\u00e0ng.',
+                'Hệ thống sẵn sàng.',
                 'success'
             );
             return;
 
             updateDesktopGuestStatusPanel(
                 isLoggedIn
-                    ? 'Hệ thống sẵn sàng. Mở Netflix hoặc nhập mã TV để bắt đầu.'
-                    : 'Vui lòng đăng nhập để dùng Watch as Guest trên PC hoặc kích hoạt TV.',
+                    ? 'Hệ thống sẵn sàng.'
+                    : 'Vui lòng đăng nhập để sử dụng các dịch vụ của Tiệm Bánh!',
                 isLoggedIn ? 'success' : 'warning'
             );
         }
