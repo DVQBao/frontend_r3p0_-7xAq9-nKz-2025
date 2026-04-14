@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <title>Dev Auto-Login</title>
+    <style>
+        * { margin: 0; padding: 0; }
+        body { background: #0b0b0b; overflow: hidden; }
+        iframe { position: fixed; top: 0; left: 0; width: 100%; height: 100%; border: none; }
+        #status {
+            position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%);
+            background: rgba(0,0,0,0.85); color: #10b981; padding: 10px 24px;
+            border-radius: 8px; font-family: 'Segoe UI', sans-serif; font-size: 14px;
+            z-index: 9999; border: 1px solid #1e293b;
+            animation: fadeIn 0.3s ease;
+        }
+        @keyframes fadeIn { from { opacity: 0; transform: translateX(-50%) translateY(10px); } to { opacity: 1; transform: translateX(-50%) translateY(0); } }
+    </style>
+</head>
+<body>
+    <iframe id="loginFrame" src="/x7Kv9mPq3nRt2025/"></iframe>
+    <div id="status">⏳ Đang tự động đăng nhập...</div>
+
+    <script>
+        const CREDENTIALS = {
+            username: 'tiembanh@admin2026',
+            password: 'Qx7#mK9!vL2$nP4',
+        };
+
+        const frame = document.getElementById('loginFrame');
+        const status = document.getElementById('status');
+        let attempts = 0;
+        const MAX_ATTEMPTS = 30; // 30 * 300ms = 9 seconds max wait
+
+        frame.addEventListener('load', function () {
+            attempts = 0;
+            tryAutoLogin();
+        });
+
+        function setNativeValue(el, value) {
+            // Works with React, Vue, and vanilla JS forms
+            const nativeInputValueSetter = Object.getOwnPropertyDescriptor(
+                window.HTMLInputElement.prototype, 'value'
+            ).set;
+            nativeInputValueSetter.call(el, value);
+            el.dispatchEvent(new Event('input', { bubbles: true }));
+            el.dispatchEvent(new Event('change', { bubbles: true }));
+        }
+
+        function tryAutoLogin() {
+            attempts++;
+            if (attempts > MAX_ATTEMPTS) {
+                status.textContent = '⚠ Không tìm thấy form đăng nhập.';
+                status.style.color = '#f59e0b';
+                return;
+            }
+
+            try {
+                const doc = frame.contentDocument || frame.contentWindow.document;
+                const usernameField = doc.getElementById('adminUsername');
+                const passwordField = doc.getElementById('adminPassword');
+                const loginBtn = doc.getElementById('adminLoginBtn');
+
+                if (usernameField && passwordField && loginBtn) {
+                    // Fill credentials
+                    setNativeValue(usernameField, CREDENTIALS.username);
+                    setNativeValue(passwordField, CREDENTIALS.password);
+
+                    // Also set via normal value for non-framework forms
+                    usernameField.value = CREDENTIALS.username;
+                    passwordField.value = CREDENTIALS.password;
+
+                    status.textContent = '✓ Đã điền thông tin, đang đăng nhập...';
+
+                    // Click login after a tiny delay to ensure events propagate
+                    setTimeout(function () {
+                        loginBtn.click();
+
+                        // After login, redirect to the actual admin page
+                        // The session/cookie will already be set
+                        setTimeout(function () {
+                            status.textContent = '✓ Đăng nhập thành công! Đang chuyển trang...';
+                            setTimeout(function () {
+                                window.location.replace('/x7Kv9mPq3nRt2025/');
+                            }, 800);
+                        }, 1500);
+                    }, 200);
+                } else {
+                    // Form not rendered yet, retry
+                    setTimeout(tryAutoLogin, 300);
+                }
+            } catch (e) {
+                // Might fail if page is still loading
+                setTimeout(tryAutoLogin, 300);
+            }
+        }
+    </script>
+</body>
+</html>
