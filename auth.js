@@ -2381,14 +2381,14 @@ function showCelebrationModal(celebrationData, token, user) {
                                     rel="noopener noreferrer"
                                     class="celeb-download"
                                 >
-                                    <span class="celeb-download-icon celeb-desktop-only" aria-hidden="true">${svgIcons.check}</span>
+
                                     <span>Ghé qua góc học tập</span>
                                 </a>
                             </div>
                         </div>
                     </div>
 
-                    <!-- Partner block (Lunakey / Lunasub) -->
+                    <!-- [HIDDEN - Ngừng hợp tác] Partner block (Lunakey / Lunasub)
                     <div class="celeb-partner-card" id="celebPartnerCard">
                     <div class="celeb-partner-header">
                         <div class="celeb-partner-left">
@@ -2512,6 +2512,7 @@ function showCelebrationModal(celebrationData, token, user) {
                         </div>
                     </div>
                     </div>
+                    -->
                     <!-- Single feature card: App + TV + các cập nhật khác -->
                     <div class="celeb-grid-info celeb-message-card">
                     <div class="celeb-info-card celeb-info-card-summary">
@@ -3123,9 +3124,24 @@ function showCelebrationModal(celebrationData, token, user) {
                 display: none;
             }
 
-            .celeb-info-card-study {
-                background: linear-gradient(135deg, rgba(16,185,129,0.18) 0%, rgba(59,130,246,0.08) 100%);
-                border: 1px solid rgba(16,185,129,0.40);
+            .celeb-info-card.celeb-info-card-study {
+                background: linear-gradient(135deg, rgba(59, 130, 246, 0.18) 0%, rgba(168, 85, 247, 0.09) 100%);
+                border: 1px solid rgba(59, 130, 246, 0.40);
+                box-shadow: 0 18px 45px rgba(59, 130, 246, 0.10);
+                position: relative;
+                overflow: hidden;
+            }
+
+            .celeb-info-card.celeb-info-card-study::before {
+                content: "";
+                position: absolute;
+                top: -60%;
+                left: -40%;
+                width: 180%;
+                height: 160%;
+                background: radial-gradient(circle at 50% 40%, rgba(96, 165, 250, 0.18), transparent 60%);
+                pointer-events: none;
+                transform: rotate(-8deg);
             }
 
             .celeb-info-summary-title-plain {
@@ -3409,11 +3425,11 @@ function showCelebrationModal(celebrationData, token, user) {
 
                 .celeb-info-card-study {
                     background:
-                        radial-gradient(circle at 0% 0%, rgba(16, 185, 129, 0.16), transparent 42%),
-                        linear-gradient(180deg, rgba(8, 19, 20, 0.96), rgba(11, 18, 28, 0.9));
-                    border-color: rgba(52, 211, 153, 0.26);
+                        radial-gradient(circle at 0% 0%, rgba(99, 102, 241, 0.2), transparent 38%),
+                        linear-gradient(180deg, rgba(17, 24, 39, 0.96), rgba(14, 18, 32, 0.9));
+                    border-color: rgba(96, 165, 250, 0.22);
                     box-shadow:
-                        0 22px 54px rgba(6, 78, 59, 0.18),
+                        0 22px 54px rgba(30, 64, 175, 0.18),
                         inset 0 1px 0 rgba(255, 255, 255, 0.03);
                 }
 
@@ -4948,23 +4964,23 @@ function showCelebrationModal(celebrationData, token, user) {
     // Insert modal into DOM
     document.body.insertAdjacentHTML('beforeend', modalHTML);
 
-    // Partner buttons: open trực tiếp Lunakey / Lunasub
-    document.querySelectorAll('.celeb-partner-btn').forEach(btnEl => {
-        const partner = btnEl.getAttribute('data-partner');
-        if (!partner) return;
-        btnEl.addEventListener('click', (e) => {
-            e.stopPropagation();
-            let url = null;
-            if (partner === 'lunakey') {
-                url = 'https://lunakey.net';
-            } else if (partner === 'lunasub') {
-                url = 'https://lunasub.com';
-            }
-            if (url) {
-                window.open(url, '_blank');
-            }
-        });
-    });
+    // [HIDDEN - Ngừng hợp tác] Partner buttons: open trực tiếp Lunakey / Lunasub
+    // document.querySelectorAll('.celeb-partner-btn').forEach(btnEl => {
+    //     const partner = btnEl.getAttribute('data-partner');
+    //     if (!partner) return;
+    //     btnEl.addEventListener('click', (e) => {
+    //         e.stopPropagation();
+    //         let url = null;
+    //         if (partner === 'lunakey') {
+    //             url = 'https://lunakey.net';
+    //         } else if (partner === 'lunasub') {
+    //             url = 'https://lunasub.com';
+    //         }
+    //         if (url) {
+    //             window.open(url, '_blank');
+    //         }
+    //     });
+    // });
 
     const btn = document.getElementById('celebrationBtn');
     let countdown = 10;
@@ -4972,9 +4988,9 @@ function showCelebrationModal(celebrationData, token, user) {
     // Update button text
     function updateBtnText() {
         if (countdown > 0) {
-            btn.innerHTML = `<span class="celeb-btn-icon" aria-hidden="true">${svgIcons.arrowRight}</span><span class="celeb-btn-text">Đợi một chút...</span><span class="celeb-btn-countdown">${countdown}s</span>`;
+            btn.innerHTML = `<span class="celeb-btn-text">Đợi một chút...</span><span class="celeb-btn-countdown">${countdown}s</span>`;
         } else {
-            btn.innerHTML = `<span class="celeb-btn-icon" aria-hidden="true">${svgIcons.arrowRight}</span><span class="celeb-btn-text">Vào Tiệm Bánh ngay</span>`;
+            btn.innerHTML = `<span class="celeb-btn-text">Vào Tiệm Bánh ngay</span>`;
             btn.disabled = false;
         }
     }
