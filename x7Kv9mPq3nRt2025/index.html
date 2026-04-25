@@ -1069,6 +1069,157 @@
             background: rgba(127, 29, 29, 0.26);
         }
 
+        @media (max-width: 768px) {
+            #pcCanplayPanelModal {
+                padding: 0 !important;
+                align-items: stretch !important;
+                justify-content: stretch !important;
+                background: rgba(2, 6, 23, 0.94) !important;
+            }
+
+            #pcCanplayPanelModal .pc-canplay-shell {
+                width: 100% !important;
+                max-width: none !important;
+                height: 100dvh !important;
+                max-height: none !important;
+                border-radius: 0 !important;
+                padding: 18px 16px 0 !important;
+                display: flex !important;
+                flex-direction: column !important;
+                overflow: hidden !important;
+                background:
+                    radial-gradient(circle at top left, rgba(229, 9, 20, 0.18), transparent 34%),
+                    linear-gradient(160deg, rgba(22, 22, 26, 0.99), rgba(8, 8, 10, 0.98)) !important;
+            }
+
+            #pcCanplayPanelModal .admin-modal-header {
+                gap: 12px;
+                margin-bottom: 16px;
+                flex-shrink: 0;
+            }
+
+            #pcCanplayPanelModal .admin-modal-icon {
+                width: 48px;
+                height: 48px;
+                border-radius: 14px;
+            }
+
+            #pcCanplayPanelModal .admin-modal-title {
+                font-size: 1.25rem;
+                line-height: 1.15;
+            }
+
+            #pcCanplayPanelModal .admin-modal-subtitle {
+                font-size: 0.88rem;
+                line-height: 1.45;
+                margin-top: 6px;
+            }
+
+            #pcCanplayPanelModal .admin-modal-close {
+                width: 38px;
+                height: 38px;
+                border-radius: 12px;
+            }
+
+            #pcCanplayPanelModal .pc-canplay-body {
+                flex: 1;
+                min-height: 0;
+                overflow-y: auto;
+                padding-bottom: 18px;
+            }
+
+            #pcCanplayPanelModal .pc-canplay-grid {
+                grid-template-columns: 1fr !important;
+                gap: 10px;
+            }
+
+            #pcCanplayPanelModal .form-group {
+                margin-bottom: 0;
+            }
+
+            #pcCanplayPanelModal .form-group label {
+                margin-bottom: 6px;
+                font-size: 0.72rem;
+                letter-spacing: 0.06em;
+            }
+
+            #pcCanplayPanelModal .form-group input,
+            #pcCanplayPanelModal .form-group select {
+                min-height: 46px;
+                padding: 11px 12px;
+                border-radius: 12px;
+                font-size: 0.95rem;
+            }
+
+            #pcCanplayPanelModal .pc-canplay-checkbox {
+                margin: 14px 0 12px !important;
+                align-items: flex-start !important;
+                line-height: 1.45;
+            }
+
+            #pcCanplayPanelModal .pc-canplay-note {
+                margin-bottom: 14px;
+                padding: 10px 12px;
+                border-left-width: 2px;
+                font-size: 0.88rem;
+                line-height: 1.55;
+                background: rgba(127, 29, 29, 0.2);
+            }
+
+            #pcCanplayPanelModal .pc-canplay-status {
+                margin-bottom: 0;
+                padding: 12px !important;
+                border-radius: 16px;
+            }
+
+            #pcCanplayPanelModal .admin-modal-inline-stats {
+                display: grid;
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+                gap: 8px;
+                margin-bottom: 12px;
+            }
+
+            #pcCanplayPanelModal .admin-modal-stat {
+                padding: 10px 11px;
+                border-radius: 12px;
+                font-size: 0.82rem;
+                line-height: 1.25;
+            }
+
+            #pcCanplayPanelModal .pc-canplay-result-meta {
+                grid-template-columns: 1fr !important;
+                gap: 7px !important;
+                font-size: 0.82rem !important;
+            }
+
+            #pcCanplayPanelModal .admin-modal-actions.pc-canplay-actions {
+                flex-shrink: 0;
+                margin: 0 -16px !important;
+                padding: 12px 16px calc(12px + env(safe-area-inset-bottom)) !important;
+                border-top: 1px solid rgba(255, 255, 255, 0.1);
+                background: rgba(8, 8, 10, 0.96);
+                display: grid !important;
+                grid-template-columns: 1fr 1fr;
+                gap: 10px;
+            }
+
+            #pcCanplayPanelModal .pc-canplay-actions .btn {
+                width: 100%;
+                min-height: 44px;
+                padding: 10px 12px;
+                border-radius: 12px;
+                font-size: 0.88rem;
+            }
+
+            #pcCanplayPanelModal #pcCanplayStartBtn {
+                grid-column: span 1;
+            }
+
+            #pcCanplayPanelModal #pcCanplaySyncBtn {
+                grid-column: span 2;
+            }
+        }
+
         /* Ẩn mobile-only stats trên desktop */
         .mobile-stat-only {
             display: none;
@@ -2004,6 +2155,9 @@
                 <button class="btn mobile-action-btn"
                     style="background: rgba(59, 130, 246, 0.1); color: #3b82f6; border: 1px solid #3b82f6;"
                     onclick="syncCookiesToMobile()">Sync Mobile</button>
+                <button class="btn mobile-action-btn"
+                    style="background: rgba(96, 165, 250, 0.1); color: #60a5fa; border: 1px solid #60a5fa;"
+                    onclick="showPcCanplayPanel()">Check Canplay</button>
                 <button class="btn mobile-action-btn"
                     style="background: rgba(139, 92, 246, 0.1); color: #8b5cf6; border: 1px solid #8b5cf6;"
                     onclick="resetAllMobileCookies()">Reset Mobile</button>
@@ -4357,6 +4511,7 @@
                     <div style="display: flex; gap: 10px; flex-wrap: wrap;">
                         <button class="btn btn-success" onclick="resetAllCookies()">Reset</button>
                         <button class="btn" style="background: rgba(16, 185, 129, 0.15); color: #10b981; border: 1px solid #10b981;" onclick="syncCookiesToMobile()">Sync Mobile</button>
+                        <button class="btn" style="background: rgba(96, 165, 250, 0.15); color: #60a5fa; border: 1px solid #60a5fa;" onclick="showPcCanplayPanel()">Check Canplay</button>
                         <button class="btn" style="background: rgba(139, 92, 246, 0.15); color: #8b5cf6; border: 1px solid #8b5cf6;" onclick="showMobileCookieManagement()">Mobile Cookies</button>
                         <button class="btn btn-warning" onclick="showImportCookiesModal()">Import</button>
                         <button class="btn btn-secondary" onclick="exportCookies()">Xuất Excel</button>
@@ -4872,6 +5027,298 @@
             }
         }
 
+        // ========================================
+        // PC COOKIE CANPLAY CHECK (GitHub Actions)
+        // ========================================
+        let pcCanplayLatestRun = null;
+
+        function formatCanplayDuration(ms) {
+            const totalSeconds = Math.max(0, Math.round(Number(ms || 0) / 1000));
+            const hours = Math.floor(totalSeconds / 3600);
+            const minutes = Math.floor((totalSeconds % 3600) / 60);
+            const seconds = totalSeconds % 60;
+            if (hours > 0) return `${hours}h ${String(minutes).padStart(2, '0')}m`;
+            if (minutes > 0) return `${minutes}m ${String(seconds).padStart(2, '0')}s`;
+            return `${seconds}s`;
+        }
+
+        function formatCanplayDate(value) {
+            if (!value) return '-';
+            return new Date(value).toLocaleString('vi-VN');
+        }
+
+        function canplayStatusText(status) {
+            const map = {
+                running: 'Đang chạy',
+                completed: 'Hoàn tất',
+                failed: 'Lỗi',
+                CAN_PLAY: 'CAN PLAY',
+                NO_PLAY: 'NO PLAY',
+                UNKNOWN: 'UNKNOWN'
+            };
+            return map[status] || status || '-';
+        }
+
+        function showPcCanplayPanel() {
+            const existing = document.getElementById('pcCanplayPanelModal');
+            if (existing) existing.remove();
+
+            const modal = document.createElement('div');
+            modal.id = 'pcCanplayPanelModal';
+            modal.className = 'admin-modal-overlay';
+            modal.style.cssText = 'position:fixed;inset:0;background:rgba(2,6,23,0.84);display:flex;align-items:center;justify-content:center;z-index:10000;padding:20px;';
+
+            modal.innerHTML = `
+                <div class="admin-modal-shell admin-modal-shell--wide pc-canplay-shell">
+                    ${buildAdminModalHeader('cookie', 'PC Cookies', 'Check canplay', 'Chạy GitHub Actions để kiểm tra CAN PLAY / NO PLAY / UNKNOWN cho PC cookies.', 'closePcCanplayPanel()')}
+
+                    <div class="pc-canplay-body">
+                        <div class="admin-modal-grid-2 pc-canplay-grid">
+                            <div class="form-group">
+                                <label>Luồng</label>
+                                <input type="number" id="pcCanplayWorkers" value="10" min="1" max="50">
+                            </div>
+                            <div class="form-group">
+                                <label>Delay mỗi request (ms)</label>
+                                <input type="number" id="pcCanplayDelayMs" value="200" min="0" max="60000">
+                            </div>
+                            <div class="form-group">
+                                <label>Block wait (giây)</label>
+                                <input type="number" id="pcCanplayBlockWaitSec" value="10" min="0" max="600">
+                            </div>
+                            <div class="form-group">
+                                <label>Số lần thử</label>
+                                <input type="number" id="pcCanplayMaxAttempts" value="2" min="1" max="5">
+                            </div>
+                            <div class="form-group">
+                                <label>Timeout (giây)</label>
+                                <input type="number" id="pcCanplayTimeoutSec" value="30" min="5" max="120">
+                            </div>
+                            <div class="form-group">
+                                <label>Phạm vi</label>
+                                <select id="pcCanplayActiveOnly">
+                                    <option value="false">Tất cả PC cookies</option>
+                                    <option value="true">Chỉ cookie đang active</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>Giới hạn</label>
+                                <input type="number" id="pcCanplayLimit" value="0" min="0" max="1000000">
+                            </div>
+                            <div class="form-group">
+                                <label>Nhãn lượt check</label>
+                                <input type="text" id="pcCanplayRunLabel" maxlength="80" placeholder="Ví dụ: recheck tháng này">
+                            </div>
+                        </div>
+
+                        <label class="pc-canplay-checkbox" style="display:flex;align-items:center;gap:10px;margin:4px 0 18px;color:rgba(229,231,235,0.82);font-size:0.9rem;">
+                            <input type="checkbox" id="pcCanplayAllowConcurrent" style="width:auto;">
+                            Cho phép chạy song song nếu GitHub Actions đang bận
+                        </label>
+
+                        <div class="admin-modal-note admin-modal-note--warn pc-canplay-note">
+                            Đồng bộ kết quả sẽ reset trạng thái PC cookies về active trước, sau đó mark die các cookie NO PLAY và UNKNOWN. Assignment hiện tại không bị xóa.
+                        </div>
+
+                        <div id="pcCanplayStatusBox" class="admin-modal-table-wrap pc-canplay-status" style="padding:14px 16px;">
+                            <div class="admin-modal-empty">Đang tải trạng thái...</div>
+                        </div>
+                    </div>
+
+                    <div class="admin-modal-actions pc-canplay-actions" style="display:flex;flex-wrap:wrap;">
+                        <button class="btn btn-secondary" onclick="loadPcCanplayStatus()">Làm mới</button>
+                        <button class="btn btn-primary" id="pcCanplayStartBtn" onclick="startPcCanplayCheck()">Bắt đầu check</button>
+                        <button class="btn btn-success" id="pcCanplaySyncBtn" onclick="syncLatestPcCanplayResult()">Đồng bộ kết quả</button>
+                    </div>
+                </div>
+            `;
+
+            document.body.appendChild(modal);
+            loadPcCanplayStatus();
+        }
+
+        function closePcCanplayPanel() {
+            const modal = document.getElementById('pcCanplayPanelModal');
+            if (modal) modal.remove();
+        }
+
+        function renderPcCanplayStatus(data) {
+            const box = document.getElementById('pcCanplayStatusBox');
+            if (!box) return;
+
+            const github = data.github || {};
+            const activeRuns = github.activeRuns || [];
+            const latest = data.latestRun || null;
+            pcCanplayLatestRun = latest;
+
+            const activeHtml = activeRuns.length > 0
+                ? activeRuns.map(run => `
+                    <div style="display:flex;align-items:center;justify-content:space-between;gap:10px;padding:8px 0;border-bottom:1px solid rgba(255,255,255,0.06);">
+                        <div>
+                            <div style="font-weight:700;color:#bfdbfe;">Action #${run.id} - ${canplayStatusText(run.status)}</div>
+                            <div style="font-size:0.78rem;color:#94a3b8;">Tạo lúc ${formatCanplayDate(run.createdAt)} · Attempt ${run.runAttempt || '-'}</div>
+                        </div>
+                        ${run.htmlUrl ? `<a href="${run.htmlUrl}" target="_blank" style="color:#60a5fa;font-weight:700;">Mở</a>` : ''}
+                    </div>
+                `).join('')
+                : '<div style="color:#bbf7d0;font-weight:700;">Không có GitHub Action đang chạy.</div>';
+
+            let latestHtml = '<div class="admin-modal-empty">Chưa có kết quả check canplay nào.</div>';
+            if (latest) {
+                const s = latest.summary || {};
+                const settings = latest.settings || {};
+                const synced = latest.sync && latest.sync.syncedAt;
+                const detailEntries = Array.isArray(s.detailCounts)
+                    ? s.detailCounts.map(item => [item.detail, item.count])
+                    : Object.entries(s.detailCounts || {});
+                const detailRows = detailEntries
+                    .sort((a, b) => b[1] - a[1])
+                    .slice(0, 5)
+                    .map(([detail, count]) => `<span class="admin-modal-chip admin-modal-chip--info">${escHtml(detail)}: ${count}</span>`)
+                    .join('');
+
+                latestHtml = `
+                    <div class="admin-modal-inline-stats" style="margin-top:6px;">
+                        <div class="admin-modal-stat">Tổng: ${s.checked ?? s.totalCandidates ?? 0}</div>
+                        <div class="admin-modal-stat" style="border-color:rgba(34,197,94,.35);color:#bbf7d0;">CAN PLAY: ${s.canPlay || 0}</div>
+                        <div class="admin-modal-stat" style="border-color:rgba(248,113,113,.35);color:#fecaca;">NO PLAY: ${s.noPlay || 0}</div>
+                        <div class="admin-modal-stat" style="border-color:rgba(251,191,36,.35);color:#fde68a;">UNKNOWN: ${s.unknown || 0}</div>
+                    </div>
+                    <div class="pc-canplay-result-meta" style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;color:#cbd5e1;font-size:0.86rem;margin-bottom:12px;">
+                        <div>Trạng thái: <strong>${canplayStatusText(latest.status)}</strong></div>
+                        <div>Thời gian: <strong>${formatCanplayDuration(latest.durationMs || s.durationMs)}</strong></div>
+                        <div>Bắt đầu: <strong>${formatCanplayDate(latest.startedAt)}</strong></div>
+                        <div>Hoàn tất: <strong>${formatCanplayDate(latest.completedAt)}</strong></div>
+                        <div>Luồng: <strong>${settings.workers || '-'}</strong></div>
+                        <div>Delay: <strong>${settings.delayMs ?? '-'}ms</strong></div>
+                        <div>Phạm vi: <strong>${settings.activeOnly ? 'Cookie active' : 'Tất cả PC cookies'}</strong></div>
+                        <div>Đồng bộ: <strong>${synced ? formatCanplayDate(latest.sync.syncedAt) : 'Chưa đồng bộ'}</strong></div>
+                    </div>
+                    ${latest.runLabel ? `<div style="color:#94a3b8;margin-bottom:10px;">Nhãn: ${escHtml(latest.runLabel)}</div>` : ''}
+                    ${detailRows ? `<div style="display:flex;flex-wrap:wrap;gap:8px;">${detailRows}</div>` : ''}
+                    ${latest.error ? `<div style="color:#fecaca;margin-top:10px;">Lỗi: ${escHtml(latest.error)}</div>` : ''}
+                `;
+            }
+
+            box.innerHTML = `
+                <div style="margin-bottom:16px;">
+                    <div style="font-size:0.75rem;text-transform:uppercase;letter-spacing:.08em;color:#94a3b8;margin-bottom:8px;">GitHub Actions</div>
+                    ${github.configured
+                        ? `<div style="color:#cbd5e1;margin-bottom:10px;">${escHtml(github.owner)}/${escHtml(github.repo)} · ${escHtml(github.workflow)} · ref ${escHtml(github.ref)}</div>`
+                        : '<div style="color:#fecaca;margin-bottom:10px;">Chưa cấu hình GitHub Actions trên backend.</div>'}
+                    ${github.error ? `<div style="color:#fecaca;margin-bottom:10px;">GitHub API: ${escHtml(github.error)}</div>` : ''}
+                    ${activeHtml}
+                </div>
+                <div>
+                    <div style="font-size:0.75rem;text-transform:uppercase;letter-spacing:.08em;color:#94a3b8;margin-bottom:8px;">Kết quả gần nhất</div>
+                    ${latestHtml}
+                </div>
+            `;
+        }
+
+        async function loadPcCanplayStatus() {
+            const box = document.getElementById('pcCanplayStatusBox');
+            if (box) box.innerHTML = '<div class="admin-modal-empty">Đang tải trạng thái...</div>';
+            try {
+                const response = await fetch(`${BACKEND_URL}/api/admin/canplay/status`, {
+                    headers: { 'Authorization': `Bearer ${localStorage.getItem('admin_token')}` }
+                });
+                const data = await response.json();
+                if (!response.ok) throw new Error(data.error || 'Không tải được trạng thái canplay');
+                renderPcCanplayStatus(data);
+            } catch (error) {
+                if (box) box.innerHTML = `<div style="color:#fecaca;">${escHtml(error.message)}</div>`;
+            }
+        }
+
+        async function startPcCanplayCheck() {
+            const payload = {
+                workers: parseInt(document.getElementById('pcCanplayWorkers')?.value || '10', 10),
+                delayMs: parseInt(document.getElementById('pcCanplayDelayMs')?.value || '200', 10),
+                blockWaitSec: parseFloat(document.getElementById('pcCanplayBlockWaitSec')?.value || '10'),
+                maxAttempts: parseInt(document.getElementById('pcCanplayMaxAttempts')?.value || '2', 10),
+                timeoutSec: parseInt(document.getElementById('pcCanplayTimeoutSec')?.value || '30', 10),
+                activeOnly: document.getElementById('pcCanplayActiveOnly')?.value === 'true',
+                limit: parseInt(document.getElementById('pcCanplayLimit')?.value || '0', 10),
+                runLabel: document.getElementById('pcCanplayRunLabel')?.value || '',
+                allowConcurrent: Boolean(document.getElementById('pcCanplayAllowConcurrent')?.checked)
+            };
+
+            if (!confirm(`Bắt đầu check canplay ${payload.activeOnly ? 'cookie đang active' : 'toàn bộ PC cookies'} trên GitHub Actions?`)) return;
+
+            const btn = document.getElementById('pcCanplayStartBtn');
+            if (btn) btn.disabled = true;
+
+            try {
+                showMessage('Đang gửi lệnh chạy GitHub Actions...', 'info');
+                const response = await fetch(`${BACKEND_URL}/api/admin/canplay/start`, {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${localStorage.getItem('admin_token')}`,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(payload)
+                });
+                const data = await response.json();
+                if (!response.ok) throw new Error(data.error || 'Không chạy được GitHub Actions');
+                showMessage(data.message || 'Đã bắt đầu check canplay.', 'success');
+                setTimeout(loadPcCanplayStatus, 1600);
+            } catch (error) {
+                showMessage(error.message, 'error');
+                loadPcCanplayStatus();
+            } finally {
+                if (btn) btn.disabled = false;
+            }
+        }
+
+        async function syncLatestPcCanplayResult() {
+            if (!pcCanplayLatestRun) {
+                showMessage('Chưa có kết quả canplay để đồng bộ.', 'error');
+                return;
+            }
+            if (pcCanplayLatestRun.status !== 'completed') {
+                showMessage('Chỉ đồng bộ được kết quả đã hoàn tất.', 'error');
+                return;
+            }
+
+            const settings = pcCanplayLatestRun.settings || {};
+            if (settings.activeOnly || Number(settings.limit || 0) > 0) {
+                showMessage('Không đồng bộ lượt check partial. Hãy chạy lại với phạm vi tất cả PC cookies và giới hạn 0.', 'error');
+                return;
+            }
+
+            if (!confirm('Đồng bộ kết quả gần nhất?\n\nPC cookies sẽ được reset isActive trước, sau đó NO PLAY và UNKNOWN sẽ bị mark die.')) return;
+
+            const btn = document.getElementById('pcCanplaySyncBtn');
+            if (btn) btn.disabled = true;
+
+            try {
+                const runId = pcCanplayLatestRun._id || pcCanplayLatestRun.runId;
+                showMessage('Đang đồng bộ kết quả canplay...', 'info');
+                const response = await fetch(`${BACKEND_URL}/api/admin/canplay/runs/${encodeURIComponent(runId)}/sync`, {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${localStorage.getItem('admin_token')}`,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ markUnknownAsDie: true })
+                });
+                const data = await response.json();
+                if (!response.ok) throw new Error(data.error || 'Đồng bộ thất bại');
+
+                showMessage(data.message || 'Đồng bộ canplay hoàn tất.', 'success');
+                loadCookieStats();
+                if (window.currentCookieManagementPage) {
+                    loadCookiesList(currentCookiePage, currentCookieSearch, currentCookieStatusFilter);
+                }
+                loadPcCanplayStatus();
+            } catch (error) {
+                showMessage(error.message, 'error');
+            } finally {
+                if (btn) btn.disabled = false;
+            }
+        }
+
         let allCookies = [];
         let availableCookiesForAssign = []; // Cookies có thể assign (isActive=true, slot<1)
 
@@ -5033,6 +5480,7 @@
                             <th>Ngày thêm</th>
                             <th>SecureNetflixId</th>
                             <th>Trạng thái</th>
+                            <th>Canplay</th>
                             <th>Users (${cookies.reduce((sum, c) => sum + (c.currentUsers?.length || 0), 0)})</th>
                             <th>Ghi chú</th>
                             <th>Thao tác</th>
@@ -5062,6 +5510,18 @@
                 const securePreview = cookie.secureNetflixId
                     ? '<span style="color: #10b981;"></span> ' + cookie.secureNetflixId.substring(0, 20) + '...'
                     : '<span style="color: #dc2626;">Chưa có</span>';
+                const canplayStatus = cookie.canplayStatus || 'NOT_CHECKED';
+                const canplayDetail = cookie.canplayDetail || '';
+                const canplayChecked = cookie.canplayCheckedAt ? new Date(cookie.canplayCheckedAt).toLocaleDateString('vi-VN') : '';
+                let canplayBadge = '<span style="background: rgba(148,163,184,.18); color: #cbd5e1; padding: 4px 8px; border-radius: 5px; font-size: 0.78rem;">Chưa check</span>';
+                if (canplayStatus === 'CAN_PLAY') {
+                    canplayBadge = '<span style="background: rgba(16,185,129,.22); color: #bbf7d0; padding: 4px 8px; border-radius: 5px; font-size: 0.78rem; font-weight: 700;">CAN PLAY</span>';
+                } else if (canplayStatus === 'NO_PLAY') {
+                    canplayBadge = '<span style="background: rgba(239,68,68,.22); color: #fecaca; padding: 4px 8px; border-radius: 5px; font-size: 0.78rem; font-weight: 700;">NO PLAY</span>';
+                } else if (canplayStatus === 'UNKNOWN') {
+                    canplayBadge = '<span style="background: rgba(245,158,11,.22); color: #fde68a; padding: 4px 8px; border-radius: 5px; font-size: 0.78rem; font-weight: 700;">UNKNOWN</span>';
+                }
+                const canplayCell = `<div title="${escHtml(canplayDetail)}">${canplayBadge}${canplayChecked ? `<div style="font-size:0.72rem;color:#94a3b8;margin-top:4px;">${canplayChecked}</div>` : ''}</div>`;
 
                 html += `
                     <tr>
@@ -5070,6 +5530,7 @@
                         <td>${createdAt}</td>
                         <td style="font-size: 0.8rem; max-width: 150px; overflow: hidden; text-overflow: ellipsis;" title="${cookie.secureNetflixId || ''}">${securePreview}</td>
                         <td>${statusBadge}</td>
+                        <td>${canplayCell}</td>
                         <td><span style="color: ${isFull ? '#f59e0b' : '#10b981'}; font-weight: 600;">${userCount}/${cookie.maxUsers || 1}</span></td>
                         <td style="max-width: 150px; overflow: hidden; text-overflow: ellipsis;" title="${cookie.notes || ''}">${cookie.notes || '-'}</td>
                         <td>
