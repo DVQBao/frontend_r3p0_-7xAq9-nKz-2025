@@ -1069,6 +1069,44 @@
             background: rgba(127, 29, 29, 0.26);
         }
 
+        .pc-canplay-feedback {
+            display: none;
+            margin: 0 0 14px;
+            padding: 12px 14px;
+            border-radius: 14px;
+            border: 1px solid rgba(96, 165, 250, 0.24);
+            background: rgba(15, 23, 42, 0.66);
+            color: #dbeafe;
+            font-size: 0.9rem;
+            line-height: 1.5;
+        }
+
+        .pc-canplay-feedback.is-visible {
+            display: block;
+        }
+
+        .pc-canplay-feedback--info {
+            border-color: rgba(96, 165, 250, 0.32);
+            background: linear-gradient(90deg, rgba(59, 130, 246, 0.15), rgba(15, 23, 42, 0.66));
+            color: #dbeafe;
+        }
+
+        .pc-canplay-feedback--success {
+            border-color: rgba(34, 197, 94, 0.34);
+            background: linear-gradient(90deg, rgba(22, 163, 74, 0.16), rgba(15, 23, 42, 0.66));
+            color: #dcfce7;
+        }
+
+        .pc-canplay-feedback--error {
+            border-color: rgba(248, 113, 113, 0.38);
+            background: linear-gradient(90deg, rgba(127, 29, 29, 0.24), rgba(15, 23, 42, 0.66));
+            color: #fee2e2;
+        }
+
+        .pc-canplay-feedback strong {
+            color: #fff;
+        }
+
         @media (max-width: 768px) {
             #pcCanplayPanelModal {
                 padding: 0 !important;
@@ -1164,6 +1202,13 @@
                 font-size: 0.88rem;
                 line-height: 1.55;
                 background: rgba(127, 29, 29, 0.2);
+            }
+
+            #pcCanplayPanelModal .pc-canplay-feedback {
+                margin-bottom: 12px;
+                padding: 11px 12px;
+                border-radius: 12px;
+                font-size: 0.86rem;
             }
 
             #pcCanplayPanelModal .pc-canplay-status {
@@ -5059,6 +5104,24 @@
             return map[status] || status || '-';
         }
 
+        function setPcCanplayFeedback(message, type = 'info', details = '') {
+            const box = document.getElementById('pcCanplayFeedback');
+            if (!box) return;
+
+            if (!message) {
+                box.className = 'pc-canplay-feedback';
+                box.textContent = '';
+                return;
+            }
+
+            const normalizedType = ['success', 'error', 'info'].includes(type) ? type : 'info';
+            box.className = `pc-canplay-feedback pc-canplay-feedback--${normalizedType} is-visible`;
+            box.innerHTML = `
+                <strong>${escHtml(message)}</strong>
+                ${details ? `<div style="margin-top:4px;color:rgba(255,255,255,0.78);">${escHtml(details)}</div>` : ''}
+            `;
+        }
+
         function showPcCanplayPanel() {
             const existing = document.getElementById('pcCanplayPanelModal');
             if (existing) existing.remove();
@@ -5119,6 +5182,8 @@
                         <div class="admin-modal-note admin-modal-note--warn pc-canplay-note">
                             Đồng bộ kết quả sẽ reset trạng thái PC cookies về active trước, sau đó mark die các cookie NO PLAY và UNKNOWN. Assignment hiện tại không bị xóa.
                         </div>
+
+                        <div id="pcCanplayFeedback" class="pc-canplay-feedback" role="status" aria-live="polite"></div>
 
                         <div id="pcCanplayStatusBox" class="admin-modal-table-wrap pc-canplay-status" style="padding:14px 16px;">
                             <div class="admin-modal-empty">Đang tải trạng thái...</div>
@@ -5273,16 +5338,19 @@
 
         async function syncLatestPcCanplayResult() {
             if (!pcCanplayLatestRun) {
+                setPcCanplayFeedback('Chưa có kết quả canplay để đồng bộ.', 'error');
                 showMessage('Chưa có kết quả canplay để đồng bộ.', 'error');
                 return;
             }
             if (pcCanplayLatestRun.status !== 'completed') {
+                setPcCanplayFeedback('Chỉ đồng bộ được kết quả đã hoàn tất.', 'error');
                 showMessage('Chỉ đồng bộ được kết quả đã hoàn tất.', 'error');
                 return;
             }
 
             const settings = pcCanplayLatestRun.settings || {};
             if (settings.activeOnly || Number(settings.limit || 0) > 0) {
+                setPcCanplayFeedback('Không đồng bộ lượt check partial.', 'error', 'Hãy chạy lại với phạm vi tất cả PC cookies và giới hạn 0.');
                 showMessage('Không đồng bộ lượt check partial. Hãy chạy lại với phạm vi tất cả PC cookies và giới hạn 0.', 'error');
                 return;
             }
@@ -5290,11 +5358,16 @@
             if (!confirm('Đồng bộ kết quả gần nhất?\n\nPC cookies sẽ được reset isActive trước, sau đó NO PLAY và UNKNOWN sẽ bị mark die.')) return;
 
             const btn = document.getElementById('pcCanplaySyncBtn');
-            if (btn) btn.disabled = true;
+            const originalText = btn ? btn.textContent : '';
+            if (btn) {
+                btn.disabled = true;
+                btn.textContent = 'Đang đồng bộ...';
+            }
 
             try {
                 const runId = pcCanplayLatestRun._id || pcCanplayLatestRun.runId;
                 showMessage('Đang đồng bộ kết quả canplay...', 'info');
+                setPcCanplayFeedback('Đang đồng bộ kết quả canplay...', 'info', 'Vui lòng chờ, hệ thống đang reset trạng thái PC cookies và cập nhật kết quả mới nhất.');
                 const response = await fetch(`${BACKEND_URL}/api/admin/canplay/runs/${encodeURIComponent(runId)}/sync`, {
                     method: 'POST',
                     headers: {
@@ -5307,6 +5380,14 @@
                 if (!response.ok) throw new Error(data.error || 'Đồng bộ thất bại');
 
                 showMessage(data.message || 'Đồng bộ canplay hoàn tất.', 'success');
+                const stats = data.stats || {};
+                const details = [
+                    `Reset active: ${stats.resetModified ?? 0}/${stats.resetMatched ?? 0}`,
+                    `CAN PLAY giữ khả dụng: ${stats.canPlayUpdated ?? 0}`,
+                    `Mark die: ${stats.markedDie ?? 0}`,
+                    `Bỏ qua: ${stats.skipped ?? 0}`
+                ].join(' · ');
+                setPcCanplayFeedback(data.message || 'Đồng bộ canplay hoàn tất.', 'success', details);
                 loadCookieStats();
                 if (window.currentCookieManagementPage) {
                     loadCookiesList(currentCookiePage, currentCookieSearch, currentCookieStatusFilter);
@@ -5314,8 +5395,12 @@
                 loadPcCanplayStatus();
             } catch (error) {
                 showMessage(error.message, 'error');
+                setPcCanplayFeedback('Đồng bộ thất bại.', 'error', error.message);
             } finally {
-                if (btn) btn.disabled = false;
+                if (btn) {
+                    btn.disabled = false;
+                    btn.textContent = originalText || 'Đồng bộ kết quả';
+                }
             }
         }
 
