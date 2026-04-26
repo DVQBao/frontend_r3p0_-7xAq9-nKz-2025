@@ -4714,6 +4714,1006 @@
             }
         }
     </style>
+    <style id="digital-upgrade-modal-styles">
+        .partner-mini-card--ai-upgrade .partner-mini-icon {
+            color: #ecfeff;
+            background: linear-gradient(135deg, rgba(20, 184, 166, 0.18), rgba(59, 130, 246, 0.12));
+            border: 1px solid rgba(45, 212, 191, 0.18);
+        }
+
+        .partner-mini-card--ai-upgrade .partner-mini-title {
+            color: #fff;
+        }
+
+        .partner-mini-card--ai-upgrade .partner-mini-sub {
+            color: #cbd5e1;
+        }
+
+        .partner-mini-ai-mark {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 20px;
+            height: 20px;
+            border-radius: 8px;
+            color: #ccfbf1;
+            font-size: 0.68rem;
+            font-weight: 900;
+            letter-spacing: 0;
+        }
+
+        @media (max-width: 768px) {
+            .partner-mini-card--ai-upgrade .partner-mini-icon {
+                color: rgba(255, 255, 255, 0.95);
+                background: transparent;
+                border: 0;
+            }
+
+            .partner-mini-ai-mark {
+                width: auto;
+                height: auto;
+                border-radius: 0;
+                color: rgba(255, 255, 255, 0.95);
+            }
+        }
+
+        button.partner-mini-card,
+        body.desktop-home-v2 button.service-card {
+            color: inherit;
+            text-align: left;
+            cursor: pointer;
+            font: inherit;
+        }
+
+        body.desktop-home-v2 .service-card.ai-upgrade-card {
+            width: 100%;
+        }
+
+        body.desktop-home-v2 .ai-upgrade-card .service-icon {
+            color: #ecfeff;
+            background: linear-gradient(135deg, rgba(20, 184, 166, 0.18), rgba(59, 130, 246, 0.1));
+            border: 1px solid rgba(45, 212, 191, 0.18);
+        }
+
+        body.desktop-home-v2 .ai-upgrade-mark {
+            font-size: 0.82rem;
+            font-weight: 900;
+            letter-spacing: 0;
+            color: #ccfbf1;
+        }
+
+        .digital-upgrade-overlay {
+            position: fixed;
+            inset: 0;
+            z-index: 10060;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 22px;
+            background: rgba(3, 7, 18, 0.82);
+            backdrop-filter: blur(18px);
+        }
+
+        .digital-upgrade-overlay.active {
+            display: flex;
+        }
+
+        .digital-upgrade-dialog {
+            display: flex;
+            flex-direction: column;
+            width: min(1180px, calc(100vw - 44px));
+            height: min(94dvh, 860px);
+            max-height: calc(100dvh - 44px);
+            overflow: hidden;
+            color: #fff;
+            background:
+                radial-gradient(circle at top left, rgba(20, 184, 166, 0.18), transparent 32%),
+                radial-gradient(circle at bottom right, rgba(59, 130, 246, 0.12), transparent 34%),
+                linear-gradient(145deg, rgba(13, 18, 30, 0.98), rgba(8, 11, 21, 0.98));
+            border: 1px solid rgba(148, 163, 184, 0.22);
+            border-radius: 24px;
+            box-shadow: 0 28px 100px rgba(0, 0, 0, 0.62);
+        }
+
+        .digital-upgrade-header {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            gap: 18px;
+            padding: 24px 28px 20px;
+            background: linear-gradient(135deg, rgba(20, 184, 166, 0.1), rgba(59, 130, 246, 0.04));
+            border-bottom: 1px solid rgba(148, 163, 184, 0.14);
+        }
+
+        .digital-upgrade-kicker {
+            margin-bottom: 6px;
+            color: #67e8f9;
+            font-size: 0.72rem;
+            font-weight: 800;
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+        }
+
+        .digital-upgrade-title {
+            margin: 0;
+            max-width: 900px;
+            font-size: clamp(1.35rem, 2.2vw, 2rem);
+            font-weight: 900;
+            line-height: 1.12;
+            letter-spacing: 0;
+        }
+
+        .digital-upgrade-subtitle {
+            max-width: 96ch;
+            margin: 8px 0 0;
+            color: rgba(226, 232, 240, 0.78);
+            font-size: 0.92rem;
+            line-height: 1.55;
+        }
+
+        .digital-upgrade-trust-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 14px;
+        }
+
+        .digital-upgrade-trust-row span {
+            display: inline-flex;
+            align-items: center;
+            min-height: 28px;
+            padding: 6px 10px;
+            color: #dbeafe;
+            background: rgba(37, 99, 235, 0.13);
+            border: 1px solid rgba(96, 165, 250, 0.18);
+            border-radius: 999px;
+            font-size: 0.76rem;
+            font-weight: 850;
+            line-height: 1;
+        }
+
+        .digital-upgrade-close {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 38px;
+            height: 38px;
+            flex-shrink: 0;
+            color: rgba(255, 255, 255, 0.78);
+            background: rgba(255, 255, 255, 0.06);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            cursor: pointer;
+            transition: background 0.18s ease, color 0.18s ease, border-color 0.18s ease;
+        }
+
+        .digital-upgrade-close:hover {
+            color: #fff;
+            background: rgba(239, 68, 68, 0.16);
+            border-color: rgba(248, 113, 113, 0.28);
+        }
+
+        .digital-upgrade-body {
+            display: grid;
+            grid-template-columns: minmax(320px, 0.8fr) minmax(0, 1.42fr);
+            gap: 20px;
+            padding: 22px 26px 26px;
+            flex: 1 1 auto;
+            min-height: 0;
+            overflow: hidden;
+            scrollbar-width: none;
+            -ms-overflow-style: none;
+        }
+
+        .digital-upgrade-body::-webkit-scrollbar {
+            width: 0;
+            height: 0;
+            display: none;
+        }
+
+        .digital-upgrade-products {
+            display: grid;
+            gap: 12px;
+            align-content: start;
+            min-height: 0;
+            overflow: auto;
+            scrollbar-width: none;
+            -ms-overflow-style: none;
+        }
+
+        .digital-upgrade-products::-webkit-scrollbar {
+            width: 0;
+            height: 0;
+            display: none;
+        }
+
+        .digital-upgrade-product {
+            width: 100%;
+            min-height: 126px;
+            padding: 15px;
+            overflow: hidden;
+            color: #fff;
+            text-align: left;
+            background: rgba(15, 23, 42, 0.72);
+            border: 1px solid rgba(148, 163, 184, 0.16);
+            border-radius: 16px;
+            cursor: pointer;
+            box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.04);
+            transition: transform 0.18s ease, border-color 0.18s ease, background 0.18s ease, box-shadow 0.18s ease;
+        }
+
+        .digital-upgrade-product:hover {
+            transform: translateY(-1px);
+            border-color: rgba(103, 232, 249, 0.32);
+            background: rgba(15, 23, 42, 0.9);
+        }
+
+        .digital-upgrade-product:focus {
+            outline: none;
+        }
+
+        .digital-upgrade-product:focus-visible {
+            border-color: rgba(103, 232, 249, 0.55);
+            box-shadow:
+                inset 0 0 0 1px rgba(103, 232, 249, 0.16),
+                inset 0 1px 0 rgba(255, 255, 255, 0.06);
+        }
+
+        .digital-upgrade-product.active {
+            border-color: rgba(45, 212, 191, 0.72);
+            background:
+                linear-gradient(135deg, rgba(20, 184, 166, 0.2), rgba(59, 130, 246, 0.11)),
+                rgba(15, 23, 42, 0.92);
+            box-shadow:
+                inset 0 0 0 1px rgba(45, 212, 191, 0.1),
+                inset 0 1px 0 rgba(255, 255, 255, 0.06);
+        }
+
+        .digital-upgrade-product-top {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+
+        .digital-upgrade-product-badges {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: flex-end;
+            gap: 6px;
+            flex-shrink: 0;
+        }
+
+        .digital-upgrade-product-name {
+            font-size: 0.95rem;
+            font-weight: 850;
+            line-height: 1.28;
+        }
+
+        .digital-upgrade-badge {
+            flex-shrink: 0;
+            padding: 4px 8px;
+            color: #a7f3d0;
+            background: rgba(16, 185, 129, 0.12);
+            border: 1px solid rgba(52, 211, 153, 0.22);
+            border-radius: 999px;
+            font-size: 0.68rem;
+            font-weight: 800;
+            white-space: nowrap;
+        }
+
+        .digital-upgrade-badge--official {
+            color: #bfdbfe;
+            background: rgba(59, 130, 246, 0.14);
+            border-color: rgba(96, 165, 250, 0.26);
+        }
+
+        .digital-upgrade-product-price {
+            display: flex;
+            align-items: baseline;
+            gap: 3px;
+            flex-wrap: wrap;
+            color: #fff;
+            font-size: 1.18rem;
+            font-weight: 950;
+            line-height: 1.12;
+        }
+
+        .digital-upgrade-product-price small {
+            color: rgba(226, 232, 240, 0.74);
+            font-size: 0.72rem;
+            font-weight: 800;
+        }
+
+        .digital-upgrade-product-meta {
+            margin-top: 6px;
+            color: rgba(226, 232, 240, 0.72);
+            font-size: 0.76rem;
+            line-height: 1.4;
+        }
+
+        .digital-upgrade-product-saving {
+            display: inline-flex;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 6px;
+            max-width: 100%;
+            box-sizing: border-box;
+            margin-top: 10px;
+            padding: 6px 8px;
+            color: #fde68a;
+            background: rgba(245, 158, 11, 0.12);
+            border: 1px solid rgba(245, 158, 11, 0.22);
+            border-radius: 10px;
+            font-size: 0.74rem;
+            font-weight: 850;
+            line-height: 1.2;
+        }
+
+        .digital-upgrade-product-saving strong {
+            color: #fef3c7;
+            font-weight: 950;
+        }
+
+        .digital-upgrade-detail {
+            display: grid;
+            gap: 16px;
+            padding: 18px;
+            min-height: 0;
+            overflow: auto;
+            scrollbar-width: none;
+            -ms-overflow-style: none;
+            background:
+                linear-gradient(180deg, rgba(15, 23, 42, 0.86), rgba(8, 13, 26, 0.86));
+            border: 1px solid rgba(148, 163, 184, 0.14);
+            border-radius: 20px;
+            box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.04);
+        }
+
+        .digital-upgrade-detail::-webkit-scrollbar {
+            width: 0;
+            height: 0;
+            display: none;
+        }
+
+        .digital-upgrade-detail-head {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            gap: 20px;
+        }
+
+        .digital-upgrade-detail h3 {
+            margin: 0;
+            font-size: 1.25rem;
+            font-weight: 900;
+            line-height: 1.2;
+            letter-spacing: 0;
+        }
+
+        .digital-upgrade-detail-desc {
+            margin: 7px 0 0;
+            color: rgba(226, 232, 240, 0.78);
+            font-size: 0.9rem;
+            line-height: 1.55;
+        }
+
+        .digital-upgrade-pricebox {
+            min-width: 268px;
+            padding: 14px;
+            overflow: hidden;
+            text-align: right;
+            background:
+                linear-gradient(135deg, rgba(20, 184, 166, 0.18), rgba(37, 99, 235, 0.1)),
+                rgba(255, 255, 255, 0.055);
+            border: 1px solid rgba(94, 234, 212, 0.22);
+            border-radius: 16px;
+        }
+
+        .digital-upgrade-price-label {
+            display: block;
+            margin-bottom: 7px;
+            color: rgba(204, 251, 241, 0.72);
+            font-size: 0.68rem;
+            font-weight: 900;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+        }
+
+        .digital-upgrade-price {
+            display: flex;
+            align-items: baseline;
+            justify-content: flex-end;
+            gap: 3px;
+            flex-wrap: wrap;
+            color: #5eead4;
+            font-size: clamp(1.25rem, 2.2vw, 1.55rem);
+            font-weight: 950;
+            line-height: 1.06;
+        }
+
+        .digital-upgrade-price small {
+            color: rgba(204, 251, 241, 0.84);
+            font-size: 0.78rem;
+            font-weight: 850;
+        }
+
+        .digital-upgrade-duration {
+            display: block;
+            margin-top: 4px;
+            color: rgba(226, 232, 240, 0.72);
+            font-size: 0.74rem;
+            font-weight: 700;
+            white-space: nowrap;
+        }
+
+        .digital-upgrade-savings {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 10px;
+        }
+
+        .digital-upgrade-stat {
+            padding: 13px;
+            background: rgba(255, 255, 255, 0.048);
+            border: 1px solid rgba(148, 163, 184, 0.14);
+            border-radius: 14px;
+        }
+
+        .digital-upgrade-stat--saving {
+            background: linear-gradient(135deg, rgba(245, 158, 11, 0.18), rgba(251, 191, 36, 0.08));
+            border-color: rgba(251, 191, 36, 0.3);
+            box-shadow: 0 10px 28px rgba(245, 158, 11, 0.1);
+        }
+
+        .digital-upgrade-stat span {
+            display: block;
+            margin-bottom: 5px;
+            color: rgba(226, 232, 240, 0.62);
+            font-size: 0.68rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+        }
+
+        .digital-upgrade-stat strong {
+            display: block;
+            color: #fff;
+            font-size: 0.95rem;
+            font-weight: 850;
+            line-height: 1.3;
+        }
+
+        .digital-upgrade-stat--saving strong {
+            color: #fef3c7;
+            font-size: 1.05rem;
+        }
+
+        .digital-upgrade-stat em {
+            display: block;
+            margin-top: 3px;
+            color: rgba(254, 243, 199, 0.86);
+            font-size: 0.72rem;
+            font-style: normal;
+            font-weight: 800;
+        }
+
+        .digital-upgrade-variants {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 10px;
+        }
+
+        .digital-upgrade-variant {
+            display: grid;
+            gap: 5px;
+            padding: 13px;
+            background:
+                linear-gradient(135deg, rgba(20, 184, 166, 0.14), rgba(59, 130, 246, 0.06)),
+                rgba(15, 23, 42, 0.74);
+            border: 1px solid rgba(45, 212, 191, 0.18);
+            border-radius: 14px;
+        }
+
+        .digital-upgrade-variant span {
+            color: #67e8f9;
+            font-size: 0.7rem;
+            font-weight: 900;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+        }
+
+        .digital-upgrade-variant strong {
+            color: #fff;
+            font-size: 1.05rem;
+            font-weight: 950;
+            line-height: 1.18;
+        }
+
+        .digital-upgrade-variant em,
+        .digital-upgrade-variant small {
+            color: rgba(226, 232, 240, 0.76);
+            font-style: normal;
+            font-size: 0.72rem;
+            line-height: 1.35;
+        }
+
+        .digital-upgrade-variant small {
+            color: #fde68a;
+            font-weight: 850;
+        }
+
+        .digital-upgrade-benefits {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 8px;
+            margin: 0;
+            padding: 0;
+            list-style: none;
+        }
+
+        .digital-upgrade-benefits li {
+            position: relative;
+            min-height: 44px;
+            padding: 11px 12px 11px 31px;
+            color: rgba(248, 250, 252, 0.9);
+            font-size: 0.82rem;
+            line-height: 1.35;
+            background: rgba(15, 23, 42, 0.72);
+            border: 1px solid rgba(148, 163, 184, 0.12);
+            border-radius: 12px;
+        }
+
+        .digital-upgrade-benefits li::before {
+            content: "";
+            position: absolute;
+            left: 11px;
+            top: 14px;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #34d399;
+            box-shadow: 0 0 0 4px rgba(52, 211, 153, 0.12);
+        }
+
+        .digital-upgrade-actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            align-items: center;
+            justify-content: flex-end;
+            margin-top: 2px;
+        }
+
+        .digital-upgrade-action {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            min-height: 42px;
+            padding: 11px 16px;
+            color: #fff;
+            font-size: 0.88rem;
+            font-weight: 850;
+            text-decoration: none;
+            border-radius: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            cursor: pointer;
+        }
+
+        .digital-upgrade-action:focus {
+            outline: none;
+        }
+
+        .digital-upgrade-action:focus-visible {
+            box-shadow:
+                inset 0 0 0 1px rgba(255, 255, 255, 0.22),
+                inset 0 1px 0 rgba(255, 255, 255, 0.12);
+        }
+
+        .digital-upgrade-action-primary {
+            background: linear-gradient(135deg, #10b981, #2563eb);
+            box-shadow: 0 14px 30px rgba(16, 185, 129, 0.18);
+        }
+
+        .digital-upgrade-action-secondary {
+            background: rgba(255, 255, 255, 0.06);
+        }
+
+        .digital-product-detail-overlay {
+            position: fixed;
+            inset: 0;
+            z-index: 10080;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 22px;
+            background: rgba(3, 7, 18, 0.82);
+            backdrop-filter: blur(18px);
+        }
+
+        .digital-product-detail-overlay.active {
+            display: flex;
+        }
+
+        .digital-product-detail-dialog {
+            display: flex;
+            flex-direction: column;
+            width: min(680px, 100%);
+            max-height: calc(100dvh - 44px);
+            overflow: hidden;
+            color: #fff;
+            background: linear-gradient(180deg, rgba(15, 23, 42, 0.98), rgba(2, 6, 23, 0.99));
+            border: 1px solid rgba(148, 163, 184, 0.18);
+            border-radius: 22px;
+            box-shadow: 0 30px 96px rgba(0, 0, 0, 0.64);
+        }
+
+        .digital-product-detail-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            padding: 16px 18px;
+            border-bottom: 1px solid rgba(148, 163, 184, 0.14);
+            background: linear-gradient(180deg, rgba(148, 163, 184, 0.06), transparent);
+        }
+
+        .digital-product-detail-heading {
+            min-width: 0;
+        }
+
+        .digital-product-detail-heading span {
+            display: block;
+            margin-bottom: 3px;
+            color: #67e8f9;
+            font-size: 0.68rem;
+            font-weight: 900;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+        }
+
+        .digital-product-detail-heading strong {
+            display: block;
+            color: #f8fafc;
+            font-size: 1.05rem;
+            font-weight: 900;
+            line-height: 1.2;
+        }
+
+        .digital-product-detail-close {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 36px;
+            height: 36px;
+            flex-shrink: 0;
+            color: rgba(255, 255, 255, 0.78);
+            background: rgba(255, 255, 255, 0.06);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            cursor: pointer;
+        }
+
+        .digital-product-detail-body {
+            overflow: auto;
+            padding: 14px;
+            scrollbar-width: none;
+            -ms-overflow-style: none;
+        }
+
+        .digital-product-detail-body::-webkit-scrollbar {
+            width: 0;
+            height: 0;
+            display: none;
+        }
+
+        @media (max-width: 720px) {
+            .digital-upgrade-overlay {
+                align-items: center;
+                padding: 12px;
+            }
+
+            .digital-upgrade-dialog {
+                width: 100%;
+                height: auto;
+                max-height: calc(100dvh - 24px);
+                background: transparent;
+                border: 0;
+                border-radius: 0;
+                box-shadow: none;
+            }
+
+            .digital-upgrade-header {
+                position: relative;
+                padding: 0 0 12px;
+                background: transparent;
+                border-bottom: 0;
+            }
+
+            .digital-upgrade-header > div,
+            .digital-product-detail-heading {
+                padding-right: 46px;
+            }
+
+            .digital-upgrade-close {
+                position: absolute;
+                top: 0;
+                right: 0;
+                width: 34px;
+                height: 34px;
+                border-radius: 11px;
+            }
+
+            .digital-upgrade-kicker {
+                margin-bottom: 5px;
+                font-size: 0.66rem;
+            }
+
+            .digital-upgrade-title {
+                display: none;
+            }
+
+            .digital-upgrade-subtitle {
+                max-width: calc(100% - 18px);
+                margin-top: 8px;
+                font-size: 0.78rem;
+                line-height: 1.45;
+            }
+
+            .digital-upgrade-trust-row {
+                gap: 6px;
+                margin-top: 10px;
+            }
+
+            .digital-upgrade-trust-row span {
+                min-height: 24px;
+                padding: 5px 8px;
+                font-size: 0.68rem;
+            }
+
+            .digital-upgrade-body {
+                display: block;
+                flex: 0 1 auto;
+                padding: 0 0 calc(16px + env(safe-area-inset-bottom, 0px));
+                overflow: auto;
+            }
+
+            .digital-upgrade-products {
+                display: grid;
+                grid-template-columns: 1fr;
+                gap: 8px;
+                margin: 0 0 12px;
+                overflow: visible;
+            }
+
+            .digital-upgrade-product {
+                min-height: 74px;
+                padding: 10px 11px;
+                border-radius: 14px;
+            }
+
+            .digital-upgrade-product-top {
+                align-items: center;
+                gap: 8px;
+                margin-bottom: 6px;
+            }
+
+            .digital-upgrade-product-name {
+                font-size: 0.86rem;
+            }
+
+            .digital-upgrade-product-badges {
+                gap: 5px;
+            }
+
+            .digital-upgrade-badge {
+                padding: 3px 7px;
+                font-size: 0.6rem;
+            }
+
+            .digital-upgrade-product-price {
+                display: inline-flex;
+                max-width: 100%;
+                font-size: 1rem;
+            }
+
+            .digital-upgrade-product-meta {
+                display: block;
+                margin-left: 0;
+                margin-top: 4px;
+                font-size: 0.66rem;
+            }
+
+            .digital-upgrade-product-saving {
+                max-width: 100%;
+                box-sizing: border-box;
+                margin-top: 6px;
+                padding: 4px 7px;
+                font-size: 0.66rem;
+            }
+
+            .digital-upgrade-detail {
+                display: none;
+                gap: 12px;
+                padding: 13px;
+                overflow: visible;
+            }
+
+            .digital-upgrade-overlay.has-mobile-detail .digital-upgrade-detail {
+                display: grid;
+            }
+
+            .digital-product-detail-overlay {
+                align-items: center;
+                padding: 12px;
+            }
+
+            .digital-product-detail-dialog {
+                width: 100%;
+                max-height: calc(100dvh - 24px);
+                background: transparent;
+                border: 0;
+                border-radius: 0;
+                box-shadow: none;
+            }
+
+            .digital-product-detail-header {
+                padding: 0 0 12px;
+                background: transparent;
+                border-bottom: 0;
+                justify-content: flex-end;
+                min-height: 34px;
+            }
+
+            .digital-product-detail-heading {
+                display: none;
+            }
+
+            .digital-product-detail-body {
+                padding: 0 0 calc(16px + env(safe-area-inset-bottom, 0px));
+            }
+
+            .digital-product-detail-body .digital-upgrade-detail {
+                display: grid;
+                gap: 12px;
+                padding: 0;
+                overflow: visible;
+                background: transparent;
+                border: 0;
+                border-radius: 0;
+                box-shadow: none;
+            }
+
+            .digital-upgrade-detail-head {
+                display: grid;
+                gap: 12px;
+            }
+
+            .digital-upgrade-detail h3 {
+                font-size: 1.12rem;
+            }
+
+            .digital-upgrade-detail-desc {
+                font-size: 0.8rem;
+                line-height: 1.48;
+            }
+
+            .digital-upgrade-pricebox {
+                min-width: 0;
+                text-align: left;
+            }
+
+            .digital-upgrade-price {
+                justify-content: flex-start;
+            }
+
+            .digital-product-detail-body .digital-upgrade-detail[data-product-id="capcut-pro"] .digital-upgrade-pricebox,
+            .digital-product-detail-body .digital-upgrade-detail[data-product-id="capcut-pro"] .digital-upgrade-savings {
+                display: none;
+            }
+
+            .digital-upgrade-duration {
+                white-space: normal;
+            }
+
+            .digital-upgrade-savings {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+                gap: 8px;
+            }
+
+            .digital-upgrade-stat {
+                padding: 11px;
+            }
+
+            .digital-upgrade-stat--saving {
+                grid-column: 1 / -1;
+            }
+
+            .digital-upgrade-variants {
+                grid-template-columns: 1fr;
+                gap: 0;
+                padding: 4px 12px;
+                background:
+                    linear-gradient(135deg, rgba(20, 184, 166, 0.12), rgba(59, 130, 246, 0.05)),
+                    rgba(15, 23, 42, 0.72);
+                border: 1px solid rgba(45, 212, 191, 0.18);
+                border-radius: 14px;
+            }
+
+            .digital-upgrade-variant {
+                grid-template-columns: minmax(0, 1fr) auto;
+                gap: 3px 10px;
+                align-items: center;
+                padding: 10px 0;
+                background: transparent;
+                border: 0;
+                border-bottom: 1px solid rgba(148, 163, 184, 0.12);
+                border-radius: 0;
+            }
+
+            .digital-upgrade-variant:last-child {
+                border-bottom: 0;
+            }
+
+            .digital-upgrade-variant span {
+                grid-column: 1;
+                font-size: 0.68rem;
+            }
+
+            .digital-upgrade-variant strong {
+                grid-column: 2;
+                grid-row: 1 / span 2;
+                align-self: center;
+                text-align: right;
+                font-size: 0.98rem;
+            }
+
+            .digital-upgrade-variant em {
+                grid-column: 1;
+                font-size: 0.68rem;
+            }
+
+            .digital-upgrade-variant small {
+                grid-column: 1 / -1;
+                font-size: 0.68rem;
+            }
+
+            .digital-upgrade-benefits {
+                grid-template-columns: 1fr;
+                gap: 7px;
+            }
+
+            .digital-upgrade-benefits li {
+                min-height: 0;
+                padding: 10px 10px 10px 29px;
+                font-size: 0.76rem;
+            }
+
+            .digital-upgrade-actions {
+                justify-content: stretch;
+                position: sticky;
+                bottom: 0;
+                padding-top: 8px;
+                background: linear-gradient(180deg, rgba(8, 13, 26, 0), rgba(8, 13, 26, 0.96) 28%);
+            }
+
+            .digital-upgrade-action {
+                flex: 1 1 160px;
+            }
+
+            .digital-upgrade-action,
+            .digital-upgrade-action-primary,
+            .digital-upgrade-action-secondary {
+                box-shadow: none;
+            }
+
+            .digital-upgrade-action:focus-visible {
+                box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.22);
+            }
+        }
+    </style>
     <script src="https://unpkg.com/lucide@latest"></script>
 </head>
 
@@ -4802,7 +5802,7 @@
                 </svg>
                 Mua gói chính chủ
             </button>
-            <button onclick="window.open('https://youtu.be/vrVgwrjUbpo', '_blank')"
+            <button onclick="window.open('https://www.youtube.com/watch?v=mlF5qNI4uOc', '_blank')"
                 style="width: 100%; padding: 14px 0; background: transparent; border: 1px solid rgba(255, 255, 255, 0.2); color: #fff; border-radius: 8px; font-size: 0.9em; font-weight: 600; cursor: pointer; transition: all 0.3s; display: flex; align-items: center; justify-content: center; gap: 8px;">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
                     stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -4942,7 +5942,7 @@
                 </p>
 
                 <!-- Primary CTA -->
-                <a href="https://youtu.be/vrVgwrjUbpo" target="_blank"
+                <a href="https://www.youtube.com/watch?v=mlF5qNI4uOc" target="_blank"
                     style="display: block; background: transparent; border: 1px solid rgba(255, 255, 255, 0.2); color: #fff; padding: 16px 0; border-radius: 6px; text-decoration: none; font-weight: 600; font-size: 0.95em; text-align: center; transition: all 0.3s;">
                     Xem video hướng dẫn
                 </a>
@@ -5083,7 +6083,7 @@
                 <span class="arrow">›</span>
             </a>
 
-            <a class="menu-item" href="https://youtu.be/vrVgwrjUbpo" target="_blank" onclick="closeMobileMenu();">
+            <a class="menu-item" href="https://www.youtube.com/watch?v=mlF5qNI4uOc" target="_blank" onclick="closeMobileMenu();">
                 <div style="display: flex; align-items: center;">
                     <div
                         style="width: 28px; display: flex; justify-content: center; flex-shrink: 0; margin-right: 10px;">
@@ -5478,22 +6478,20 @@
                                         <div class="partner-mini-arrow" aria-hidden="true">→</div>
                                     </a>
 
-                                    <a class="partner-mini-card partner-mini-card--chatgpt"
-                                        href="https://www.facebook.com/tiembanh4k/" target="_blank" rel="noopener noreferrer"
-                                        aria-label="Mở ChatGPT Plus (tab mới)">
+                                    <button type="button" class="partner-mini-card partner-mini-card--ai-upgrade"
+                                        onclick="showDigitalUpgradeModal()"
+                                        aria-label="Mở bảng chọn nâng cấp tài khoản số">
                                         <div class="partner-mini-left">
                                             <div class="partner-mini-icon" aria-hidden="true">
-                                                <img class="partner-mini-openai-mark"
-                                                    src="https://upload.wikimedia.org/wikipedia/commons/6/66/OpenAI_logo_2025_%28symbol%29.svg"
-                                                    alt="">
+                                                <span class="partner-mini-ai-mark">AI</span>
                                             </div>
                                             <div class="partner-mini-text">
-                                                <div class="partner-mini-title">ChatGPT Plus</div>
-                                                <div class="partner-mini-sub">145.000đ/tháng, nâng cấp chính chủ,<br>bảo hành toàn thời gian</div>
+                                                <div class="partner-mini-title">Nâng cấp tài khoản số</div>
+                                                <div class="partner-mini-sub">Google AI Pro 5TB, ChatGPT Plus, CapCut Pro<br>chính chủ, bảo hành toàn thời gian</div>
                                             </div>
                                         </div>
                                         <div class="partner-mini-arrow" aria-hidden="true">→</div>
-                                    </a>
+                                    </button>
 
                                     <!-- [HIDDEN - Ngừng hợp tác] LunaSub Partner Card
                                     <a class="partner-mini-card partner-mini-card--lunasub"
@@ -9166,7 +10164,7 @@ Nếu cần thêm lượt đổi tài khoản, vui lòng liên hệ Support qua 
                     Cài Extension
                 </a>
                 <span style="color: rgba(255, 255, 255, 0.3);">|</span>
-                <a href="https://youtu.be/vrVgwrjUbpo" target="_blank"
+                <a href="https://www.youtube.com/watch?v=mlF5qNI4uOc" target="_blank"
                     style="color: #fff; text-decoration: none; font-size: 0.95rem; transition: color 0.3s;"
                     onmouseover="this.style.color='#fbbf24'" onmouseout="this.style.color='#fff'">
                     Hướng Dẫn Sử Dụng
@@ -10445,12 +11443,12 @@ Nếu cần thêm lượt đổi tài khoản, vui lòng liên hệ Support qua 
                 `;
                 document.head.appendChild(style);
 
-                overlay.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.95);backdrop-filter:blur(12px);z-index:10000;display:flex;align-items:flex-start;justify-content:center;overflow-y:auto;';
+                overlay.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.95);backdrop-filter:blur(12px);z-index:10000;display:flex;align-items:center;justify-content:center;overflow-y:auto;padding:20px 0;box-sizing:border-box;';
 
                 let countdown = 5;
 
                 overlay.innerHTML = `
-                    <div style="animation:promoSlideUp 0.4s ease;width:92%;max-width:500px;padding:20px 0;margin:0 auto;">
+                    <div style="animation:promoSlideUp 0.4s ease;width:92%;max-width:500px;margin:0 auto;">
 
                         <!-- Header -->
                         <div style="padding:22px 20px 14px;text-align:center;position:relative;">
@@ -10480,7 +11478,6 @@ Nếu cần thêm lượt đổi tài khoản, vui lòng liên hệ Support qua 
                                     <div style="font-size:0.78rem;font-weight:700;color:#22c55e;margin-bottom:2px;">Đăng ký CTV</div>
                                     <div style="font-size:0.7rem;color:#fff;">Resell dịch vụ của Tiệm Bánh</div>
                                 </div>
-                                <span style="flex-shrink:0;font-size:0.72rem;font-weight:600;color:#22c55e;padding:5px 10px;border:1px solid rgba(34,197,94,0.4);border-radius:6px;white-space:nowrap;">Liên hệ</span>
                             </a>
 
                             <!-- Study: Tiệm Bánh Netflix -->
@@ -10496,23 +11493,21 @@ Nếu cần thêm lượt đổi tài khoản, vui lòng liên hệ Support qua 
                                     <div style="font-size:0.78rem;font-weight:700;color:#60a5fa;margin-bottom:2px;">Góc học tập - Tiệm Bánh Netflix</div>
                                     <div style="font-size:0.7rem;color:#fff;">Dịch vụ hỗ trợ định dạng văn bản</div>
                                 </div>
-                                <span style="flex-shrink:0;font-size:0.72rem;font-weight:600;color:#60a5fa;padding:5px 10px;border:1px solid rgba(96,165,250,0.4);border-radius:6px;white-space:nowrap;">Liên hệ</span>
                             </a>
 
-                            <!-- ChatGPT Plus -->
-                            <a href="https://www.facebook.com/tiembanh4k/" target="_blank" rel="noopener noreferrer" class="promo-card" style="display:flex;align-items:center;gap:12px;padding:12px 14px;background:rgba(16,185,129,0.07);border:1px solid rgba(16,185,129,0.28);border-radius:14px;text-decoration:none;border-left:3px solid #10b981;">
-                                <div style="flex-shrink:0;width:34px;height:34px;background:linear-gradient(135deg,rgba(16,185,129,0.16),rgba(255,255,255,0.04));border-radius:8px;display:flex;align-items:center;justify-content:center;border:1px solid rgba(16,185,129,0.18);">
-                                    <img src="https://upload.wikimedia.org/wikipedia/commons/6/66/OpenAI_logo_2025_%28symbol%29.svg" alt="" style="width:18px;height:18px;display:block;filter:brightness(0) invert(1);opacity:0.94;">
+                            <!-- Nâng cấp tài khoản số -->
+                            <button type="button" onclick="if (typeof showDigitalUpgradeModal === 'function') showDigitalUpgradeModal();" class="promo-card" style="width:100%;display:flex;align-items:center;gap:12px;padding:12px 14px;background:rgba(20,184,166,0.08);border:1px solid rgba(45,212,191,0.28);border-radius:14px;text-decoration:none;border-left:3px solid #14b8a6;color:inherit;text-align:left;cursor:pointer;font:inherit;">
+                                <div style="flex-shrink:0;width:34px;height:34px;display:flex;align-items:center;justify-content:center;">
+                                    <span style="display:inline-flex;align-items:center;justify-content:center;color:#ccfbf1;font-size:0.74rem;font-weight:900;line-height:1;">AI</span>
                                 </div>
                                 <div style="flex:1;min-width:0;">
-                                    <div style="font-size:0.78rem;font-weight:700;color:#34d399;margin-bottom:2px;">ChatGPT Plus</div>
-                                    <div style="font-size:0.7rem;color:#fff;">Chính chủ, bảo hành toàn thời gian</div>
+                                    <div style="font-size:0.78rem;font-weight:700;color:#5eead4;margin-bottom:2px;">Nâng cấp tài khoản số</div>
+                                    <div style="font-size:0.7rem;color:#fff;">Google AI Pro 5TB, ChatGPT Plus, CapCut Pro</div>
                                 </div>
-                                <span style="flex-shrink:0;font-size:0.72rem;font-weight:700;color:#34d399;padding:5px 10px;border:1px solid rgba(16,185,129,0.4);border-radius:6px;white-space:nowrap;">Liên hệ</span>
-                            </a>
+                            </button>
 
                             <!-- Capcut Pro -->
-                            <div class="promo-card" style="background:rgba(167,139,250,0.04);border:1px solid rgba(167,139,250,0.25);border-radius:14px;padding:14px 14px 12px;border-left:3px solid #a78bfa;">
+                            <div class="promo-card" style="display:none;background:rgba(167,139,250,0.04);border:1px solid rgba(167,139,250,0.25);border-radius:14px;padding:14px 14px 12px;border-left:3px solid #a78bfa;">
                                 <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;">
                                     <div style="display:flex;align-items:center;gap:10px;">
                                         <div style="width:34px;height:34px;background:linear-gradient(135deg,#a78bfa,#7c3aed);border-radius:10px;display:flex;align-items:center;justify-content:center;">
@@ -10545,7 +11540,7 @@ Nếu cần thêm lượt đổi tài khoản, vui lòng liên hệ Support qua 
                             </div>
 
                             <!-- Google One -->
-                            <div class="promo-card" style="background:rgba(52,211,153,0.04);border:1px solid rgba(52,211,153,0.25);border-radius:14px;padding:14px 14px 12px;border-left:3px solid #34d399;">
+                            <div class="promo-card" style="display:none;background:rgba(52,211,153,0.04);border:1px solid rgba(52,211,153,0.25);border-radius:14px;padding:14px 14px 12px;border-left:3px solid #34d399;">
                                 <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;">
                                     <div style="display:flex;align-items:center;gap:10px;">
                                         <div style="width:34px;height:34px;background:linear-gradient(135deg,#34d399,#059669);border-radius:10px;display:flex;align-items:center;justify-content:center;">
@@ -10578,7 +11573,7 @@ Nếu cần thêm lượt đổi tài khoản, vui lòng liên hệ Support qua 
                             </div>
 
                             <!-- Netflix chính chủ -->
-                            <div class="promo-card" style="background:rgba(239,68,68,0.04);border:1px solid rgba(239,68,68,0.25);border-radius:14px;padding:14px 14px 12px;border-left:3px solid #ef4444;">
+                            <div class="promo-card" style="display:none;background:rgba(239,68,68,0.04);border:1px solid rgba(239,68,68,0.25);border-radius:14px;padding:14px 14px 12px;border-left:3px solid #ef4444;">
                                 <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;">
                                     <div style="display:flex;align-items:center;gap:10px;">
                                         <div style="width:34px;height:34px;background:linear-gradient(135deg,#ef4444,#b91c1c);border-radius:10px;display:flex;align-items:center;justify-content:center;">
@@ -11002,6 +11997,428 @@ Nếu cần thêm lượt đổi tài khoản, vui lòng liên hệ Support qua 
         window.loadAssignedCookies = loadAssignedCookies;
         window.switchMobileTvAccount = switchMobileTvAccount;
     </script>
+    <script>
+        (function () {
+            const contactUrl = 'https://www.facebook.com/tiembanh4k/';
+            const googleAiProMonthly = 489000;
+            const googleAiProYearly = googleAiProMonthly * 12;
+            const chatGptPlusMonthly = 526000;
+            const capCutProMonthly = 222000;
+            let previousBodyOverflow = '';
+
+            const products = [
+                {
+                    id: 'google-ai-pro-slot',
+                    name: 'Google AI Pro (5TB)',
+                    badge: '1 slot riêng',
+                    term: '12 tháng',
+                    price: 165000,
+                    billingSuffix: '',
+                    referencePrice: googleAiProYearly,
+                    referenceLabel: 'Tự nâng cấp 12 tháng',
+                    shortMeta: '1 slot chính chủ · bảo hành toàn thời gian',
+                    description: 'Dành cho người cần dùng Google AI Pro trên tài khoản Google cá nhân với chi phí thấp, phù hợp học tập, làm việc và lưu trữ dài hạn.',
+                    benefits: [
+                        'Gemini 3.1 Pro, Deep Research và Gemini trong Google apps',
+                        '5TB lưu trữ dùng cho Gmail, Drive và Photos',
+                        'NotebookLM giới hạn cao hơn cho nghiên cứu và học tập',
+                        'Flow/Veo, Whisk, AI Studio, Jules, Gemini CLI, Code Assist và Antigravity Pro'
+                    ],
+                    note: 'Google AI Pro có một số tính năng giới hạn theo quốc gia, độ tuổi, ngôn ngữ và chính sách Google. Giá tự nâng cấp tham chiếu: 489.000đ/tháng tại Việt Nam.'
+                },
+                {
+                    id: 'google-ai-pro-family',
+                    name: 'Google AI Pro (5TB)',
+                    badge: 'Full family',
+                    term: '12 tháng',
+                    price: 665000,
+                    billingSuffix: '',
+                    referencePrice: googleAiProYearly,
+                    referenceLabel: 'Tự nâng cấp 12 tháng',
+                    shortMeta: 'Mời thêm 05 thành viên · bảo hành toàn thời gian',
+                    description: 'Dành cho nhóm gia đình hoặc team nhỏ cần một gói Google AI Pro full family, có thể mời thêm 05 thành viên khác cùng sử dụng.',
+                    benefits: [
+                        'Quyền lợi Google AI Pro cho family, có thể chia sẻ với tối đa 05 thành viên khác',
+                        'Gemini 3.1 Pro, Deep Research, NotebookLM và Gemini trong Gmail, Docs, Vids',
+                        '5TB lưu trữ dùng trong hệ sinh thái Google',
+                        'Flow/Veo, Whisk, AI Studio, Jules, Gemini CLI, Code Assist và Antigravity Pro'
+                    ],
+                    note: 'Family sharing phụ thuộc điều kiện chia sẻ của Google One và từng quyền lợi cụ thể. Giá tự nâng cấp tham chiếu: 489.000đ/tháng tại Việt Nam.'
+                },
+                {
+                    id: 'chatgpt-plus',
+                    name: 'ChatGPT Plus',
+                    badge: 'Plus',
+                    term: '1 tháng',
+                    price: 180000,
+                    billingSuffix: '/tháng',
+                    referencePrice: chatGptPlusMonthly,
+                    referenceLabel: 'Tự nâng cấp mỗi tháng',
+                    shortMeta: 'Bảo hành toàn thời gian sử dụng',
+                    description: 'Dành cho người cần ChatGPT Plus để làm việc, học tập, viết nội dung, phân tích file, tạo ảnh và dùng các mô hình suy luận mạnh hơn.',
+                    benefits: [
+                        'GPT-5.5 giới hạn cao hơn và GPT-5.5 Thinking theo hạn mức Plus',
+                        'Tạo ảnh, phân tích file, data analysis, web search và Canvas',
+                        'Voice, Deep Research, Projects, Tasks và Custom GPTs',
+                        'Codex agent và Sora theo giới hạn/khả dụng của gói Plus'
+                    ],
+                    note: 'Giá tự nâng cấp tham chiếu: ChatGPT Plus 20 USD/tháng, quy đổi xấp xỉ 526.000đ/tháng. Quyền lợi có thể thay đổi theo chính sách OpenAI và khu vực.'
+                },
+                {
+                    id: 'capcut-pro',
+                    name: 'CapCut Pro',
+                    badge: 'Pro',
+                    trustBadge: 'Acc cấp',
+                    detailKicker: 'Acc cấp',
+                    term: '1, 3 hoặc 6 tháng',
+                    priceMeta: 'Bảo hành toàn thời gian',
+                    price: 50000,
+                    pricePrefix: 'Từ',
+                    billingSuffix: '',
+                    referencePrice: capCutProMonthly,
+                    referenceLabel: 'Tự nâng cấp mỗi tháng',
+                    shortMeta: 'Acc cấp · đổi acc 1 lần · bảo hành toàn thời gian',
+                    description: 'Dành cho người cần CapCut Pro chi phí thấp theo thời hạn linh hoạt, tài khoản được cấp sẵn và bảo hành trong toàn thời gian sử dụng.',
+                    variants: [
+                        { label: '1 tháng', price: 50000, referencePrice: capCutProMonthly, note: 'Đổi acc 1 lần' },
+                        { label: '3 tháng', price: 250000, referencePrice: capCutProMonthly * 3, note: 'Đổi acc 1 lần' },
+                        { label: '6 tháng', price: 500000, referencePrice: capCutProMonthly * 6, note: 'Đổi acc 1 lần' }
+                    ],
+                    benefits: [
+                        'Tài khoản CapCut Pro được cấp sẵn, dùng theo thời hạn đã chọn',
+                        'Không watermark và xuất video chất lượng cao/4K 60fps theo hỗ trợ của CapCut',
+                        'Kho template, hiệu ứng, filter, font, nhạc và tài nguyên Pro',
+                        'Công cụ AI, auto captions, background remover và lưu trữ/cloud theo hạn mức gói'
+                    ],
+                    note: 'CapCut Pro dạng acc cấp, không phải nâng cấp trực tiếp trên tài khoản cá nhân. Giá tự nâng cấp tham chiếu: Pro Monthly Subscription 222.000đ trên App Store Việt Nam; giá và quyền lợi có thể thay đổi theo khu vực/nền tảng.'
+                }
+            ];
+
+            function formatVnd(value) {
+                return new Intl.NumberFormat('vi-VN').format(value) + 'đ';
+            }
+
+            function getProductById(productId) {
+                return products.find(product => product.id === productId) || products[0];
+            }
+
+            function getSavings(product) {
+                const amount = Math.max(product.referencePrice - product.price, 0);
+                const percent = product.referencePrice > 0 ? Math.round((amount / product.referencePrice) * 100) : 0;
+                return { amount, percent };
+            }
+
+            function getVariantSavings(variant) {
+                const amount = Math.max(variant.referencePrice - variant.price, 0);
+                const percent = variant.referencePrice > 0 ? Math.round((amount / variant.referencePrice) * 100) : 0;
+                return { amount, percent };
+            }
+
+            function getSavingsRange(product) {
+                const savingsList = (product.variants || []).map(getVariantSavings);
+                return savingsList.reduce((range, saving) => ({
+                    minAmount: Math.min(range.minAmount, saving.amount),
+                    maxAmount: Math.max(range.maxAmount, saving.amount),
+                    minPercent: Math.min(range.minPercent, saving.percent),
+                    maxPercent: Math.max(range.maxPercent, saving.percent)
+                }), {
+                    minAmount: Number.POSITIVE_INFINITY,
+                    maxAmount: 0,
+                    minPercent: Number.POSITIVE_INFINITY,
+                    maxPercent: 0
+                });
+            }
+
+            function isDigitalUpgradeMobile() {
+                return typeof window.matchMedia === 'function' && window.matchMedia('(max-width: 720px)').matches;
+            }
+
+            function priceMarkup(product, className) {
+                const suffix = product.billingSuffix || (product.term === '12 tháng' ? '/12 tháng' : '');
+                const prefixMarkup = product.pricePrefix ? `<small>${product.pricePrefix}</small>` : '';
+                const suffixMarkup = suffix ? `<small>${suffix}</small>` : '';
+                return `<span class="${className}">${prefixMarkup}${formatVnd(product.price)}${suffixMarkup}</span>`;
+            }
+
+            function offerPriceMarkup(product, className) {
+                const prefixMarkup = product.pricePrefix ? `<small>${product.pricePrefix}</small>` : '';
+                return `<span class="${className}">${prefixMarkup}${formatVnd(product.price)}</span>`;
+            }
+
+            function productSavingMarkup(product) {
+                if (product.variants && product.variants.length) {
+                    const range = getSavingsRange(product);
+                    return `<div class="digital-upgrade-product-saving">Tiết kiệm <strong>từ ${formatVnd(range.minAmount)}</strong> · tới ${range.maxPercent}%</div>`;
+                }
+
+                const savings = getSavings(product);
+                return `<div class="digital-upgrade-product-saving">Tiết kiệm <strong>${formatVnd(savings.amount)}</strong> · ${savings.percent}%</div>`;
+            }
+
+            function variantsMarkup(product) {
+                if (!product.variants || !product.variants.length) return '';
+
+                return `
+                    <div class="digital-upgrade-variants" aria-label="Lựa chọn thời hạn">
+                        ${product.variants.map(variant => {
+                            const savings = getVariantSavings(variant);
+                            return `
+                                <div class="digital-upgrade-variant">
+                                    <span>${variant.label}</span>
+                                    <strong>${formatVnd(variant.price)}</strong>
+                                    <em>${variant.note}</em>
+                                    <small>Tiết kiệm ${formatVnd(savings.amount)} · ${savings.percent}%</small>
+                                </div>
+                            `;
+                        }).join('')}
+                    </div>
+                `;
+            }
+
+            function productButtonMarkup(product, selectedId, detailOpen) {
+                const isActive = detailOpen && product.id === selectedId;
+                return `
+                    <button type="button" class="digital-upgrade-product${isActive ? ' active' : ''}" data-product-id="${product.id}" aria-pressed="${isActive ? 'true' : 'false'}">
+                        <div class="digital-upgrade-product-top">
+                            <div class="digital-upgrade-product-name">${product.name}</div>
+                            <div class="digital-upgrade-product-badges">
+                                <span class="digital-upgrade-badge digital-upgrade-badge--official">${product.trustBadge || 'Chính chủ'}</span>
+                                <span class="digital-upgrade-badge">${product.badge}</span>
+                            </div>
+                        </div>
+                        ${priceMarkup(product, 'digital-upgrade-product-price')}
+                        <div class="digital-upgrade-product-meta">${product.shortMeta}</div>
+                        ${productSavingMarkup(product)}
+                    </button>
+                `;
+            }
+
+            function detailMarkup(product) {
+                const savings = getSavings(product);
+                const range = product.variants && product.variants.length ? getSavingsRange(product) : null;
+                const savingAmountText = range ? `${formatVnd(range.minAmount)} - ${formatVnd(range.maxAmount)}` : formatVnd(savings.amount);
+                const savingPercentText = range ? `${range.minPercent}-${range.maxPercent}% tùy thời hạn` : `khoảng ${savings.percent}%`;
+                const detailKicker = product.detailKicker || product.badge;
+                const priceMeta = product.priceMeta || `${product.term} · bảo hành toàn thời gian`;
+                return `
+                    <div class="digital-upgrade-detail-head">
+                        <div>
+                            <div class="digital-upgrade-kicker">${detailKicker}</div>
+                            <h3>${product.name}</h3>
+                            <p class="digital-upgrade-detail-desc">${product.description}</p>
+                        </div>
+                        <div class="digital-upgrade-pricebox">
+                            <span class="digital-upgrade-price-label">Giá ưu đãi</span>
+                            ${offerPriceMarkup(product, 'digital-upgrade-price')}
+                            <span class="digital-upgrade-duration">${priceMeta}</span>
+                        </div>
+                    </div>
+
+                    <div class="digital-upgrade-savings">
+                        <div class="digital-upgrade-stat digital-upgrade-stat--saving">
+                            <span>Bạn tiết kiệm</span>
+                            <strong>${savingAmountText}</strong>
+                            <em>${savingPercentText}</em>
+                        </div>
+                        <div class="digital-upgrade-stat">
+                            <span>Giá tự nâng cấp</span>
+                            <strong>${formatVnd(product.referencePrice)}</strong>
+                        </div>
+                        <div class="digital-upgrade-stat">
+                            <span>Thời hạn</span>
+                            <strong>${product.term}</strong>
+                        </div>
+                    </div>
+
+                    ${variantsMarkup(product)}
+
+                    <ul class="digital-upgrade-benefits">
+                        ${product.benefits.map(benefit => `<li>${benefit}</li>`).join('')}
+                    </ul>
+
+                    <div class="digital-upgrade-actions">
+                        <button type="button" class="digital-upgrade-action digital-upgrade-action-secondary" data-digital-upgrade-close>Đóng</button>
+                        <a class="digital-upgrade-action digital-upgrade-action-primary" href="${contactUrl}" target="_blank" rel="noopener noreferrer">Liên hệ</a>
+                    </div>
+                `;
+            }
+
+            function ensureDigitalUpgradeModal() {
+                let overlay = document.getElementById('digitalUpgradeModalOverlay');
+                if (overlay) return overlay;
+
+                overlay = document.createElement('div');
+                overlay.id = 'digitalUpgradeModalOverlay';
+                overlay.className = 'digital-upgrade-overlay';
+                overlay.setAttribute('aria-hidden', 'true');
+                overlay.innerHTML = `
+                    <div class="digital-upgrade-dialog" role="dialog" aria-modal="true" aria-labelledby="digitalUpgradeModalTitle">
+                        <div class="digital-upgrade-header">
+                            <div>
+                                <div class="digital-upgrade-kicker">Tài khoản số</div>
+                                <h2 class="digital-upgrade-title" id="digitalUpgradeModalTitle">Chọn gói nâng cấp tài khoản số</h2>
+                                <p class="digital-upgrade-subtitle">Các lựa chọn nâng cấp tài khoản số với quyền lợi, thời hạn, bảo hành và mức tiết kiệm so với tự nâng cấp.</p>
+                                <div class="digital-upgrade-trust-row" aria-label="Cam kết dịch vụ">
+                                    <span>Chính chủ</span>
+                                    <span>Bảo hành toàn thời gian</span>
+                                    <span>Tiết kiệm tới 97%</span>
+                                </div>
+                            </div>
+                            <button type="button" class="digital-upgrade-close" data-digital-upgrade-close aria-label="Đóng">
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+                            </button>
+                        </div>
+                        <div class="digital-upgrade-body">
+                            <div class="digital-upgrade-products" id="digitalUpgradeProducts"></div>
+                            <div class="digital-upgrade-detail" id="digitalUpgradeDetail"></div>
+                        </div>
+                    </div>
+                `;
+
+                overlay.addEventListener('click', function (event) {
+                    const closeButton = event.target.closest('[data-digital-upgrade-close]');
+                    if (closeButton) {
+                        closeDigitalUpgradeModal();
+                        return;
+                    }
+
+                    const productButton = event.target.closest('[data-product-id]');
+                    if (productButton) {
+                        const productId = productButton.getAttribute('data-product-id');
+                        if (isDigitalUpgradeMobile()) {
+                            showDigitalProductDetailModal(productId);
+                        } else {
+                            renderDigitalUpgradeProduct(productId, { showDetail: true });
+                        }
+                        return;
+                    }
+
+                    if (event.target === overlay) {
+                        closeDigitalUpgradeModal();
+                    }
+                });
+
+                document.body.appendChild(overlay);
+                return overlay;
+            }
+
+            function ensureDigitalProductDetailModal() {
+                let overlay = document.getElementById('digitalProductDetailOverlay');
+                if (overlay) return overlay;
+
+                overlay = document.createElement('div');
+                overlay.id = 'digitalProductDetailOverlay';
+                overlay.className = 'digital-product-detail-overlay';
+                overlay.setAttribute('aria-hidden', 'true');
+                overlay.innerHTML = `
+                    <div class="digital-product-detail-dialog" role="dialog" aria-modal="true" aria-labelledby="digitalProductDetailTitle">
+                        <div class="digital-product-detail-header">
+                            <div class="digital-product-detail-heading">
+                                <span>Chi tiết gói</span>
+                                <strong id="digitalProductDetailTitle">Thông tin sản phẩm</strong>
+                            </div>
+                            <button type="button" class="digital-product-detail-close" data-digital-detail-close aria-label="Đóng chi tiết">
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+                            </button>
+                        </div>
+                        <div class="digital-product-detail-body" id="digitalProductDetailBody"></div>
+                    </div>
+                `;
+
+                overlay.addEventListener('click', function (event) {
+                    const closeButton = event.target.closest('[data-digital-detail-close], [data-digital-upgrade-close]');
+                    if (closeButton || event.target === overlay) {
+                        closeDigitalProductDetailModal();
+                    }
+                });
+
+                document.body.appendChild(overlay);
+                return overlay;
+            }
+
+            function showDigitalProductDetailModal(productId) {
+                const product = getProductById(productId);
+                const overlay = ensureDigitalProductDetailModal();
+                const titleEl = overlay.querySelector('#digitalProductDetailTitle');
+                const bodyEl = overlay.querySelector('#digitalProductDetailBody');
+
+                titleEl.textContent = product.name;
+                bodyEl.innerHTML = `<div class="digital-upgrade-detail" data-product-id="${product.id}">${detailMarkup(product)}</div>`;
+                overlay.classList.add('active');
+                overlay.setAttribute('aria-hidden', 'false');
+
+                setTimeout(() => {
+                    const closeButton = overlay.querySelector('.digital-product-detail-close');
+                    if (closeButton) closeButton.focus();
+                }, 0);
+            }
+
+            function closeDigitalProductDetailModal() {
+                const overlay = document.getElementById('digitalProductDetailOverlay');
+                if (!overlay) return;
+                overlay.classList.remove('active');
+                overlay.setAttribute('aria-hidden', 'true');
+            }
+
+            function renderDigitalUpgradeProduct(productId, options = {}) {
+                const selectedProduct = getProductById(productId);
+                const overlay = ensureDigitalUpgradeModal();
+                const productsEl = overlay.querySelector('#digitalUpgradeProducts');
+                const detailEl = overlay.querySelector('#digitalUpgradeDetail');
+                const detailOpen = typeof options.showDetail === 'boolean' ? options.showDetail : !isDigitalUpgradeMobile();
+
+                overlay.classList.toggle('has-mobile-detail', detailOpen);
+                productsEl.innerHTML = products.map(product => productButtonMarkup(product, selectedProduct.id, detailOpen)).join('');
+                detailEl.innerHTML = detailOpen ? detailMarkup(selectedProduct) : '';
+
+                if (detailOpen && !isDigitalUpgradeMobile()) {
+                    requestAnimationFrame(() => {
+                        const activeProduct = productsEl.querySelector('.digital-upgrade-product.active');
+                        if (activeProduct) activeProduct.scrollIntoView({ block: 'nearest' });
+                    });
+                }
+            }
+
+            function showDigitalUpgradeModal(productId) {
+                const overlay = ensureDigitalUpgradeModal();
+                previousBodyOverflow = document.body.style.overflow || '';
+                renderDigitalUpgradeProduct(productId || products[0].id, { showDetail: !isDigitalUpgradeMobile() });
+                overlay.classList.add('active');
+                overlay.setAttribute('aria-hidden', 'false');
+                document.body.style.overflow = 'hidden';
+
+                setTimeout(() => {
+                    const closeButton = overlay.querySelector('.digital-upgrade-close');
+                    if (closeButton) closeButton.focus();
+                }, 0);
+            }
+
+            function closeDigitalUpgradeModal() {
+                const overlay = document.getElementById('digitalUpgradeModalOverlay');
+                if (!overlay) return;
+                closeDigitalProductDetailModal();
+                overlay.classList.remove('active');
+                overlay.setAttribute('aria-hidden', 'true');
+                document.body.style.overflow = previousBodyOverflow;
+            }
+
+            document.addEventListener('keydown', function (event) {
+                if (event.key !== 'Escape') return;
+                const detailOverlay = document.getElementById('digitalProductDetailOverlay');
+                if (detailOverlay && detailOverlay.classList.contains('active')) {
+                    closeDigitalProductDetailModal();
+                    return;
+                }
+                const overlay = document.getElementById('digitalUpgradeModalOverlay');
+                if (overlay && overlay.classList.contains('active')) {
+                    closeDigitalUpgradeModal();
+                }
+            });
+
+            window.showDigitalUpgradeModal = showDigitalUpgradeModal;
+            window.closeDigitalUpgradeModal = closeDigitalUpgradeModal;
+        })();
+    </script>
 
     <!-- Environment Configuration - Must load first -->
     <script src="config.js"></script>
@@ -11035,7 +12452,7 @@ Nếu cần thêm lượt đổi tài khoản, vui lòng liên hệ Support qua 
     <script type="text/plain" id="desktopFeaturesTemplate">
         <div class="main-topbar">
             <a href="/install-guide/" class="nav-pill"><svg class="icon" style="width:16px;height:16px;"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg> Tải Extension</a>
-            <a href="https://youtu.be/vrVgwrjUbpo" target="_blank" class="nav-pill"><svg class="icon" style="width:16px;height:16px;"><circle cx="12" cy="12" r="10"/><polygon points="10 8 16 12 10 16 10 8"/></svg> Hướng dẫn</a>
+            <a href="https://www.youtube.com/watch?v=mlF5qNI4uOc" target="_blank" class="nav-pill"><svg class="icon" style="width:16px;height:16px;"><circle cx="12" cy="12" r="10"/><polygon points="10 8 16 12 10 16 10 8"/></svg> Hướng dẫn</a>
             <a href="https://www.facebook.com/tiembanh4k/" target="_blank" class="nav-pill"><svg class="icon" style="width:16px;height:16px;"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg> Hỗ trợ</a>
         </div>
         <section class="hero">
@@ -11059,15 +12476,15 @@ Nếu cần thêm lượt đổi tài khoản, vui lòng liên hệ Support qua 
                         <div class="service-icon"><svg class="icon"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1 0-5H20"/></svg></div>
                         <div class="service-copy"><h3>Góc học tập</h3><p>Dịch vụ hỗ trợ định dạng báo cáo, tiểu luận và các loại văn bản khác.</p></div>
                     </a>
-                    <a href="https://www.facebook.com/tiembanh4k/" target="_blank" rel="noopener noreferrer" class="service-card chatgpt" aria-label="ChatGPT Plus">
+                    <button type="button" class="service-card ai-upgrade-card" onclick="showDigitalUpgradeModal()" aria-label="Mở bảng chọn nâng cấp tài khoản số">
                         <div class="service-icon">
-                            <img class="chatgpt-mark" src="https://upload.wikimedia.org/wikipedia/commons/6/66/OpenAI_logo_2025_%28symbol%29.svg" alt="ChatGPT">
+                            <span class="ai-upgrade-mark">AI</span>
                         </div>
                         <div class="service-copy">
-                            <h3>ChatGPT Plus - 145.000đ/tháng</h3>
-                            <p>Nâng cấp chính chủ, bảo hành toàn thời gian.</p>
+                            <h3>Nâng cấp tài khoản số</h3>
+                            <p>Google AI Pro 5TB, ChatGPT Plus, CapCut Pro bảo hành toàn thời gian.</p>
                         </div>
-                    </a>
+                    </button>
                 </div>
             </div>
         </section>
