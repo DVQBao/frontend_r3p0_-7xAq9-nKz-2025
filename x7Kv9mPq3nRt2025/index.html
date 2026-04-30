@@ -403,6 +403,15 @@
             display: none;
         }
 
+        .admin-sidebar,
+        .desktop-action-icon {
+            display: none;
+        }
+
+        .admin-main {
+            min-width: 0;
+        }
+
         .search-box {
             flex: 1;
             min-width: 300px;
@@ -544,6 +553,8 @@
             max-width: 600px;
             width: 90%;
             pointer-events: none;
+            display: flex;
+            justify-content: center;
             /* Cho phép click qua notification */
         }
 
@@ -582,6 +593,30 @@
             }
         }
 
+        @keyframes toastInRight {
+            from {
+                opacity: 0;
+                transform: translateX(18px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        @keyframes toastOutRight {
+            from {
+                opacity: 1;
+                transform: translateX(0);
+            }
+
+            to {
+                opacity: 0;
+                transform: translateX(18px);
+            }
+        }
+
         .error {
             background: #3a1a1a;
             color: #ff6b6b;
@@ -607,6 +642,76 @@
             border-radius: 8px;
             border: 1px solid #2d4a5f;
             font-weight: 500;
+        }
+
+            .admin-toast {
+                width: min(420px, 100%);
+                display: grid;
+                grid-template-columns: 20px minmax(0, 1fr);
+                gap: 10px;
+                align-items: center;
+                padding: 11px 13px;
+                color: #f8fafc;
+                background:
+                    linear-gradient(145deg, rgba(18, 18, 22, 0.94), rgba(7, 8, 10, 0.94)),
+                    radial-gradient(circle at 0% 0%, rgba(255, 90, 79, 0.14), transparent 34%);
+                border: 1px solid rgba(255, 255, 255, 0.14);
+                border-radius: 10px;
+                box-shadow: 0 16px 44px rgba(0, 0, 0, 0.38), inset 0 1px 0 rgba(255, 255, 255, 0.07);
+                backdrop-filter: blur(16px);
+            }
+
+            .admin-toast-icon {
+                display: inline-flex;
+                width: 20px;
+                height: 20px;
+                align-items: center;
+                justify-content: center;
+                color: #60a5fa;
+                filter: drop-shadow(0 0 9px currentColor);
+            }
+
+            .admin-toast-icon svg {
+                width: 18px;
+                height: 18px;
+                fill: none;
+                stroke: currentColor;
+                stroke-width: 2.2;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+        }
+
+            .admin-toast-text {
+                min-width: 0;
+                font-size: 0.86rem;
+                font-weight: 800;
+                line-height: 1.3;
+            }
+
+        .admin-toast--success {
+            border-color: rgba(52, 211, 153, 0.3);
+            background:
+                linear-gradient(145deg, rgba(18, 30, 26, 0.97), rgba(7, 12, 10, 0.97)),
+                radial-gradient(circle at 12% 0%, rgba(52, 211, 153, 0.2), transparent 36%);
+        }
+
+        .admin-toast--success .admin-toast-icon {
+            color: #34d399;
+        }
+
+        .admin-toast--error {
+            border-color: rgba(248, 113, 113, 0.32);
+            background:
+                linear-gradient(145deg, rgba(42, 16, 18, 0.97), rgba(12, 7, 8, 0.97)),
+                radial-gradient(circle at 12% 0%, rgba(248, 113, 113, 0.22), transparent 36%);
+        }
+
+        .admin-toast--error .admin-toast-icon {
+            color: #f87171;
+        }
+
+        .admin-toast--info {
+            border-color: rgba(96, 165, 250, 0.32);
         }
 
         .modal {
@@ -830,10 +935,16 @@
         }
 
         #manualBanModal.admin-shared-modal .modal-header::before {
-            border-color: rgba(248, 113, 113, 0.22);
+            width: 42px;
+            height: 42px;
+            border: 0;
+            border-radius: 0;
+            background-color: transparent;
+            background-size: 36px 36px;
+            box-shadow: none;
+            filter: drop-shadow(0 0 16px rgba(248, 113, 113, 0.34));
             background-image:
-                url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23f87171' stroke-width='1.9' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M12 3 5 6v6c0 5 3.4 8.74 7 9 3.6-.26 7-4 7-9V6l-7-3Z'/%3E%3Cpath d='M9.5 12.5 11 14l3.5-3.5'/%3E%3C/svg%3E"),
-                linear-gradient(135deg, rgba(239, 68, 68, 0.16), rgba(251, 191, 36, 0.06));
+                url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23f87171' stroke-width='1.9' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M12 3 5 6v6c0 5 3.4 8.74 7 9 3.6-.26 7-4 7-9V6l-7-3Z'/%3E%3Cpath d='M15 9 9 15'/%3E%3Cpath d='m9 9 6 6'/%3E%3C/svg%3E");
         }
 
         .admin-shared-modal .modal-header h3 {
@@ -4113,6 +4224,44 @@
             text-overflow: ellipsis;
         }
 
+        #pcCanplayPanelModal .pc-canplay-body,
+        #pcCanplayPanelModal .pc-canplay-shell {
+            scrollbar-width: thin;
+            scrollbar-color: rgba(103, 232, 249, 0.56) rgba(15, 23, 42, 0.36);
+        }
+
+        #pcCanplayPanelModal .pc-canplay-body {
+            scrollbar-gutter: stable;
+        }
+
+        #pcCanplayPanelModal .pc-canplay-body::-webkit-scrollbar,
+        #pcCanplayPanelModal .pc-canplay-shell::-webkit-scrollbar {
+            width: 9px;
+        }
+
+        #pcCanplayPanelModal .pc-canplay-body::-webkit-scrollbar-track,
+        #pcCanplayPanelModal .pc-canplay-shell::-webkit-scrollbar-track {
+            margin: 8px 0 12px;
+            border-radius: 999px;
+            background:
+                linear-gradient(180deg, rgba(15, 23, 42, 0.34), rgba(2, 6, 23, 0.52));
+            box-shadow: inset 0 0 0 1px rgba(148, 163, 184, 0.12);
+        }
+
+        #pcCanplayPanelModal .pc-canplay-body::-webkit-scrollbar-thumb,
+        #pcCanplayPanelModal .pc-canplay-shell::-webkit-scrollbar-thumb {
+            border: 2px solid rgba(3, 7, 18, 0.94);
+            border-radius: 999px;
+            background:
+                linear-gradient(180deg, rgba(103, 232, 249, 0.9), rgba(99, 102, 241, 0.74));
+        }
+
+        #pcCanplayPanelModal .pc-canplay-body::-webkit-scrollbar-thumb:hover,
+        #pcCanplayPanelModal .pc-canplay-shell::-webkit-scrollbar-thumb:hover {
+            background:
+                linear-gradient(180deg, rgba(165, 243, 252, 0.95), rgba(129, 140, 248, 0.88));
+        }
+
         @media (max-width: 768px) {
             #pcCanplayPanelModal .pc-canplay-body {
                 padding-bottom: 12px;
@@ -4371,6 +4520,1965 @@
 
             .stat-value {
                 font-size: 1.8em;
+            }
+        }
+
+        @media (min-width: 769px) {
+            #messageArea {
+                top: 18px;
+                right: 18px;
+                left: auto;
+                width: min(360px, calc(100vw - 36px));
+                max-width: 360px;
+                transform: none;
+                justify-content: flex-end;
+            }
+
+            #messageArea>div {
+                animation: toastInRight 0.22s ease-out;
+            }
+
+            #messageArea>div.fade-out {
+                animation: toastOutRight 0.22s ease-out forwards;
+            }
+
+            .admin-toast {
+                width: 100%;
+            }
+
+            body {
+                background:
+                    radial-gradient(circle at 18% 0%, rgba(229, 9, 20, 0.2), transparent 34%),
+                    radial-gradient(circle at 82% 8%, rgba(245, 158, 11, 0.12), transparent 28%),
+                    linear-gradient(rgba(255, 255, 255, 0.025) 1px, transparent 1px),
+                    linear-gradient(90deg, rgba(255, 255, 255, 0.018) 1px, transparent 1px),
+                    linear-gradient(180deg, #050506 0%, #0d0d10 48%, #020203 100%);
+                background-size: auto, auto, 46px 46px, 46px 46px, auto;
+                color: #f5f5f7;
+                overflow-x: hidden;
+            }
+
+            .container {
+                display: grid;
+                grid-template-columns: 292px minmax(0, 1fr);
+                width: 100%;
+                max-width: none;
+                min-height: 100vh;
+                padding: 0;
+                margin: 0;
+                background: transparent;
+            }
+
+            .admin-sidebar {
+                position: sticky;
+                top: 0;
+                display: flex;
+                height: 100vh;
+                min-height: 100vh;
+                flex-direction: column;
+                gap: 24px;
+                padding: 26px 18px;
+                background:
+                    linear-gradient(180deg, rgba(22, 18, 20, 0.99), rgba(6, 6, 8, 0.99));
+                border-right: 1px solid rgba(255, 90, 79, 0.16);
+                box-shadow: 18px 0 60px rgba(0, 0, 0, 0.62);
+                overflow-y: auto;
+                overflow-x: hidden;
+                z-index: 20;
+            }
+
+            .admin-sidebar::before {
+                content: "";
+                position: absolute;
+                top: 0;
+                right: -1px;
+                width: 1px;
+                height: 100%;
+                background: linear-gradient(180deg, rgba(229, 9, 20, 0.9), rgba(245, 158, 11, 0.55), transparent 70%);
+                pointer-events: none;
+            }
+
+            .sidebar-brand {
+                display: grid;
+                grid-template-columns: 52px minmax(0, 1fr);
+                gap: 12px;
+                align-items: center;
+                padding: 10px 8px 20px;
+                border-bottom: 0;
+            }
+
+            .sidebar-logo {
+                display: inline-flex;
+                width: 52px;
+                height: 52px;
+                align-items: center;
+                justify-content: center;
+                color: #ff4d45;
+                border-radius: 8px;
+                background:
+                    linear-gradient(145deg, rgba(229, 9, 20, 0.24), rgba(245, 158, 11, 0.1)),
+                    rgba(255, 255, 255, 0.04);
+                border: 1px solid rgba(255, 90, 79, 0.45);
+                box-shadow: 0 14px 28px rgba(229, 9, 20, 0.16), inset 0 1px 0 rgba(255, 255, 255, 0.09);
+            }
+
+            .sidebar-logo svg,
+            .sidebar-icon svg,
+            .desktop-action-icon svg {
+                width: 100%;
+                height: 100%;
+                fill: none;
+                stroke: currentColor;
+                stroke-width: 1.9;
+                stroke-linecap: round;
+                stroke-linejoin: round;
+            }
+
+            .sidebar-logo svg {
+                width: 28px;
+                height: 28px;
+            }
+
+            .sidebar-brand-title {
+                color: #ffffff;
+                font-size: 16px;
+                font-weight: 800;
+                line-height: 1.15;
+                letter-spacing: 0;
+            }
+
+            .sidebar-brand-subtitle {
+                margin-top: 4px;
+                color: #a1a1aa;
+                font-size: 12px;
+                line-height: 1.35;
+                letter-spacing: 0;
+            }
+
+            .sidebar-section {
+                display: grid;
+                gap: 10px;
+            }
+
+            .sidebar-section-title {
+                padding: 0 8px;
+                color: #71717a;
+                font-size: 11px;
+                font-weight: 800;
+                text-transform: uppercase;
+                letter-spacing: 0;
+            }
+
+            .sidebar-nav {
+                display: grid;
+                gap: 8px;
+            }
+
+            .sidebar-nav button {
+                position: relative;
+                width: 100%;
+                min-height: 46px;
+                display: flex;
+                align-items: center;
+                gap: 10px;
+                padding: 11px 12px;
+                color: #d4d4d8;
+                text-align: left;
+                background: linear-gradient(180deg, rgba(255, 255, 255, 0.07), rgba(255, 255, 255, 0.025));
+                border: 1px solid rgba(255, 255, 255, 0.1);
+                border-radius: 8px;
+                cursor: pointer;
+                font-size: 13px;
+                font-weight: 700;
+                letter-spacing: 0;
+                transition: background 0.18s ease, border-color 0.18s ease, color 0.18s ease, transform 0.18s ease;
+            }
+
+            .sidebar-nav button:hover,
+            .sidebar-nav button.is-active {
+                color: #ffffff;
+                background:
+                    linear-gradient(145deg, rgba(229, 9, 20, 0.42), rgba(245, 158, 11, 0.12)),
+                    rgba(255, 255, 255, 0.055);
+                border-color: rgba(255, 90, 79, 0.62);
+                transform: translateX(2px);
+            }
+
+            body:has(#cookiesManagement) .sidebar-nav button.is-active,
+            body:has(#mobileCookiesManagement) .sidebar-nav button.is-active,
+            body:has(#rateLimitManagement) .sidebar-nav button.is-active,
+            body:has(#ctvManagement) .sidebar-nav button.is-active {
+                color: #d4d4d8;
+                background: linear-gradient(180deg, rgba(255, 255, 255, 0.07), rgba(255, 255, 255, 0.025));
+                border-color: rgba(255, 255, 255, 0.1);
+                transform: none;
+            }
+
+            body:has(#cookiesManagement) .sidebar-nav button[data-admin-nav="cookies"],
+            body:has(#mobileCookiesManagement) .sidebar-nav button[data-admin-nav="mobile-cookies"],
+            body:has(#rateLimitManagement) .sidebar-nav button[data-admin-nav="rate-limit"],
+            body:has(#ctvManagement) .sidebar-nav button[data-admin-nav="ctv"] {
+                color: #ffffff;
+                background:
+                    linear-gradient(145deg, rgba(229, 9, 20, 0.42), rgba(245, 158, 11, 0.12)),
+                    rgba(255, 255, 255, 0.055);
+                border-color: rgba(255, 90, 79, 0.62);
+                transform: translateX(2px);
+            }
+
+            .sidebar-nav button.is-active::before,
+            body:has(#cookiesManagement) .sidebar-nav button[data-admin-nav="cookies"]::before,
+            body:has(#mobileCookiesManagement) .sidebar-nav button[data-admin-nav="mobile-cookies"]::before,
+            body:has(#rateLimitManagement) .sidebar-nav button[data-admin-nav="rate-limit"]::before,
+            body:has(#ctvManagement) .sidebar-nav button[data-admin-nav="ctv"]::before {
+                content: "";
+                position: absolute;
+                left: -1px;
+                top: 10px;
+                bottom: 10px;
+                width: 3px;
+                border-radius: 999px;
+                background: linear-gradient(180deg, #ff4438, #f59e0b);
+            }
+
+            body:has(#cookiesManagement) .sidebar-nav button.is-active::before,
+            body:has(#mobileCookiesManagement) .sidebar-nav button.is-active::before,
+            body:has(#rateLimitManagement) .sidebar-nav button.is-active::before,
+            body:has(#ctvManagement) .sidebar-nav button.is-active::before {
+                display: none;
+            }
+
+            .sidebar-nav button.sidebar-danger {
+                color: #fecaca;
+                background: rgba(127, 29, 29, 0.16);
+                border-color: rgba(248, 113, 113, 0.22);
+            }
+
+            .sidebar-nav button.sidebar-danger:hover {
+                color: #ffffff;
+                background: rgba(185, 28, 28, 0.28);
+                border-color: rgba(248, 113, 113, 0.44);
+            }
+
+            .sidebar-icon {
+                display: inline-flex;
+                width: 18px;
+                height: 18px;
+                flex: 0 0 18px;
+                align-items: center;
+                justify-content: center;
+                color: currentColor;
+                opacity: 0.96;
+            }
+
+            .sidebar-status {
+                margin-top: auto;
+                padding: 14px;
+                border-radius: 8px;
+                background: rgba(255, 255, 255, 0.04);
+                border: 1px solid rgba(255, 255, 255, 0.09);
+            }
+
+            .sidebar-status-label {
+                color: #a1a1aa;
+                font-size: 11px;
+                font-weight: 800;
+                text-transform: uppercase;
+                letter-spacing: 0;
+            }
+
+            .sidebar-status-value {
+                display: flex;
+                align-items: center;
+                gap: 8px;
+                margin-top: 8px;
+                color: #bbf7d0;
+                font-size: 13px;
+                font-weight: 800;
+            }
+
+            .sidebar-status-dot {
+                width: 9px;
+                height: 9px;
+                border-radius: 999px;
+                background: #22c55e;
+                box-shadow: 0 0 0 4px rgba(34, 197, 94, 0.12);
+            }
+
+            .admin-main {
+                min-width: 0;
+                padding: 26px;
+            }
+
+            .header {
+                position: relative;
+                margin-bottom: 18px;
+                padding: 26px;
+                background:
+                    linear-gradient(135deg, rgba(229, 9, 20, 0.34), rgba(22, 16, 18, 0.94) 34%, rgba(20, 20, 24, 0.94) 100%);
+                border: 1px solid rgba(255, 90, 79, 0.22);
+                border-radius: 8px;
+                box-shadow: 0 28px 72px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.08);
+            }
+
+            .header::before {
+                height: 1px;
+                background: linear-gradient(90deg, rgba(229, 9, 20, 0.9), rgba(245, 158, 11, 0.55), transparent);
+            }
+
+            .header::after {
+                content: "";
+                position: absolute;
+                left: 22px;
+                bottom: 10px;
+                width: 170px;
+                height: 110px;
+                opacity: 0.045;
+                background-repeat: no-repeat;
+                background-size: contain;
+                background-image: url("data:image/svg+xml,%3Csvg width='220' height='140' viewBox='0 0 220 140' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' stroke='%23ffffff' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M35 98h150c-7 18-28 28-75 28s-68-10-75-28Z'/%3E%3Cpath d='M55 92c5-31 27-50 55-50s50 19 55 50'/%3E%3Cpath d='M64 82c20-13 33-4 46-17 16 13 30 4 48 17'/%3E%3Cpath d='M85 42c10-20 43-20 53 0'/%3E%3Cpath d='M111 17c17-10 43 6 37 31'/%3E%3Cpath d='M28 98h164'/%3E%3C/g%3E%3C/svg%3E");
+                pointer-events: none;
+            }
+
+            .header-content {
+                position: relative;
+                z-index: 1;
+                align-items: stretch;
+                gap: 22px;
+            }
+
+            .header-left {
+                flex: 0 0 430px;
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                min-width: 0;
+                padding-right: 18px;
+                border-right: 1px solid rgba(255, 255, 255, 0.08);
+            }
+
+            .header-left h1 {
+                color: #ffffff;
+                font-size: 1.9em;
+                line-height: 1.08;
+                margin-bottom: 8px;
+                font-weight: 900;
+                letter-spacing: 0;
+                text-shadow: 0 8px 28px rgba(229, 9, 20, 0.28);
+                white-space: nowrap;
+            }
+
+            .header-left p {
+                max-width: 32ch;
+                color: #a1a1aa;
+                font-size: 0.95em;
+                font-weight: 600;
+                line-height: 1.45;
+                letter-spacing: 0;
+            }
+
+            .header-stats {
+                flex: 1;
+                display: grid;
+                grid-template-columns: repeat(6, minmax(112px, 1fr));
+                gap: 12px;
+                align-items: stretch;
+            }
+
+            .header-stats .mobile-stat-only {
+                display: none !important;
+            }
+
+            .stat-item {
+                display: grid;
+                grid-template-columns: 48px minmax(0, 1fr);
+                grid-template-areas:
+                    "icon value"
+                    "icon label";
+                align-items: center;
+                column-gap: 13px;
+                min-width: 0;
+                min-height: 82px;
+                padding: 15px;
+                background:
+                    linear-gradient(145deg, rgba(255, 255, 255, 0.13), rgba(255, 255, 255, 0.035));
+                border: 1px solid rgba(255, 255, 255, 0.16);
+                border-radius: 8px;
+                box-shadow: 0 18px 42px rgba(0, 0, 0, 0.32), inset 0 1px 0 rgba(255, 255, 255, 0.09);
+            }
+
+            .stat-item:not(:last-child)::after {
+                display: none;
+            }
+
+            .header-stats .mobile-stat-icon {
+                display: flex;
+                grid-area: icon;
+                width: 42px;
+                height: 42px;
+                align-items: center;
+                justify-content: center;
+                justify-self: center;
+                color: #ff5a4f;
+                border-radius: 8px;
+                background: rgba(229, 9, 20, 0.2);
+                border: 1px solid rgba(255, 90, 79, 0.34);
+            }
+
+            .header-stats .mobile-stat-icon svg {
+                width: 23px;
+                height: 23px;
+                fill: none;
+                stroke: currentColor;
+                stroke-width: 2;
+                stroke-linecap: round;
+                stroke-linejoin: round;
+            }
+
+            .header-stats .stat-pro,
+            .header-stats .stat-cookies {
+                color: #fbbf24;
+                background: rgba(245, 158, 11, 0.12);
+                border-color: rgba(245, 158, 11, 0.24);
+            }
+
+            .header-stats .stat-free,
+            .header-stats .stat-available {
+                color: #38bdf8;
+                background: rgba(59, 130, 246, 0.12);
+                border-color: rgba(59, 130, 246, 0.22);
+            }
+
+            .header-stats .stat-sms {
+                color: #34d399;
+                width: 48px;
+                height: 48px;
+                background: rgba(16, 185, 129, 0.22);
+                border-color: rgba(52, 211, 153, 0.38);
+            }
+
+            .header-stats .stat-sms svg {
+                width: 29px;
+                height: 29px;
+            }
+
+            .stat-value {
+                grid-area: value;
+                min-width: 0;
+                overflow: hidden;
+                color: #ffffff;
+                font-size: 1.65em;
+                line-height: 1;
+                margin: 0 0 4px;
+                text-overflow: ellipsis;
+                text-shadow: none;
+                align-self: end;
+            }
+
+            .stat-label {
+                grid-area: label;
+                min-width: 0;
+                overflow: hidden;
+                color: #a1a1aa;
+                font-size: 0.68em;
+                line-height: 1.15;
+                font-weight: 800;
+                letter-spacing: 0;
+                text-overflow: ellipsis;
+                align-self: start;
+            }
+
+            .controls {
+                gap: 9px;
+                margin-bottom: 18px;
+                padding: 15px;
+                background:
+                    linear-gradient(180deg, rgba(255, 255, 255, 0.075), rgba(255, 255, 255, 0.03));
+                border: 1px solid rgba(255, 255, 255, 0.13);
+                border-radius: 8px;
+                box-shadow: 0 18px 44px rgba(0, 0, 0, 0.34);
+            }
+
+            .search-wrapper {
+                flex: 1 1 360px;
+                min-width: 280px;
+                gap: 8px;
+            }
+
+            .search-box {
+                min-width: 0;
+                min-height: 42px;
+                padding: 10px 14px;
+                color: #f5f5f7;
+                background: rgba(2, 2, 3, 0.86);
+                border: 1px solid rgba(255, 255, 255, 0.13);
+                border-radius: 8px;
+                box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.04);
+            }
+
+            .search-box:focus {
+                border-color: rgba(96, 165, 250, 0.72);
+                background: rgba(15, 23, 42, 0.64);
+                box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.12);
+            }
+
+            .btn {
+                min-height: 40px;
+                padding: 10px 14px;
+                border-radius: 8px;
+                letter-spacing: 0;
+                border-width: 1px;
+                border-style: solid;
+                box-shadow: 0 10px 24px rgba(0, 0, 0, 0.16), inset 0 1px 0 rgba(255, 255, 255, 0.07);
+                backdrop-filter: blur(12px);
+            }
+
+            .btn-primary {
+                color: #dbeafe !important;
+                background: linear-gradient(180deg, rgba(37, 99, 235, 0.48), rgba(29, 78, 216, 0.24)) !important;
+                border-color: rgba(96, 165, 250, 0.78) !important;
+            }
+
+            .btn-secondary {
+                color: #ddd6fe !important;
+                background: linear-gradient(180deg, rgba(124, 58, 237, 0.44), rgba(91, 33, 182, 0.22)) !important;
+                border-color: rgba(167, 139, 250, 0.72) !important;
+            }
+
+            .btn-success {
+                color: #a7f3d0 !important;
+                background: linear-gradient(180deg, rgba(16, 185, 129, 0.44), rgba(4, 120, 87, 0.22)) !important;
+                border-color: rgba(52, 211, 153, 0.74) !important;
+            }
+
+            .btn-info {
+                color: #ddd6fe !important;
+                background: linear-gradient(180deg, rgba(139, 92, 246, 0.45), rgba(109, 40, 217, 0.22)) !important;
+                border-color: rgba(196, 181, 253, 0.72) !important;
+            }
+
+            .btn-warning {
+                color: #fde68a !important;
+                background: linear-gradient(180deg, rgba(245, 158, 11, 0.46), rgba(180, 83, 9, 0.22)) !important;
+                border-color: rgba(251, 191, 36, 0.78) !important;
+            }
+
+            .btn-danger {
+                color: #fecaca !important;
+                background: linear-gradient(180deg, rgba(239, 68, 68, 0.46), rgba(153, 27, 27, 0.22)) !important;
+                border-color: rgba(248, 113, 113, 0.78) !important;
+            }
+
+            .btn:hover {
+                transform: translateY(-1px);
+                filter: brightness(1.08);
+                box-shadow: 0 12px 28px rgba(0, 0, 0, 0.28), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+            }
+
+            .btn:disabled {
+                opacity: 0.46 !important;
+                cursor: not-allowed !important;
+                transform: none !important;
+                box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.04) !important;
+            }
+
+            .desktop-action-icon {
+                display: inline-flex;
+                width: 16px;
+                height: 16px;
+                flex: 0 0 16px;
+                align-items: center;
+                justify-content: center;
+            }
+
+            .desktop-filter-btn {
+                display: none !important;
+            }
+
+            #pagination,
+            #cookiePagination,
+            #mobileCookiePagination {
+                flex: 0 0 auto;
+                margin-left: auto;
+            }
+
+            #pagination>div.admin-pagination,
+            #cookiePagination>div.admin-pagination,
+            #mobileCookiePagination>div.admin-pagination {
+                width: max-content;
+                max-width: 100%;
+                margin: 0 !important;
+                padding: 0 !important;
+                background: transparent !important;
+                border: 0 !important;
+                border-radius: 0 !important;
+                box-shadow: none !important;
+            }
+
+            #pagination input,
+            #cookiePagination input,
+            #mobileCookiePagination input {
+                min-height: 40px;
+                background: rgba(8, 8, 10, 0.74) !important;
+                border-color: rgba(255, 255, 255, 0.1) !important;
+            }
+
+            .table-header-actions {
+                display: inline-flex;
+                align-items: center;
+                gap: 10px;
+                margin-left: auto;
+                min-width: 0;
+            }
+
+            .cookies-table-header>span {
+                order: 1;
+            }
+
+            .cookies-table-header .header-pagination {
+                order: 2;
+            }
+
+            .header-pagination {
+                display: inline-flex;
+                margin-left: auto;
+            }
+
+            .table-header--with-centered-pagination {
+                position: relative;
+            }
+
+            .table-header-title {
+                display: inline-flex;
+                align-items: center;
+                min-width: 0;
+            }
+
+            .table-header--with-centered-pagination #pagination,
+            .table-header--with-centered-pagination #cookiePagination,
+            .table-header--with-centered-pagination #mobileCookiePagination {
+                position: absolute;
+                top: 50%;
+                left: 50%;
+                z-index: 2;
+                margin-left: 0;
+                transform: translate(-50%, -50%);
+            }
+
+            .table-header--with-centered-pagination .table-header-actions {
+                margin-left: auto;
+            }
+
+            .table-pagination {
+                display: inline-flex;
+                align-items: center;
+                gap: 6px;
+                min-height: 36px;
+                padding: 4px;
+                border-radius: 8px;
+                background: rgba(8, 8, 10, 0.42);
+                border: 1px solid rgba(255, 255, 255, 0.1);
+                box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.045);
+            }
+
+            .table-pagination--single,
+            .table-pagination--empty {
+                padding: 0 10px;
+                background: rgba(255, 255, 255, 0.04);
+            }
+
+            .table-page-icon {
+                width: 30px;
+                min-width: 30px;
+                height: 28px;
+                min-height: 28px;
+                padding: 0 !important;
+                justify-content: center;
+                border-radius: 7px;
+            }
+
+            .table-page-icon .desktop-action-icon {
+                width: 15px;
+                height: 15px;
+                flex-basis: 15px;
+            }
+
+            .table-page-status {
+                min-height: 28px;
+                display: inline-flex;
+                align-items: center;
+                gap: 5px;
+                padding: 0 9px;
+                border-radius: 7px;
+                color: #cbd5e1;
+                background: rgba(0, 0, 0, 0.34);
+                border: 1px solid rgba(255, 255, 255, 0.075);
+                font-size: 12px;
+                font-weight: 800;
+                white-space: nowrap;
+            }
+
+            .table-page-status strong {
+                color: #ff5a4f;
+                font-size: 13px;
+                font-weight: 900;
+            }
+
+            .admin-pagination {
+                display: flex;
+                gap: 8px;
+                align-items: center;
+                justify-content: center;
+                flex-wrap: wrap;
+            }
+
+            .admin-page-status,
+            .admin-page-total,
+            .admin-page-jump {
+                min-height: 40px;
+                display: inline-flex;
+                align-items: center;
+                gap: 8px;
+                padding: 0 13px;
+                border-radius: 8px;
+                background: linear-gradient(180deg, rgba(10, 10, 12, 0.86), rgba(18, 18, 21, 0.68));
+                border: 1px solid rgba(255, 255, 255, 0.1);
+                color: #cbd5e1;
+                font-size: 13px;
+                font-weight: 700;
+                box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.045);
+            }
+
+            .admin-page-status strong,
+            .admin-page-total strong {
+                color: #ffffff;
+                font-size: 16px;
+                font-weight: 900;
+            }
+
+            .admin-page-status .admin-current-page {
+                color: #ff5a4f;
+            }
+
+            .admin-page-jump {
+                padding: 3px;
+                background: rgba(5, 5, 7, 0.8);
+            }
+
+            .admin-page-jump input {
+                width: 78px !important;
+                height: 34px;
+                min-height: 34px;
+                padding: 6px 10px !important;
+                border-radius: 7px !important;
+                background: rgba(0, 0, 0, 0.68) !important;
+            }
+
+            .admin-page-jump .btn {
+                min-height: 34px;
+                padding: 7px 12px;
+            }
+
+            .admin-page-btn {
+                min-width: 88px;
+                justify-content: center;
+                min-height: 40px;
+            }
+
+            .admin-page-total {
+                color: #e5e7eb;
+                background: linear-gradient(180deg, rgba(255, 255, 255, 0.07), rgba(255, 255, 255, 0.025));
+            }
+
+            .admin-page-total span:last-child {
+                color: #a1a1aa;
+            }
+
+            .users-table {
+                background:
+                    linear-gradient(180deg, rgba(255, 255, 255, 0.075), rgba(255, 255, 255, 0.028));
+                border: 1px solid rgba(255, 255, 255, 0.14);
+                border-radius: 8px;
+                box-shadow: 0 26px 68px rgba(0, 0, 0, 0.46);
+            }
+
+            .table-header {
+                display: flex;
+                align-items: center;
+                gap: 10px;
+                padding: 18px 20px;
+                color: #ffffff;
+                background:
+                    linear-gradient(180deg, rgba(255, 255, 255, 0.12), rgba(229, 9, 20, 0.07));
+                border-bottom: 1px solid rgba(255, 90, 79, 0.16);
+                font-size: 1.05em;
+                letter-spacing: 0;
+            }
+
+            .table-header::before {
+                content: "";
+                width: 18px;
+                height: 18px;
+                flex: 0 0 18px;
+                background-color: #ff5a4f;
+                -webkit-mask: url("data:image/svg+xml,%3Csvg width='24' height='24' viewBox='0 0 24 24' xmlns='http://www.w3.org/2000/svg' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M3 5h18'/%3E%3Cpath d='M3 12h18'/%3E%3Cpath d='M3 19h18'/%3E%3Cpath d='M7 5v14'/%3E%3Cpath d='M17 5v14'/%3E%3C/svg%3E") center / contain no-repeat;
+                mask: url("data:image/svg+xml,%3Csvg width='24' height='24' viewBox='0 0 24 24' xmlns='http://www.w3.org/2000/svg' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M3 5h18'/%3E%3Cpath d='M3 12h18'/%3E%3Cpath d='M3 19h18'/%3E%3Cpath d='M7 5v14'/%3E%3Cpath d='M17 5v14'/%3E%3C/svg%3E") center / contain no-repeat;
+            }
+
+            #usersTable,
+            #cookiesTableContainer,
+            #bannedIPsTableContainer {
+                max-height: calc(100vh - 330px) !important;
+                background: rgba(8, 8, 10, 0.3);
+            }
+
+            .admin-table-shell {
+                position: relative;
+                overflow: hidden;
+                border-radius: 0 0 8px 8px;
+            }
+
+            .admin-table-shell::before,
+            .admin-table-shell::after {
+                content: "";
+                position: absolute;
+                top: 0;
+                bottom: 13px;
+                z-index: 18;
+                width: 34px;
+                opacity: 0;
+                pointer-events: none;
+                transition: opacity 0.18s ease;
+            }
+
+            .admin-table-shell::before {
+                left: 0;
+                background: linear-gradient(90deg, rgba(12, 12, 14, 0.96), rgba(12, 12, 14, 0));
+            }
+
+            .admin-table-shell::after {
+                right: 0;
+                background: linear-gradient(270deg, rgba(12, 12, 14, 0.96), rgba(12, 12, 14, 0));
+            }
+
+            .admin-table-shell.is-scrollable:not(.is-scroll-start)::before,
+            .admin-table-shell.is-scrollable:not(.is-scroll-end)::after {
+                opacity: 1;
+            }
+
+            .admin-table-scroll {
+                width: 100%;
+                overflow-x: auto;
+                padding-bottom: 7px;
+                scrollbar-gutter: stable;
+                scrollbar-width: thin;
+                scrollbar-color: rgba(148, 163, 184, 0.42) rgba(255, 255, 255, 0.035);
+            }
+
+            .admin-table-scroll::-webkit-scrollbar {
+                height: 8px;
+            }
+
+            .admin-table-scroll::-webkit-scrollbar-track {
+                margin: 0 14px;
+                border-radius: 999px;
+                background:
+                    linear-gradient(180deg, rgba(255, 255, 255, 0.07), rgba(255, 255, 255, 0.025));
+                box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.055);
+            }
+
+            .admin-table-scroll::-webkit-scrollbar-thumb {
+                border: 2px solid rgba(12, 12, 14, 0.95);
+                border-radius: 999px;
+                background:
+                    linear-gradient(90deg, rgba(255, 90, 79, 0.72), rgba(96, 165, 250, 0.58));
+            }
+
+            .admin-table-scroll::-webkit-scrollbar-thumb:hover {
+                background:
+                    linear-gradient(90deg, rgba(255, 109, 100, 0.9), rgba(125, 185, 255, 0.78));
+            }
+
+            .users-table-header {
+                padding-right: 16px;
+            }
+
+            .users-table-header-title {
+                min-width: 0;
+            }
+
+            .user-columns-toggle {
+                min-width: 132px;
+                min-height: 36px;
+                margin-left: auto;
+                padding: 8px 13px !important;
+                justify-content: center;
+                font-size: 12px;
+                font-weight: 850;
+            }
+
+            .table-header-actions .user-columns-toggle {
+                margin-left: 0;
+            }
+
+            .user-columns-toggle .desktop-action-icon {
+                width: 18px;
+                height: 18px;
+                flex-basis: 18px;
+            }
+
+            .user-columns-toggle .user-columns-icon--compact {
+                display: none;
+            }
+
+            .user-columns-toggle.is-active .user-columns-icon--detail {
+                display: none;
+            }
+
+            .user-columns-toggle.is-active .user-columns-icon--compact {
+                display: block;
+            }
+
+            .user-columns-label {
+                display: inline-flex;
+                line-height: 1;
+                font-size: 0;
+            }
+
+            .user-columns-label::before {
+                content: "Xem chi ti\1EBFt";
+                font-size: 12px;
+                line-height: 1;
+            }
+
+            .user-columns-toggle.is-active .user-columns-label::before {
+                content: "Thu g\1ECDn";
+            }
+
+            .user-columns-toggle.is-active {
+                color: #67e8f9 !important;
+                border-color: rgba(103, 232, 249, 0.68) !important;
+                background:
+                    linear-gradient(145deg, rgba(14, 116, 144, 0.34), rgba(59, 130, 246, 0.16)) !important;
+            }
+
+            .user-data-table.user-table--compact {
+                min-width: 1360px;
+            }
+
+            .user-data-table.user-table--expanded {
+                min-width: 2000px;
+            }
+
+            .user-data-table.user-table--compact .user-detail-col {
+                display: none !important;
+            }
+
+            .table {
+                border-collapse: separate;
+                border-spacing: 0;
+            }
+
+            .table th {
+                position: sticky;
+                top: 0;
+                z-index: 8;
+                background: #1d1d20 !important;
+                color: #c4c4cc;
+                border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+                font-size: 11px;
+                letter-spacing: 0;
+            }
+
+            #cookiesManagement #cookiesTableContainer .table th:nth-child(3),
+            #cookiesManagement #cookiesTableContainer .table td:nth-child(3),
+            #cookiesManagement #cookiesTableContainer .table th:nth-child(9),
+            #cookiesManagement #cookiesTableContainer .table td:nth-child(9) {
+                display: none;
+            }
+
+            #cookiesManagement .table th:nth-child(2),
+            #cookiesManagement .table td:nth-child(2) {
+                min-width: 260px;
+            }
+
+            #cookiesManagement .table th:nth-child(8),
+            #cookiesManagement .table td:nth-child(8) {
+                min-width: 220px;
+            }
+
+            .admin-action-strip,
+            .mobile-cookie-controls {
+                display: flex;
+                gap: 10px;
+                flex-wrap: wrap;
+                align-items: center;
+                padding: 15px;
+                background:
+                    linear-gradient(180deg, rgba(255, 255, 255, 0.08), rgba(229, 9, 20, 0.035)) !important;
+                border-bottom: 1px solid rgba(255, 90, 79, 0.13);
+            }
+
+            .admin-action-strip .btn,
+            .mobile-cookie-controls .btn {
+                min-height: 40px;
+            }
+
+            .mobile-cookie-panel {
+                padding: 15px;
+                background:
+                    linear-gradient(180deg, rgba(255, 255, 255, 0.045), rgba(255, 255, 255, 0.018));
+                border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+            }
+
+            .mobile-cookie-stats {
+                display: grid;
+                grid-template-columns: repeat(4, minmax(150px, 1fr));
+                gap: 12px;
+                margin-bottom: 14px;
+            }
+
+            .mobile-cookie-stat-card {
+                display: grid;
+                grid-template-columns: 42px minmax(0, 1fr);
+                gap: 12px;
+                align-items: center;
+                min-height: 74px;
+                padding: 14px;
+                border-radius: 8px;
+                background: linear-gradient(145deg, rgba(255, 255, 255, 0.075), rgba(255, 255, 255, 0.026));
+                border: 1px solid rgba(255, 255, 255, 0.095);
+                box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.055);
+            }
+
+            .mobile-cookie-stat-icon {
+                display: inline-flex;
+                width: 38px;
+                height: 38px;
+                align-items: center;
+                justify-content: center;
+                color: #8b5cf6;
+                border-radius: 8px;
+                background: rgba(139, 92, 246, 0.13);
+                border: 1px solid rgba(139, 92, 246, 0.24);
+            }
+
+            .mobile-cookie-stat-icon svg {
+                width: 20px;
+                height: 20px;
+                fill: none;
+                stroke: currentColor;
+                stroke-width: 2;
+                stroke-linecap: round;
+                stroke-linejoin: round;
+            }
+
+            .mobile-cookie-stat-value {
+                color: #ffffff;
+                font-size: 1.55rem;
+                font-weight: 900;
+                line-height: 1;
+            }
+
+            .mobile-cookie-stat-label {
+                margin-top: 5px;
+                color: #a1a1aa;
+                font-size: 0.72rem;
+                font-weight: 800;
+                text-transform: uppercase;
+                letter-spacing: 0;
+            }
+
+            .mobile-cookie-stat-card.is-available .mobile-cookie-stat-icon,
+            .mobile-cookie-stat-card.is-available .mobile-cookie-stat-value {
+                color: #34d399;
+            }
+
+            .mobile-cookie-stat-card.is-used .mobile-cookie-stat-icon,
+            .mobile-cookie-stat-card.is-used .mobile-cookie-stat-value {
+                color: #60a5fa;
+            }
+
+            .mobile-cookie-stat-card.is-inactive .mobile-cookie-stat-icon,
+            .mobile-cookie-stat-card.is-inactive .mobile-cookie-stat-value {
+                color: #f87171;
+            }
+
+            #mobileCookiesManagement {
+                overflow: hidden;
+                background:
+                    linear-gradient(180deg, rgba(255, 255, 255, 0.07), rgba(255, 255, 255, 0.024));
+                border-color: rgba(255, 255, 255, 0.14);
+            }
+
+            #mobileCookiesManagement .table-header {
+                background:
+                    linear-gradient(180deg, rgba(255, 255, 255, 0.105), rgba(139, 92, 246, 0.055));
+                border-left: 0;
+            }
+
+            #mobileCookiesManagement .mobile-cookie-panel {
+                display: grid;
+                grid-template-columns: minmax(0, 1fr) auto;
+                gap: 14px;
+                align-items: center;
+                padding: 12px 16px;
+                background:
+                    linear-gradient(180deg, rgba(20, 20, 24, 0.82), rgba(8, 8, 10, 0.68));
+                border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            }
+
+            #mobileCookiesManagement .mobile-cookie-stats {
+                grid-template-columns: repeat(4, minmax(110px, 1fr));
+                gap: 10px;
+                margin-bottom: 0;
+            }
+
+            #mobileCookiesManagement .mobile-cookie-stat-card {
+                grid-template-columns: 28px minmax(0, 1fr);
+                gap: 9px;
+                min-height: 54px;
+                padding: 10px 12px;
+                background: linear-gradient(145deg, rgba(255, 255, 255, 0.11), rgba(255, 255, 255, 0.03));
+                border-color: rgba(255, 255, 255, 0.13);
+                box-shadow: 0 14px 34px rgba(0, 0, 0, 0.22), inset 0 1px 0 rgba(255, 255, 255, 0.07);
+            }
+
+            #mobileCookiesManagement .mobile-cookie-stat-icon {
+                width: 24px;
+                height: 24px;
+                background: transparent;
+                border: 0;
+                border-radius: 0;
+                filter: drop-shadow(0 0 12px currentColor);
+            }
+
+            #mobileCookiesManagement .mobile-cookie-stat-icon svg {
+                width: 22px;
+                height: 22px;
+            }
+
+            #mobileCookiesManagement .mobile-cookie-stat-value {
+                font-size: 1.28rem;
+            }
+
+            #mobileCookiesManagement .mobile-cookie-stat-label {
+                margin-top: 3px;
+                font-size: 0.62rem;
+            }
+
+            #mobileCookiesManagement .mobile-cookie-controls {
+                display: flex;
+                justify-content: flex-end;
+                align-items: center;
+                gap: 8px;
+                flex-wrap: nowrap;
+                padding: 0;
+                background: transparent !important;
+                border-bottom: 0;
+            }
+
+            #mobileCookiesManagement .mobile-cookie-pagination {
+                display: inline-flex;
+                min-width: 0;
+                flex: 0 0 auto;
+                justify-content: center;
+            }
+
+            #mobileCookiesManagement .mobile-cookie-actions {
+                display: inline-flex;
+                align-items: center;
+                gap: 8px;
+                flex: 0 0 auto;
+            }
+
+            #mobileCookiesManagement .mobile-cookie-pagination .admin-pagination {
+                margin: 0 !important;
+            }
+
+            #mobileCookiesManagement .mobile-cookie-controls .btn,
+            #mobileCookiesManagement .mobile-cookie-pagination .admin-page-btn,
+            #mobileCookiesManagement .mobile-cookie-pagination .admin-page-status {
+                min-height: 36px;
+            }
+
+            #mobileCookiesManagement .mobile-cookie-pagination .admin-page-btn {
+                min-width: 74px;
+                padding: 8px 10px;
+            }
+
+            #mobileCookiesManagement .mobile-cookie-pagination .admin-page-status {
+                padding: 0 10px;
+            }
+
+            #mobileCookiesManagement .mobile-cookie-controls .search-box {
+                flex: 1 1 360px;
+                width: auto !important;
+                background: rgba(3, 3, 5, 0.82) !important;
+                border-color: rgba(255, 255, 255, 0.14) !important;
+            }
+
+            #mobileCookiesManagement #mobileCookiesList {
+                max-height: calc(100vh - 330px);
+                min-height: 360px;
+                padding: 0;
+                overflow: auto;
+                background: transparent;
+                border-top: 1px solid rgba(255, 255, 255, 0.09);
+            }
+
+            #cookiesManagement .admin-action-strip {
+                flex-wrap: nowrap;
+                overflow-x: auto;
+                scrollbar-width: thin;
+            }
+
+            #cookiesManagement #cookiePagination>div {
+                margin: 0 !important;
+            }
+
+            #cookiesManagement #cookiePagination .admin-page-total {
+                display: none !important;
+            }
+
+            #mobileCookiesManagement .mobile-cookie-table {
+                min-width: 1060px;
+                border-radius: 0;
+                font-size: 13px;
+            }
+
+            #mobileCookiesManagement .mobile-cookie-table th {
+                position: sticky;
+                top: 0;
+                z-index: 12;
+                background: #1d1d20 !important;
+                color: #c4c4cc;
+                font-size: 13px;
+            }
+
+            #mobileCookiesManagement .mobile-cookie-table td {
+                background: rgba(255, 255, 255, 0.012);
+                font-size: 13px;
+                line-height: 1.35;
+            }
+
+            #mobileCookiesManagement .mobile-cookie-table tr:hover td {
+                background: rgba(139, 92, 246, 0.07);
+            }
+
+            .mobile-cookie-token {
+                display: inline-block;
+                max-width: 240px;
+                overflow: hidden;
+                color: #f5f5f7;
+                font-size: 13px;
+                font-weight: 800;
+                text-overflow: ellipsis;
+                white-space: nowrap;
+            }
+
+            .mobile-cookie-slot {
+                display: inline-flex;
+                min-width: 46px;
+                min-height: 26px;
+                align-items: center;
+                justify-content: center;
+                color: #e5e7eb;
+                background: rgba(255, 255, 255, 0.07);
+                border: 1px solid rgba(255, 255, 255, 0.12);
+                border-radius: 7px;
+                font-size: 13px;
+                font-weight: 900;
+            }
+
+            .mobile-cookie-user {
+                display: inline-block;
+                max-width: 260px;
+                overflow: hidden;
+                color: #f5f5f7;
+                font-size: 13px;
+                text-overflow: ellipsis;
+                white-space: nowrap;
+            }
+
+            .mobile-cookie-status {
+                display: inline-flex;
+                min-height: 24px;
+                align-items: center;
+                padding: 3px 8px;
+                border-radius: 4px;
+                font-size: 13px;
+                font-weight: 800;
+                line-height: 1;
+            }
+
+            .mobile-cookie-status.is-used {
+                color: #60a5fa;
+                background: rgba(59, 130, 246, 0.18);
+            }
+
+            .mobile-cookie-status.is-available {
+                color: #34d399;
+                background: rgba(16, 185, 129, 0.18);
+            }
+
+            .mobile-cookie-status.is-inactive {
+                color: #f87171;
+                background: rgba(239, 68, 68, 0.2);
+            }
+
+            .table th:first-child {
+                z-index: 16 !important;
+            }
+
+            .table td {
+                border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+                color: #e4e4e7;
+                background: rgba(255, 255, 255, 0.015);
+                vertical-align: middle;
+            }
+
+            .table tbody tr:nth-child(even) td {
+                background: rgba(255, 255, 255, 0.028);
+            }
+
+            .table tr:hover td {
+                background: rgba(59, 130, 246, 0.08);
+            }
+
+            .table td:first-child {
+                background: #121214 !important;
+                box-shadow: 12px 0 24px rgba(0, 0, 0, 0.18);
+            }
+
+            .table tr:hover td:first-child {
+                background: #17171a !important;
+            }
+
+            .table td:first-child a {
+                display: inline-flex;
+                align-items: center;
+                gap: 5px;
+                min-height: 28px;
+                padding: 5px 9px;
+                border-radius: 8px;
+                text-decoration: none !important;
+                background: rgba(255, 255, 255, 0.05);
+                border: 1px solid rgba(255, 255, 255, 0.08);
+                font-size: 12px;
+                font-weight: 800 !important;
+            }
+
+            .table td:first-child a.save-btn[style*="display: inline-block"],
+            .table td:first-child a.cancel-btn[style*="display: inline-block"] {
+                display: inline-flex !important;
+            }
+
+            .table td:first-child a::before {
+                content: "";
+                width: 13px;
+                height: 13px;
+                flex: 0 0 13px;
+                background-color: currentColor;
+            }
+
+            .table td:first-child a.delete-btn::before {
+                -webkit-mask: url("data:image/svg+xml,%3Csvg width='24' height='24' viewBox='0 0 24 24' xmlns='http://www.w3.org/2000/svg' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M3 6h18'/%3E%3Cpath d='M8 6V4h8v2'/%3E%3Cpath d='M19 6l-1 15H6L5 6'/%3E%3Cpath d='M10 11v6'/%3E%3Cpath d='M14 11v6'/%3E%3C/svg%3E") center / contain no-repeat;
+                mask: url("data:image/svg+xml,%3Csvg width='24' height='24' viewBox='0 0 24 24' xmlns='http://www.w3.org/2000/svg' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M3 6h18'/%3E%3Cpath d='M8 6V4h8v2'/%3E%3Cpath d='M19 6l-1 15H6L5 6'/%3E%3Cpath d='M10 11v6'/%3E%3Cpath d='M14 11v6'/%3E%3C/svg%3E") center / contain no-repeat;
+            }
+
+            .table td:first-child a.edit-btn::before {
+                -webkit-mask: url("data:image/svg+xml,%3Csvg width='24' height='24' viewBox='0 0 24 24' xmlns='http://www.w3.org/2000/svg' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M12 20h9'/%3E%3Cpath d='M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4Z'/%3E%3C/svg%3E") center / contain no-repeat;
+                mask: url("data:image/svg+xml,%3Csvg width='24' height='24' viewBox='0 0 24 24' xmlns='http://www.w3.org/2000/svg' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M12 20h9'/%3E%3Cpath d='M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4Z'/%3E%3C/svg%3E") center / contain no-repeat;
+            }
+
+            .table td:first-child a.save-btn::before {
+                -webkit-mask: url("data:image/svg+xml,%3Csvg width='24' height='24' viewBox='0 0 24 24' xmlns='http://www.w3.org/2000/svg' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M20 6 9 17l-5-5'/%3E%3C/svg%3E") center / contain no-repeat;
+                mask: url("data:image/svg+xml,%3Csvg width='24' height='24' viewBox='0 0 24 24' xmlns='http://www.w3.org/2000/svg' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M20 6 9 17l-5-5'/%3E%3C/svg%3E") center / contain no-repeat;
+            }
+
+            .table td:first-child a.cancel-btn::before {
+                -webkit-mask: url("data:image/svg+xml,%3Csvg width='24' height='24' viewBox='0 0 24 24' xmlns='http://www.w3.org/2000/svg' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M18 6 6 18'/%3E%3Cpath d='m6 6 12 12'/%3E%3C/svg%3E") center / contain no-repeat;
+                mask: url("data:image/svg+xml,%3Csvg width='24' height='24' viewBox='0 0 24 24' xmlns='http://www.w3.org/2000/svg' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M18 6 6 18'/%3E%3Cpath d='m6 6 12 12'/%3E%3C/svg%3E") center / contain no-repeat;
+            }
+
+            .edit-mode {
+                min-height: 32px;
+                color: #ffffff !important;
+                background: rgba(8, 8, 10, 0.82) !important;
+                border: 1px solid rgba(255, 255, 255, 0.14) !important;
+                border-radius: 6px !important;
+                padding: 6px 8px !important;
+            }
+
+            .plan-badge {
+                display: inline-flex;
+                align-items: center;
+                min-height: 26px;
+                padding: 5px 10px;
+                border-radius: 8px;
+                letter-spacing: 0;
+            }
+
+            .desktop-action-icon svg,
+            .device-mark svg,
+            .ctv-stat-icon svg,
+            .rate-limit-stat-icon svg {
+                width: 100%;
+                height: 100%;
+                fill: none;
+                stroke: currentColor;
+                stroke-width: 2;
+                stroke-linecap: round;
+                stroke-linejoin: round;
+            }
+
+            .admin-status-badge {
+                display: inline-flex;
+                min-height: 24px;
+                align-items: center;
+                justify-content: center;
+                padding: 4px 10px;
+                border-radius: 6px;
+                font-size: 0.78rem;
+                font-weight: 800;
+                line-height: 1;
+                letter-spacing: 0;
+                border: 1px solid rgba(255, 255, 255, 0.12);
+                box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.08);
+            }
+
+            .admin-status-badge--success {
+                color: #bbf7d0;
+                background: rgba(16, 185, 129, 0.22);
+                border-color: rgba(52, 211, 153, 0.26);
+            }
+
+            .admin-status-badge--warning {
+                color: #fde68a;
+                background: rgba(245, 158, 11, 0.22);
+                border-color: rgba(251, 191, 36, 0.28);
+            }
+
+            .admin-status-badge--danger {
+                color: #fecaca;
+                background: rgba(239, 68, 68, 0.22);
+                border-color: rgba(248, 113, 113, 0.28);
+            }
+
+            .device-signature {
+                display: inline-flex;
+                align-items: center;
+                gap: 7px;
+                min-width: 150px;
+                max-width: 170px;
+                min-height: 28px;
+                color: #e5e7eb;
+                white-space: nowrap;
+            }
+
+            .device-mark {
+                display: inline-flex;
+                width: 20px;
+                height: 20px;
+                flex: 0 0 20px;
+                align-items: center;
+                justify-content: center;
+                color: #60a5fa;
+                filter: drop-shadow(0 0 10px rgba(96, 165, 250, 0.22));
+            }
+
+            .device-mark svg {
+                width: 20px;
+                height: 20px;
+            }
+
+            .device-mark--windows {
+                color: #60a5fa;
+            }
+
+            .device-mark--macos {
+                color: #f5f5f7;
+            }
+
+            .device-mark--phone,
+            .device-mark--android,
+            .device-mark--ios {
+                color: #34d399;
+            }
+
+            .device-mark--tablet {
+                color: #c084fc;
+            }
+
+            .device-mark--chrome {
+                color: #fbbf24;
+            }
+
+            .device-mark--safari {
+                color: #38bdf8;
+            }
+
+            .device-mark--browser {
+                color: #fbbf24;
+            }
+
+            .device-copy {
+                display: inline-flex;
+                min-width: 0;
+                align-items: center;
+                gap: 6px;
+                overflow: hidden;
+                color: #f5f5f7;
+                font-weight: 800;
+                line-height: 1.15;
+            }
+
+            .device-part {
+                display: inline-flex;
+                min-width: 0;
+                align-items: center;
+                gap: 5px;
+            }
+
+            .device-name {
+                min-width: 0;
+                overflow: hidden;
+                text-overflow: ellipsis;
+            }
+
+            .device-sep {
+                color: #71717a;
+                font-weight: 900;
+            }
+
+            .desktop-sms-otp-modal {
+                position: fixed;
+                inset: 0;
+                z-index: 99999;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                padding: 24px;
+                background: rgba(0, 0, 0, 0.72);
+                backdrop-filter: blur(10px);
+            }
+
+            .desktop-sms-otp-card {
+                width: min(420px, 100%);
+                padding: 20px;
+                color: #f5f5f7;
+                background:
+                    linear-gradient(180deg, rgba(39, 39, 42, 0.96), rgba(12, 12, 14, 0.98));
+                border: 1px solid rgba(255, 255, 255, 0.13);
+                border-radius: 10px;
+                box-shadow: 0 28px 80px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.08);
+            }
+
+            .desktop-sms-otp-head {
+                display: flex;
+                gap: 12px;
+                align-items: center;
+                margin-bottom: 16px;
+            }
+
+            .desktop-sms-otp-head .desktop-action-icon {
+                width: 42px;
+                height: 42px;
+                color: #34d399;
+                background: transparent;
+                border: 0;
+                border-radius: 0;
+                box-shadow: none;
+                filter: drop-shadow(0 0 14px rgba(52, 211, 153, 0.36));
+            }
+
+            .desktop-sms-otp-head .desktop-action-icon svg {
+                width: 34px;
+                height: 34px;
+            }
+
+            .desktop-sms-otp-title {
+                color: #ffffff;
+                font-size: 1rem;
+                font-weight: 900;
+                line-height: 1.2;
+            }
+
+            .desktop-sms-otp-subtitle {
+                margin-top: 4px;
+                color: #a1a1aa;
+                font-size: 0.78rem;
+                font-weight: 700;
+            }
+
+            .desktop-sms-otp-card input {
+                width: 100%;
+                min-height: 42px;
+                margin-bottom: 16px;
+                padding: 10px 12px;
+                color: #fff;
+                background: rgba(5, 5, 7, 0.78);
+                border: 1px solid rgba(255, 255, 255, 0.12);
+                border-radius: 8px;
+                font-size: 0.95rem;
+                font-weight: 800;
+                box-sizing: border-box;
+            }
+
+            .desktop-sms-otp-actions {
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+                gap: 10px;
+            }
+
+            #rateLimitManagement .rate-limit-stats-grid {
+                display: grid;
+                grid-template-columns: repeat(6, minmax(120px, 1fr));
+                gap: 12px;
+            }
+
+            #rateLimitManagement #rateLimitStats {
+                padding: 20px 20px 4px !important;
+                margin-bottom: 18px !important;
+                background: transparent !important;
+                border: 0 !important;
+                border-radius: 0 !important;
+            }
+
+            #rateLimitManagement .rate-limit-stat-card,
+            #ctvManagement .ctv-stat-card,
+            #ctvManagement .ctv-cookie-stat {
+                display: grid;
+                grid-template-columns: 32px minmax(0, 1fr);
+                gap: 11px;
+                align-items: center;
+                min-height: 72px;
+                padding: 14px;
+                border-radius: 8px;
+                background: linear-gradient(145deg, rgba(255, 255, 255, 0.12), rgba(255, 255, 255, 0.034));
+                border: 1px solid rgba(255, 255, 255, 0.14);
+                box-shadow: 0 14px 34px rgba(0, 0, 0, 0.24), inset 0 1px 0 rgba(255, 255, 255, 0.07);
+            }
+
+            #rateLimitManagement .rate-limit-stat-icon,
+            #ctvManagement .ctv-stat-icon {
+                display: inline-flex;
+                width: 28px;
+                height: 28px;
+                align-items: center;
+                justify-content: center;
+                color: #60a5fa;
+                background: transparent;
+                border: 0;
+                border-radius: 0;
+                filter: drop-shadow(0 0 12px rgba(96, 165, 250, 0.3));
+            }
+
+            #rateLimitManagement .rate-limit-stat-icon svg,
+            #ctvManagement .ctv-stat-icon svg {
+                width: 28px;
+                height: 28px;
+                stroke-width: 2.15;
+            }
+
+            #rateLimitManagement .rate-limit-stat-card.is-danger,
+            #ctvManagement .ctv-stat-card.is-expired,
+            #ctvManagement .ctv-cookie-stat.is-inactive {
+                background: linear-gradient(145deg, rgba(239, 68, 68, 0.18), rgba(255, 255, 255, 0.035));
+                border-color: rgba(248, 113, 113, 0.28);
+            }
+
+            #rateLimitManagement .rate-limit-stat-card.is-warning,
+            #ctvManagement .ctv-stat-card.is-suspended {
+                background: linear-gradient(145deg, rgba(245, 158, 11, 0.18), rgba(255, 255, 255, 0.035));
+                border-color: rgba(251, 191, 36, 0.28);
+            }
+
+            #rateLimitManagement .rate-limit-stat-card.is-success,
+            #ctvManagement .ctv-stat-card.is-active,
+            #ctvManagement .ctv-cookie-stat.is-available {
+                background: linear-gradient(145deg, rgba(16, 185, 129, 0.18), rgba(255, 255, 255, 0.035));
+                border-color: rgba(52, 211, 153, 0.28);
+            }
+
+            #rateLimitManagement .rate-limit-stat-card.is-purple {
+                background: linear-gradient(145deg, rgba(139, 92, 246, 0.18), rgba(255, 255, 255, 0.035));
+                border-color: rgba(196, 181, 253, 0.28);
+            }
+
+            .rate-limit-stat-value,
+            .ctv-stat-value,
+            .ctv-cookie-stat-value {
+                color: #fff;
+                font-size: 1.45rem;
+                font-weight: 900;
+                line-height: 1;
+            }
+
+            .rate-limit-stat-label,
+            .ctv-stat-label,
+            .ctv-cookie-stat-label {
+                margin-top: 5px;
+                color: #a1a1aa;
+                font-size: 0.72rem;
+                font-weight: 800;
+                line-height: 1.15;
+            }
+
+            #rateLimitManagement .rate-limit-stat-card.is-danger .rate-limit-stat-icon,
+            #rateLimitManagement .rate-limit-stat-card.is-danger .rate-limit-stat-value,
+            #ctvManagement .is-expired .ctv-stat-icon,
+            #ctvManagement .is-expired .ctv-stat-value,
+            #ctvManagement .is-inactive .ctv-stat-icon,
+            #ctvManagement .is-inactive .ctv-cookie-stat-value {
+                color: #f87171;
+            }
+
+            #rateLimitManagement .rate-limit-stat-card.is-warning .rate-limit-stat-icon,
+            #rateLimitManagement .rate-limit-stat-card.is-warning .rate-limit-stat-value,
+            #ctvManagement .is-suspended .ctv-stat-icon,
+            #ctvManagement .is-suspended .ctv-stat-value {
+                color: #fbbf24;
+            }
+
+            #rateLimitManagement .rate-limit-stat-card.is-success .rate-limit-stat-icon,
+            #rateLimitManagement .rate-limit-stat-card.is-success .rate-limit-stat-value,
+            #ctvManagement .is-active .ctv-stat-icon,
+            #ctvManagement .is-active .ctv-stat-value,
+            #ctvManagement .is-available .ctv-stat-icon,
+            #ctvManagement .is-available .ctv-cookie-stat-value {
+                color: #34d399;
+            }
+
+            #rateLimitManagement .rate-limit-stat-card.is-purple .rate-limit-stat-icon,
+            #rateLimitManagement .rate-limit-stat-card.is-purple .rate-limit-stat-value {
+                color: #a78bfa;
+            }
+
+            #rateLimitManagement .rate-limit-controls {
+                display: grid !important;
+                grid-template-columns: minmax(320px, 1fr) auto !important;
+                gap: 12px !important;
+                align-items: center;
+                box-sizing: border-box;
+                width: 100%;
+                margin-bottom: 0 !important;
+                padding: 0 20px 20px !important;
+            }
+
+            #rateLimitManagement .rate-limit-search-wrapper {
+                display: grid;
+                grid-template-columns: minmax(0, 1fr) auto;
+                gap: 8px;
+            }
+
+            #rateLimitManagement .rate-limit-buttons {
+                display: flex;
+                gap: 8px;
+                flex-wrap: wrap;
+                justify-content: flex-end;
+            }
+
+            #ctvManagement .ctv-dashboard-shell {
+                padding: 14px;
+            }
+
+            #ctvManagement .ctv-toolbar {
+                display: grid;
+                grid-template-columns: auto minmax(320px, 1fr);
+                gap: 10px;
+                align-items: center;
+                margin-bottom: 12px;
+            }
+
+            #ctvManagement .ctv-action-group,
+            #ctvManagement .ctv-filter-group,
+            #ctvManagement .ctv-cookie-actions,
+            #ctvManagement .ctv-table-actions {
+                display: flex;
+                gap: 8px;
+                flex-wrap: wrap;
+                align-items: center;
+            }
+
+            #ctvManagement .ctv-filter-group {
+                justify-content: flex-end;
+            }
+
+            #ctvManagement .ctv-filter-group select {
+                flex: 0 0 120px;
+            }
+
+            #ctvManagement .ctv-filter-group input {
+                flex: 1 1 260px;
+                min-width: 220px;
+            }
+
+            #ctvManagement .ctv-stats-grid,
+            #ctvManagement .ctv-cookie-stats-grid {
+                display: grid;
+                grid-template-columns: repeat(4, minmax(150px, 1fr));
+                gap: 10px;
+            }
+
+            #ctvManagement .ctv-cookie-panel {
+                display: grid;
+                grid-template-columns: minmax(0, 1fr) auto;
+                gap: 12px;
+                align-items: center;
+                padding: 14px;
+                margin: 14px 0;
+                background:
+                    linear-gradient(180deg, rgba(30, 41, 59, 0.58), rgba(8, 8, 10, 0.72));
+                border: 1px solid rgba(148, 163, 184, 0.32);
+                border-radius: 8px;
+            }
+
+            #ctvManagement .ctv-cookie-head {
+                display: contents;
+            }
+
+            #ctvManagement .ctv-cookie-title {
+                display: none;
+            }
+
+            #ctvManagement .ctv-cookie-actions {
+                grid-column: 2;
+                grid-row: 1;
+                justify-content: flex-end;
+                flex-wrap: nowrap;
+            }
+
+            #ctvManagement .ctv-cookie-stats-grid {
+                grid-column: 1;
+                grid-row: 1;
+                grid-template-columns: repeat(4, minmax(105px, 1fr));
+                min-width: 0;
+            }
+
+            #ctvManagement .ctv-cookie-stat {
+                grid-template-columns: 28px minmax(0, 1fr);
+                min-height: 54px;
+                padding: 10px 12px;
+            }
+
+            #ctvManagement .ctv-cookie-stat .ctv-stat-icon {
+                width: 24px;
+                height: 24px;
+            }
+
+            #ctvManagement .ctv-cookie-stat .ctv-stat-icon svg {
+                width: 22px;
+                height: 22px;
+            }
+
+            #ctvManagement .ctv-cookie-stat-value {
+                font-size: 1.28rem;
+            }
+
+            #ctvManagement .ctv-cookie-stat-label {
+                margin-top: 3px;
+                font-size: 0.62rem;
+            }
+
+            #ctvManagement .ctv-table-wrap {
+                overflow-x: auto;
+                border: 1px solid rgba(255, 255, 255, 0.13);
+                border-radius: 8px;
+                background: rgba(4, 4, 6, 0.58);
+            }
+
+            #ctvManagement .ctv-table {
+                width: 100%;
+                border-collapse: collapse;
+                min-width: 960px;
+            }
+
+            #ctvManagement .ctv-table th {
+                padding: 12px;
+                color: #c4c4cc;
+                background: rgba(255, 255, 255, 0.08);
+                border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+                font-size: 0.75rem;
+                font-weight: 900;
+                text-align: left;
+                text-transform: uppercase;
+                letter-spacing: 0;
+            }
+
+            #ctvManagement .ctv-table td {
+                padding: 12px;
+                border-bottom: 1px solid rgba(255, 255, 255, 0.055);
+            }
+
+            #ctvManagement .ctv-status-badge {
+                display: inline-flex;
+                min-height: 24px;
+                align-items: center;
+                padding: 4px 10px;
+                border-radius: 999px;
+                font-size: 0.75rem;
+                font-weight: 900;
+                background: rgba(239, 68, 68, 0.16);
+                color: #fecaca;
+                border: 1px solid rgba(248, 113, 113, 0.24);
+            }
+
+            #ctvManagement .ctv-status-active {
+                color: #bbf7d0;
+                background: rgba(16, 185, 129, 0.16);
+                border-color: rgba(52, 211, 153, 0.24);
+            }
+
+            #ctvManagement .ctv-status-suspended {
+                color: #fde68a;
+                background: rgba(245, 158, 11, 0.16);
+                border-color: rgba(251, 191, 36, 0.24);
+            }
+
+            #ctvManagement .ctv-pagination {
+                padding: 12px 0 0;
+            }
+
+            .loading {
+                color: #a1a1aa;
+            }
+        }
+
+        @media (min-width: 769px) and (max-width: 1500px) {
+            .container {
+                grid-template-columns: 252px minmax(0, 1fr);
+            }
+
+            .admin-main {
+                padding: 18px;
+            }
+
+            .header-content {
+                flex-direction: column;
+            }
+
+            .header-left {
+                flex: none;
+                padding-right: 0;
+                padding-bottom: 16px;
+                border-right: 0;
+                border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+            }
+
+            .header-stats {
+                grid-template-columns: repeat(3, minmax(140px, 1fr));
+            }
+
+            #rateLimitManagement .rate-limit-controls,
+            #ctvManagement .ctv-toolbar {
+                grid-template-columns: 1fr !important;
+            }
+
+            #rateLimitManagement .rate-limit-buttons,
+            #ctvManagement .ctv-filter-group {
+                justify-content: flex-start;
             }
         }
 
@@ -4922,7 +7030,7 @@
             /* Layout 1 hàng cho 4 nút trên mobile */
             #rateLimitManagement .rate-limit-buttons {
                 display: grid !important;
-                grid-template-columns: repeat(4, 1fr);
+                grid-template-columns: repeat(3, 1fr);
                 gap: 4px;
                 width: 100%;
                 margin-top: -5px;
@@ -4932,11 +7040,6 @@
                 display: flex !important;
                 flex-direction: column;
                 gap: 4px;
-            }
-
-            /* Ẩn dropdown categories trên mobile */
-            #rateLimitManagement #filterCategory {
-                display: none !important;
             }
 
             /* Search wrapper với nút tìm kiếm */
@@ -5490,6 +7593,128 @@
 
 <body>
     <div class="container">
+        <aside class="admin-sidebar" aria-label="Điều hướng quản trị">
+            <div class="sidebar-brand">
+                <div class="sidebar-logo" aria-hidden="true">
+                    <svg viewBox="0 0 48 48" focusable="false">
+                        <path d="M13 22c0-5.5 4.7-10 11-10s11 4.5 11 10" />
+                        <path d="M16 22h16l-2.2 13.5H18.2L16 22Z" />
+                        <path d="M19 28h10" />
+                        <path d="M21 34h6" />
+                        <path d="M24 12V8" />
+                        <path d="M19 14l-3-3" />
+                        <path d="M29 14l3-3" />
+                    </svg>
+                </div>
+                <div>
+                    <div class="sidebar-brand-title">Tiệm Bánh Admin</div>
+                    <div class="sidebar-brand-subtitle">Control center</div>
+                </div>
+            </div>
+
+            <div class="sidebar-section">
+                <div class="sidebar-section-title">Dashboard</div>
+                <div class="sidebar-nav">
+                    <button type="button" class="is-active" data-admin-nav="users" onclick="showUsersTable()">
+                        <span class="sidebar-icon" aria-hidden="true">
+                            <svg viewBox="0 0 24 24" focusable="false">
+                                <path d="M16 20v-2a4 4 0 0 0-8 0v2" />
+                                <circle cx="12" cy="8" r="3" />
+                                <path d="M20 20v-2a3 3 0 0 0-2-2.8" />
+                                <path d="M4 20v-2a3 3 0 0 1 2-2.8" />
+                            </svg>
+                        </span>
+                        Người dùng
+                    </button>
+                    <button type="button" data-admin-nav="cookies" onclick="showUsersTable(); showCookieManagement()">
+                        <span class="sidebar-icon" aria-hidden="true">
+                            <svg viewBox="0 0 24 24" focusable="false">
+                                <path d="M19 14.5A7.5 7.5 0 1 1 9.5 5c.3 2.7 2.1 4.5 4.7 4.7.4 2.6 2.2 4.4 4.8 4.8Z" />
+                                <circle cx="8" cy="11" r=".7" />
+                                <circle cx="11" cy="16" r=".7" />
+                                <circle cx="14" cy="13" r=".7" />
+                            </svg>
+                        </span>
+                        Cookies
+                    </button>
+                    <button type="button" data-admin-nav="mobile-cookies" onclick="showUsersTable(); showMobileCookieManagement()">
+                        <span class="sidebar-icon" aria-hidden="true">
+                            <svg viewBox="0 0 24 24" focusable="false">
+                                <rect x="7" y="2.5" width="10" height="19" rx="2" />
+                                <path d="M11 18h2" />
+                                <path d="M9.5 6.5h5" />
+                            </svg>
+                        </span>
+                        Mobile Cookies
+                    </button>
+                    <button type="button" data-admin-nav="rate-limit" onclick="showUsersTable(); showRateLimitManagement()">
+                        <span class="sidebar-icon" aria-hidden="true">
+                            <svg viewBox="0 0 24 24" focusable="false">
+                                <path d="M12 3 5 6v5c0 4.5 2.8 8.5 7 10 4.2-1.5 7-5.5 7-10V6l-7-3Z" />
+                                <path d="m9 12 2 2 4-5" />
+                            </svg>
+                        </span>
+                        Rate Limit
+                    </button>
+                    <button type="button" data-admin-nav="ctv" onclick="showUsersTable(); showCtvManagement()">
+                        <span class="sidebar-icon" aria-hidden="true">
+                            <svg viewBox="0 0 24 24" focusable="false">
+                                <path d="M16 20v-2a4 4 0 0 0-8 0v2" />
+                                <circle cx="12" cy="8" r="3" />
+                                <path d="M22 20v-2a4 4 0 0 0-3-3.8" />
+                                <path d="M2 20v-2a4 4 0 0 1 3-3.8" />
+                            </svg>
+                        </span>
+                        CTV
+                    </button>
+                </div>
+            </div>
+
+            <div class="sidebar-section">
+                <div class="sidebar-section-title">Quick actions</div>
+                <div class="sidebar-nav">
+                    <button type="button" onclick="setSmsOtpQuota()">
+                        <span class="sidebar-icon" aria-hidden="true">
+                            <svg viewBox="0 0 24 24" focusable="false">
+                                <path d="M21 15a4 4 0 0 1-4 4H8l-5 3V7a4 4 0 0 1 4-4h10a4 4 0 0 1 4 4v8Z" />
+                                <path d="M8 9h8M8 13h5" />
+                            </svg>
+                        </span>
+                        SMS OTP
+                    </button>
+                    <button type="button" onclick="showPcCanplayPanel()">
+                        <span class="sidebar-icon" aria-hidden="true">
+                            <svg viewBox="0 0 24 24" focusable="false">
+                                <path d="M6 12h4M8 10v4" />
+                                <path d="M15 13h.01M18 11h.01" />
+                                <path d="M7 8h10a5 5 0 0 1 4.8 3.6l.9 3.2a3 3 0 0 1-4.9 3.1l-1.7-1.5H7.9l-1.7 1.5a3 3 0 0 1-4.9-3.1l.9-3.2A5 5 0 0 1 7 8Z" />
+                            </svg>
+                        </span>
+                        Check Canplay
+                    </button>
+                    <button type="button" class="sidebar-danger" onclick="logoutAdmin()">
+                        <span class="sidebar-icon" aria-hidden="true">
+                            <svg viewBox="0 0 24 24" focusable="false">
+                                <path d="M10 17 15 12 10 7" />
+                                <path d="M15 12H3" />
+                                <path d="M21 19V5a2 2 0 0 0-2-2h-6" />
+                            </svg>
+                        </span>
+                        Đăng xuất
+                    </button>
+                </div>
+            </div>
+
+            <div class="sidebar-status">
+                <div class="sidebar-status-label">System status</div>
+                <div class="sidebar-status-value">
+                    <span class="sidebar-status-dot" aria-hidden="true"></span>
+                    Secure session
+                </div>
+            </div>
+        </aside>
+
+        <main class="admin-main">
         <div class="header">
             <div class="header-content">
                 <div class="header-left">
@@ -5740,35 +7965,88 @@
             <div class="search-wrapper">
                 <input type="text" id="searchBox" class="search-box" placeholder="Tìm kiếm theo tên hoặc email...">
                 <button class="btn btn-primary search-btn" id="searchBtn" onclick="performSearch()"
-                    style="padding: 11px 20px;">Tìm kiếm</button>
+                    style="padding: 11px 20px;">
+                    <span class="desktop-action-icon" aria-hidden="true">
+                        <svg viewBox="0 0 24 24" focusable="false">
+                            <circle cx="11" cy="11" r="7" />
+                            <path d="m20 20-3.5-3.5" />
+                        </svg>
+                    </span>
+                    Tìm kiếm
+                </button>
             </div>
-            <button class="btn btn-primary desktop-only" onclick="loadUsers(1, currentSearch, currentPlanFilter)">Làm
-                mới</button>
+            <button class="btn btn-primary desktop-only" onclick="resetUserSearch()">
+                <span class="desktop-action-icon" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" focusable="false">
+                        <path d="M20 12a8 8 0 0 1-13.7 5.7L4 15" />
+                        <path d="M4 20v-5h5" />
+                        <path d="M4 12A8 8 0 0 1 17.7 6.3L20 9" />
+                        <path d="M20 4v5h-5" />
+                    </svg>
+                </span>
+                Làm mới
+            </button>
 
             <!-- Filter buttons - desktop only -->
-            <button class="btn desktop-only"
+            <button class="btn desktop-only desktop-filter-btn"
                 style="background: rgba(16, 185, 129, 0.1); color: #10b981; border: 1px solid #10b981;"
-                onclick="filterByPlan('')" id="filterAll">Tất cả</button>
-            <button class="btn desktop-only"
+                onclick="filterByPlan('')" id="filterAll">
+                <span class="desktop-action-icon" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" focusable="false">
+                        <path d="M4 6h16" />
+                        <path d="M4 12h16" />
+                        <path d="M4 18h16" />
+                    </svg>
+                </span>
+                Tất cả
+            </button>
+            <button class="btn desktop-only desktop-filter-btn"
                 style="background: rgba(59, 130, 246, 0.1); color: #3b82f6; border: 1px solid #3b82f6;"
-                onclick="filterByPlan('free')" id="filterFree">Free</button>
-            <button class="btn desktop-only"
+                onclick="filterByPlan('free')" id="filterFree">
+                <span class="desktop-action-icon" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" focusable="false">
+                        <path d="m13 2-8 12h7l-1 8 8-12h-7l1-8Z" />
+                    </svg>
+                </span>
+                Free
+            </button>
+            <button class="btn desktop-only desktop-filter-btn"
                 style="background: rgba(139, 92, 246, 0.1); color: #8b5cf6; border: 1px solid #8b5cf6;"
-                onclick="filterByPlan('pro')" id="filterPro">Pro</button>
+                onclick="filterByPlan('pro')" id="filterPro">
+                <span class="desktop-action-icon" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" focusable="false">
+                        <path d="m4 8 4 3 4-6 4 6 4-3-2 10H6L4 8Z" />
+                        <path d="M6 18h12" />
+                    </svg>
+                </span>
+                Pro
+            </button>
 
-            <button class="btn btn-secondary desktop-only" onclick="exportUsers()">Xuất Excel</button>
-            <button class="btn btn-info desktop-only" onclick="showCookieManagement()">Quản lý Cookies</button>
-            <button class="btn btn-info desktop-only" onclick="showRateLimitManagement()">Rate Limit</button>
-            <button class="btn desktop-only"
-                style="background: rgba(245, 158, 11, 0.1); color: #f59e0b; border: 1px solid #f59e0b;"
-                onclick="setSmsOtpQuota()">Set SMS OTP</button>
-            <button class="btn desktop-only"
-                style="background: rgba(16, 185, 129, 0.1); color: #10b981; border: 1px solid #10b981;"
-                onclick="showCtvManagement()">CTV Management</button>
+            <button class="btn btn-success desktop-only" onclick="exportUsers()">
+                <span class="desktop-action-icon" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" focusable="false">
+                        <path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8l-5-5Z" />
+                        <path d="M14 3v5h5" />
+                        <path d="M12 17v-6" />
+                        <path d="m9 14 3 3 3-3" />
+                    </svg>
+                </span>
+                Xuất Excel
+            </button>
+
+            <button class="btn btn-info desktop-only user-columns-toggle" id="userColumnsToggleToolbar" style="display: none !important;"
+                onclick="toggleUserTableDetails()" title="Hiá»‡n Ä‘áº§y Ä‘á»§ cá»™t"
+                aria-label="Hiá»‡n Ä‘áº§y Ä‘á»§ cá»™t" aria-pressed="false">
+                <span class="desktop-action-icon" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" focusable="false">
+                        <path d="M2.5 12s3.8-6.5 9.5-6.5 9.5 6.5 9.5 6.5-3.8 6.5-9.5 6.5S2.5 12 2.5 12Z" />
+                        <circle cx="12" cy="12" r="3.2" />
+                    </svg>
+                </span>
+            </button>
+
+            <!-- Pagination controls (top) -->
         </div>
-
-        <!-- Pagination controls (top) -->
-        <div id="pagination"></div>
 
         <!-- Mobile search results container -->
         <div class="mobile-search-title">KẾT QUẢ TÌM KIẾM</div>
@@ -5779,8 +8057,32 @@
         </div>
 
         <div class="users-table">
-            <div class="table-header">
-                Danh sách người dùng
+            <div class="table-header users-table-header table-header--with-centered-pagination">
+                <span class="table-header-title users-table-header-title">Danh sách người dùng</span>
+                <div id="pagination" class="header-pagination"></div>
+                <div class="table-header-actions">
+                <button class="btn btn-info desktop-only user-columns-toggle" id="userColumnsToggle"
+                    onclick="toggleUserTableDetails()" title="Xem chi tiáº¿t"
+                    aria-label="Xem chi tiáº¿t" aria-pressed="false">
+                    <span class="desktop-action-icon" aria-hidden="true">
+                        <svg class="user-columns-icon--detail" viewBox="0 0 24 24" focusable="false">
+                            <path d="M4 6h9" />
+                            <path d="M4 12h7" />
+                            <path d="M4 18h9" />
+                            <circle cx="18" cy="12" r="3" />
+                            <path d="M18 10.5v3" />
+                            <path d="M16.5 12h3" />
+                        </svg>
+                        <svg class="user-columns-icon--compact" viewBox="0 0 24 24" focusable="false">
+                            <path d="M4 6h16" />
+                            <path d="M4 12h10" />
+                            <path d="M4 18h16" />
+                            <path d="M19 9l-3 3 3 3" />
+                        </svg>
+                    </span>
+                    <span class="user-columns-label">Xem chi tiáº¿t</span>
+                </button>
+                </div>
             </div>
             <div id="usersTable" style="max-height: 600px; overflow-y: auto; overflow-x: hidden;">
                 <div class="loading">
@@ -5788,6 +8090,7 @@
                 </div>
             </div>
         </div>
+        </main>
     </div>
 
     <!-- Modal nâng cấp -->
@@ -5968,6 +8271,7 @@
         let totalPages = 1;
         let currentSearch = '';
         let currentPlanFilter = '';
+        let userTableDetailsExpanded = false;
 
         // ========================================
         // INITIALIZATION
@@ -6491,7 +8795,7 @@
                 currentSearch = search;
                 currentPlanFilter = planFilter;
 
-                showMessage(`⏳ Đang tải trang ${page}...`, 'info');
+                showMessage(`Đang tải trang ${page}...`, 'info');
 
                 // Build query params
                 const params = new URLSearchParams({
@@ -6527,11 +8831,11 @@
 
                 const searchInfo = search ? ` | Tìm kiếm: "${search}"` : '';
                 const filterInfo = planFilter ? ` | Lọc: ${planFilter.toUpperCase()}` : '';
-                showMessage(`✅ Tải thành công ${currentUsers.length} users (Trang ${currentPage}/${totalPages})${searchInfo}${filterInfo}`, 'success');
+                showMessage(`Tải thành công ${currentUsers.length} users (Trang ${currentPage}/${totalPages})${searchInfo}${filterInfo}`, 'success');
 
             } catch (error) {
                 console.error('Error loading users:', error);
-                showMessage('❌ Lỗi tải dữ liệu: ' + error.message, 'error');
+                showMessage('Lỗi tải dữ liệu: ' + error.message, 'error');
                 renderUsersTable([]);
                 renderPagination({ page: 1, totalPages: 0, total: 0 });
             }
@@ -6898,19 +9202,38 @@
                 return;
             }
 
-            // Desktop dùng prompt
-            const newValue = prompt(`Nhập số lượng SMS OTP LEFT mới:\n\n(Hiện tại: ${currentQuota})`, currentQuota !== '?' ? currentQuota : '300');
+            const existingModal = document.getElementById('smsOtpModal');
+            if (existingModal) existingModal.remove();
 
-            if (newValue === null) return;
+            const html = `
+                <div id="smsOtpModal" class="desktop-sms-otp-modal">
+                    <div class="desktop-sms-otp-card">
+                        <div class="desktop-sms-otp-head">
+                            <span class="desktop-action-icon" aria-hidden="true">
+                                <svg viewBox="0 0 24 24" focusable="false"><path d="M21 15a4 4 0 0 1-4 4H8l-5 3V7a4 4 0 0 1 4-4h10a4 4 0 0 1 4 4z" /><path d="M8 8h8" /><path d="M8 12h5" /></svg>
+                            </span>
+                            <div>
+                                <div class="desktop-sms-otp-title">Set SMS OTP LEFT</div>
+                                <div class="desktop-sms-otp-subtitle">Current quota: ${currentQuota}</div>
+                            </div>
+                        </div>
+                        <input type="number" id="smsOtpInput" value="${currentQuota !== '?' ? currentQuota : '300'}" min="0" onkeydown="if(event.key==='Enter'){submitSmsOtpQuota();}">
+                        <div class="desktop-sms-otp-actions">
+                            <button class="btn btn-primary" onclick="document.getElementById('smsOtpModal').remove()">
+                                <span class="desktop-action-icon" aria-hidden="true"><svg viewBox="0 0 24 24" focusable="false"><path d="M18 6 6 18" /><path d="m6 6 12 12" /></svg></span>
+                                <span>Cancel</span>
+                            </button>
+                            <button class="btn btn-success" onclick="submitSmsOtpQuota()">
+                                <span class="desktop-action-icon" aria-hidden="true"><svg viewBox="0 0 24 24" focusable="false"><path d="M20 6 9 17l-5-5" /></svg></span>
+                                <span>Save</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `;
 
-            const quota = parseInt(newValue);
-
-            if (isNaN(quota) || quota < 0) {
-                alert('Vui lòng nhập số nguyên không âm!');
-                return;
-            }
-
-            await doSetSmsOtpQuota(quota);
+            document.body.insertAdjacentHTML('beforeend', html);
+            document.getElementById('smsOtpInput').focus();
         }
 
         async function submitSmsOtpQuota() {
@@ -6918,7 +9241,11 @@
             const quota = parseInt(input.value);
 
             if (isNaN(quota) || quota < 0) {
-                showMobileNotice('Vui lòng nhập số nguyên không âm!', 'error');
+                if (window.innerWidth <= 768) {
+                    showMobileNotice('Vui lòng nhập số nguyên không âm!', 'error');
+                } else {
+                    showMessage('Vui lòng nhập số nguyên không âm!', 'error');
+                }
                 return;
             }
 
@@ -6955,8 +9282,35 @@
             }
         }
 
+        function getDeviceDisplayHtml(deviceText) {
+            const text = deviceText || '-';
+            return escHtml(String(text).replace(/\s*\/\s*/g, '/'));
+        }
+
+        function updateUserTableDetailsToggle() {
+            const btn = document.getElementById('userColumnsToggle');
+            if (!btn) return;
+
+            const label = userTableDetailsExpanded ? 'RÃºt gá»n cá»™t' : 'Hiá»‡n Ä‘áº§y Ä‘á»§ cá»™t';
+            btn.classList.toggle('is-active', userTableDetailsExpanded);
+            const displayLabel = userTableDetailsExpanded ? 'Thu g\u1ecdn' : 'Xem chi ti\u1ebft';
+            const cleanLabel = userTableDetailsExpanded ? 'Thu gá»n' : 'Xem chi tiáº¿t';
+            btn.setAttribute('title', displayLabel);
+            btn.setAttribute('aria-label', displayLabel);
+            btn.setAttribute('aria-pressed', String(userTableDetailsExpanded));
+            const labelEl = btn.querySelector('.user-columns-label');
+            if (labelEl) labelEl.textContent = displayLabel;
+        }
+
+        function toggleUserTableDetails() {
+            userTableDetailsExpanded = !userTableDetailsExpanded;
+            updateUserTableDetailsToggle();
+            renderUsersTable(currentUsers || []);
+        }
+
         function renderUsersTable(users) {
             const tableContainer = document.getElementById('usersTable');
+            updateUserTableDetailsToggle();
 
             if (!tableContainer) {
                 console.error('usersTable element not found!');
@@ -6966,32 +9320,35 @@
             if (users.length === 0) {
                 tableContainer.innerHTML = `
                     <div class="loading">
-                        <p>📭 Không có dữ liệu người dùng</p>
+                        <p>Không có dữ liệu người dùng</p>
                     </div>
                 `;
                 return;
             }
 
+            const tableModeClass = userTableDetailsExpanded ? 'user-table--expanded' : 'user-table--compact';
+
             let tableHTML = `
-                <div style="overflow-x: auto; width: 100%;">
-                    <table class="table" style="min-width: 2000px;">
+                <div class="admin-table-shell">
+                    <div class="admin-table-scroll">
+                    <table class="table user-data-table ${tableModeClass}">
                         <thead>
                             <tr>
                                 <th style="width: 150px; position: sticky; left: 0; background: rgba(255, 255, 255, 0.05); z-index: 10;">Thao tác</th>
-                                <th style="width: 40px;">No.</th>
-                                <th style="width: 200px;">Name</th>
-                                <th style="width: 180px;">Email</th>
-                                <th style="width: 120px;">Password</th>
+                                <th style="width: 56px;">STT</th>
+                                <th style="width: 260px;">Name</th>
+                                <th style="width: 260px;">Email</th>
+                                <th class="user-detail-col" style="width: 120px;">Password</th>
                                 <th style="width: 120px;">Plan</th>
-                                <th style="width: 150px;">Cookie No.</th>
-                                <th style="width: 150px;">IP</th>
-                                <th style="width: 150px;">Device</th>
-                                <th style="width: 100px;">Status</th>
+                                <th class="user-detail-col" style="width: 150px;">Cookie No.</th>
+                                <th class="user-detail-col" style="width: 150px;">IP</th>
+                                <th class="user-detail-col" style="width: 150px;">Device</th>
+                                <th class="user-detail-col" style="width: 100px;">Status</th>
                                 <th style="width: 100px;">Reg.date</th>
-                                <th style="width: 100px;">Pro Since</th>
+                                <th class="user-detail-col" style="width: 100px;">Pro Since</th>
                                 <th style="width: 100px;">Pro Exp.</th>
                                 <th style="width: 100px;">Free Exp.</th>
-                                <th style="width: 100px;">Last login</th>
+                                <th class="user-detail-col" style="width: 100px;">Last login</th>
                                 <th style="width: 120px;">Monthly Limit</th>
                                 <th style="width: 100px;">Credits</th>
                                 <th style="width: 80px;">Invites</th>
@@ -7082,7 +9439,7 @@
                             <span class="view-mode">${user.email}</span>
                             <input type="email" class="edit-mode" value="${user.email}" style="display: none; width: 100%; padding: 4px; border: 1px solid #ddd; border-radius: 4px;">
                         </td>
-                        <td>
+                        <td class="user-detail-col">
                             <span class="view-mode" style="color: #e11d48; font-weight: 600;">••••••••</span>
                             <input type="text" class="edit-mode" placeholder="Nhập mật khẩu mới" style="display: none; width: 100%; padding: 4px; border: 1px solid #ddd; border-radius: 4px;">
                         </td>
@@ -7095,17 +9452,17 @@
                                 <option value="pro" ${user.plan === 'pro' ? 'selected' : ''}>Pro</option>
                             </select>
                         </td>
-                        <td>
+                        <td class="user-detail-col">
                             <span class="view-mode" style="color: ${cookieColor}; font-weight: 600;">#${cookieNumber}</span>
                             <select class="edit-mode cookie-dropdown" style="display: none; width: 100%; padding: 4px; border: 1px solid #ddd; border-radius: 4px;">
                                 ${cookieOptions}
                             </select>
                         </td>
-                        <td style="font-size: 0.85rem; color: var(--text-primary);">${ip}</td>
-                        <td style="font-size: 0.85rem; color: var(--text-primary);">${device}</td>
-                        <td style="font-size: 0.85rem; color: ${statusColor}; font-weight: 600;">${statusText}</td>
+                        <td class="user-detail-col" style="font-size: 0.85rem; color: var(--text-primary);">${ip}</td>
+                        <td class="user-detail-col" style="font-size: 0.85rem; color: var(--text-primary);">${getDeviceDisplayHtml(device)}</td>
+                        <td class="user-detail-col" style="font-size: 0.85rem; color: ${statusColor}; font-weight: 600;">${statusText}</td>
                         <td>${createdAt}</td>
-                        <td style="color: ${user.proUpgradedAt ? '#8b5cf6' : '#6b7280'};">${proUpgraded}</td>
+                        <td class="user-detail-col" style="color: ${user.proUpgradedAt ? '#8b5cf6' : '#6b7280'};">${proUpgraded}</td>
                         <td>
                             <span class="view-mode">${proExpires ? new Date(proExpires).toLocaleDateString('vi-VN') : '-'}</span>
                             <input type="date" class="edit-mode" value="${proExpires}" style="display: none; width: 100%; padding: 4px; border: 1px solid #ddd; border-radius: 4px;">
@@ -7114,7 +9471,7 @@
                             <span class="view-mode" style="color: ${freeExpColor}; font-weight: 600;">${freeExpDays}</span>
                             <input type="date" class="edit-mode free-exp-input" value="${freeExpDate}" style="display: none; width: 100%; padding: 4px; border: 1px solid #ddd; border-radius: 4px;" ${user.plan !== 'free' ? 'disabled' : ''}>
                         </td>
-                        <td>${lastLogin}</td>
+                        <td class="user-detail-col">${lastLogin}</td>
                         <td>
                             <span class="view-mode" style="color: ${(() => {
                         const limit = user.monthlyReportLimit !== undefined ? user.monthlyReportLimit : (user.plan === 'pro' ? 5 : 2);
@@ -7151,31 +9508,49 @@
             tableHTML += `
                     </tbody>
                 </table>
+                    </div>
                 </div>
             `;
 
             tableContainer.innerHTML = tableHTML;
+            enhanceAdminTableScroll(tableContainer);
+        }
+
+        function updateAdminTableScrollState(scroller) {
+            const shell = scroller.closest('.admin-table-shell');
+            if (!shell) return;
+
+            const maxScrollLeft = scroller.scrollWidth - scroller.clientWidth;
+            const isScrollable = maxScrollLeft > 2;
+
+            shell.classList.toggle('is-scrollable', isScrollable);
+            shell.classList.toggle('is-scroll-start', !isScrollable || scroller.scrollLeft <= 2);
+            shell.classList.toggle('is-scroll-end', !isScrollable || scroller.scrollLeft >= maxScrollLeft - 2);
+        }
+
+        function enhanceAdminTableScroll(scope = document) {
+            const root = scope && scope.querySelectorAll ? scope : document;
+
+            root.querySelectorAll('.admin-table-scroll').forEach(scroller => {
+                requestAnimationFrame(() => updateAdminTableScrollState(scroller));
+
+                if (scroller.dataset.scrollEnhanced === 'true') return;
+
+                scroller.dataset.scrollEnhanced = 'true';
+                scroller.addEventListener('scroll', () => updateAdminTableScrollState(scroller), { passive: true });
+            });
+
+            if (!window.adminTableScrollResizeBound) {
+                window.adminTableScrollResizeBound = true;
+                window.addEventListener('resize', () => {
+                    document.querySelectorAll('.admin-table-scroll').forEach(updateAdminTableScrollState);
+                });
+            }
         }
 
         function setupSearch() {
             const searchBox = document.getElementById('searchBox');
-            let searchTimeout;
-
-            // Kiểm tra nếu là mobile thì không auto search
-            const isMobile = window.innerWidth <= 768;
-
-            searchBox.addEventListener('input', function () {
-                // Trên mobile: không auto search, phải bấm nút
-                if (isMobile) return;
-
-                clearTimeout(searchTimeout);
-                const query = this.value;
-
-                // Debounce: Chờ 500ms sau khi user ngừng gõ (chỉ trên desktop)
-                searchTimeout = setTimeout(() => {
-                    loadUsers(1, query, currentPlanFilter); // Load page 1 with search
-                }, 500);
-            });
+            if (!searchBox) return;
 
             // Cho phép Enter để tìm kiếm
             searchBox.addEventListener('keypress', function (e) {
@@ -7196,6 +9571,15 @@
             } else {
                 loadUsers(1, query, currentPlanFilter);
             }
+        }
+
+        function resetUserSearch() {
+            const searchBox = document.getElementById('searchBox');
+            if (searchBox) searchBox.value = '';
+            currentSearch = '';
+            currentPlanFilter = '';
+            updateFilterButtonHighlight('');
+            loadUsers(1, '', '');
         }
 
         // Tìm kiếm cho mobile - hiển thị dạng card
@@ -7336,6 +9720,37 @@
         // PAGINATION FUNCTIONS
         // ========================================
 
+        function buildHeaderPagination({ page, totalPages, total, emptyLabel, prevAction, nextAction }) {
+            if (totalPages === 0 || total === 0) {
+                return `<div class="table-pagination table-pagination--empty">
+                    <span class="table-page-status">${emptyLabel}</span>
+                </div>`;
+            }
+
+            if (totalPages <= 1) {
+                return `<div class="table-pagination table-pagination--single">
+                    <span class="table-page-status">Trang <strong>${page}</strong><span>/ ${totalPages}</span></span>
+                </div>`;
+            }
+
+            const prevDisabled = page === 1;
+            const nextDisabled = page === totalPages;
+
+            return `<div class="table-pagination">
+                <button class="btn btn-secondary table-page-icon" onclick="${prevAction}" ${prevDisabled ? 'disabled' : ''} aria-label="Trang truoc">
+                    <span class="desktop-action-icon" aria-hidden="true">
+                        <svg viewBox="0 0 24 24" focusable="false"><path d="m15 18-6-6 6-6" /></svg>
+                    </span>
+                </button>
+                <span class="table-page-status">Trang <strong>${page}</strong><span>/ ${totalPages}</span></span>
+                <button class="btn btn-secondary table-page-icon" onclick="${nextAction}" ${nextDisabled ? 'disabled' : ''} aria-label="Trang tiep">
+                    <span class="desktop-action-icon" aria-hidden="true">
+                        <svg viewBox="0 0 24 24" focusable="false"><path d="m9 18 6-6-6-6" /></svg>
+                    </span>
+                </button>
+            </div>`;
+        }
+
         function renderPagination(pagination) {
             const paginationDiv = document.getElementById('pagination');
 
@@ -7346,31 +9761,55 @@
 
             const { page, totalPages, total } = pagination;
 
+            paginationDiv.innerHTML = buildHeaderPagination({
+                page,
+                totalPages,
+                total,
+                emptyLabel: '0 ng\u01b0\u1eddi d\u00f9ng',
+                prevAction: `goToPage(${page - 1})`,
+                nextAction: `goToPage(${page + 1})`
+            });
+            return;
+
             if (totalPages === 0 || total === 0) {
-                const emptyHTML = '<div style="text-align: center; padding: 20px; color: var(--text-secondary);">📭 Không có dữ liệu</div>';
+                const emptyHTML = '<div style="text-align: center; padding: 20px; color: var(--text-secondary);">Không có dữ liệu</div>';
                 paginationDiv.innerHTML = emptyHTML;
                 return;
             }
 
-            let html = '<div style="display: flex; gap: 12px; align-items: center; justify-content: center; margin: 25px 0; flex-wrap: wrap; padding: 20px; background: rgba(255, 255, 255, 0.02); border-radius: 12px; border: 1px solid var(--border-color);">';
+            let html = '<div class="admin-pagination">';
 
             // Previous button
             const prevDisabled = page === 1;
-            html += `<button class="btn btn-primary" onclick="goToPage(${page - 1})" ${prevDisabled ? 'disabled style="opacity: 0.5; cursor: not-allowed;"' : ''}>← Trước</button>`;
+            html += `<button class="btn btn-primary admin-page-btn" onclick="goToPage(${page - 1})" ${prevDisabled ? 'disabled' : ''}>
+                <span class="desktop-action-icon" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" focusable="false"><path d="m15 18-6-6 6-6" /></svg>
+                </span>
+                <span>Trước</span>
+            </button>`;
 
             // Page info
-            html += `<span style="color: var(--text-primary); font-weight: 600; font-size: 15px; padding: 0 10px;">Trang <span style="color: var(--accent-red);">${page}</span> / ${totalPages}</span>`;
+            html += `<div class="admin-page-status"><span>Trang</span><strong class="admin-current-page">${page}</strong><span>/ ${totalPages}</span></div>`;
 
             // Jump to page input
-            html += `<input type="number" id="jumpToPageInput" min="1" max="${totalPages}" placeholder="Nhập trang" value="${page}" style="width: 100px; padding: 10px 12px; border-radius: 8px; border: 1px solid var(--border-color); background: var(--bg-tertiary); color: var(--text-primary); text-align: center; font-weight: 600;">`;
-            html += `<button class="btn btn-secondary" onclick="jumpToPage()" style="background: rgba(139, 92, 246, 0.1); color: var(--accent-purple); border: 1px solid var(--accent-purple);">Đi tới</button>`;
+            html += `<div class="admin-page-jump">
+                <input type="number" id="jumpToPageInput" min="1" max="${totalPages}" placeholder="Trang" value="${page}" style="width: 100px; padding: 10px 12px; border-radius: 8px; border: 1px solid var(--border-color); background: var(--bg-tertiary); color: var(--text-primary); text-align: center; font-weight: 600;">
+                <button class="btn btn-secondary" onclick="jumpToPage()">
+                    <span class="desktop-action-icon" aria-hidden="true">
+                        <svg viewBox="0 0 24 24" focusable="false"><path d="M5 12h14" /><path d="m13 6 6 6-6 6" /></svg>
+                    </span>
+                    <span>Đi tới</span>
+                </button>
+            </div>`;
 
             // Next button
             const nextDisabled = page === totalPages;
-            html += `<button class="btn btn-primary" onclick="goToPage(${page + 1})" ${nextDisabled ? 'disabled style="opacity: 0.5; cursor: not-allowed;"' : ''}>Tiếp →</button>`;
-
-            // Total info
-            html += `<span style="color: var(--text-secondary); font-size: 14px; margin-left: 10px;">| Tổng: <strong style="color: var(--text-primary);">${total}</strong> users</span>`;
+            html += `<button class="btn btn-primary admin-page-btn" onclick="goToPage(${page + 1})" ${nextDisabled ? 'disabled' : ''}>
+                <span>Tiếp</span>
+                <span class="desktop-action-icon" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" focusable="false"><path d="m9 18 6-6-6-6" /></svg>
+                </span>
+            </button>`;
 
             html += '</div>';
 
@@ -7383,7 +9822,7 @@
             const page = parseInt(input.value);
 
             if (isNaN(page) || page < 1 || page > totalPages) {
-                showMessage(`⚠️ Số trang phải từ 1 đến ${totalPages}!`, 'error');
+                showMessage(`Số trang phải từ 1 đến ${totalPages}!`, 'error');
                 input.value = currentPage;
                 return;
             }
@@ -7769,15 +10208,28 @@
 
         function showMessage(message, type) {
             const messageArea = document.getElementById('messageArea');
+            if (!messageArea) return;
             const messageClass = type === 'error' ? 'error' : type === 'success' ? 'success' : 'info';
+            const toastIcons = {
+                success: '<svg viewBox="0 0 24 24" focusable="false"><path d="M20 6 9 17l-5-5" /></svg>',
+                error: '<svg viewBox="0 0 24 24" focusable="false"><circle cx="12" cy="12" r="10" /><path d="M12 8v5" /><path d="M12 17h.01" /></svg>',
+                info: '<svg viewBox="0 0 24 24" focusable="false"><circle cx="12" cy="12" r="10" /><path d="M12 16v-4" /><path d="M12 8h.01" /></svg>'
+            };
+            const cleanMessage = String(message || '')
+                .replace(/[\u{1F300}-\u{1FAFF}\u{2600}-\u{27BF}\uFE0F]/gu, '')
+                .replace(/\s+/g, ' ')
+                .trim();
 
             // Clear existing message first
             messageArea.innerHTML = '';
 
             // Create new message with animation
             const messageDiv = document.createElement('div');
-            messageDiv.className = messageClass;
-            messageDiv.textContent = message;
+            messageDiv.className = `admin-toast admin-toast--${messageClass}`;
+            messageDiv.innerHTML = `
+                <span class="admin-toast-icon" aria-hidden="true">${toastIcons[messageClass]}</span>
+                <span class="admin-toast-text">${escHtml(cleanMessage)}</span>
+            `;
             messageArea.appendChild(messageDiv);
 
             // Auto-hide after 5 seconds with fade-out animation
@@ -7851,7 +10303,7 @@
             link.click();
             document.body.removeChild(link);
 
-            showMessage(`✅ Xuất file Excel thành công! (${currentUsers.length} users)`, 'success');
+            showMessage(`Xuất file Excel thành công! (${currentUsers.length} users)`, 'success');
         }
 
         async function exportCookies() {
@@ -7861,12 +10313,12 @@
             // Kiểm tra mật khẩu
             const EXPORT_PASSWORD = 'Moyeudau2803@2025';
             if (password !== EXPORT_PASSWORD) {
-                showMessage('❌ Mật khẩu không đúng! Không thể xuất dữ liệu.', 'error');
+                showMessage('Mật khẩu không đúng! Không thể xuất dữ liệu.', 'error');
                 return;
             }
 
             try {
-                showMessage('⏳ Đang tải TẤT CẢ cookies để xuất...', 'info');
+                showMessage('Đang tải TẤT CẢ cookies để xuất...', 'info');
 
                 // Load TẤT CẢ cookies (không pagination)
                 const response = await fetch(`${BACKEND_URL}/api/admin/cookies?limit=10000&page=1`, {
@@ -7931,11 +10383,11 @@
                 link.click();
                 document.body.removeChild(link);
 
-                showMessage(`✅ Xuất ${sortedCookies.length} cookies ra Excel thành công!`, 'success');
+                showMessage(`Xuất ${sortedCookies.length} cookies ra Excel thành công!`, 'success');
 
             } catch (error) {
                 console.error('Export cookies error:', error);
-                showMessage('❌ Lỗi khi xuất cookies: ' + error.message, 'error');
+                showMessage('Lỗi khi xuất cookies: ' + error.message, 'error');
             }
         }
 
@@ -8130,25 +10582,37 @@
             cookiesContainer.id = 'cookiesManagement';
             cookiesContainer.className = 'users-table';
             cookiesContainer.innerHTML = `
-                <div class="table-header">
-                    <span>Quản lý Cookies</span>
+                <div class="table-header cookies-table-header table-header--with-centered-pagination">
+                    <span class="table-header-title">Quản lý Cookies</span>
+                    <div id="cookiePagination" class="header-pagination"></div>
                 </div>
                 
-                <div style="background: rgba(0,0,0,0.3); padding: 15px; border-radius: 10px; margin-bottom: 20px;">
-                    <div style="display: flex; gap: 10px; flex-wrap: wrap;">
-                        <button class="btn btn-success" onclick="resetAllCookies()">Reset</button>
-                        <button class="btn" style="background: rgba(16, 185, 129, 0.15); color: #10b981; border: 1px solid #10b981;" onclick="syncCookiesToMobile()">Sync Mobile</button>
-                        <button class="btn" style="background: rgba(96, 165, 250, 0.15); color: #60a5fa; border: 1px solid #60a5fa;" onclick="showPcCanplayPanel()">Check Canplay</button>
-                        <button class="btn" style="background: rgba(139, 92, 246, 0.15); color: #8b5cf6; border: 1px solid #8b5cf6;" onclick="showMobileCookieManagement()">Mobile Cookies</button>
-                        <button class="btn btn-warning" onclick="showImportCookiesModal()">Import</button>
-                        <button class="btn btn-secondary" onclick="exportCookies()">Xuất Excel</button>
-                        <button class="btn btn-danger" onclick="deleteAllCookies()">Xóa hết</button>
-                        <button class="btn btn-primary" onclick="backToUsers()">Quay lại Users</button>
-                    </div>
+                <div class="admin-action-strip">
+                    <button class="btn btn-success" onclick="resetAllCookies()">
+                        <span class="desktop-action-icon" aria-hidden="true"><svg viewBox="0 0 24 24" focusable="false"><path d="M20 12a8 8 0 0 1-13.7 5.7L4 15" /><path d="M4 20v-5h5" /></svg></span>
+                        Reset
+                    </button>
+                    <button class="btn btn-success" onclick="syncCookiesToMobile()">
+                        <span class="desktop-action-icon" aria-hidden="true"><svg viewBox="0 0 24 24" focusable="false"><path d="M20 11a8 8 0 0 0-14.5-4.5L4 8" /><path d="M4 4v4h4" /><path d="M4 13a8 8 0 0 0 14.5 4.5L20 16" /><path d="M20 20v-4h-4" /></svg></span>
+                        Sync Mobile
+                    </button>
+                    <button class="btn btn-primary" onclick="showPcCanplayPanel()">
+                        <span class="desktop-action-icon" aria-hidden="true"><svg viewBox="0 0 24 24" focusable="false"><path d="M6 12h4M8 10v4" /><path d="M15 13h.01M18 11h.01" /><path d="M7 8h10a5 5 0 0 1 4.8 3.6l.9 3.2a3 3 0 0 1-4.9 3.1l-1.7-1.5H7.9l-1.7 1.5a3 3 0 0 1-4.9-3.1l.9-3.2A5 5 0 0 1 7 8Z" /></svg></span>
+                        Check Canplay
+                    </button>
+                    <button class="btn btn-warning" onclick="showImportCookiesModal()">
+                        <span class="desktop-action-icon" aria-hidden="true"><svg viewBox="0 0 24 24" focusable="false"><path d="M12 3v12" /><path d="m7 8 5-5 5 5" /><path d="M5 21h14" /></svg></span>
+                        Import
+                    </button>
+                    <button class="btn btn-success" onclick="exportCookies()">
+                        <span class="desktop-action-icon" aria-hidden="true"><svg viewBox="0 0 24 24" focusable="false"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8l-5-5Z" /><path d="M14 3v5h5" /><path d="M12 17v-6" /><path d="m9 14 3 3 3-3" /></svg></span>
+                        Xuất Excel
+                    </button>
+                    <button class="btn btn-danger" onclick="deleteAllCookies()">
+                        <span class="desktop-action-icon" aria-hidden="true"><svg viewBox="0 0 24 24" focusable="false"><path d="M3 6h18" /><path d="M8 6V4h8v2" /><path d="M19 6l-1 15H6L5 6" /></svg></span>
+                        Xóa hết
+                    </button>
                 </div>
-                
-                <!-- Cookie Pagination -->
-                <div id="cookiePagination"></div>
                 
                 <div id="cookiesTableContainer" style="max-height: 600px; overflow-y: auto; overflow-x: hidden;">
                     <div class="loading">
@@ -8237,50 +10701,48 @@
             container.id = 'mobileCookiesManagement';
             container.className = 'users-table';
             container.innerHTML = `
-                <div class="table-header" style="background: linear-gradient(135deg, rgba(139, 92, 246, 0.1), rgba(139, 92, 246, 0.05)); border-left: 3px solid #8b5cf6;">
-                    <span>Mobile Cookies (TV Activation)</span>
+                <div class="table-header table-header--with-centered-pagination">
+                    <span class="table-header-title">Mobile Cookies (TV Activation)</span>
+                    <div id="mobileCookiePagination" class="header-pagination mobile-cookie-pagination"></div>
                 </div>
                 
-                <div style="background: rgba(0,0,0,0.3); padding: 15px; border-radius: 10px; margin-bottom: 20px;">
-                    <!-- Stats -->
-                    <div id="mobileCookieStats" style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 15px; margin-bottom: 15px;">
-                        <div style="background: rgba(139, 92, 246, 0.1); padding: 12px; border-radius: 8px; text-align: center; border: 1px solid rgba(139, 92, 246, 0.3);">
-                            <div style="font-size: 1.5rem; font-weight: 700; color: #8b5cf6;" id="mobileTotalStat">-</div>
-                            <div style="font-size: 0.75rem; color: #aaa;">Tổng</div>
+                <div class="mobile-cookie-panel">
+                    <div id="mobileCookieStats" class="mobile-cookie-stats">
+                        <div class="mobile-cookie-stat-card">
+                            <span class="mobile-cookie-stat-icon" aria-hidden="true"><svg viewBox="0 0 24 24" focusable="false"><rect x="7" y="2.5" width="10" height="19" rx="2" /><path d="M11 18h2" /></svg></span>
+                            <div><div class="mobile-cookie-stat-value" id="mobileTotalStat">-</div><div class="mobile-cookie-stat-label">Tổng</div></div>
                         </div>
-                        <div style="background: rgba(16, 185, 129, 0.1); padding: 12px; border-radius: 8px; text-align: center; border: 1px solid rgba(16, 185, 129, 0.3);">
-                            <div style="font-size: 1.5rem; font-weight: 700; color: #10b981;" id="mobileAvailableStat">-</div>
-                            <div style="font-size: 0.75rem; color: #aaa;">Còn trống</div>
+                        <div class="mobile-cookie-stat-card is-available">
+                            <span class="mobile-cookie-stat-icon" aria-hidden="true"><svg viewBox="0 0 24 24" focusable="false"><path d="M20 6 9 17l-5-5" /></svg></span>
+                            <div><div class="mobile-cookie-stat-value" id="mobileAvailableStat">-</div><div class="mobile-cookie-stat-label">Còn trống</div></div>
                         </div>
-                        <div style="background: rgba(59, 130, 246, 0.1); padding: 12px; border-radius: 8px; text-align: center; border: 1px solid rgba(59, 130, 246, 0.3);">
-                            <div style="font-size: 1.5rem; font-weight: 700; color: #3b82f6;" id="mobileUsedStat">-</div>
-                            <div style="font-size: 0.75rem; color: #aaa;">Đã dùng</div>
+                        <div class="mobile-cookie-stat-card is-used">
+                            <span class="mobile-cookie-stat-icon" aria-hidden="true"><svg viewBox="0 0 24 24" focusable="false"><path d="M16 20v-2a4 4 0 0 0-8 0v2" /><circle cx="12" cy="8" r="3" /></svg></span>
+                            <div><div class="mobile-cookie-stat-value" id="mobileUsedStat">-</div><div class="mobile-cookie-stat-label">Đã dùng</div></div>
                         </div>
-                        <div style="background: rgba(239, 68, 68, 0.1); padding: 12px; border-radius: 8px; text-align: center; border: 1px solid rgba(239, 68, 68, 0.3);">
-                            <div style="font-size: 1.5rem; font-weight: 700; color: #ef4444;" id="mobileInactiveStat">-</div>
-                            <div style="font-size: 0.75rem; color: #aaa;">Inactive</div>
+                        <div class="mobile-cookie-stat-card is-inactive">
+                            <span class="mobile-cookie-stat-icon" aria-hidden="true"><svg viewBox="0 0 24 24" focusable="false"><path d="M18 6 6 18" /><path d="m6 6 12 12" /></svg></span>
+                            <div><div class="mobile-cookie-stat-value" id="mobileInactiveStat">-</div><div class="mobile-cookie-stat-label">Inactive</div></div>
                         </div>
                     </div>
                     
-                    <!-- Controls -->
-                    <div style="display: flex; gap: 10px; flex-wrap: wrap; align-items: center;">
-                        <select id="mobileCookieStatusFilter" style="padding: 8px 12px; background: #2a2a2a; border: 1px solid #444; border-radius: 6px; color: #fff; font-size: 14px;">
-                            <option value="">Tất cả trạng thái</option>
-                            <option value="available">Còn trống</option>
-                            <option value="used">Đã dùng</option>
-                            <option value="inactive">Inactive</option>
-                        </select>
-                        <button class="btn btn-secondary" onclick="resetAllMobileCookies()" style="font-size: 13px; padding: 8px 12px;">Reset tất cả</button>
-                        <button class="btn" onclick="deleteAllMobileCookies()" style="font-size: 13px; padding: 8px 12px; background: rgba(239, 68, 68, 0.1); color: #ef4444; border: 1px solid #ef4444;">Xóa tất cả</button>
-                        <button class="btn btn-secondary" onclick="showCookieManagement()" style="font-size: 13px; padding: 8px 12px;">← Quay lại Cookies</button>
+                    <div class="mobile-cookie-controls">
+                        <div class="mobile-cookie-actions">
+                            <button class="btn btn-secondary" onclick="resetAllMobileCookies()" style="font-size: 13px; padding: 8px 12px;">
+                                <span class="desktop-action-icon" aria-hidden="true"><svg viewBox="0 0 24 24" focusable="false"><path d="M20 12a8 8 0 0 1-13.7 5.7L4 15" /><path d="M4 20v-5h5" /></svg></span>
+                                Reset tất cả
+                            </button>
+                            <button class="btn btn-danger" onclick="deleteAllMobileCookies()" style="font-size: 13px; padding: 8px 12px;">
+                                <span class="desktop-action-icon" aria-hidden="true"><svg viewBox="0 0 24 24" focusable="false"><path d="M3 6h18" /><path d="M8 6V4h8v2" /><path d="M19 6l-1 15H6L5 6" /></svg></span>
+                                Xóa tất cả
+                            </button>
+                        </div>
                     </div>
                 </div>
                 
                 <div id="mobileCookiesList" style="min-height: 200px;">
                     <p style="text-align: center; color: #888;">Đang tải...</p>
                 </div>
-                
-                <div id="mobileCookiePagination" style="margin-top: 15px; display: flex; justify-content: center; gap: 10px;"></div>
             `;
 
             // Replace users table
@@ -8292,14 +10754,9 @@
 
             // Load data
             window.currentMobileCookieManagementPage = true;
+            currentMobileCookieStatusFilter = '';
             await loadMobileCookieStats();
             await loadMobileCookiesList(1, '');
-
-            // Setup filter
-            document.getElementById('mobileCookieStatusFilter')?.addEventListener('change', function () {
-                currentMobileCookieStatusFilter = this.value;
-                loadMobileCookiesList(1, this.value);
-            });
         }
 
         async function loadMobileCookieStats() {
@@ -8337,22 +10794,22 @@
                 const listContainer = document.getElementById('mobileCookiesList');
 
                 if (!data.mobileCookies || data.mobileCookies.length === 0) {
+                    renderMobileCookiePagination(data.pagination);
                     listContainer.innerHTML = '<p style="text-align: center; color: #888; padding: 40px;">Chưa có Mobile Cookie nào. Mobile Cookies được tạo tự động khi user sync SecureNetflixId từ Extension.</p>';
                     return;
                 }
 
                 let html = `
-                    <table class="table" style="width: 100%;">
+                    <table class="table mobile-cookie-table" style="width: 100%;">
                         <thead>
                             <tr>
-                                <th style="width: 60px;">#</th>
-                                <th style="width: 150px;">NetflixId</th>
-                                <th style="width: 150px;">SecureNetflixId</th>
-                                <th style="width: 80px;">Slot</th>
-                                <th style="width: 200px;">Assigned User</th>
-                                <th style="width: 100px;">Trạng thái</th>
-                                <th style="width: 140px;">Cập nhật</th>
-                                <th style="width: 120px;">Hành động</th>
+                                <th style="width: 70px;">#</th>
+                                <th style="width: 250px;">NetflixId</th>
+                                <th style="width: 250px;">SecureNetflixId</th>
+                                <th style="width: 90px;">Slot</th>
+                                <th style="width: 260px;">Assigned User</th>
+                                <th style="width: 120px;">Trạng thái</th>
+                                <th style="width: 170px;">Cập nhật</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -8361,26 +10818,22 @@
                 for (const mc of data.mobileCookies) {
                     const statusBadge = mc.isActive
                         ? (mc.currentSlots >= 1
-                            ? '<span style="background: rgba(59, 130, 246, 0.2); color: #3b82f6; padding: 3px 8px; border-radius: 4px; font-size: 11px;">Đã dùng</span>'
-                            : '<span style="background: rgba(16, 185, 129, 0.2); color: #10b981; padding: 3px 8px; border-radius: 4px; font-size: 11px;">Trống</span>')
-                        : '<span style="background: rgba(239, 68, 68, 0.2); color: #ef4444; padding: 3px 8px; border-radius: 4px; font-size: 11px;">Inactive</span>';
+                            ? '<span class="mobile-cookie-status is-used">Đã dùng</span>'
+                            : '<span class="mobile-cookie-status is-available">Trống</span>')
+                        : '<span class="mobile-cookie-status is-inactive">Inactive</span>';
 
                     const userEmail = mc.assignedUser?.email || '-';
                     const updatedAt = mc.updatedAt ? new Date(mc.updatedAt).toLocaleString('vi-VN') : '-';
 
                     html += `
-                        <tr style="border-bottom: 1px solid #333;">
-                            <td style="font-weight: 600; color: #8b5cf6; font-size: 14px;">${mc.cookieNumber}</td>
-                            <td style="font-family: 'SF Pro Web', sans-serif; font-size: 14px; color: #fff;">${mc.netflixId?.substring(0, 20)}...</td>
-                            <td style="font-family: 'SF Pro Web', sans-serif; font-size: 14px; color: #fff;">${mc.secureNetflixId?.substring(0, 20)}...</td>
-                            <td style="text-align: center; font-size: 14px; color: #fff;">${mc.currentSlots}/${mc.maxSlots}</td>
-                            <td style="font-size: 14px; color: #fff;">${userEmail === '-' ? '-' : userEmail}</td>
+                        <tr>
+                            <td style="font-weight: 900; color: #a78bfa;">${mc.cookieNumber}</td>
+                            <td><span class="mobile-cookie-token" title="${escHtml(mc.netflixId || '')}">${escHtml((mc.netflixId || '').substring(0, 28))}...</span></td>
+                            <td><span class="mobile-cookie-token" title="${escHtml(mc.secureNetflixId || '')}">${escHtml((mc.secureNetflixId || '').substring(0, 28))}...</span></td>
+                            <td style="text-align: center;"><span class="mobile-cookie-slot">${mc.currentSlots}/${mc.maxSlots}</span></td>
+                            <td><span class="mobile-cookie-user" title="${escHtml(userEmail)}">${userEmail === '-' ? '-' : escHtml(userEmail)}</span></td>
                             <td>${statusBadge}</td>
-                            <td style="font-size: 14px; color: #fff;">${updatedAt}</td>
-                            <td>
-                                <button onclick="resetMobileCookie('${mc._id}')" class="btn btn-secondary" style="font-size: 12px; padding: 5px 10px; margin-right: 4px;">Reset</button>
-                                <button onclick="deleteMobileCookie('${mc._id}')" class="btn" style="font-size: 12px; padding: 5px 10px; background: rgba(239, 68, 68, 0.1); color: #ef4444; border: 1px solid #ef4444;">Xóa</button>
-                            </td>
+                            <td style="color: #fff;">${updatedAt}</td>
                         </tr>
                     `;
                 }
@@ -8406,20 +10859,15 @@
                 return;
             }
 
-            let html = '';
             const { page, totalPages } = pagination;
-
-            if (page > 1) {
-                html += `<button onclick="loadMobileCookiesList(${page - 1}, currentMobileCookieStatusFilter)" class="btn btn-secondary" style="padding: 6px 12px;">←</button>`;
-            }
-
-            html += `<span style="color: #888; padding: 6px 12px;">Trang ${page}/${totalPages}</span>`;
-
-            if (page < totalPages) {
-                html += `<button onclick="loadMobileCookiesList(${page + 1}, currentMobileCookieStatusFilter)" class="btn btn-secondary" style="padding: 6px 12px;">→</button>`;
-            }
-
-            container.innerHTML = html;
+            container.innerHTML = buildHeaderPagination({
+                page,
+                totalPages,
+                total: pagination.total || totalPages,
+                emptyLabel: '0 mobile cookies',
+                prevAction: `loadMobileCookiesList(${page - 1}, currentMobileCookieStatusFilter)`,
+                nextAction: `loadMobileCookiesList(${page + 1}, currentMobileCookieStatusFilter)`
+            });
         }
 
         async function resetMobileCookie(id) {
@@ -9202,7 +11650,7 @@
                 currentCookieSearch = search;
                 currentCookieStatusFilter = statusFilter;
 
-                showMessage(`⏳ Đang tải cookies trang ${page}...`, 'info');
+                showMessage(`Đang tải cookies trang ${page}...`, 'info');
 
                 // Build query params
                 const params = new URLSearchParams({
@@ -9231,7 +11679,7 @@
 
                     const searchInfo = search ? ` | Tìm kiếm: "${search}"` : '';
                     const filterInfo = statusFilter ? ` | Lọc: ${statusFilter}` : '';
-                    showMessage(`✅ Tải thành công ${allCookies.length} cookies (Trang ${currentCookiePage}/${totalCookiePages})${searchInfo}${filterInfo}`, 'success');
+                    showMessage(`Tải thành công ${allCookies.length} cookies (Trang ${currentCookiePage}/${totalCookiePages})${searchInfo}${filterInfo}`, 'success');
                 } else {
                     showMessage('Lỗi tải danh sách cookies!', 'error');
                     renderCookiesTable([]);
@@ -9239,7 +11687,7 @@
                 }
             } catch (error) {
                 console.error('Load cookies error:', error);
-                showMessage('❌ Lỗi kết nối!', 'error');
+                showMessage('Lỗi kết nối!', 'error');
                 renderCookiesTable([]);
                 renderCookiesPagination({ page: 1, pages: 0, total: 0 });
             }
@@ -9255,30 +11703,57 @@
 
             const { page, pages, total } = pagination;
 
+            paginationDiv.innerHTML = buildHeaderPagination({
+                page,
+                totalPages: pages,
+                total,
+                emptyLabel: '0 cookies',
+                prevAction: `goToCookiePage(${page - 1})`,
+                nextAction: `goToCookiePage(${page + 1})`
+            });
+            return;
+
             if (pages === 0 || total === 0) {
-                paginationDiv.innerHTML = '<div style="text-align: center; padding: 20px; color: var(--text-secondary);">📭 Không có cookies</div>';
+                paginationDiv.innerHTML = '<div style="text-align: center; padding: 20px; color: var(--text-secondary);">Không có cookies</div>';
                 return;
             }
 
-            let html = '<div style="display: flex; gap: 12px; align-items: center; justify-content: center; margin: 25px 0; flex-wrap: wrap; padding: 20px; background: rgba(255, 255, 255, 0.02); border-radius: 12px; border: 1px solid var(--border-color);">';
+            let html = '<div class="admin-pagination">';
 
             // Previous button
             const prevDisabled = page === 1;
-            html += `<button class="btn btn-primary" onclick="goToCookiePage(${page - 1})" ${prevDisabled ? 'disabled style="opacity: 0.5; cursor: not-allowed;"' : ''}>← Trước</button>`;
+            html += `<button class="btn btn-primary admin-page-btn" onclick="goToCookiePage(${page - 1})" ${prevDisabled ? 'disabled' : ''}>
+                <span class="desktop-action-icon" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" focusable="false"><path d="m15 18-6-6 6-6" /></svg>
+                </span>
+                <span>Trước</span>
+            </button>`;
 
             // Page info
-            html += `<span style="color: var(--text-primary); font-weight: 600; font-size: 15px; padding: 0 10px;">Trang <span style="color: var(--accent-red);">${page}</span> / ${pages}</span>`;
+            html += `<div class="admin-page-status"><span>Trang</span><strong class="admin-current-page">${page}</strong><span>/ ${pages}</span></div>`;
 
             // Jump to page input
-            html += `<input type="number" id="jumpToCookiePageInput" min="1" max="${pages}" placeholder="Nhập trang" value="${page}" style="width: 100px; padding: 10px 12px; border-radius: 8px; border: 1px solid var(--border-color); background: var(--bg-tertiary); color: var(--text-primary); text-align: center; font-weight: 600;">`;
-            html += `<button class="btn btn-secondary" onclick="jumpToCookiePage()" style="background: rgba(139, 92, 246, 0.1); color: var(--accent-purple); border: 1px solid var(--accent-purple);">Đi tới</button>`;
+            html += `<div class="admin-page-jump">
+                <input type="number" id="jumpToCookiePageInput" min="1" max="${pages}" placeholder="Trang" value="${page}" style="width: 100px; padding: 10px 12px; border-radius: 8px; border: 1px solid var(--border-color); background: var(--bg-tertiary); color: var(--text-primary); text-align: center; font-weight: 600;">
+                <button class="btn btn-secondary" onclick="jumpToCookiePage()">
+                    <span class="desktop-action-icon" aria-hidden="true">
+                        <svg viewBox="0 0 24 24" focusable="false"><path d="M5 12h14" /><path d="m13 6 6 6-6 6" /></svg>
+                    </span>
+                    <span>Đi tới</span>
+                </button>
+            </div>`;
 
             // Next button
             const nextDisabled = page === pages;
-            html += `<button class="btn btn-primary" onclick="goToCookiePage(${page + 1})" ${nextDisabled ? 'disabled style="opacity: 0.5; cursor: not-allowed;"' : ''}>Tiếp →</button>`;
+            html += `<button class="btn btn-primary admin-page-btn" onclick="goToCookiePage(${page + 1})" ${nextDisabled ? 'disabled' : ''}>
+                <span>Tiếp</span>
+                <span class="desktop-action-icon" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" focusable="false"><path d="m9 18 6-6-6-6" /></svg>
+                </span>
+            </button>`;
 
             // Total info
-            html += `<span style="color: var(--text-secondary); font-size: 14px; margin-left: 10px;">| Tổng: <strong style="color: var(--text-primary);">${total}</strong> cookies</span>`;
+            html += `<div class="admin-page-total"><span>Tổng</span><strong>${total}</strong><span>cookies</span></div>`;
 
             html += '</div>';
 
@@ -9297,7 +11772,7 @@
             const page = parseInt(input.value);
 
             if (isNaN(page) || page < 1 || page > totalCookiePages) {
-                showMessage(`⚠️ Số trang phải từ 1 đến ${totalCookiePages}!`, 'error');
+                showMessage(`Số trang phải từ 1 đến ${totalCookiePages}!`, 'error');
                 input.value = currentCookiePage;
                 return;
             }
@@ -9316,6 +11791,8 @@
 
             // Backend đã sort theo cookieNumber, không cần sort lại
             let html = `
+                <div class="admin-table-shell">
+                    <div class="admin-table-scroll">
                 <table class="table">
                     <thead>
                         <tr>
@@ -9342,11 +11819,11 @@
                 let statusBadge = '';
                 if (isDead) {
                     // Ưu tiên: Cookie die/recheck (màu đỏ)
-                    statusBadge = '<span style="background: #dc2626; color: white; padding: 4px 10px; border-radius: 5px; font-size: 0.85rem; font-weight: 600;">🔴 Die - Recheck</span>';
+                    statusBadge = '<span class="admin-status-badge admin-status-badge--danger">Die - Recheck</span>';
                 } else if (isFull) {
-                    statusBadge = '<span style="background: #f59e0b; color: white; padding: 4px 10px; border-radius: 5px; font-size: 0.85rem;">Đầy</span>';
+                    statusBadge = '<span class="admin-status-badge admin-status-badge--warning">Đầy</span>';
                 } else {
-                    statusBadge = '<span style="background: #10b981; color: white; padding: 4px 10px; border-radius: 5px; font-size: 0.85rem;">Khả dụng</span>';
+                    statusBadge = '<span class="admin-status-badge admin-status-badge--success">Khả dụng</span>';
                 }
 
                 const valuePreview = cookie.value.substring(0, 30) + '...';
@@ -9388,8 +11865,9 @@
                 `;
             });
 
-            html += '</tbody></table>';
+            html += '</tbody></table></div></div>';
             container.innerHTML = html;
+            enhanceAdminTableScroll(container);
         }
 
         function viewCookieDetails(cookie) {
@@ -9442,7 +11920,7 @@
 
 
         async function editCookie(cookieId) {
-            const notes = prompt('✏️ Cập nhật ghi chú:');
+            const notes = prompt('Cập nhật ghi chú:');
             if (notes === null) return;
 
             try {
@@ -9506,7 +11984,7 @@
 
         async function deleteAllCookies() {
             if (!confirm('BẠN CÓ CHẮC CHẮN MUỐN XÓA TẤT CẢ COOKIES?\n\nHành động này KHÔNG THỂ HOÀN TÁC!')) return;
-            if (!confirm('⚠️XÁC NHẬN LẦN CUỐI: Xóa tất cả cookies?')) return;
+            if (!confirm('XÁC NHẬN LẦN CUỐI: Xóa tất cả cookies?')) return;
 
             try {
                 showMessage('Đang xóa tất cả cookies...', 'info');
@@ -9581,28 +12059,34 @@
                     </div>
                     
                     <!-- Stats - Di chuyển lên trên -->
-                    <div id="rateLimitStats" style="padding: 20px; background: linear-gradient(135deg, rgba(229, 9, 20, 0.1), rgba(139, 92, 246, 0.05)); border-radius: 12px; margin-bottom: 20px; border: 1px solid var(--border-color);">
+                    <div id="rateLimitStats">
                         <p style="color: var(--text-secondary); margin: 0;">Đang tải...</p>
                     </div>
                     
                     <!-- Controls -->
-                    <div class="rate-limit-controls" style="display: grid; grid-template-columns: 1fr auto auto auto auto; gap: 12px; margin-bottom: 20px; align-items: center;">
+                    <div class="rate-limit-controls" style="display: grid; grid-template-columns: 1fr auto; gap: 12px; margin-bottom: 20px; align-items: center;">
                         <div class="rate-limit-search-wrapper">
                             <input type="text" id="searchRateLimitBox" class="search-box" placeholder="Tìm kiếm theo IP hoặc Email...">
-                            <button class="btn btn-primary rate-limit-search-btn" onclick="filterBannedIPs()">Tìm kiếm</button>
+                            <button class="btn btn-primary rate-limit-search-btn" onclick="filterBannedIPs()">
+                                <span class="desktop-action-icon" aria-hidden="true">
+                                    <svg viewBox="0 0 24 24" focusable="false"><circle cx="11" cy="11" r="8" /><path d="m21 21-4.3-4.3" /></svg>
+                                </span>
+                                <span>Tìm kiếm</span>
+                            </button>
                         </div>
-                        <select id="filterCategory" class="search-box" style="width: 200px;" onchange="filterBannedIPs()">
-                            <option value="">Tất cả Categories</option>
-                            <option value="auth">Auth (Login/Register)</option>
-                            <option value="cookieGet">Cookie Get</option>
-                            <option value="cookieReport">Cookie Report</option>
-                            <option value="general">General API</option>
-                        </select>
                         <div class="rate-limit-buttons">
-                            <button class="btn btn-primary" onclick="showUsersTable()">Quay lại</button>
-                            <button class="btn btn-primary" onclick="loadBannedIPs()">Làm mới</button>
-                            <button class="btn btn-danger" onclick="showManualBanModal()">Manual Ban</button>
-                            <button class="btn btn-warning" onclick="unbanAllCategories()">Unban All</button>
+                            <button class="btn btn-primary" onclick="loadBannedIPs()">
+                                <span class="desktop-action-icon" aria-hidden="true"><svg viewBox="0 0 24 24" focusable="false"><path d="M21 12a9 9 0 0 1-15 6.7L3 16" /><path d="M3 21v-5h5" /><path d="M3 12A9 9 0 0 1 18 5.3L21 8" /><path d="M21 3v5h-5" /></svg></span>
+                                <span>Làm mới</span>
+                            </button>
+                            <button class="btn btn-danger" onclick="showManualBanModal()">
+                                <span class="desktop-action-icon" aria-hidden="true"><svg viewBox="0 0 24 24" focusable="false"><circle cx="12" cy="12" r="10" /><path d="m4.9 4.9 14.2 14.2" /></svg></span>
+                                <span>Manual Ban</span>
+                            </button>
+                            <button class="btn btn-warning" onclick="unbanAllCategories()">
+                                <span class="desktop-action-icon" aria-hidden="true"><svg viewBox="0 0 24 24" focusable="false"><rect x="3" y="11" width="18" height="10" rx="2" /><path d="M7 11V7a5 5 0 0 1 9.9-1" /></svg></span>
+                                <span>Unban All</span>
+                            </button>
                         </div>
                     </div>
                     
@@ -9655,7 +12139,7 @@
                         allBannedIPs.push({
                             ...data,
                             type,
-                            typeName: isAllCategories ? '🔒 ALL' : categories[type].name,
+                            typeName: isAllCategories ? 'ALL' : categories[type].name,
                             typeColor: isAllCategories ? '#ef4444' : categories[type].color
                         });
                     });
@@ -9681,30 +12165,30 @@
                     const avgSeconds = avgTimeLeft % 60;
 
                     statsDiv.innerHTML = `
-                        <div style="display: grid; grid-template-columns: repeat(6, 1fr); gap: 20px;">
-                            <div style="text-align: center; padding: 12px; background: rgba(229, 9, 20, 0.1); border-radius: 8px; border: 1px solid rgba(229, 9, 20, 0.3);">
-                                <div style="color: var(--text-secondary); font-size: 0.9em; margin-bottom: 8px;">Tổng IP bị ban</div>
-                                <div style="color: var(--accent-red); font-size: 2em; font-weight: 700;">${allBannedIPs.length}</div>
+                        <div class="rate-limit-stats-grid">
+                            <div class="rate-limit-stat-card is-danger">
+                                <span class="rate-limit-stat-icon" aria-hidden="true"><svg viewBox="0 0 24 24" focusable="false"><path d="M12 2 2 7l10 5 10-5-10-5Z" /><path d="m2 17 10 5 10-5" /><path d="m2 12 10 5 10-5" /></svg></span>
+                                <div><div class="rate-limit-stat-value">${allBannedIPs.length}</div><div class="rate-limit-stat-label">Tổng IP bị ban</div></div>
                             </div>
-                            <div style="text-align: center; padding: 12px; background: rgba(245, 158, 11, 0.1); border-radius: 8px; border: 1px solid rgba(245, 158, 11, 0.3);">
-                                <div style="color: var(--text-secondary); font-size: 0.9em; margin-bottom: 8px;">Auth</div>
-                                <div style="color: #f59e0b; font-size: 1.8em; font-weight: 600;">${authCount}</div>
+                            <div class="rate-limit-stat-card is-warning">
+                                <span class="rate-limit-stat-icon" aria-hidden="true"><svg viewBox="0 0 24 24" focusable="false"><path d="M12 3v18" /><path d="M5 8h14" /><path d="M5 16h14" /></svg></span>
+                                <div><div class="rate-limit-stat-value">${authCount}</div><div class="rate-limit-stat-label">Auth</div></div>
                             </div>
-                            <div style="text-align: center; padding: 12px; background: rgba(59, 130, 246, 0.1); border-radius: 8px; border: 1px solid rgba(59, 130, 246, 0.3);">
-                                <div style="color: var(--text-secondary); font-size: 0.9em; margin-bottom: 8px;">Cookie Get</div>
-                                <div style="color: #3b82f6; font-size: 1.8em; font-weight: 600;">${cookieGetCount}</div>
+                            <div class="rate-limit-stat-card">
+                                <span class="rate-limit-stat-icon" aria-hidden="true"><svg viewBox="0 0 24 24" focusable="false"><path d="M20 7h-9" /><path d="M14 17H5" /><circle cx="17" cy="17" r="3" /><circle cx="7" cy="7" r="3" /></svg></span>
+                                <div><div class="rate-limit-stat-value">${cookieGetCount}</div><div class="rate-limit-stat-label">Cookie Get</div></div>
                             </div>
-                            <div style="text-align: center; padding: 12px; background: rgba(139, 92, 246, 0.1); border-radius: 8px; border: 1px solid rgba(139, 92, 246, 0.3);">
-                                <div style="color: var(--text-secondary); font-size: 0.9em; margin-bottom: 8px;">Cookie Report</div>
-                                <div style="color: #8b5cf6; font-size: 1.8em; font-weight: 600;">${cookieReportCount}</div>
+                            <div class="rate-limit-stat-card is-purple">
+                                <span class="rate-limit-stat-icon" aria-hidden="true"><svg viewBox="0 0 24 24" focusable="false"><path d="M21 15a4 4 0 0 1-4 4H7l-4 3V7a4 4 0 0 1 4-4h10a4 4 0 0 1 4 4z" /><path d="M8 9h8" /><path d="M8 13h5" /></svg></span>
+                                <div><div class="rate-limit-stat-value">${cookieReportCount}</div><div class="rate-limit-stat-label">Cookie Report</div></div>
                             </div>
-                            <div style="text-align: center; padding: 12px; background: rgba(16, 185, 129, 0.1); border-radius: 8px; border: 1px solid rgba(16, 185, 129, 0.3);">
-                                <div style="color: var(--text-secondary); font-size: 0.9em; margin-bottom: 8px;">General</div>
-                                <div style="color: #10b981; font-size: 1.8em; font-weight: 600;">${generalCount}</div>
+                            <div class="rate-limit-stat-card is-success">
+                                <span class="rate-limit-stat-icon" aria-hidden="true"><svg viewBox="0 0 24 24" focusable="false"><path d="M20 6 9 17l-5-5" /></svg></span>
+                                <div><div class="rate-limit-stat-value">${generalCount}</div><div class="rate-limit-stat-label">General</div></div>
                             </div>
-                            <div style="text-align: center; padding: 12px; background: rgba(245, 158, 11, 0.1); border-radius: 8px; border: 1px solid rgba(245, 158, 11, 0.3);">
-                                <div style="color: var(--text-secondary); font-size: 0.9em; margin-bottom: 8px;">Avg Time Left</div>
-                                <div style="color: var(--accent-orange); font-size: 1.5em; font-weight: 700;">${avgMinutes}m ${avgSeconds}s</div>
+                            <div class="rate-limit-stat-card is-warning">
+                                <span class="rate-limit-stat-icon" aria-hidden="true"><svg viewBox="0 0 24 24" focusable="false"><circle cx="12" cy="12" r="10" /><path d="M12 6v6l4 2" /></svg></span>
+                                <div><div class="rate-limit-stat-value">${avgMinutes}m ${avgSeconds}s</div><div class="rate-limit-stat-label">Avg Time Left</div></div>
                             </div>
                         </div>
                     `;
@@ -9784,16 +12268,14 @@
                 const minutes = Math.floor(data.remainingSeconds / 60);
                 const seconds = data.remainingSeconds % 60;
                 const isPermanent = data.isPermanent || data.remainingSeconds > 365 * 24 * 60 * 60; // > 1 năm = vĩnh viễn
-                const timeLeft = isPermanent ? '♾️ Vĩnh viễn' : (minutes > 0 ? `${minutes}m ${seconds}s` : `${seconds}s`);
+                const timeLeft = isPermanent ? 'Vĩnh viễn' : (minutes > 0 ? `${minutes}m ${seconds}s` : `${seconds}s`);
                 const timeLeftColor = isPermanent ? '#ef4444' : 'var(--accent-orange)';
 
                 const reason = data.reason || (data.isManual ? 'Manual ban' : 'Rate limit exceeded');
-                const isManual = data.isManual ? '🚫' : '⚡';
-
                 html += `
                     <tr style="border-bottom: 1px solid var(--border-color); transition: background 0.2s;" onmouseover="this.style.background='var(--bg-tertiary)'" onmouseout="this.style.background='transparent'">
                         <td style="padding: 14px; text-align: center; color: var(--text-secondary); font-size: 0.95em;">${index + 1}</td>
-                        <td style="padding: 14px; color: var(--text-primary); font-weight: 600; font-size: 0.95em;">${isManual} ${data.ip}</td>
+                        <td style="padding: 14px; color: var(--text-primary); font-weight: 600; font-size: 0.95em;">${data.ip}</td>
                         <td style="padding: 14px; color: var(--text-secondary); font-size: 0.95em;">${data.userEmail}</td>
                         <td style="padding: 14px; text-align: center;">
                             <span style="display: inline-block; padding: 6px 12px; border-radius: 6px; font-size: 0.9em; font-weight: 600; background: ${data.typeColor}20; color: ${data.typeColor}; border: 1px solid ${data.typeColor}40;">
@@ -9810,11 +12292,10 @@
                             ${timeLeft}
                         </td>
                         <td style="padding: 14px; text-align: center;">
-                            <a href="javascript:void(0)" onclick="unbanIP('${data.type}', '${data.ip}')" 
-                               style="color: var(--accent-green); text-decoration: underline; font-weight: 600; font-size: 0.95em; cursor: pointer; transition: color 0.2s;"
-                               onmouseover="this.style.color='#10b981'" onmouseout="this.style.color='var(--accent-green)'">
-                                Unban
-                            </a>
+                            <button class="btn btn-success btn-sm" onclick="unbanIP('${data.type}', '${data.ip}')">
+                                <span class="desktop-action-icon" aria-hidden="true"><svg viewBox="0 0 24 24" focusable="false"><rect x="3" y="11" width="18" height="10" rx="2" /><path d="M7 11V7a5 5 0 0 1 9.9-1" /></svg></span>
+                                <span>Unban</span>
+                            </button>
                         </td>
                     </tr>
                 `;
@@ -9830,9 +12311,7 @@
 
         function filterBannedIPs() {
             const searchBox = document.getElementById('searchRateLimitBox');
-            const categoryFilter = document.getElementById('filterCategory');
             const searchTerm = searchBox ? searchBox.value.toLowerCase().trim() : '';
-            const categoryValue = categoryFilter ? categoryFilter.value : '';
 
             let filtered = allBannedIPs;
 
@@ -9842,11 +12321,6 @@
                     item.ip.toLowerCase().includes(searchTerm) ||
                     item.userEmail.toLowerCase().includes(searchTerm)
                 );
-            }
-
-            // Filter by category
-            if (categoryValue) {
-                filtered = filtered.filter(item => item.type === categoryValue);
             }
 
             renderBannedIPsTable(filtered);
@@ -10007,8 +12481,14 @@
                             </select>
                         </div>
                         <div class="modal-actions admin-modal-actions">
-                            <button class="btn btn-secondary" onclick="closeManualBanModal()">Hủy</button>
-                            <button class="btn btn-danger" onclick="confirmManualBan()">Ban ngay</button>
+                            <button class="btn btn-secondary" onclick="closeManualBanModal()">
+                                <span class="desktop-action-icon" aria-hidden="true"><svg viewBox="0 0 24 24" focusable="false"><path d="M18 6 6 18" /><path d="m6 6 12 12" /></svg></span>
+                                <span>Hủy</span>
+                            </button>
+                            <button class="btn btn-danger" onclick="confirmManualBan()">
+                                <span class="desktop-action-icon" aria-hidden="true"><svg viewBox="0 0 24 24" focusable="false"><path d="M12 3 5 6v6c0 5 3.4 8.74 7 9 3.6-.26 7-4 7-9V6l-7-3Z" /><path d="M15 9 9 15" /><path d="m9 9 6 6" /></svg></span>
+                                <span>Ban ngay</span>
+                            </button>
                         </div>
                     </div>
                 `;
@@ -10121,79 +12601,85 @@
                     <span>CTV Management</span>
                 </div>
 
-                <div style="padding:12px;">
-                    <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px;">
-                        <button class="btn btn-success btn-sm" onclick="showCreateCtvModal()" style="display:inline-flex;align-items:center;gap:6px;">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-                            New CTV
-                        </button>
-                        <button class="btn btn-primary btn-sm" onclick="loadCtvList(); loadCtvStats(); loadCtvCookieStats();" style="display:inline-flex;align-items:center;gap:6px;">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>
-                            Refresh
-                        </button>
-                        <button class="btn btn-secondary btn-sm" onclick="backToUsers()" style="display:inline-flex;align-items:center;gap:6px;">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
-                            Back
-                        </button>
-                        <div style="display:flex;gap:8px;flex:1;min-width:200px;">
-                            <select id="ctvStatusFilter" onchange="ctvStatusFilter=this.value; ctvCurrentPage=1; loadCtvList();"
-                                style="background:#1a1a1a;color:#fff;border:1px solid #333;padding:7px 10px;border-radius:8px;font-size:0.82em;flex:0 0 auto;">
+                <div class="ctv-dashboard-shell">
+                    <div class="ctv-toolbar">
+                        <div class="ctv-action-group">
+                            <button class="btn btn-success btn-sm" onclick="showCreateCtvModal()">
+                                <span class="desktop-action-icon" aria-hidden="true"><svg viewBox="0 0 24 24" focusable="false"><path d="M12 5v14" /><path d="M5 12h14" /></svg></span>
+                                <span>New CTV</span>
+                            </button>
+                            <button class="btn btn-primary btn-sm" onclick="loadCtvList(); loadCtvStats(); loadCtvCookieStats();">
+                                <span class="desktop-action-icon" aria-hidden="true"><svg viewBox="0 0 24 24" focusable="false"><path d="M21 12a9 9 0 0 1-15 6.7L3 16" /><path d="M3 21v-5h5" /><path d="M3 12A9 9 0 0 1 18 5.3L21 8" /><path d="M21 3v5h-5" /></svg></span>
+                                <span>Refresh</span>
+                            </button>
+                            <button class="btn btn-secondary btn-sm" onclick="backToUsers()">
+                                <span class="desktop-action-icon" aria-hidden="true"><svg viewBox="0 0 24 24" focusable="false"><path d="m15 18-6-6 6-6" /></svg></span>
+                                <span>Back</span>
+                            </button>
+                        </div>
+                        <div class="ctv-filter-group">
+                            <select id="ctvStatusFilter" class="search-box" onchange="ctvStatusFilter=this.value; ctvCurrentPage=1; loadCtvList();">
                                 <option value="all">All</option>
                                 <option value="active">Active</option>
                                 <option value="suspended">Suspended</option>
                                 <option value="expired">Expired</option>
                             </select>
-                            <input type="text" id="ctvSearchBox" placeholder="Search CTV..." onkeydown="if(event.key==='Enter'){ctvSearchQuery=this.value;ctvCurrentPage=1;loadCtvList();}"
-                                style="background:#1a1a1a;color:#fff;border:1px solid #333;padding:7px 10px;border-radius:8px;font-size:0.82em;flex:1;min-width:0;">
+                            <input type="text" id="ctvSearchBox" class="search-box" placeholder="Search CTV..." onkeydown="if(event.key==='Enter'){ctvSearchQuery=this.value;ctvCurrentPage=1;loadCtvList();}">
+                            <button class="btn btn-primary btn-sm" onclick="ctvSearchQuery=document.getElementById('ctvSearchBox').value;ctvCurrentPage=1;loadCtvList();">
+                                <span class="desktop-action-icon" aria-hidden="true"><svg viewBox="0 0 24 24" focusable="false"><circle cx="11" cy="11" r="8" /><path d="m21 21-4.3-4.3" /></svg></span>
+                                <span>Search</span>
+                            </button>
                         </div>
                     </div>
 
-                    <div id="ctvStats" style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:14px;"></div>
+                    <div id="ctvStats" class="ctv-stats-grid"></div>
 
                     <!-- CTV COOKIE STATS + ACTIONS (Mobile admin view) -->
-                    <div id="ctvCookieStatsBlock" style="background:rgba(15,23,42,0.6);border-radius:10px;padding:12px 10px;margin-bottom:14px;border:1px solid rgba(148,163,184,0.35);">
-                        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;gap:8px;flex-wrap:wrap;">
-                            <div style="font-size:0.82em;font-weight:600;color:#e5e7eb;display:flex;align-items:center;gap:6px;">
-                                <span>CTV Cookies</span>
-                            </div>
-                        <div style="display:flex;gap:6px;flex-wrap:wrap;">
-                            <button class="btn btn-secondary btn-sm" onclick="syncCtvCookiesFromMobile()" style="font-size:11px;padding:6px 10px;background:rgba(34,197,94,0.08);border-color:#22c55e;color:#22c55e;">
-                                Sync CTV
-                            </button>
-                            <button class="btn btn-secondary btn-sm" onclick="showCtvCookieDetail()" style="font-size:11px;padding:6px 10px;background:rgba(59,130,246,0.08);border-color:#3b82f6;color:#93c5fd;">
-                                Detail
-                            </button>
-                                <button class="btn btn-secondary btn-sm" onclick="resetAllCtvCookies()" style="font-size:11px;padding:6px 10px;background:rgba(59,130,246,0.08);border-color:#3b82f6;color:#3b82f6;">
-                                    Reset CTV
+                    <div id="ctvCookieStatsBlock" class="ctv-cookie-panel">
+                        <div class="ctv-cookie-head">
+                            <div class="ctv-cookie-title">CTV Cookies</div>
+                            <div class="ctv-cookie-actions">
+                                <button class="btn btn-success btn-sm" onclick="syncCtvCookiesFromMobile()">
+                                    <span class="desktop-action-icon" aria-hidden="true"><svg viewBox="0 0 24 24" focusable="false"><path d="M21 12a9 9 0 0 1-15 6.7L3 16" /><path d="M3 21v-5h5" /></svg></span>
+                                    <span>Sync CTV</span>
                                 </button>
-                                <button class="btn btn-secondary btn-sm" onclick="deleteAllCtvCookies()" style="font-size:11px;padding:6px 10px;background:rgba(248,113,113,0.08);border-color:#ef4444;color:#ef4444;">
-                                    Delete CTV
+                                <button class="btn btn-primary btn-sm" onclick="showCtvCookieDetail()">
+                                    <span class="desktop-action-icon" aria-hidden="true"><svg viewBox="0 0 24 24" focusable="false"><path d="M2 12s4-7 10-7 10 7 10 7-4 7-10 7S2 12 2 12Z" /><circle cx="12" cy="12" r="3" /></svg></span>
+                                    <span>Detail</span>
+                                </button>
+                                <button class="btn btn-secondary btn-sm" onclick="resetAllCtvCookies()">
+                                    <span class="desktop-action-icon" aria-hidden="true"><svg viewBox="0 0 24 24" focusable="false"><path d="M3 12a9 9 0 1 0 3-6.7" /><path d="M3 3v6h6" /></svg></span>
+                                    <span>Reset CTV</span>
+                                </button>
+                                <button class="btn btn-danger btn-sm" onclick="deleteAllCtvCookies()">
+                                    <span class="desktop-action-icon" aria-hidden="true"><svg viewBox="0 0 24 24" focusable="false"><path d="M3 6h18" /><path d="M8 6V4h8v2" /><path d="M19 6l-1 15H6L5 6" /><path d="M10 11v6" /><path d="M14 11v6" /></svg></span>
+                                    <span>Delete CTV</span>
                                 </button>
                             </div>
                         </div>
-                        <div id="ctvCookieStats" style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;">
-                            <div style="background:rgba(30,64,175,0.35);padding:8px 6px;border-radius:8px;text-align:center;border:1px solid rgba(59,130,246,0.5);">
-                                <div id="ctvCookieTotalStat" style="font-size:1.1em;font-weight:800;color:#60a5fa;">-</div>
-                                <div style="font-size:0.68em;color:#cbd5f5;margin-top:2px;">Tổng CTV</div>
+                        <div id="ctvCookieStats" class="ctv-cookie-stats-grid">
+                            <div class="ctv-cookie-stat">
+                                <span class="ctv-stat-icon" aria-hidden="true"><svg viewBox="0 0 24 24" focusable="false"><path d="M12 2 2 7l10 5 10-5-10-5Z" /><path d="m2 17 10 5 10-5" /><path d="m2 12 10 5 10-5" /></svg></span>
+                                <div><div id="ctvCookieTotalStat" class="ctv-cookie-stat-value">-</div><div class="ctv-cookie-stat-label">Tổng CTV</div></div>
                             </div>
-                            <div style="background:rgba(21,128,61,0.35);padding:8px 6px;border-radius:8px;text-align:center;border:1px solid rgba(34,197,94,0.55);">
-                                <div id="ctvCookieAvailableStat" style="font-size:1.1em;font-weight:800;color:#4ade80;">-</div>
-                                <div style="font-size:0.68em;color:#bbf7d0;margin-top:2px;">Còn dùng</div>
+                            <div class="ctv-cookie-stat is-available">
+                                <span class="ctv-stat-icon" aria-hidden="true"><svg viewBox="0 0 24 24" focusable="false"><path d="M20 6 9 17l-5-5" /></svg></span>
+                                <div><div id="ctvCookieAvailableStat" class="ctv-cookie-stat-value">-</div><div class="ctv-cookie-stat-label">Còn dùng</div></div>
                             </div>
-                            <div style="background:rgba(30,64,175,0.25);padding:8px 6px;border-radius:8px;text-align:center;border:1px solid rgba(59,130,246,0.4);">
-                                <div id="ctvCookieUsedStat" style="font-size:1.1em;font-weight:800;color:#93c5fd;">-</div>
-                                <div style="font-size:0.68em;color:#cbd5f5;margin-top:2px;">Đã cấp</div>
+                            <div class="ctv-cookie-stat">
+                                <span class="ctv-stat-icon" aria-hidden="true"><svg viewBox="0 0 24 24" focusable="false"><path d="M16 3h5v5" /><path d="M21 3 13 11" /><path d="M8 21H3v-5" /><path d="m3 21 8-8" /></svg></span>
+                                <div><div id="ctvCookieUsedStat" class="ctv-cookie-stat-value">-</div><div class="ctv-cookie-stat-label">Đã cấp</div></div>
                             </div>
-                            <div style="background:rgba(127,29,29,0.35);padding:8px 6px;border-radius:8px;text-align:center;border:1px solid rgba(248,113,113,0.6);">
-                                <div id="ctvCookieInactiveStat" style="font-size:1.1em;font-weight:800;color:#fca5a5;">-</div>
-                                <div style="font-size:0.68em;color:#fecaca;margin-top:2px;">Inactive</div>
+                            <div class="ctv-cookie-stat is-inactive">
+                                <span class="ctv-stat-icon" aria-hidden="true"><svg viewBox="0 0 24 24" focusable="false"><circle cx="12" cy="12" r="10" /><path d="m15 9-6 6" /><path d="m9 9 6 6" /></svg></span>
+                                <div><div id="ctvCookieInactiveStat" class="ctv-cookie-stat-value">-</div><div class="ctv-cookie-stat-label">Inactive</div></div>
                             </div>
                         </div>
                     </div>
 
                     <div id="ctvTableContainer"></div>
 
-                    <div id="ctvPagination" style="display:flex;justify-content:center;gap:8px;padding:12px 0;"></div>
+                    <div id="ctvPagination" class="ctv-pagination"></div>
                 </div>
             `;
 
@@ -10213,21 +12699,21 @@
                 if (!data.success) return;
                 const s = data.stats;
                 document.getElementById('ctvStats').innerHTML = `
-                    <div style="background:rgba(16,185,129,0.1);border:1px solid rgba(16,185,129,0.3);border-radius:8px;padding:10px 6px;text-align:center;">
-                        <div style="font-size:1.2em;font-weight:800;color:#10b981;">${s.active}</div>
-                        <div style="font-size:0.62em;color:#aaa;margin-top:2px;">Active</div>
+                    <div class="ctv-stat-card is-active">
+                        <span class="ctv-stat-icon" aria-hidden="true"><svg viewBox="0 0 24 24" focusable="false"><path d="M20 6 9 17l-5-5" /></svg></span>
+                        <div><div class="ctv-stat-value">${s.active}</div><div class="ctv-stat-label">Active</div></div>
                     </div>
-                    <div style="background:rgba(245,158,11,0.1);border:1px solid rgba(245,158,11,0.3);border-radius:8px;padding:10px 6px;text-align:center;">
-                        <div style="font-size:1.2em;font-weight:800;color:#f59e0b;">${s.suspended}</div>
-                        <div style="font-size:0.62em;color:#aaa;margin-top:2px;">Suspended</div>
+                    <div class="ctv-stat-card is-suspended">
+                        <span class="ctv-stat-icon" aria-hidden="true"><svg viewBox="0 0 24 24" focusable="false"><path d="M10 2h4" /><path d="M12 14v-4" /><path d="M4 13a8 8 0 1 0 16 0 8 8 0 0 0-16 0Z" /></svg></span>
+                        <div><div class="ctv-stat-value">${s.suspended}</div><div class="ctv-stat-label">Suspended</div></div>
                     </div>
-                    <div style="background:rgba(239,68,68,0.1);border:1px solid rgba(239,68,68,0.3);border-radius:8px;padding:10px 6px;text-align:center;">
-                        <div style="font-size:1.2em;font-weight:800;color:#ef4444;">${s.expired}</div>
-                        <div style="font-size:0.62em;color:#aaa;margin-top:2px;">Expired</div>
+                    <div class="ctv-stat-card is-expired">
+                        <span class="ctv-stat-icon" aria-hidden="true"><svg viewBox="0 0 24 24" focusable="false"><circle cx="12" cy="12" r="10" /><path d="m15 9-6 6" /><path d="m9 9 6 6" /></svg></span>
+                        <div><div class="ctv-stat-value">${s.expired}</div><div class="ctv-stat-label">Expired</div></div>
                     </div>
-                    <div style="background:rgba(59,130,246,0.1);border:1px solid rgba(59,130,246,0.3);border-radius:8px;padding:10px 6px;text-align:center;">
-                        <div style="font-size:1.2em;font-weight:800;color:#3b82f6;">${s.totalCookiesTaken}</div>
-                        <div style="font-size:0.62em;color:#aaa;margin-top:2px;">Taken</div>
+                    <div class="ctv-stat-card">
+                        <span class="ctv-stat-icon" aria-hidden="true"><svg viewBox="0 0 24 24" focusable="false"><path d="M12 2 2 7l10 5 10-5-10-5Z" /><path d="m2 17 10 5 10-5" /><path d="m2 12 10 5 10-5" /></svg></span>
+                        <div><div class="ctv-stat-value">${s.totalCookiesTaken}</div><div class="ctv-stat-label">Taken</div></div>
                     </div>
                 `;
             } catch (err) {
@@ -10453,51 +12939,49 @@
                 } else {
                     // ---- DESKTOP: table layout ----
                     const rows = data.collaborators.map(c => {
-                        const statusColor = c.effectiveStatus === 'active' ? '#10b981' : c.effectiveStatus === 'suspended' ? '#f59e0b' : '#ef4444';
-                        const statusBg = c.effectiveStatus === 'active' ? 'rgba(16,185,129,0.12)' : c.effectiveStatus === 'suspended' ? 'rgba(245,158,11,0.12)' : 'rgba(239,68,68,0.12)';
                         const endDate = new Date(c.endDate).toLocaleDateString('vi-VN');
                         const startDate = new Date(c.startDate).toLocaleDateString('vi-VN');
                         const remaining = c.maxCookies - c.cookiesUsed;
                         const toggleBtn = c.effectiveStatus === 'active'
-                            ? `<button class="btn btn-warning btn-sm" onclick="suspendCtv('${c._id}')">Suspend</button>`
-                            : `<button class="btn btn-success btn-sm" onclick="activateCtv('${c._id}')">Activate</button>`;
+                            ? `<button class="btn btn-warning btn-sm" onclick="suspendCtv('${c._id}')"><span class="desktop-action-icon" aria-hidden="true"><svg viewBox="0 0 24 24" focusable="false"><rect x="6" y="4" width="4" height="16" /><rect x="14" y="4" width="4" height="16" /></svg></span><span>Suspend</span></button>`
+                            : `<button class="btn btn-success btn-sm" onclick="activateCtv('${c._id}')"><span class="desktop-action-icon" aria-hidden="true"><svg viewBox="0 0 24 24" focusable="false"><path d="M5 3l14 9-14 9V3Z" /></svg></span><span>Activate</span></button>`;
                         return `
-                        <tr style="border-bottom:1px solid #1e1e1e;">
-                            <td style="padding:10px 12px;">
+                        <tr>
+                            <td>
                                 <div style="font-weight:600;font-size:0.88em;">${escHtml(c.username)}</div>
                                 <div style="font-size:0.75em;color:#666;">${escHtml(c.displayName)}</div>
                                 ${c.notes ? `<div style="font-size:0.72em;color:#888;margin-top:3px;font-style:italic;">${escHtml(c.notes)}</div>` : ''}
                             </td>
-                            <td style="padding:10px 12px;text-align:center;">
-                                <span style="background:${statusBg};color:${statusColor};padding:3px 10px;border-radius:12px;font-size:0.75em;font-weight:700;">${c.effectiveStatus}</span>
+                            <td style="text-align:center;">
+                                <span class="ctv-status-badge ctv-status-${escHtml(c.effectiveStatus)}">${escHtml(c.effectiveStatus)}</span>
                             </td>
-                            <td style="padding:10px 12px;text-align:center;font-size:0.85em;">
+                            <td style="text-align:center;font-size:0.85em;">
                                 <span style="color:#60a5fa;font-weight:600;">${c.cookiesUsed}/${c.maxCookies}</span>
                                 <span style="color:#555;font-size:0.85em;"> (${remaining} left)</span>
                             </td>
-                            <td style="padding:10px 12px;text-align:center;font-size:0.82em;color:#aaa;">${startDate}</td>
-                            <td style="padding:10px 12px;text-align:center;font-size:0.82em;color:#aaa;">${endDate}</td>
-                            <td style="padding:10px 12px;">
-                                <div style="display:flex;gap:4px;flex-wrap:wrap;">
-                                    <button class="btn btn-primary btn-sm" onclick="showEditCtvModal('${c._id}')">Edit</button>
-                                    <button class="btn btn-info btn-sm" onclick="showCtvLogs('${c._id}','${escHtml(c.username)}')">Logs</button>
+                            <td style="text-align:center;font-size:0.82em;color:#aaa;">${startDate}</td>
+                            <td style="text-align:center;font-size:0.82em;color:#aaa;">${endDate}</td>
+                            <td>
+                                <div class="ctv-table-actions">
+                                    <button class="btn btn-primary btn-sm" onclick="showEditCtvModal('${c._id}')"><span class="desktop-action-icon" aria-hidden="true"><svg viewBox="0 0 24 24" focusable="false"><path d="M12 20h9" /><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4Z" /></svg></span><span>Edit</span></button>
+                                    <button class="btn btn-info btn-sm" onclick="showCtvLogs('${c._id}','${escHtml(c.username)}')"><span class="desktop-action-icon" aria-hidden="true"><svg viewBox="0 0 24 24" focusable="false"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8Z" /><path d="M14 2v6h6" /><path d="M8 13h8" /><path d="M8 17h5" /></svg></span><span>Logs</span></button>
                                     ${toggleBtn}
-                                    <button class="btn btn-danger btn-sm" onclick="deleteCtv('${c._id}','${escHtml(c.username)}')">Del</button>
+                                    <button class="btn btn-danger btn-sm" onclick="deleteCtv('${c._id}','${escHtml(c.username)}')"><span class="desktop-action-icon" aria-hidden="true"><svg viewBox="0 0 24 24" focusable="false"><path d="M3 6h18" /><path d="M8 6V4h8v2" /><path d="M19 6l-1 15H6L5 6" /></svg></span><span>Del</span></button>
                                 </div>
                             </td>
                         </tr>`;
                     }).join('');
                     tableContainer.innerHTML = `
-                        <div style="overflow-x:auto;">
-                            <table style="width:100%;border-collapse:collapse;">
+                        <div class="ctv-table-wrap">
+                            <table class="ctv-table">
                                 <thead>
-                                    <tr style="background:rgba(255,255,255,0.04);border-bottom:1px solid #2a2a2a;">
-                                        <th style="padding:10px 12px;text-align:left;font-size:0.78em;color:#888;font-weight:600;text-transform:uppercase;">Username</th>
-                                        <th style="padding:10px 12px;text-align:center;font-size:0.78em;color:#888;font-weight:600;text-transform:uppercase;">Status</th>
-                                        <th style="padding:10px 12px;text-align:center;font-size:0.78em;color:#888;font-weight:600;text-transform:uppercase;">Cookies</th>
-                                        <th style="padding:10px 12px;text-align:center;font-size:0.78em;color:#888;font-weight:600;text-transform:uppercase;">Start</th>
-                                        <th style="padding:10px 12px;text-align:center;font-size:0.78em;color:#888;font-weight:600;text-transform:uppercase;">End</th>
-                                        <th style="padding:10px 12px;text-align:left;font-size:0.78em;color:#888;font-weight:600;text-transform:uppercase;">Actions</th>
+                                    <tr>
+                                        <th>Username</th>
+                                        <th style="text-align:center;">Status</th>
+                                        <th style="text-align:center;">Cookies</th>
+                                        <th style="text-align:center;">Start</th>
+                                        <th style="text-align:center;">End</th>
+                                        <th>Actions</th>
                                     </tr>
                                 </thead>
                                 <tbody>${rows}</tbody>
@@ -10509,9 +12993,11 @@
                 const pag = data.pagination;
                 let pagHtml = '';
                 if (pag.totalPages > 1) {
+                    pagHtml = '<div class="admin-pagination">';
                     for (let i = 1; i <= pag.totalPages; i++) {
-                        pagHtml += `<button class="btn ${i === pag.page ? 'btn-primary' : 'btn-secondary'}" style="padding:6px 12px;font-size:0.8em;" onclick="ctvCurrentPage=${i};loadCtvList();">${i}</button>`;
+                        pagHtml += `<button class="btn ${i === pag.page ? 'btn-primary' : 'btn-secondary'}" onclick="ctvCurrentPage=${i};loadCtvList();">${i}</button>`;
                     }
+                    pagHtml += '</div>';
                 }
                 document.getElementById('ctvPagination').innerHTML = pagHtml;
             } catch (err) {
