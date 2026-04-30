@@ -4536,6 +4536,17 @@
             border-color: rgba(139, 92, 246, 0.35);
         }
 
+        body.desktop-home-v2 .btn-tv-switch {
+            color: #c4b5fd;
+            background: rgba(139, 92, 246, 0.1);
+            border-color: rgba(139, 92, 246, 0.28);
+        }
+
+        body.desktop-home-v2 .btn-tv-switch:hover:not(:disabled) {
+            background: rgba(139, 92, 246, 0.16);
+            border-color: rgba(139, 92, 246, 0.38);
+        }
+
         body.desktop-home-v2 #tvActivateBtn.is-loading > .icon {
             display: none;
         }
@@ -6191,7 +6202,7 @@
                                             </button>
                                             <div
                                                 style="font-size: 0.75rem; line-height: 1.5; color: #9ca3af; text-align: center;">
-                                                Tạo link nhanh, hạn chế tài khoản lỗi, dùng được trên mọi trình duyệt và chỉ áp dụng cho Pro Plan.
+                                                Tạo link nhanh, hạn chế tài khoản lỗi, dùng được trên mọi trình duyệt. Chỉ áp dụng cho Pro Plan.
                                             </div>
                                             <div id="pcLoginLinkStatus"
                                                 style="display:none; font-size: 0.8rem; text-align: center; color: #9ca3af;">
@@ -6490,7 +6501,7 @@
                                             </div>
                                             <div class="partner-mini-text">
                                                 <div class="partner-mini-title">Nâng cấp tài khoản số</div>
-                                                <div class="partner-mini-sub">Google AI Pro, ChatGPT Plus, CapCut Pro<br>Chính chủ · bảo hành toàn thời gian</div>
+                                                <div class="partner-mini-sub">Google 5TB, ChatGPT Plus, CapCut Pro<br>Chính chủ · Bảo hành toàn thời gian</div>
                                             </div>
                                         </div>
                                         <div class="partner-mini-arrow" aria-hidden="true">→</div>
@@ -9216,7 +9227,7 @@ Nếu cần thêm lượt đổi tài khoản, vui lòng liên hệ Support qua 
                                 }
                             }));
                         } else {
-                            console.warn('⏳ Ping attempt ' + attempt + ' failed:', chrome.runtime.lastError?.message);
+                            console.warn('Ping attempt ' + attempt + ' failed:', chrome.runtime.lastError?.message);
                             // Try next extension ID
                             if (extensionIdIndex + 1 < POSSIBLE_EXTENSION_IDS.length) {
                                 setTimeout(() => pingExtension(attempt, extensionIdIndex + 1), 200);
@@ -10605,6 +10616,7 @@ Nếu cần thêm lượt đổi tài khoản, vui lòng liên hệ Support qua 
             const tvCodeInput = document.getElementById('tvCodeInput');
             const tvActivateBtn = document.getElementById('tvActivateBtn');
             const tvActivateBtnText = document.getElementById('tvActivateBtnText');
+            const desktopSwitchTvBtn = document.getElementById('desktopSwitchTvAccountBtn');
             const tvActivationForm = document.getElementById('tvActivationForm');
             const tvActivationStatus = document.getElementById('tvActivationStatus');
             const hasExtension = !!extensionDetected;
@@ -10639,6 +10651,10 @@ Nếu cần thêm lượt đổi tài khoản, vui lòng liên hệ Support qua 
             }
 
             if (tvActivateBtn) tvActivateBtn.disabled = !isLoggedIn;
+            if (desktopSwitchTvBtn) {
+                desktopSwitchTvBtn.disabled = !isLoggedIn;
+                desktopSwitchTvBtn.title = isLoggedIn ? '' : 'Vui lòng đăng nhập để sử dụng.';
+            }
             if (tvActivateBtnText && !isLoggedIn) tvActivateBtnText.textContent = 'Kích hoạt TV';
             if (tvActivationForm) tvActivationForm.classList.toggle('is-locked', !isLoggedIn);
 
@@ -11870,10 +11886,16 @@ Nếu cần thêm lượt đổi tài khoản, vui lòng liên hệ Support qua 
         }
 
         // Switch mobile TV account
-        async function switchMobileTvAccount() {
-            await showPromoModal();
-            const btn = document.getElementById('switchTvAccountBtn');
+        async function switchMobileTvAccount(trigger) {
+            const btn = trigger instanceof HTMLElement
+                ? trigger
+                : document.getElementById(typeof trigger === 'string' ? trigger : 'switchTvAccountBtn');
             if (!btn) return;
+            const isDesktopTvSwitch = btn.id === 'desktopSwitchTvAccountBtn';
+
+            if (!isDesktopTvSwitch) {
+                await showPromoModal();
+            }
 
             // Confirm với custom modal đẹp hơn
             if (typeof showConfirmCustomModal === 'function') {
@@ -11909,7 +11931,7 @@ Nếu cần thêm lượt đổi tài khoản, vui lòng liên hệ Support qua 
             // Loading state
             const originalText = btn.innerHTML;
             btn.disabled = true;
-            btn.innerHTML = '⏳ Đang đổi...';
+            btn.innerHTML = '<span style="display:inline-flex;align-items:center;justify-content:center;gap:8px;"><span aria-hidden="true" style="display:inline-block;width:14px;height:14px;border:2px solid currentColor;border-top-color:transparent;border-radius:50%;animation:spin 0.8s linear infinite;"></span><span>Đang đổi...</span></span>';
 
             try {
                 const backendUrl = window.APP_CONFIG ? window.APP_CONFIG.BACKEND_URL : '';
@@ -12547,6 +12569,7 @@ Nếu cần thêm lượt đổi tài khoản, vui lòng liên hệ Support qua 
                         <div id="tvActivationForm" class="input-shell is-locked">
                             <input type="text" id="tvCodeInput" class="n-input" placeholder="XXXX-XXXX" maxlength="9" pattern="[0-9]*" inputmode="numeric" oninput="this.value = this.value.replace(/[^0-9-]/g, '').slice(0, 9)" disabled>
                             <button id="tvActivateBtn" class="btn btn-purple" onclick="handleTvActivation()" disabled><svg class="icon"><rect x="2" y="6" width="20" height="12" rx="2"/><path d="M8 20h8"/><path d="M12 18v2"/><path d="m15 10-3 3-3-3"/></svg> <span id="tvActivateBtnText">Kích hoạt TV</span></button>
+                            <button id="desktopSwitchTvAccountBtn" class="btn btn-tv-switch" onclick="switchMobileTvAccount(this)" disabled><svg class="icon"><path d="M21 12a9 9 0 0 0-9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/><path d="M3 12a9 9 0 0 0 9 9 9.75 9.75 0 0 0 6.74-2.74L21 16"/><path d="M16 21v-5h5"/></svg> Đổi tài khoản Netflix TV</button>
                             <div id="tvActivationStatus" style="display:none;font-size:0.85rem;text-align:center;color:var(--desktop-home-muted);"></div>
                         </div>
                         <div class="task-list">
