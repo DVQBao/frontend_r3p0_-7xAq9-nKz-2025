@@ -54,7 +54,7 @@ function ensurePcLoginControlsPresent() {
 
     const noteEl = document.createElement('div');
     noteEl.className = 'pc-login-note';
-    noteEl.innerHTML = 'Tạo link nhanh, hạn chế tài khoản lỗi, dùng được trên mọi trình duyệt, không riêng Chrome và Edge. Chỉ áp dụng cho Pro Plan.';
+    noteEl.innerHTML = 'Tạo link nhanh, hạn chế tài khoản lỗi, dùng được trên mọi trình duyệt. Chỉ áp dụng cho Pro Plan.';
 
     const statusEl = document.createElement('div');
     statusEl.id = 'pcLoginLinkStatus';
