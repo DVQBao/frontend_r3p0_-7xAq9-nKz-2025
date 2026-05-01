@@ -890,6 +890,116 @@
             box-shadow: 0 0 0 4px rgba(229, 9, 20, 0.12);
         }
 
+        .manual-ban-field {
+            position: relative;
+        }
+
+        .manual-ban-helper {
+            margin-top: 7px;
+            color: rgba(229, 231, 235, 0.52);
+            font-size: 0.76rem;
+            line-height: 1.45;
+        }
+
+        .manual-ban-selected {
+            display: none;
+            margin-top: 8px;
+            padding: 9px 10px;
+            border-radius: 10px;
+            border: 1px solid rgba(52, 211, 153, 0.22);
+            background: rgba(16, 185, 129, 0.1);
+            color: #bbf7d0;
+            font-size: 0.78rem;
+            font-weight: 700;
+            line-height: 1.35;
+            word-break: break-word;
+        }
+
+        .manual-ban-suggestions {
+            position: absolute;
+            top: calc(100% + 8px);
+            left: 0;
+            right: 0;
+            z-index: 20;
+            display: none;
+            max-height: 220px;
+            overflow-y: auto !important;
+            overscroll-behavior: contain;
+            scrollbar-width: thin;
+            padding: 6px;
+            border-radius: 14px;
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            background: rgba(10, 10, 12, 0.98);
+            box-shadow: 0 18px 44px rgba(0, 0, 0, 0.42), inset 0 1px 0 rgba(255, 255, 255, 0.05);
+            -webkit-overflow-scrolling: touch;
+        }
+
+        .manual-ban-suggestions.is-open {
+            display: block;
+        }
+
+        .manual-ban-suggestion {
+            width: 100%;
+            display: grid;
+            grid-template-columns: minmax(0, 1fr) auto;
+            gap: 8px;
+            align-items: center;
+            padding: 9px 10px;
+            border: 0;
+            border-radius: 10px;
+            background: transparent;
+            color: #f8fafc;
+            text-align: left;
+            cursor: pointer;
+        }
+
+        .manual-ban-suggestion:hover,
+        .manual-ban-suggestion:focus {
+            outline: none;
+            background: rgba(255, 255, 255, 0.07);
+        }
+
+        .manual-ban-suggestion-main,
+        .manual-ban-suggestion strong,
+        .manual-ban-suggestion-email {
+            min-width: 0;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .manual-ban-suggestion strong {
+            display: block;
+            color: #fff;
+            font-size: 0.86rem;
+            font-weight: 800;
+        }
+
+        .manual-ban-suggestion-email {
+            display: block;
+            margin-top: 2px;
+            color: rgba(229, 231, 235, 0.58);
+            font-size: 0.75rem;
+        }
+
+        .manual-ban-suggestion em {
+            padding: 3px 7px;
+            border-radius: 999px;
+            background: rgba(59, 130, 246, 0.14);
+            color: #bfdbfe;
+            font-style: normal;
+            font-size: 0.68rem;
+            font-weight: 800;
+            text-transform: uppercase;
+        }
+
+        .manual-ban-suggestion-empty {
+            padding: 10px;
+            color: rgba(229, 231, 235, 0.58);
+            font-size: 0.78rem;
+            line-height: 1.45;
+        }
+
         .admin-modal-header {
             display: flex;
             align-items: flex-start;
@@ -1035,6 +1145,9 @@
             color: rgba(255, 255, 255, 0.7);
             font-size: 1.45rem;
             line-height: 1;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
             cursor: pointer;
             transition: transform 0.2s ease, border-color 0.2s ease, color 0.2s ease, background 0.2s ease;
             flex-shrink: 0;
@@ -1090,6 +1203,13 @@
             min-height: 46px;
             border-radius: 14px;
             justify-content: center;
+        }
+
+        .admin-modal-actions .btn svg,
+        .admin-modal-close svg {
+            width: 16px;
+            height: 16px;
+            flex: 0 0 16px;
         }
 
         .admin-shared-modal .modal-actions .btn {
@@ -1189,6 +1309,16 @@
         .admin-modal-table-scroll {
             max-height: 52vh;
             overflow: auto;
+        }
+
+        .ctv-cookie-detail-table {
+            width: calc(100% + 32px);
+            margin: 16px -16px 0;
+            box-sizing: border-box;
+        }
+
+        .ctv-cookie-detail-table .admin-modal-table {
+            table-layout: fixed;
         }
 
         .admin-modal-table {
@@ -6967,6 +7097,265 @@
                 border-radius: 0;
             }
 
+            /* CTV mobile layout */
+            #ctvManagement .ctv-dashboard-shell {
+                display: flex;
+                flex-direction: column;
+                gap: 10px;
+                padding: 10px 0 0;
+            }
+
+            #ctvManagement .ctv-toolbar {
+                display: grid;
+                grid-template-columns: 1fr;
+                gap: 8px;
+                margin-bottom: 0;
+            }
+
+            #ctvManagement .ctv-action-group {
+                display: grid;
+                grid-template-columns: repeat(3, minmax(0, 1fr));
+                gap: 6px;
+            }
+
+            #ctvManagement .ctv-filter-group {
+                display: grid;
+                grid-template-columns: minmax(88px, 0.34fr) minmax(0, 1fr) minmax(74px, auto);
+                gap: 6px;
+                align-items: stretch;
+            }
+
+            #ctvManagement .ctv-filter-group .search-box {
+                width: 100% !important;
+                min-width: 0 !important;
+            }
+
+            #ctvManagement .ctv-action-group .btn,
+            #ctvManagement .ctv-filter-group .btn,
+            #ctvManagement .ctv-cookie-actions .btn {
+                display: flex;
+                width: 100%;
+                min-width: 0;
+                min-height: 36px;
+                align-items: center;
+                justify-content: center;
+                padding: 7px 6px !important;
+                border-radius: 8px !important;
+                font-size: 11px !important;
+                line-height: 1.15;
+                text-align: center;
+                white-space: normal;
+                overflow-wrap: anywhere;
+                gap: 5px;
+            }
+
+            #ctvManagement .desktop-action-icon {
+                display: inline-flex;
+                width: 14px;
+                height: 14px;
+                flex: 0 0 14px;
+                align-items: center;
+                justify-content: center;
+                color: currentColor;
+                opacity: 0.96;
+            }
+
+            #ctvManagement .desktop-action-icon svg {
+                width: 100%;
+                height: 100%;
+                fill: none;
+                stroke: currentColor;
+                stroke-width: 2.15;
+                stroke-linecap: round;
+                stroke-linejoin: round;
+            }
+
+            #ctvManagement .ctv-stats-grid,
+            #ctvManagement .ctv-cookie-stats-grid {
+                display: grid;
+                grid-template-columns: repeat(4, minmax(0, 1fr));
+                gap: 6px;
+            }
+
+            #ctvManagement .ctv-stat-card,
+            #ctvManagement .ctv-cookie-stat {
+                display: grid;
+                grid-template-columns: 20px minmax(0, 1fr);
+                gap: 5px;
+                align-items: center;
+                min-height: 48px;
+                padding: 7px 6px;
+                border-radius: 8px;
+                background: linear-gradient(145deg, rgba(255, 255, 255, 0.065), rgba(255, 255, 255, 0.025));
+                border: 1px solid rgba(255, 255, 255, 0.12);
+                box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.04);
+                overflow: hidden;
+            }
+
+            #ctvManagement .ctv-stat-card>div,
+            #ctvManagement .ctv-cookie-stat>div {
+                min-width: 0;
+            }
+
+            #ctvManagement .ctv-stat-icon {
+                display: inline-flex;
+                width: 20px;
+                height: 20px;
+                align-items: center;
+                justify-content: center;
+                color: #60a5fa;
+            }
+
+            #ctvManagement .ctv-stat-icon svg {
+                width: 16px;
+                height: 16px;
+                fill: none;
+                stroke: currentColor;
+                stroke-width: 2.15;
+                stroke-linecap: round;
+                stroke-linejoin: round;
+            }
+
+            #ctvManagement .ctv-stat-value,
+            #ctvManagement .ctv-cookie-stat-value {
+                color: #f8fafc;
+                font-size: 1rem;
+                font-weight: 900;
+                line-height: 1;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                white-space: nowrap;
+            }
+
+            #ctvManagement .ctv-stat-label,
+            #ctvManagement .ctv-cookie-stat-label {
+                margin-top: 2px;
+                color: #a1a1aa;
+                font-size: 8px;
+                font-weight: 800;
+                line-height: 1.1;
+                letter-spacing: 0;
+                text-transform: uppercase;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                white-space: nowrap;
+            }
+
+            #ctvManagement .ctv-stat-card.is-active,
+            #ctvManagement .ctv-cookie-stat.is-available {
+                border-color: rgba(52, 211, 153, 0.24);
+                background: linear-gradient(145deg, rgba(16, 185, 129, 0.14), rgba(255, 255, 255, 0.025));
+            }
+
+            #ctvManagement .ctv-stat-card.is-suspended {
+                border-color: rgba(251, 191, 36, 0.24);
+                background: linear-gradient(145deg, rgba(245, 158, 11, 0.14), rgba(255, 255, 255, 0.025));
+            }
+
+            #ctvManagement .ctv-stat-card.is-expired,
+            #ctvManagement .ctv-cookie-stat.is-inactive {
+                border-color: rgba(248, 113, 113, 0.24);
+                background: linear-gradient(145deg, rgba(239, 68, 68, 0.14), rgba(255, 255, 255, 0.025));
+            }
+
+            #ctvManagement .is-active .ctv-stat-icon,
+            #ctvManagement .is-active .ctv-stat-value,
+            #ctvManagement .is-available .ctv-stat-icon,
+            #ctvManagement .is-available .ctv-cookie-stat-value {
+                color: #34d399;
+            }
+
+            #ctvManagement .is-suspended .ctv-stat-icon,
+            #ctvManagement .is-suspended .ctv-stat-value {
+                color: #fbbf24;
+            }
+
+            #ctvManagement .is-expired .ctv-stat-icon,
+            #ctvManagement .is-expired .ctv-stat-value,
+            #ctvManagement .is-inactive .ctv-stat-icon,
+            #ctvManagement .is-inactive .ctv-cookie-stat-value {
+                color: #f87171;
+            }
+
+            #ctvManagement .ctv-cookie-panel {
+                display: flex;
+                flex-direction: column;
+                gap: 8px;
+                margin: 0;
+                padding: 10px;
+                border-radius: 10px;
+                background: linear-gradient(180deg, rgba(24, 24, 27, 0.72), rgba(8, 8, 10, 0.72));
+                border: 1px solid rgba(255, 255, 255, 0.12);
+            }
+
+            #ctvManagement .ctv-cookie-head {
+                display: flex;
+                flex-direction: column;
+                gap: 8px;
+            }
+
+            #ctvManagement .ctv-cookie-title {
+                display: block;
+                color: #f4f4f5;
+                font-size: 11px;
+                font-weight: 900;
+                line-height: 1.15;
+                text-transform: uppercase;
+            }
+
+            #ctvManagement .ctv-cookie-actions {
+                display: grid;
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+                gap: 6px;
+            }
+
+            #ctvManagement #ctvTableContainer {
+                display: flex;
+                flex-direction: column;
+                gap: 8px;
+            }
+
+            #ctvManagement #ctvTableContainer .mobile-user-card {
+                margin-bottom: 0;
+                border-color: rgba(96, 165, 250, 0.22);
+            }
+
+            #ctvManagement #ctvTableContainer .mobile-user-card .user-actions {
+                display: grid;
+                grid-template-columns: repeat(4, minmax(0, 1fr));
+                gap: 6px;
+            }
+
+            #ctvManagement #ctvTableContainer .mobile-user-card .user-actions button {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                gap: 5px;
+                min-width: 0;
+                min-height: 34px;
+                padding: 7px 4px;
+                line-height: 1.1;
+                overflow-wrap: anywhere;
+            }
+
+            #ctvManagement .ctv-pagination {
+                padding: 0;
+            }
+
+            #ctvManagement .ctv-pagination .admin-pagination {
+                display: flex;
+                gap: 6px;
+                overflow-x: auto;
+                padding-bottom: 2px;
+            }
+
+            #ctvManagement .ctv-pagination .btn {
+                min-width: 34px;
+                padding: 7px 10px !important;
+                font-size: 11px !important;
+                border-radius: 8px !important;
+            }
+
             /* Stats box */
             #rateLimitManagement #rateLimitStats {
                 display: none !important;
@@ -7017,6 +7406,28 @@
                 display: flex;
                 align-items: center;
                 justify-content: center;
+                gap: 6px;
+                white-space: normal;
+            }
+
+            #rateLimitManagement .desktop-action-icon {
+                display: inline-flex;
+                width: 14px;
+                height: 14px;
+                flex: 0 0 14px;
+                align-items: center;
+                justify-content: center;
+                color: currentColor;
+            }
+
+            #rateLimitManagement .desktop-action-icon svg {
+                width: 100%;
+                height: 100%;
+                fill: none;
+                stroke: currentColor;
+                stroke-width: 2.1;
+                stroke-linecap: round;
+                stroke-linejoin: round;
             }
 
             #rateLimitManagement .btn-danger,
@@ -7030,10 +7441,20 @@
             /* Layout 1 hàng cho 4 nút trên mobile */
             #rateLimitManagement .rate-limit-buttons {
                 display: grid !important;
-                grid-template-columns: repeat(3, 1fr);
+                grid-template-columns: 1fr 1.35fr 1.15fr 0.75fr;
                 gap: 4px;
                 width: 100%;
                 margin-top: -5px;
+            }
+
+            #rateLimitManagement .rate-limit-buttons .btn {
+                padding: 8px 5px !important;
+                gap: 5px;
+                white-space: nowrap;
+            }
+
+            #rateLimitManagement .rate-limit-back-btn {
+                padding-inline: 4px !important;
             }
 
             #rateLimitManagement .rate-limit-controls {
@@ -7061,9 +7482,9 @@
 
             /* Table container */
             #rateLimitManagement #bannedIPsTableContainer {
-                max-height: 400px !important;
+                max-height: none !important;
                 font-size: 11px;
-                overflow-x: hidden !important;
+                overflow: visible !important;
             }
 
             /* Thanh cuộn mỏng trên mobile */
@@ -7091,10 +7512,6 @@
             /* Ẩn bảng mặc định, hiện dạng card trên mobile */
             #rateLimitManagement table {
                 display: none !important;
-            }
-
-            #rateLimitManagement .mobile-banned-list {
-                display: block !important;
             }
 
             .mobile-banned-card {
@@ -7132,6 +7549,10 @@
             }
 
             .mobile-banned-card .btn-unban {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                gap: 6px;
                 width: 100%;
                 margin-top: 10px;
                 padding: 8px;
@@ -7247,6 +7668,10 @@
             }
 
             .mobile-user-card .user-actions button {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                gap: 6px;
                 flex: 1;
                 padding: 8px;
                 font-size: 11px;
@@ -7254,6 +7679,12 @@
                 cursor: pointer;
                 border: none;
                 font-weight: 500;
+            }
+
+            .mobile-user-card .user-actions button svg {
+                width: 14px;
+                height: 14px;
+                flex: 0 0 14px;
             }
 
             .mobile-user-card .btn-edit {
@@ -7320,6 +7751,84 @@
             .mobile-user-card .btn-delete {
                 background: rgba(239, 68, 68, 0.2);
                 color: #ef4444;
+            }
+
+            #manualBanModal {
+                align-items: center;
+                padding: 12px;
+                overflow-y: auto;
+            }
+
+            #manualBanModal .admin-modal-shell {
+                width: 100%;
+                max-height: none;
+                padding: 20px;
+                border-radius: 18px;
+            }
+
+            #manualBanModal .modal-header {
+                align-items: center;
+                gap: 12px;
+                margin-bottom: 18px;
+            }
+
+            #manualBanModal .modal-header::before {
+                width: 44px;
+                height: 44px;
+                background-size: 34px 34px;
+            }
+
+            #manualBanModal .modal-header h3 {
+                font-size: 1.12rem;
+                line-height: 1.18;
+            }
+
+            #manualBanModal .close {
+                width: 38px;
+                height: 38px;
+                border-radius: 12px;
+            }
+
+            #manualBanModal .form-group {
+                margin-bottom: 14px;
+            }
+
+            #manualBanModal .form-group label {
+                margin-bottom: 6px;
+                font-size: 0.68rem;
+                letter-spacing: 0.06em;
+            }
+
+            #manualBanModal .form-group input,
+            #manualBanModal .form-group select,
+            #manualBanModal .form-group textarea {
+                min-height: 42px;
+                padding: 10px 12px;
+                border-radius: 10px;
+                font-size: 13px;
+            }
+
+            #manualBanModal .manual-ban-helper {
+                font-size: 11px;
+            }
+
+            #manualBanModal .manual-ban-suggestions {
+                max-height: 168px;
+                border-radius: 12px;
+            }
+
+            #manualBanModal .modal-actions {
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+                gap: 8px;
+                margin-top: 18px;
+                padding-top: 14px;
+            }
+
+            #manualBanModal .modal-actions .btn {
+                min-height: 42px;
+                border-radius: 10px;
+                font-size: 12px !important;
             }
 
             /* Pro Log cards */
@@ -8155,7 +8664,7 @@
             </button>
             <div class="plan-modal-hero">
                 <h3 class="plan-modal-title">Hạ cấp Free</h3>
-                <p class="plan-modal-subtitle">Gỡ quyền Pro và đưa tài khoản này về gói Free.</p>
+                <p class="plan-modal-subtitle">Hạ cấp tài khoản về Free.</p>
             </div>
             <div class="plan-modal-body">
                 <div class="form-group plan-modal-field">
@@ -8296,6 +8805,7 @@
                 cookie: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 2a2 2 0 0 0 4 0c0 1.2.97 2.17 2.17 2.17A2.83 2.83 0 0 0 21 7a2.83 2.83 0 0 0-2.83 2.83A2.17 2.17 0 0 1 16 12a2 2 0 0 0-2 2 2 2 0 0 1-4 0 2 2 0 0 0-2-2 2 2 0 0 1-2-2 2.17 2.17 0 0 0-2.17-2.17A2.83 2.83 0 0 1 1 5a2.83 2.83 0 0 0 2.83-2.83A2.17 2.17 0 0 1 6 0a2 2 0 0 0 2 2 2 2 0 0 1 4 0Z" transform="translate(1 4) scale(.92)"></path><circle cx="9.5" cy="9.5" r="1"></circle><circle cx="14.5" cy="14.5" r="1"></circle><circle cx="15.5" cy="9" r="1"></circle></svg>',
                 users: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M16 21v-2a4 4 0 0 0-4-4H7a4 4 0 0 0-4 4v2"></path><circle cx="9.5" cy="7" r="4"></circle><path d="M20 8v6"></path><path d="M17 11h6"></path></svg>',
                 logs: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 6h13"></path><path d="M8 12h13"></path><path d="M8 18h13"></path><path d="M3 6h.01"></path><path d="M3 12h.01"></path><path d="M3 18h.01"></path></svg>',
+                edit: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 20h9"></path><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4Z"></path></svg>',
                 lock: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="11" width="16" height="10" rx="2"></rect><path d="M8 11V7a4 4 0 1 1 8 0v4"></path></svg>',
                 eye: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 12s3.6-6 10-6 10 6 10 6-3.6 6-10 6-10-6-10-6Z"></path><circle cx="12" cy="12" r="3"></circle></svg>',
                 eyeOff: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m3 3 18 18"></path><path d="M10.58 10.58a2 2 0 0 0 2.83 2.83"></path><path d="M9.88 5.09A10.94 10.94 0 0 1 12 5c6.4 0 10 7 10 7a18.78 18.78 0 0 1-4.24 5.08"></path><path d="M6.61 6.61C3.93 8.35 2 12 2 12a18.7 18.7 0 0 0 5.39 5.39"></path></svg>',
@@ -8330,7 +8840,7 @@
                         <h3 class="admin-modal-title">${title}</h3>
                         ${subtitle ? `<p class="admin-modal-subtitle">${subtitle}</p>` : ''}
                     </div>
-                    ${closeAction ? `<button type="button" class="admin-modal-close" onclick="${closeAction}" aria-label="Close">&times;</button>` : ''}
+                    ${closeAction ? `<button type="button" class="admin-modal-close" onclick="${closeAction}" aria-label="Đóng">${getAdminModalSvg('close')}</button>` : ''}
                 </div>
             `;
         }
@@ -9698,11 +10208,11 @@
                                 </div>
                             </div>
                             <div class="user-actions">
-                                <button class="btn-edit view-mode" onclick="enableMobileEdit('${user._id}')">Sửa</button>
-                                <button class="btn-upgrade view-mode ${plan === 'free' ? '' : 'hidden'}" onclick="openUpgradeModal('${user._id}', '${user.name}', '${user.email}')">Nâng cấp</button>
-                                <button class="btn-downgrade view-mode ${plan === 'pro' ? '' : 'hidden'}" onclick="openDowngradeModal('${user._id}', '${user.name}', '${user.email}')">Hạ cấp</button>
-                                <button class="btn-save edit-mode" onclick="saveMobileCard('${user._id}')" style="display:none;">Lưu</button>
-                                <button class="btn-cancel edit-mode" onclick="cancelMobileEdit('${user._id}')" style="display:none;">Hủy</button>
+                                <button class="btn-edit view-mode" onclick="enableMobileEdit('${user._id}')">${getAdminModalSvg('edit')}<span>Sửa</span></button>
+                                <button class="btn-upgrade view-mode ${plan === 'free' ? '' : 'hidden'}" onclick="openUpgradeModal('${user._id}', '${user.name}', '${user.email}')">${getAdminModalSvg('upgrade')}<span>Nâng cấp</span></button>
+                                <button class="btn-downgrade view-mode ${plan === 'pro' ? '' : 'hidden'}" onclick="openDowngradeModal('${user._id}', '${user.name}', '${user.email}')">${getAdminModalSvg('downgrade')}<span>Hạ cấp</span></button>
+                                <button class="btn-save edit-mode" onclick="saveMobileCard('${user._id}')" style="display:none;">${getAdminModalSvg('checkCircle')}<span>Lưu</span></button>
+                                <button class="btn-cancel edit-mode" onclick="cancelMobileEdit('${user._id}')" style="display:none;">${getAdminModalSvg('xCircle')}<span>Hủy</span></button>
                             </div>
                         </div>
                     `;
@@ -9927,7 +10437,9 @@
 
             // Ẩn view mode, hiện edit mode
             card.querySelectorAll('.view-mode').forEach(el => el.style.display = 'none');
-            card.querySelectorAll('.edit-mode').forEach(el => el.style.display = 'block');
+            card.querySelectorAll('.edit-mode').forEach(el => {
+                el.style.display = el.tagName === 'BUTTON' ? 'flex' : 'block';
+            });
         }
 
         function cancelMobileEdit(userId) {
@@ -12028,6 +12540,10 @@
 
         // RATE LIMIT MANAGEMENT
         let allBannedIPs = []; // Store all banned IPs for filtering
+        let manualBanUserSearchTimer = null;
+        let manualBanUserResults = [];
+        let manualBanSelectedUser = null;
+        let manualBanLastQuery = '';
 
         async function showRateLimitManagement() {
             // Hide users table and controls
@@ -12086,6 +12602,10 @@
                             <button class="btn btn-warning" onclick="unbanAllCategories()">
                                 <span class="desktop-action-icon" aria-hidden="true"><svg viewBox="0 0 24 24" focusable="false"><rect x="3" y="11" width="18" height="10" rx="2" /><path d="M7 11V7a5 5 0 0 1 9.9-1" /></svg></span>
                                 <span>Unban All</span>
+                            </button>
+                            <button class="btn btn-secondary rate-limit-back-btn" onclick="showUsersTable()">
+                                <span class="desktop-action-icon" aria-hidden="true"><svg viewBox="0 0 24 24" focusable="false"><path d="m15 18-6-6 6-6" /></svg></span>
+                                <span>Back</span>
                             </button>
                         </div>
                     </div>
@@ -12219,7 +12739,7 @@
 
             // Mobile view - dạng card
             if (isMobile) {
-                let mobileHtml = '<div class="mobile-banned-list">';
+                let mobileHtml = '';
                 ips.forEach((data, index) => {
                     const minutes = Math.floor(data.remainingSeconds / 60);
                     const seconds = data.remainingSeconds % 60;
@@ -12237,11 +12757,13 @@
                             <div class="banned-info">Lý do: <span>${reason}</span></div>
                             <div class="banned-info">Thời gian: <span style="color: ${isPermanent ? '#ef4444' : '#f59e0b'};">${timeLeft}</span></div>
                             <div class="banned-info">Banned: <span>${bannedAt}</span></div>
-                            <button class="btn-unban" onclick="unbanIP('${data.type}', '${data.ip}')">Unban</button>
+                            <button class="btn-unban" onclick="unbanIP('${data.type}', '${data.ip}')">
+                                <span class="desktop-action-icon" aria-hidden="true"><svg viewBox="0 0 24 24" focusable="false"><rect x="3" y="11" width="18" height="10" rx="2" /><path d="M7 11V7a5 5 0 0 1 9.9-1" /></svg></span>
+                                <span>Unban</span>
+                            </button>
                         </div>
                     `;
                 });
-                mobileHtml += '</div>';
                 container.innerHTML = mobileHtml;
                 return;
             }
@@ -12447,6 +12969,258 @@
         // MANUAL BAN FUNCTIONS
         // ========================================
 
+        function normalizeManualBanText(value) {
+            return String(value || '')
+                .trim()
+                .toLowerCase()
+                .normalize('NFD')
+                .replace(/[\u0300-\u036f]/g, '')
+                .replace(/đ/g, 'd');
+        }
+
+        function formatManualBanUser(user) {
+            if (!user) return '';
+            const name = user.name || user.displayName || user.username || 'Không tên';
+            return user.email ? `${name} (${user.email})` : name;
+        }
+
+        function getManualBanUserEmail(user) {
+            return user && user.email ? String(user.email).trim() : '';
+        }
+
+        function manualBanUserMatchesInput(user, inputValue) {
+            if (!user) return false;
+            const normalizedInput = normalizeManualBanText(inputValue);
+            const fields = [
+                formatManualBanUser(user),
+                user.email,
+                user.name,
+                user.displayName,
+                user.username
+            ].filter(Boolean);
+
+            return fields.some(field => normalizeManualBanText(field) === normalizedInput);
+        }
+
+        function isManualBanIp(value) {
+            const input = String(value || '').trim();
+            const ipv4Part = '(25[0-5]|2[0-4]\\d|1\\d\\d|[1-9]?\\d)';
+            const ipv4Regex = new RegExp(`^${ipv4Part}\\.${ipv4Part}\\.${ipv4Part}\\.${ipv4Part}$`);
+            const likelyIpv6 = input.includes(':') && /^[0-9a-fA-F:]+$/.test(input) && input.length >= 3;
+            return ipv4Regex.test(input) || likelyIpv6;
+        }
+
+        function clearManualBanSuggestions() {
+            const suggestions = document.getElementById('manualBanSuggestions');
+            if (!suggestions) return;
+            suggestions.classList.remove('is-open');
+            suggestions.innerHTML = '';
+        }
+
+        function setManualBanSelectedUser(user) {
+            manualBanSelectedUser = user || null;
+            const selected = document.getElementById('manualBanSelectedUser');
+            if (!selected) return;
+
+            if (!user) {
+                selected.style.display = 'none';
+                selected.textContent = '';
+                return;
+            }
+
+            selected.textContent = `Đã chọn: ${formatManualBanUser(user)}`;
+            selected.style.display = 'block';
+        }
+
+        async function searchManualBanUsers(query, limit = 20) {
+            const cleanQuery = String(query || '').trim();
+            if (!cleanQuery) return [];
+
+            const params = new URLSearchParams({
+                page: '1',
+                limit: String(limit),
+                search: cleanQuery
+            });
+
+            const response = await fetch(`${BACKEND_URL}/api/admin/users?${params}`, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${localStorage.getItem('admin_token')}`
+                }
+            });
+
+            if (!response.ok) {
+                throw new Error('Không thể tìm user');
+            }
+
+            const data = await response.json();
+            const users = data.users || data.data?.users || [];
+            return Array.isArray(users) ? users : [];
+        }
+
+        function renderManualBanSuggestions(users, query, emptyMessage = 'Không tìm thấy user phù hợp') {
+            const suggestions = document.getElementById('manualBanSuggestions');
+            if (!suggestions) return;
+
+            manualBanUserResults = Array.isArray(users) ? users : [];
+
+            if (!String(query || '').trim()) {
+                clearManualBanSuggestions();
+                return;
+            }
+
+            if (manualBanUserResults.length === 0) {
+                suggestions.innerHTML = `<div class="manual-ban-suggestion-empty">${escHtml(emptyMessage)}</div>`;
+                suggestions.classList.add('is-open');
+                return;
+            }
+
+            suggestions.innerHTML = manualBanUserResults.map((user, index) => {
+                const name = escHtml(user.name || user.displayName || user.username || 'Không tên');
+                const email = escHtml(user.email || 'Chưa có email');
+                const plan = escHtml(user.plan || 'free');
+
+                return `
+                    <button type="button" class="manual-ban-suggestion" onmousedown="event.preventDefault()" onclick="selectManualBanUser(${index})">
+                        <span class="manual-ban-suggestion-main">
+                            <strong>${name}</strong>
+                            <span class="manual-ban-suggestion-email">${email}</span>
+                        </span>
+                        <em>${plan}</em>
+                    </button>
+                `;
+            }).join('');
+            suggestions.classList.add('is-open');
+        }
+
+        function handleManualBanUserInput() {
+            const input = document.getElementById('banIdentifier');
+            if (!input) return;
+
+            const query = input.value.trim();
+            if (manualBanSelectedUser) {
+                if (manualBanUserMatchesInput(manualBanSelectedUser, query)) {
+                    clearManualBanSuggestions();
+                    return;
+                }
+                setManualBanSelectedUser(null);
+            }
+
+            clearTimeout(manualBanUserSearchTimer);
+
+            if (query.length < 2 || isManualBanIp(query)) {
+                manualBanUserResults = [];
+                manualBanLastQuery = '';
+                clearManualBanSuggestions();
+                return;
+            }
+
+            manualBanUserSearchTimer = setTimeout(async () => {
+                try {
+                    if (manualBanLastQuery === query && manualBanUserResults.length > 0) {
+                        renderManualBanSuggestions(manualBanUserResults, query);
+                        return;
+                    }
+
+                    manualBanLastQuery = query;
+                    const users = await searchManualBanUsers(query, 20);
+                    renderManualBanSuggestions(users, query);
+                } catch (error) {
+                    console.error('Manual ban user search error:', error);
+                    renderManualBanSuggestions([], query, 'Không tải được danh sách user');
+                }
+            }, 220);
+        }
+
+        function selectManualBanUser(index) {
+            const user = manualBanUserResults[index];
+            if (!user) return;
+
+            const input = document.getElementById('banIdentifier');
+            if (input) {
+                input.value = formatManualBanUser(user);
+            }
+
+            setManualBanSelectedUser(user);
+            clearManualBanSuggestions();
+        }
+
+        async function resolveManualBanIdentifier(rawIdentifier) {
+            const raw = String(rawIdentifier || '').trim();
+
+            if (!raw) {
+                showMessage('Vui lòng nhập IP, email hoặc tên user!', 'error');
+                return null;
+            }
+
+            if (manualBanSelectedUser && manualBanUserMatchesInput(manualBanSelectedUser, raw)) {
+                const email = getManualBanUserEmail(manualBanSelectedUser);
+                if (!email) {
+                    showMessage('User được chọn không có email để ban.', 'error');
+                    return null;
+                }
+                return { identifier: email, display: formatManualBanUser(manualBanSelectedUser) };
+            }
+
+            if (isManualBanIp(raw)) {
+                return { identifier: raw, display: raw };
+            }
+
+            let users = [];
+            try {
+                showMessage('Đang kiểm tra user...', 'info');
+                users = await searchManualBanUsers(raw, 10);
+            } catch (error) {
+                console.error('Manual ban user resolve error:', error);
+                showMessage('Không kiểm tra được user. Vui lòng thử lại.', 'error');
+                return null;
+            }
+
+            const normalizedRaw = normalizeManualBanText(raw);
+            const exactMatches = users.filter(user => [
+                user.email,
+                user.name,
+                user.displayName,
+                user.username,
+                formatManualBanUser(user)
+            ].filter(Boolean).some(field => normalizeManualBanText(field) === normalizedRaw));
+
+            let matchedUser = null;
+            if (exactMatches.length === 1) {
+                matchedUser = exactMatches[0];
+            } else if (exactMatches.length > 1) {
+                renderManualBanSuggestions(exactMatches, raw);
+                showMessage('Có nhiều user trùng thông tin, hãy chọn đúng user trong danh sách.', 'error');
+                return null;
+            } else if (users.length === 1) {
+                matchedUser = users[0];
+            } else if (users.length > 1) {
+                renderManualBanSuggestions(users, raw);
+                showMessage('Hãy chọn đúng user trong danh sách gợi ý trước khi ban.', 'error');
+                return null;
+            } else {
+                renderManualBanSuggestions([], raw);
+                showMessage('Không tìm thấy user này. Nếu muốn ban IP, hãy nhập đúng địa chỉ IP.', 'error');
+                return null;
+            }
+
+            const email = getManualBanUserEmail(matchedUser);
+            if (!email) {
+                showMessage('User này không có email để ban.', 'error');
+                return null;
+            }
+
+            const input = document.getElementById('banIdentifier');
+            if (input) {
+                input.value = formatManualBanUser(matchedUser);
+            }
+            setManualBanSelectedUser(matchedUser);
+            clearManualBanSuggestions();
+
+            return { identifier: email, display: formatManualBanUser(matchedUser) };
+        }
+
         function showManualBanModal() {
             // Tạo modal nếu chưa có
             let modal = document.getElementById('manualBanModal');
@@ -12457,12 +13231,15 @@
                 modal.innerHTML = `
                     <div class="modal-content admin-modal-shell admin-modal-shell--compact">
                         <div class="modal-header">
-                            <h3>Ban thủ công IP/Email</h3>
+                            <h3>Ban thủ công</h3>
                             <span class="close" onclick="closeManualBanModal()">&times;</span>
                         </div>
-                        <div class="form-group">
-                            <label>IP hoặc Email:</label>
-                            <input type="text" id="banIdentifier" placeholder="Nhập IP hoặc Email">
+                        <div class="form-group manual-ban-field">
+                            <label>IP, email hoặc tên user:</label>
+                            <input type="text" id="banIdentifier" placeholder="Gõ tên, email hoặc IP" autocomplete="off" oninput="handleManualBanUserInput()" onfocus="handleManualBanUserInput()" onblur="setTimeout(clearManualBanSuggestions, 150)">
+                            <div id="manualBanSelectedUser" class="manual-ban-selected"></div>
+                            <div id="manualBanSuggestions" class="manual-ban-suggestions"></div>
+                            <div class="manual-ban-helper">Gõ ít nhất 2 ký tự để tìm. Danh sách hiển thị tối đa 20 kết quả.</div>
                         </div>
                         <div class="form-group">
                             <label>Lý do ban:</label>
@@ -12499,6 +13276,11 @@
             document.getElementById('banIdentifier').value = '';
             document.getElementById('banReason').value = '';
             document.getElementById('banDuration').value = '1440';
+            clearTimeout(manualBanUserSearchTimer);
+            manualBanUserResults = [];
+            manualBanLastQuery = '';
+            setManualBanSelectedUser(null);
+            clearManualBanSuggestions();
 
             modal.style.display = 'block';
         }
@@ -12506,27 +13288,32 @@
         function closeManualBanModal() {
             const modal = document.getElementById('manualBanModal');
             if (modal) modal.style.display = 'none';
+            clearTimeout(manualBanUserSearchTimer);
+            clearManualBanSuggestions();
         }
 
         async function confirmManualBan() {
-            const identifier = document.getElementById('banIdentifier').value.trim();
+            const rawIdentifier = document.getElementById('banIdentifier').value.trim();
             const reason = document.getElementById('banReason').value.trim();
             const durationMinutes = parseInt(document.getElementById('banDuration').value);
+            const resolvedBan = await resolveManualBanIdentifier(rawIdentifier);
 
-            if (!identifier) {
-                showMessage('Vui lòng nhập IP hoặc Email!', 'error');
+            if (!resolvedBan) {
                 return;
             }
+
+            const identifier = resolvedBan.identifier;
+            const identifierDisplay = resolvedBan.display || identifier;
 
             // Bỏ confirm trên mobile, ban luôn
             const isMobile = window.innerWidth <= 768;
             if (!isMobile) {
                 const durationText = durationMinutes === 0 ? 'vĩnh viễn' : `${durationMinutes} phút`;
-                if (!confirm(`Ban ${identifier} trong ${durationText}?\n\nLưu ý: Sẽ chặn TẤT CẢ hoạt động của IP/Email này.`)) return;
+                if (!confirm(`Ban ${identifierDisplay} trong ${durationText}?\n\nLưu ý: Sẽ chặn TẤT CẢ hoạt động của IP/Email này.`)) return;
             }
 
             try {
-                showMessage(`Đang ban ${identifier}...`, 'info');
+                showMessage(`Đang ban ${identifierDisplay}...`, 'info');
 
                 const response = await fetch(`${BACKEND_URL}/api/admin/rate-limit/manual-ban`, {
                     method: 'POST',
@@ -12803,18 +13590,18 @@
 
                     return `
                         <tr>
-                            <td style="padding:6px 8px;font-size:0.75rem;color:#e5e7eb;width:16%;">#${c.cookieNumber}</td>
+                            <td style="padding:6px 8px;font-size:0.75rem;color:#e5e7eb;width:14%;">#${c.cookieNumber}</td>
                             <td style="padding:6px 8px;font-size:0.75rem;width:16%;">
                                 <span style="display:inline-flex;align-items:center;gap:4px;">
                                     <span style="font-weight:600;color:#e5e7eb;">${slotText}</span>
                                 </span>
                             </td>
-                            <td style="padding:6px 8px;font-size:0.72rem;width:18%;">
+                            <td style="padding:6px 8px;font-size:0.72rem;width:24%;">
                                 <span style="display:inline-flex;align-items:center;padding:2px 8px;border-radius:999px;background:${statusBg};color:${statusColor};border:1px solid rgba(148,163,184,0.4);font-weight:600;">
                                     ${statusLabel}
                                 </span>
                             </td>
-                            <td style="padding:6px 8px;font-size:0.75rem;color:#e5e7eb;max-width:260px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;width:50%;">
+                            <td style="padding:6px 8px;font-size:0.75rem;color:#e5e7eb;max-width:260px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;width:46%;">
                                 ${ctvName}
                             </td>
                         </tr>
@@ -12823,28 +13610,25 @@
 
                 modal.innerHTML = `
                     <div class="admin-modal-shell admin-modal-shell--xwide" style="display:flex;flex-direction:column;">
-                        ${buildAdminModalHeader('cookie', 'CTV Cookies', 'Chi tiet tung cookie CTV', 'Tong hop so slot da dung, trang thai va CTV dang giu cookie. Chi doi giao dien, khong doi logic.', `document.getElementById('ctvCookieDetailModal').remove()`)}
-                        <div class="admin-modal-note admin-modal-note--info">
-                            Bang du lieu ben duoi van giu nguyen thong tin hien co, nhung duoc dat trong shell premium de de doc hon tren desktop.
-                        </div>
+                        ${buildAdminModalHeader('cookie', 'CTV Cookies', 'Chi tiết từng cookie CTV', 'Tổng hợp số slot đã dùng, trạng thái và CTV đang giữ từng cookie.', `document.getElementById('ctvCookieDetailModal').remove()`)}
                         <div style="display:none;align-items:center;justify-content:space-between;margin-bottom:12px;gap:10px;">
                             <div>
                                 <div style="font-size:0.8rem;text-transform:uppercase;letter-spacing:.08em;color:#64748b;">CTV Cookies</div>
                                 <h3 style="margin:2px 0 0;font-size:1.05rem;color:#e5e7eb;">Chi tiết từng cookie CTV</h3>
                             </div>
-                            <button class="btn btn-secondary" style="padding:6px 10px;font-size:0.78rem;" onclick="document.getElementById('ctvCookieDetailModal').remove();">Close</button>
+                            <button class="btn btn-secondary" style="padding:6px 10px;font-size:0.78rem;" onclick="document.getElementById('ctvCookieDetailModal').remove();">${getAdminModalSvg('xCircle')}<span>Close</span></button>
                         </div>
                         <div style="display:none;font-size:0.7rem;color:#9ca3af;margin-bottom:10px;">
                             Danh sách hiển thị số thứ tự cookie, số slot đã dùng, trạng thái và CTV đang giữ cookie đó (nếu có).
                         </div>
-                        <div class="admin-modal-table-wrap">
+                        <div class="ctv-cookie-detail-table">
                             <table class="admin-modal-table">
                                 <thead>
                                     <tr style="background:#020617;border-bottom:1px solid #1f2937;">
-                                        <th style="text-align:left;padding:6px 8px;font-size:0.7rem;color:#9ca3af;font-weight:500;width:16%;"># Cookie</th>
+                                        <th style="text-align:left;padding:6px 8px;font-size:0.7rem;color:#9ca3af;font-weight:500;width:14%;">#</th>
                                         <th style="text-align:left;padding:6px 8px;font-size:0.7rem;color:#9ca3af;font-weight:500;width:16%;">Slot</th>
-                                        <th style="text-align:left;padding:6px 8px;font-size:0.7rem;color:#9ca3af;font-weight:500;width:18%;">Trạng thái</th>
-                                        <th style="text-align:left;padding:6px 8px;font-size:0.7rem;color:#9ca3af;font-weight:500;width:50%;">CTV đang dùng</th>
+                                        <th style="text-align:left;padding:6px 8px;font-size:0.7rem;color:#9ca3af;font-weight:500;width:24%;">Status</th>
+                                        <th style="text-align:left;padding:6px 8px;font-size:0.7rem;color:#9ca3af;font-weight:500;width:46%;">CTV</th>
                                     </tr>
                                 </thead>
                             </table>
@@ -12898,8 +13682,8 @@
                         const startDate = new Date(c.startDate).toLocaleDateString('vi-VN');
                         const remaining = c.maxCookies - c.cookiesUsed;
                         const toggleBtn = c.effectiveStatus === 'active'
-                            ? `<button class="btn-suspend" onclick="suspendCtv('${c._id}')">Suspend</button>`
-                            : `<button class="btn-activate" onclick="activateCtv('${c._id}')">Activate</button>`;
+                            ? `<button class="btn-suspend" onclick="suspendCtv('${c._id}')"><span class="desktop-action-icon" aria-hidden="true"><svg viewBox="0 0 24 24" focusable="false"><rect x="6" y="4" width="4" height="16" /><rect x="14" y="4" width="4" height="16" /></svg></span><span>Suspend</span></button>`
+                            : `<button class="btn-activate" onclick="activateCtv('${c._id}')"><span class="desktop-action-icon" aria-hidden="true"><svg viewBox="0 0 24 24" focusable="false"><path d="M5 3l14 9-14 9V3Z" /></svg></span><span>Activate</span></button>`;
                         return `
                         <div class="mobile-user-card">
                             <div class="user-header">
@@ -12929,10 +13713,10 @@
                             </div>
                             ${c.notes ? `<div style="margin-top:8px;padding:8px 10px;background:rgba(245,158,11,0.08);border-left:2px solid rgba(245,158,11,0.4);border-radius:0 6px 6px 0;font-size:10px;color:#ccc;word-break:break-word;">${escHtml(c.notes)}</div>` : ''}
                             <div class="user-actions">
-                                <button class="btn-edit" onclick="showEditCtvModal('${c._id}')">Edit</button>
-                                <button class="btn-logs" onclick="showCtvLogs('${c._id}','${escHtml(c.username)}')">Logs</button>
+                                <button class="btn-edit" onclick="showEditCtvModal('${c._id}')"><span class="desktop-action-icon" aria-hidden="true"><svg viewBox="0 0 24 24" focusable="false"><path d="M12 20h9" /><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4Z" /></svg></span><span>Edit</span></button>
+                                <button class="btn-logs" onclick="showCtvLogs('${c._id}','${escHtml(c.username)}')"><span class="desktop-action-icon" aria-hidden="true"><svg viewBox="0 0 24 24" focusable="false"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8Z" /><path d="M14 2v6h6" /><path d="M8 13h8" /><path d="M8 17h5" /></svg></span><span>Logs</span></button>
                                 ${toggleBtn}
-                                <button class="btn-delete" onclick="deleteCtv('${c._id}','${escHtml(c.username)}')">Del</button>
+                                <button class="btn-delete" onclick="deleteCtv('${c._id}','${escHtml(c.username)}')"><span class="desktop-action-icon" aria-hidden="true"><svg viewBox="0 0 24 24" focusable="false"><path d="M3 6h18" /><path d="M8 6V4h8v2" /><path d="M19 6l-1 15H6L5 6" /></svg></span><span>Del</span></button>
                             </div>
                         </div>`;
                     }).join('');
@@ -13026,9 +13810,9 @@
             const ctvInp = `width:100%;padding:10px 12px;background:#0f0f0f;border:1px solid #333;border-radius:8px;color:#fff;${ctvFS}`;
             modal.innerHTML = `
                 <div class="admin-modal-shell admin-modal-shell--compact" style="${ctvFS}">
-                    ${buildAdminModalHeader('users', 'CTV Workspace', 'Create New CTV', 'Tao tai khoan cong tac vien trong mot shell dong bo voi theme premium.', `document.getElementById('ctvModal').remove()`)}
+                    ${buildAdminModalHeader('users', 'CTV Workspace', 'Create New CTV', 'Tạo tài khoản cộng tác viên mới và thiết lập hạn mức cookie ban đầu.', `document.getElementById('ctvModal').remove()`)}
                     <div class="admin-modal-note admin-modal-note--info">
-                        Cac field ben duoi va request tao CTV duoc giu nguyen. Ban chi dang nhin thay mot giao dien moi.
+                        Điền thông tin cần thiết. Nếu bỏ trống mật khẩu, hệ thống sẽ tự tạo mật khẩu mới.
                     </div>
                     <div style="margin-bottom:12px;">
                         <label style="${ctvLbl}">Username *</label>
@@ -13062,8 +13846,8 @@
                     </div>
                     <div id="ctvFormResult" class="admin-modal-result" style="margin-bottom:12px;"></div>
                     <div class="admin-modal-actions" style="display:flex;">
-                        <button class="btn btn-success" style="flex:1;" onclick="submitCreateCtv()">Create</button>
-                        <button class="btn btn-danger" style="flex:1;" onclick="document.getElementById('ctvModal').remove();">Cancel</button>
+                        <button class="btn btn-success" style="flex:1;" onclick="submitCreateCtv()">${getAdminModalSvg('checkCircle')}<span>Create</span></button>
+                        <button class="btn btn-danger" style="flex:1;" onclick="document.getElementById('ctvModal').remove();">${getAdminModalSvg('xCircle')}<span>Cancel</span></button>
                     </div>
                 </div>
             `;
@@ -13143,7 +13927,7 @@
                 const eInp = `width:100%;padding:10px 12px;background:#0f0f0f;border:1px solid #333;border-radius:8px;color:#fff;${eFS}`;
                 modal.innerHTML = `
                     <div class="admin-modal-shell admin-modal-shell--compact" style="${eFS}">
-                        ${buildAdminModalHeader('users', 'CTV Workspace', `Edit CTV: ${escHtml(ctv.displayName)}`, 'Cap nhat thong tin CTV trong mot modal cao cap hon nhung van giu nguyen luong xu ly.', `document.getElementById('ctvModal').remove()`)}
+                        ${buildAdminModalHeader('users', 'CTV Workspace', `Edit CTV: ${escHtml(ctv.displayName)}`, 'Cập nhật hồ sơ và hạn mức CTV.', `document.getElementById('ctvModal').remove()`)}
                         <div style="margin-bottom:12px;">
                             <label style="${eLbl}">Display Name</label>
                             <input type="text" id="ctvEditDisplayName" value="${escHtml(ctv.displayName)}" style="${eInp}">
@@ -13178,10 +13962,10 @@
                             Username: ${escHtml(ctv.username)} | Used: ${ctv.cookiesUsed} / ${ctv.maxCookies} cookies
                         </div>
                         <div class="admin-modal-actions" style="display:flex;flex-wrap:wrap;gap:8px;">
-                            <button class="btn btn-success" style="flex:1;" onclick="submitEditCtv('${id}')">Save</button>
-                            <button class="btn btn-info" style="flex:1;" onclick="resetCtvPassword('${id}')">Reset PW</button>
-                            <button class="btn btn-warning" style="flex:1;" onclick="resetCtvQuota('${id}')">Reset Quota</button>
-                            <button class="btn btn-danger" style="flex:1;" onclick="document.getElementById('ctvModal').remove();">Cancel</button>
+                            <button class="btn btn-success" style="flex:1;" onclick="submitEditCtv('${id}')">${getAdminModalSvg('checkCircle')}<span>Save</span></button>
+                            <button class="btn btn-info" style="flex:1;" onclick="resetCtvPassword('${id}')">${getAdminModalSvg('lock')}<span>Reset PW</span></button>
+                            <button class="btn btn-warning" style="flex:1;" onclick="resetCtvQuota('${id}')">${getAdminModalSvg('refresh')}<span>Reset Quota</span></button>
+                            <button class="btn btn-danger" style="flex:1;" onclick="document.getElementById('ctvModal').remove();">${getAdminModalSvg('xCircle')}<span>Cancel</span></button>
                         </div>
                         <div id="ctvEditResult" class="admin-modal-result"></div>
                     </div>
@@ -13389,14 +14173,14 @@
 
                 modal.innerHTML = `
                     <div class="admin-modal-shell admin-modal-shell--wide">
-                        ${buildAdminModalHeader('logs', 'CTV Logs', `Logs: ${escHtml(username)}`, 'Theo doi cac lan su dung cookie trong mot modal sang hon va de quet thong tin hon.', `document.getElementById('ctvModal').remove()`)}
+                        ${buildAdminModalHeader('logs', 'CTV Logs', `Logs: ${escHtml(username)}`, 'Theo dõi lịch sử cấp cookie và số lần sử dụng của CTV này.', `document.getElementById('ctvModal').remove()`)}
                         <div class="admin-modal-inline-stats">
                             <div class="admin-modal-stat">Used: ${data.collaborator.cookiesUsed} / ${data.collaborator.maxCookies}</div>
                             <div class="admin-modal-stat">Total entries: ${data.pagination.total}</div>
                         </div>
                         ${logsHtml}
                         <div class="admin-modal-actions" style="display:flex;">
-                            <button class="btn btn-secondary" style="margin-top:0;" onclick="document.getElementById('ctvModal').remove();">Close</button>
+                            <button class="btn btn-secondary" style="margin-top:0;" onclick="document.getElementById('ctvModal').remove();">${getAdminModalSvg('xCircle')}<span>Close</span></button>
                         </div>
                     </div>
                 `;
