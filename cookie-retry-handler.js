@@ -10,6 +10,7 @@ class CookieRetryHandler {
         this.maxRetries = 5;
         this.currentRetry = 0;
         this.usedCookies = new Set();
+        this.hasRetryProof = false;
     }
 
     getExtensionSignalHeaderValue() {
@@ -27,6 +28,7 @@ class CookieRetryHandler {
     async attemptLogin(onProgress) {
         this.currentRetry = 0;
         this.usedCookies.clear();
+        this.hasRetryProof = false;
 
         while (this.currentRetry < this.maxRetries) {
             this.currentRetry++;
@@ -110,10 +112,30 @@ class CookieRetryHandler {
 
                 // ❌ LỖI COOKIE - Mark cookie as dead (bao gồm TIMEOUT)
                 console.log(`❌ Cookie failed (${result.errorCode}), marking as dead...`);
-                await this.markCookieAsDead(cookieData.cookieId, result.errorCode);
+                const reportSucceeded = await this.markCookieAsDead(cookieData.cookieId, result.errorCode);
+
+                if (!reportSucceeded) {
+                    const message = 'Không thể xác nhận trạng thái tài khoản lỗi. Vui lòng thử lại từ đầu.';
+                    console.warn('⚠️ report-failed did not complete, stopping retry to avoid skipCurrent without proof');
+
+                    if (onProgress) {
+                        onProgress({
+                            status: 'failed',
+                            message,
+                            errorCode: result.errorCode
+                        });
+                    }
+
+                    return {
+                        success: false,
+                        error: message,
+                        errorCode: 'REPORT_FAILED_NOT_CONFIRMED'
+                    };
+                }
 
                 // Add to used list
                 this.usedCookies.add(cookieData.cookieId);
+                this.hasRetryProof = true;
 
                 // Update progress
                 if (onProgress) {
@@ -419,14 +441,16 @@ class CookieRetryHandler {
             // Build URL with query params - dùng /preview thay vì /guest
             const url = new URL(`${this.backendUrl}/api/cookies/preview`);
 
-            // Skip current cookie when retrying
-            if (this.currentRetry > 1) {
+            // Skip current cookie only after backend accepted report-failed/report-issue proof.
+            if (this.currentRetry > 1 && this.hasRetryProof) {
                 url.searchParams.set('skipCurrent', 'true');
                 console.log('⏭️ Requesting to skip current cookie');
+            } else if (this.currentRetry > 1) {
+                console.warn('⚠️ Retry without skipCurrent because no backend proof is available');
             }
 
-            // Exclude cookies that already failed
-            if (this.usedCookies.size > 0) {
+            // Exclude cookies only when backend has retry proof for that failed-cookie list.
+            if (this.usedCookies.size > 0 && this.hasRetryProof) {
                 const excludeIds = JSON.stringify([...this.usedCookies]);
                 url.searchParams.set('excludeIds', excludeIds);
                 console.log(`🚫 Excluding ${this.usedCookies.size} failed cookie(s):`, [...this.usedCookies]);
@@ -1098,6 +1122,7 @@ class CookieRetryHandler {
                 console.log(`✅ Cookie #${data.cookieNumber} marked as failed (die, recheck)`);
                 console.log(`⚠️ Cookie NOT assigned - slot unchanged`);
                 console.log(`📝 Status: isActive=false`);
+                return true;
             } else {
                 const errorData = await response.json().catch(() => ({}));
                 const securitySignal = response.headers.get('x-security-signal') || errorData.code || '';
@@ -1123,12 +1148,14 @@ class CookieRetryHandler {
 
                 // Lỗi khác (404, 500...) → log warn, không throw (không ảnh hưởng UX)
                 console.warn(`⚠️ Failed to mark cookie as dead:`, errorData.error || response.status);
+                return false;
             }
 
         } catch (error) {
             // Re-throw lỗi abuse để attemptLogin bắt được và dừng retry
             if (error.isAbuse) throw error;
             console.error('❌ Mark cookie as dead error:', error);
+            return false;
         }
     }
 
