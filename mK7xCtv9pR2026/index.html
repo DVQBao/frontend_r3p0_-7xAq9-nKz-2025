@@ -1783,17 +1783,34 @@ function copyJsExample(btn) {
 // ========================================
 // HELPERS
 // ========================================
+const API_TIMEOUT_MS = 60 * 1000;
+
 async function apiFetch(path, method = 'GET', body = null) {
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), API_TIMEOUT_MS);
+
     const opts = {
         method,
-        headers: { 'Content-Type': 'application/json' }
+        headers: { 'Content-Type': 'application/json' },
+        signal: controller.signal
     };
     const token = localStorage.getItem(TOKEN_KEY);
     if (token) opts.headers['Authorization'] = 'Bearer ' + token;
     if (body && method !== 'GET') opts.body = JSON.stringify(body);
 
-    const res = await fetch(BACKEND_URL + path, opts);
-    const data = await res.json();
+    let res;
+    let data;
+    try {
+        res = await fetch(BACKEND_URL + path, opts);
+        data = await res.json().catch(() => ({}));
+    } catch (error) {
+        if (error.name === 'AbortError') {
+            throw new Error('Request timed out. Please try again.');
+        }
+        throw error;
+    } finally {
+        clearTimeout(timeoutId);
+    }
 
     if (res.status === 401 || res.status === 403) {
         if (data.error && (data.error.includes('expired') || data.error.includes('Invalid token'))) {
