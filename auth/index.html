@@ -5372,7 +5372,7 @@
                 }
             }
 
-            const DEFAULT_PREFERRED_MARKETS = ['VN', 'KR', 'US'];
+            const DEFAULT_PREFERRED_MARKETS = ['VN', 'KR'];
             const REQUIRED_SHOWCASE_MARKETS = ['VN', 'KR'];
             const DEFAULT_YEAR_RANGE = [2024, 2026];
             const MARKET_LABELS = {
@@ -5394,6 +5394,26 @@
                     { title: 'Siêu Sao Siêu Ngố', year: 2018, originCode: 'VN', genre: 'Hài', detail: 'Trường Giang', palette: ['#06b6d4', '#083344', '#67e8f9'] }
                 ],
                 KR: [
+                    {
+                        title: 'Teach You a Lesson',
+                        year: 2026,
+                        originCode: 'KR',
+                        genre: 'Học đường',
+                        detail: 'Netflix',
+                        image: 'https://image.tmdb.org/t/p/w342/gN7Tq35raryabkPGcKlb4ZKeutm.jpg',
+                        heroImage: 'https://image.tmdb.org/t/p/w780/vyG93jhmPL7tBIhRtCLa5mdBKob.jpg',
+                        palette: ['#38bdf8', '#082f49', '#bae6fd']
+                    },
+                    {
+                        title: 'If Wishes Could Kill',
+                        year: 2026,
+                        originCode: 'KR',
+                        genre: 'Bí ẩn',
+                        detail: 'Netflix',
+                        image: 'https://image.tmdb.org/t/p/w342/2CfTNVaR8kZQkWtWWE3Cntaiq33.jpg',
+                        heroImage: 'https://image.tmdb.org/t/p/w780/zV9WYOfFr4MAnzXXD8PR5J6JnN3.jpg',
+                        palette: ['#8b5cf6', '#1e1b4b', '#c4b5fd']
+                    },
                     {
                         title: 'When Life Gives You Tangerines',
                         year: 2025,
@@ -5426,21 +5446,7 @@
             };
             const SHOWCASE_RAIL_FALLBACKS = [
                 ...CURATED_SHOWCASE_POOLS.VN,
-                ...CURATED_SHOWCASE_POOLS.KR,
-                {
-                    title: 'Back in Action',
-                    year: 2025,
-                    originCode: 'US',
-                    genre: 'Hành động',
-                    palette: ['#3b82f6', '#111827', '#93c5fd']
-                },
-                {
-                    title: 'War Machine',
-                    year: 2026,
-                    originCode: 'US',
-                    genre: 'Science Fiction',
-                    palette: ['#ef4444', '#111827', '#fca5a5']
-                }
+                ...CURATED_SHOWCASE_POOLS.KR
             ];
 
             function escapeSvgText(value) {
@@ -5901,7 +5907,7 @@
             function promoteRailItemToFeatured(featuredItem, railItem, settings) {
                 return {
                     ...featuredItem,
-                    kicker: 'Ưu tiên mới cập nhật',
+                    kicker: 'Đang nổi bật',
                     title: railItem.title || featuredItem.title,
                     heroImage: railItem.image || featuredItem.heroImage,
                     year: railItem.year || featuredItem.year,
@@ -5985,12 +5991,16 @@
                 const featuredItem = normalizeFeaturedItem(item);
                 const fallbackCandidates = buildFallbackRecommendations(settings, featuredItem);
                 const fallbackFeatured = fallbackCandidates[0] || null;
-                const finalFeatured = (featuredItem?.title && getImageUrl(featuredItem))
+                const baseFeatured = (featuredItem?.title && getImageUrl(featuredItem))
                     ? featuredItem
                     : (fallbackFeatured ? promoteRailItemToFeatured(featuredItem, fallbackFeatured, settings) : featuredItem);
                 const allRailItems = (Array.isArray(item.rail) ? item.rail : [])
                     .map(normalizeRailItem)
                     .filter((entry) => Boolean(getImageUrl(entry)));
+                let finalFeatured = baseFeatured;
+                if (item.managedRail && allRailItems[0]) {
+                    finalFeatured = promoteRailItemToFeatured(baseFeatured || {}, allRailItems[0], settings);
+                }
                 const preferredRailItems = allRailItems
                     .filter((entry) => isAllowedRecommendation(entry, settings));
                 const relaxedYearRailItems = allRailItems
@@ -6016,14 +6026,16 @@
                     ...finalFeatured,
                     heroImage: finalHeroImage
                 };
-                const posterItems = buildPosterCollection(
-                    finalFeaturedWithImage,
-                    preferredRailItems,
-                    supplementalRailItems,
-                    fallbackCandidates,
-                    settings,
-                    4
-                );
+                const posterItems = item.managedRail
+                    ? allRailItems.slice(0, 4)
+                    : buildPosterCollection(
+                        finalFeaturedWithImage,
+                        preferredRailItems,
+                        supplementalRailItems,
+                        fallbackCandidates,
+                        settings,
+                        4
+                    );
 
                 showcaseState.hidden = true;
                 showcaseCard.hidden = false;
