@@ -4837,7 +4837,8 @@
             body:has(#cookiesManagement) .sidebar-nav button.is-active,
             body:has(#mobileCookiesManagement) .sidebar-nav button.is-active,
             body:has(#rateLimitManagement) .sidebar-nav button.is-active,
-            body:has(#ctvManagement) .sidebar-nav button.is-active {
+            body:has(#ctvManagement) .sidebar-nav button.is-active,
+            body:has(#authShowcaseManagement) .sidebar-nav button.is-active {
                 color: #d4d4d8;
                 background: linear-gradient(180deg, rgba(255, 255, 255, 0.07), rgba(255, 255, 255, 0.025));
                 border-color: rgba(255, 255, 255, 0.1);
@@ -4847,7 +4848,8 @@
             body:has(#cookiesManagement) .sidebar-nav button[data-admin-nav="cookies"],
             body:has(#mobileCookiesManagement) .sidebar-nav button[data-admin-nav="mobile-cookies"],
             body:has(#rateLimitManagement) .sidebar-nav button[data-admin-nav="rate-limit"],
-            body:has(#ctvManagement) .sidebar-nav button[data-admin-nav="ctv"] {
+            body:has(#ctvManagement) .sidebar-nav button[data-admin-nav="ctv"],
+            body:has(#authShowcaseManagement) .sidebar-nav button[data-admin-nav="showcase"] {
                 color: #ffffff;
                 background:
                     linear-gradient(145deg, rgba(229, 9, 20, 0.42), rgba(245, 158, 11, 0.12)),
@@ -4860,7 +4862,8 @@
             body:has(#cookiesManagement) .sidebar-nav button[data-admin-nav="cookies"]::before,
             body:has(#mobileCookiesManagement) .sidebar-nav button[data-admin-nav="mobile-cookies"]::before,
             body:has(#rateLimitManagement) .sidebar-nav button[data-admin-nav="rate-limit"]::before,
-            body:has(#ctvManagement) .sidebar-nav button[data-admin-nav="ctv"]::before {
+            body:has(#ctvManagement) .sidebar-nav button[data-admin-nav="ctv"]::before,
+            body:has(#authShowcaseManagement) .sidebar-nav button[data-admin-nav="showcase"]::before {
                 content: "";
                 position: absolute;
                 left: -1px;
@@ -4874,7 +4877,8 @@
             body:has(#cookiesManagement) .sidebar-nav button.is-active::before,
             body:has(#mobileCookiesManagement) .sidebar-nav button.is-active::before,
             body:has(#rateLimitManagement) .sidebar-nav button.is-active::before,
-            body:has(#ctvManagement) .sidebar-nav button.is-active::before {
+            body:has(#ctvManagement) .sidebar-nav button.is-active::before,
+            body:has(#authShowcaseManagement) .sidebar-nav button.is-active::before {
                 display: none;
             }
 
@@ -8097,6 +8101,215 @@
                 flex-direction: column;
             }
         }
+
+        .showcase-manager {
+            display: grid;
+            gap: 16px;
+            padding: 16px;
+        }
+
+        .showcase-toolbar,
+        .showcase-add-panel,
+        .showcase-list-panel {
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            background: rgba(15, 23, 42, 0.66);
+            border-radius: 14px;
+            padding: 16px;
+        }
+
+        .showcase-toolbar {
+            display: flex;
+            justify-content: space-between;
+            gap: 12px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .showcase-toolbar h3,
+        .showcase-add-panel h3 {
+            margin: 0;
+            color: #fff;
+            font-size: 1rem;
+        }
+
+        .showcase-toolbar p,
+        .showcase-add-panel p {
+            margin: 4px 0 0;
+            color: var(--text-secondary);
+            font-size: 0.82rem;
+        }
+
+        .showcase-form-grid {
+            display: grid;
+            grid-template-columns: 150px 150px minmax(180px, 1fr) auto;
+            gap: 10px;
+            align-items: end;
+            margin-top: 14px;
+        }
+
+        .showcase-field {
+            display: grid;
+            gap: 6px;
+        }
+
+        .showcase-field label {
+            color: var(--text-secondary);
+            font-size: 0.72rem;
+            text-transform: uppercase;
+            letter-spacing: .04em;
+        }
+
+        .showcase-field input,
+        .showcase-field select {
+            width: 100%;
+            min-height: 40px;
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            border-radius: 10px;
+            background: rgba(255, 255, 255, 0.05);
+            color: #fff;
+            padding: 9px 10px;
+            font: inherit;
+        }
+
+        .showcase-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+            gap: 12px;
+        }
+
+        .showcase-inventory-list {
+            display: grid;
+            gap: 8px;
+        }
+
+        .showcase-inventory-row {
+            display: grid;
+            grid-template-columns: auto minmax(0, 1fr) auto;
+            gap: 12px;
+            align-items: center;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            background: rgba(2, 6, 23, 0.45);
+            border-radius: 10px;
+            padding: 10px 12px;
+        }
+
+        .showcase-inventory-row.is-selected {
+            border-color: rgba(52, 211, 153, 0.42);
+            background: rgba(16, 185, 129, 0.08);
+        }
+
+        .showcase-inventory-check {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--text-secondary);
+            font-size: 0.84rem;
+            white-space: nowrap;
+        }
+
+        .showcase-inventory-title {
+            color: #fff;
+            font-weight: 750;
+            line-height: 1.25;
+            overflow-wrap: anywhere;
+        }
+
+        .showcase-inventory-meta {
+            color: var(--text-secondary);
+            font-size: 0.82rem;
+            margin-top: 3px;
+        }
+
+        .showcase-inventory-badge {
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            border-radius: 999px;
+            color: var(--text-secondary);
+            font-size: 0.76rem;
+            padding: 5px 9px;
+            white-space: nowrap;
+        }
+
+        .showcase-card {
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            background: rgba(2, 6, 23, 0.55);
+            border-radius: 12px;
+            overflow: hidden;
+        }
+
+        .showcase-card img {
+            width: 100%;
+            aspect-ratio: 16 / 10;
+            object-fit: cover;
+            display: block;
+            background: rgba(255, 255, 255, 0.06);
+        }
+
+        .showcase-card-body {
+            display: grid;
+            gap: 10px;
+            padding: 12px;
+        }
+
+        .showcase-card-title {
+            color: #fff;
+            font-weight: 750;
+            line-height: 1.25;
+        }
+
+        .showcase-card-meta,
+        .showcase-verify-result {
+            color: var(--text-secondary);
+            font-size: 0.82rem;
+        }
+
+        .showcase-card-controls {
+            display: grid;
+            grid-template-columns: 70px 1fr 1fr;
+            gap: 8px;
+        }
+
+        .showcase-card-actions {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .showcase-empty {
+            border: 1px dashed rgba(255, 255, 255, 0.16);
+            color: var(--text-secondary);
+            padding: 18px;
+            border-radius: 12px;
+            text-align: center;
+        }
+
+        @media (max-width: 768px) {
+            .showcase-manager {
+                padding: 12px;
+            }
+
+            .showcase-form-grid,
+            .showcase-card-controls {
+                grid-template-columns: 1fr;
+            }
+
+            .showcase-toolbar {
+                align-items: stretch;
+            }
+
+            .showcase-inventory-row {
+                grid-template-columns: auto minmax(0, 1fr);
+            }
+
+            .showcase-inventory-badge {
+                grid-column: 2;
+                width: fit-content;
+            }
+
+            .showcase-toolbar .btn,
+            .showcase-form-grid .btn {
+                width: 100%;
+            }
+        }
     </style>
 </head>
 
@@ -8175,6 +8388,15 @@
                             </svg>
                         </span>
                         CTV
+                    </button>
+                    <button type="button" data-admin-nav="showcase" onclick="showUsersTable(); showAuthShowcaseManagement()">
+                        <span class="sidebar-icon" aria-hidden="true">
+                            <svg viewBox="0 0 24 24" focusable="false">
+                                <rect x="3" y="5" width="18" height="14" rx="2" />
+                                <path d="m10 9 5 3-5 3V9Z" />
+                            </svg>
+                        </span>
+                        Auth Showcase
                     </button>
                 </div>
             </div>
@@ -8773,6 +8995,9 @@
         const BACKEND_URL = window.APP_CONFIG && window.APP_CONFIG.BACKEND_URL ? window.APP_CONFIG.BACKEND_URL : '';
         let currentUsers = [];
         let currentUserId = null;
+        let authShowcaseItems = [];
+        let authShowcaseInventory = [];
+        let authShowcaseEnabled = true;
 
         // Pagination state
         let currentPage = 1;
@@ -11162,6 +11387,7 @@
             const cookiesContainer = document.getElementById('cookiesManagement');
             const mobileCookiesContainer = document.getElementById('mobileCookiesManagement');
             const ctvContainer = document.getElementById('ctvManagement');
+            const authShowcaseContainer = document.getElementById('authShowcaseManagement');
             const usersTable = document.querySelector('.users-table');
             const controls = document.querySelector('.controls');
             const pagination = document.getElementById('pagination');
@@ -11169,6 +11395,7 @@
             if (cookiesContainer) cookiesContainer.remove();
             if (mobileCookiesContainer) mobileCookiesContainer.remove();
             if (ctvContainer) ctvContainer.remove();
+            if (authShowcaseContainer) authShowcaseContainer.remove();
             if (usersTable) usersTable.style.display = 'block';
             if (controls) controls.style.display = 'flex';
             if (pagination) pagination.style.display = 'block';
@@ -12944,6 +13171,7 @@
             const rateLimitContainer = document.getElementById('rateLimitManagement');
             const cookiesContainer = document.getElementById('cookiesManagement');
             const mobileCookiesContainer = document.getElementById('mobileCookiesManagement');
+            const authShowcaseContainer = document.getElementById('authShowcaseManagement');
 
             // Khôi phục mobile search results và title
             const mobileSearchResults = document.getElementById('mobileSearchResults');
@@ -12956,6 +13184,7 @@
             if (rateLimitContainer) rateLimitContainer.remove();
             if (cookiesContainer) cookiesContainer.remove();
             if (mobileCookiesContainer) mobileCookiesContainer.remove();
+            if (authShowcaseContainer) authShowcaseContainer.remove();
             const ctvMgmt = document.getElementById('ctvManagement');
             if (ctvMgmt) ctvMgmt.remove();
             if (usersTable) usersTable.style.display = 'block';
@@ -12963,6 +13192,336 @@
             if (pagination) pagination.style.display = 'block';
 
             window.currentMobileCookieManagementPage = false;
+        }
+
+        // ========================================
+        // AUTH SHOWCASE MANAGEMENT
+        // ========================================
+
+        function escapeHtml(value) {
+            return String(value || '')
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;')
+                .replace(/'/g, '&#39;');
+        }
+
+        function authShowcaseHeaders() {
+            return {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${localStorage.getItem('admin_token')}`
+            };
+        }
+
+        function normalizeShowcaseDateInput(value) {
+            if (!value) return '';
+            const date = new Date(value);
+            if (!Number.isFinite(date.getTime())) return '';
+            const offsetMs = date.getTimezoneOffset() * 60000;
+            return new Date(date.getTime() - offsetMs).toISOString().slice(0, 16);
+        }
+
+        function updateAuthShowcaseItem(index, field, value) {
+            if (!authShowcaseItems[index]) return;
+            authShowcaseItems[index][field] = value;
+        }
+
+        function moveAuthShowcaseItem(index, delta) {
+            const nextIndex = index + delta;
+            if (nextIndex < 0 || nextIndex >= authShowcaseItems.length) return;
+            const [item] = authShowcaseItems.splice(index, 1);
+            authShowcaseItems.splice(nextIndex, 0, item);
+            authShowcaseItems = authShowcaseItems.map((entry, itemIndex) => ({ ...entry, priority: itemIndex + 1 }));
+            renderAuthShowcaseList();
+        }
+
+        function removeAuthShowcaseItem(index) {
+            authShowcaseItems.splice(index, 1);
+            authShowcaseItems = authShowcaseItems.map((entry, itemIndex) => ({ ...entry, priority: itemIndex + 1 }));
+            renderAuthShowcaseList();
+            renderAuthShowcaseInventory();
+        }
+
+        function getAuthShowcaseItemKey(item) {
+            return `${String(item?.provider || '').toLowerCase()}:${String(item?.mediaId || '')}`;
+        }
+
+        function toggleAuthShowcaseInventory(index, checked) {
+            const item = authShowcaseInventory[index];
+            if (!item) return;
+
+            const key = getAuthShowcaseItemKey(item);
+            const existingIndex = authShowcaseItems.findIndex((entry) => getAuthShowcaseItemKey(entry) === key);
+
+            if (checked && existingIndex === -1) {
+                authShowcaseItems.push({
+                    ...item,
+                    uid: `${key}:${Date.now()}`,
+                    enabled: true,
+                    priority: authShowcaseItems.length + 1
+                });
+            }
+
+            if (!checked && existingIndex !== -1) {
+                authShowcaseItems.splice(existingIndex, 1);
+            }
+
+            authShowcaseItems = authShowcaseItems.map((entry, itemIndex) => ({ ...entry, priority: itemIndex + 1 }));
+            renderAuthShowcaseList();
+            renderAuthShowcaseInventory();
+        }
+
+        function renderAuthShowcaseList() {
+            const list = document.getElementById('authShowcaseList');
+            const count = document.getElementById('authShowcaseCount');
+            if (count) count.textContent = String(authShowcaseItems.length);
+            if (!list) return;
+
+            if (!authShowcaseItems.length) {
+                list.innerHTML = '<div class="showcase-empty">Chưa có phim nào. Validate TMDB hoặc Watchmode ID rồi thêm vào danh sách.</div>';
+                return;
+            }
+
+            list.innerHTML = authShowcaseItems.map((item, index) => `
+                <div class="showcase-inventory-row is-selected">
+                    <div class="showcase-inventory-badge">${index + 1}</div>
+                    <div>
+                        <div class="showcase-inventory-title">${escapeHtml(item.title || 'Không rõ tên')}</div>
+                        <div class="showcase-inventory-meta">${escapeHtml((item.provider || '').toUpperCase())} #${escapeHtml(item.mediaId)} • ${escapeHtml(item.originLabel || item.originCode || 'Netflix')} • ${escapeHtml(item.year || '')}</div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function renderAuthShowcaseInventory() {
+            const list = document.getElementById('authShowcaseInventory');
+            const count = document.getElementById('authShowcaseInventoryCount');
+            if (count) count.textContent = String(authShowcaseInventory.length);
+            if (!list) return;
+
+            if (!authShowcaseInventory.length) {
+                list.innerHTML = '<div class="showcase-empty">Chưa tải được kho phim nguồn. Kiểm tra WATCHMODE_API_KEY / TMDB_READ_TOKEN hoặc bấm làm mới.</div>';
+                return;
+            }
+
+            const selectedKeys = new Set(authShowcaseItems.map(getAuthShowcaseItemKey));
+            const selectedOrder = new Map(authShowcaseItems.map((entry, index) => [getAuthShowcaseItemKey(entry), index]));
+            const sortedInventory = authShowcaseInventory
+                .map((item, index) => {
+                    const key = getAuthShowcaseItemKey(item);
+                    return {
+                        item,
+                        index,
+                        selected: selectedKeys.has(key),
+                        selectedIndex: selectedOrder.has(key) ? selectedOrder.get(key) : Number.MAX_SAFE_INTEGER
+                    };
+                })
+                .sort((a, b) => {
+                    if (a.selected !== b.selected) return a.selected ? -1 : 1;
+                    if (a.selected && a.selectedIndex !== b.selectedIndex) return a.selectedIndex - b.selectedIndex;
+                    const sourceCompare = String(a.item.sourceGroup || '').localeCompare(String(b.item.sourceGroup || ''));
+                    if (sourceCompare) return sourceCompare;
+                    return String(a.item.title || '').localeCompare(String(b.item.title || ''));
+                });
+
+            list.innerHTML = sortedInventory.map(({ item, index, selected }) => {
+                const providerLabel = String(item.provider || '').toUpperCase();
+                const metaParts = [
+                    item.sourceGroup || 'Source',
+                    providerLabel && item.mediaId ? `${providerLabel} #${item.mediaId}` : '',
+                    item.originLabel || item.originCode || '',
+                    item.year || ''
+                ].filter(Boolean);
+                return `
+                    <div class="showcase-inventory-row ${selected ? 'is-selected' : ''}">
+                        <label class="showcase-inventory-check">
+                            <input type="checkbox" ${selected ? 'checked' : ''} onchange="toggleAuthShowcaseInventory(${index}, this.checked)">
+                            Treo
+                        </label>
+                        <div>
+                            <div class="showcase-inventory-title">${escapeHtml(item.title || 'Không rõ tên')}</div>
+                            <div class="showcase-inventory-meta">${escapeHtml(metaParts.join(' • '))}</div>
+                        </div>
+                        <span class="showcase-inventory-badge">${selected ? 'Đang treo' : escapeHtml(item.sourceGroup || 'Nguồn')}</span>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        async function loadAuthShowcaseConfig() {
+            const response = await fetch(`${BACKEND_URL}/api/admin/showcase`, {
+                headers: { 'Authorization': `Bearer ${localStorage.getItem('admin_token')}` }
+            });
+            const data = await response.json();
+            if (!response.ok || !data.success) throw new Error(data.error || 'Không tải được cấu hình showcase');
+
+            authShowcaseEnabled = data.config?.enabled !== false;
+            authShowcaseItems = Array.isArray(data.config?.items) ? data.config.items : [];
+            authShowcaseInventory = Array.isArray(data.inventory) ? data.inventory : [];
+            const enabledInput = document.getElementById('authShowcaseEnabled');
+            if (enabledInput) enabledInput.checked = authShowcaseEnabled;
+            renderAuthShowcaseList();
+            renderAuthShowcaseInventory();
+        }
+
+        async function validateAuthShowcaseId() {
+            const provider = document.getElementById('authShowcaseProvider')?.value || 'tmdb';
+            const mediaType = document.getElementById('authShowcaseMediaType')?.value || 'movie';
+            const mediaId = document.getElementById('authShowcaseMediaId')?.value.trim();
+            const result = document.getElementById('authShowcaseVerifyResult');
+            if (!mediaId) {
+                showMessage('Nhập ID trước khi xác nhận.', 'error');
+                return;
+            }
+
+            if (result) result.textContent = 'Đang kiểm tra ID...';
+
+            try {
+                const response = await fetch(`${BACKEND_URL}/api/admin/showcase/validate`, {
+                    method: 'POST',
+                    headers: authShowcaseHeaders(),
+                    body: JSON.stringify({ provider, mediaType, mediaId, region: 'VN' })
+                });
+                const data = await response.json();
+                if (!response.ok || !data.success) throw new Error(data.error || 'Validate thất bại');
+
+                const item = {
+                    ...data.item,
+                    uid: `${data.item.provider}:${data.item.mediaId}:${Date.now()}`,
+                    enabled: true,
+                    priority: authShowcaseItems.length + 1
+                };
+                authShowcaseItems.push(item);
+                authShowcaseInventory.push({ ...item, sourceGroup: 'Manual' });
+                renderAuthShowcaseList();
+                renderAuthShowcaseInventory();
+                if (result) {
+                    result.innerHTML = `Đã xác nhận: <strong>${escapeHtml(item.title)}</strong> (${escapeHtml(item.year || '')}) • ${escapeHtml(item.originLabel || item.originCode || '')}`;
+                }
+                showMessage('Đã thêm phim vào danh sách showcase. Bấm Lưu để áp dụng.', 'success');
+            } catch (error) {
+                if (result) result.textContent = error.message;
+                showMessage(error.message, 'error');
+            }
+        }
+
+        async function saveAuthShowcaseConfig() {
+            const enabledInput = document.getElementById('authShowcaseEnabled');
+            authShowcaseEnabled = enabledInput ? enabledInput.checked : true;
+            authShowcaseItems = authShowcaseItems
+                .slice()
+                .sort((a, b) => (Number(a.priority) || 999) - (Number(b.priority) || 999))
+                .map((item, index) => {
+                    const { selected, sourceGroup, ...cleanItem } = item;
+                    return { ...cleanItem, priority: index + 1 };
+                });
+
+            try {
+                const response = await fetch(`${BACKEND_URL}/api/admin/showcase`, {
+                    method: 'PUT',
+                    headers: authShowcaseHeaders(),
+                    body: JSON.stringify({ enabled: authShowcaseEnabled, items: authShowcaseItems })
+                });
+                const data = await response.json();
+                if (!response.ok || !data.success) throw new Error(data.error || 'Không lưu được showcase');
+
+                authShowcaseItems = Array.isArray(data.config?.items) ? data.config.items : authShowcaseItems;
+                renderAuthShowcaseList();
+                showMessage('Đã lưu Auth Showcase. Refresh trang auth để xem kết quả.', 'success');
+            } catch (error) {
+                showMessage(error.message, 'error');
+            }
+        }
+
+        async function showAuthShowcaseManagement() {
+            const usersTable = document.querySelector('.users-table');
+            const controls = document.querySelector('.controls');
+            const pagination = document.getElementById('pagination');
+            if (!usersTable || !controls) return;
+
+            ['cookiesManagement', 'mobileCookiesManagement', 'rateLimitManagement', 'ctvManagement', 'authShowcaseManagement']
+                .forEach((id) => document.getElementById(id)?.remove());
+
+            const mobileSearchResults = document.getElementById('mobileSearchResults');
+            const mobileSearchTitle = document.querySelector('.mobile-search-title');
+            if (mobileSearchResults) mobileSearchResults.style.display = 'none';
+            if (mobileSearchTitle) mobileSearchTitle.style.display = 'none';
+            if (pagination) pagination.style.display = 'none';
+            usersTable.style.display = 'none';
+            controls.style.display = 'none';
+
+            const container = document.createElement('div');
+            container.id = 'authShowcaseManagement';
+            container.className = 'users-table';
+            container.innerHTML = `
+                <div class="table-header">
+                    <span>Auth Showcase</span>
+                </div>
+                <div class="showcase-manager">
+                    <div class="showcase-toolbar">
+                        <div>
+                            <h3>Danh sách phim treo trang auth</h3>
+                            <p><span id="authShowcaseCount">0</span> phim đang được cấu hình. Auth page ưu tiên danh sách này trước hardcode.</p>
+                        </div>
+                        <div class="showcase-card-actions">
+                            <label style="display:flex;align-items:center;gap:8px;color:var(--text-secondary);font-size:.88rem;">
+                                <input type="checkbox" id="authShowcaseEnabled" checked>
+                                Bật showcase tuỳ chỉnh
+                            </label>
+                            <button class="btn btn-success" onclick="saveAuthShowcaseConfig()">Lưu cấu hình</button>
+                            <button class="btn btn-secondary" onclick="backToUsers()">Back</button>
+                        </div>
+                    </div>
+                    <div class="showcase-add-panel">
+                        <h3>Thêm phim bằng ID</h3>
+                        <p>Validate trước để xác nhận ID là phim gì, có poster/backdrop và metadata cần thiết.</p>
+                        <div class="showcase-form-grid">
+                            <div class="showcase-field">
+                                <label>Nguồn</label>
+                                <select id="authShowcaseProvider">
+                                    <option value="tmdb">TMDB</option>
+                                    <option value="watchmode">Watchmode</option>
+                                </select>
+                            </div>
+                            <div class="showcase-field">
+                                <label>Loại TMDB</label>
+                                <select id="authShowcaseMediaType">
+                                    <option value="movie">Movie</option>
+                                    <option value="tv">TV</option>
+                                </select>
+                            </div>
+                            <div class="showcase-field">
+                                <label>ID</label>
+                                <input id="authShowcaseMediaId" inputmode="numeric" placeholder="VD: 1528577 hoặc 3241552">
+                            </div>
+                            <button class="btn btn-primary" onclick="validateAuthShowcaseId()">Xác nhận & thêm</button>
+                        </div>
+                        <div id="authShowcaseVerifyResult" class="showcase-verify-result"></div>
+                    </div>
+                    <div class="showcase-list-panel">
+                        <div class="showcase-toolbar" style="padding:0;border:0;background:transparent;margin-bottom:12px;">
+                            <div>
+                                <h3>Kho phim nguồn</h3>
+                                <p><span id="authShowcaseInventoryCount">0</span> phim từ hardcode TMDB, hardcode Watchmode và auto Watchmode. Phim đã tick sẽ đứng đầu danh sách.</p>
+                            </div>
+                            <button class="btn btn-primary" onclick="loadAuthShowcaseConfig()">Làm mới kho phim</button>
+                        </div>
+                        <div id="authShowcaseInventory" class="showcase-inventory-list">
+                            <div class="loading"><p>Đang tải kho phim nguồn...</p></div>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            usersTable.parentNode.insertBefore(container, usersTable.nextSibling);
+
+            try {
+                await loadAuthShowcaseConfig();
+            } catch (error) {
+                showMessage(error.message, 'error');
+                renderAuthShowcaseList();
+            }
         }
 
         // ========================================
