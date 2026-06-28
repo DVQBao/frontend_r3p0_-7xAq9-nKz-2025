@@ -5756,7 +5756,7 @@ window.closePurchaseCreditsModal = function () {
  * Calculate credits from amount
  */
 window.calculateCredits = function (amount) {
-    const numAmount = parseInt(amount);
+    const numAmount = parseInt(String(amount || '').replace(/\D/g, ''), 10);
     const preview = document.getElementById('creditsPreview');
     const creditsAmount = document.getElementById('creditsAmount');
     const confirmBtn = document.getElementById('confirmPurchaseBtn');
@@ -5768,7 +5768,7 @@ window.calculateCredits = function (amount) {
     }
 
     // Check minimum
-    if (numAmount < 30000) {
+    if (numAmount < 35000) {
         preview.style.display = 'none';
         confirmBtn.disabled = true;
         return;
@@ -5781,7 +5781,7 @@ window.calculateCredits = function (amount) {
         return;
     }
 
-    // Calculate credits: 500 VNĐ = 1 credit (30.000 = 60 credits)
+    // Calculate credits: 500 VNĐ = 1 credit (35.000 = 70 credits)
     const credits = Math.floor(numAmount / 500);
 
     creditsAmount.textContent = `${credits} Credits`;
@@ -5793,10 +5793,10 @@ window.calculateCredits = function (amount) {
  * Confirm purchase credits
  */
 window.confirmPurchaseCredits = async function () {
-    const amount = parseInt(document.getElementById('purchaseAmount').value);
+    const amount = parseInt(String(document.getElementById('purchaseAmount').value || '').replace(/\D/g, ''), 10);
 
-    if (!amount || amount < 30000 || amount % 1000 !== 0) {
-        alert('⚠️ Vui lòng nhập số tiền hợp lệ (tối thiểu 30.000 VNĐ, số tròn nghìn)');
+    if (!amount || amount < 35000 || amount % 1000 !== 0) {
+        alert('⚠️ Vui lòng nhập số tiền hợp lệ (tối thiểu 35.000 VNĐ, số tròn nghìn)');
         return;
     }
 
@@ -5908,7 +5908,7 @@ function createReferralModalHTML() {
             <div class="verification-modal-body">
                 <p style="color: #ddd; margin-bottom: 15px; text-align: center;">
                     Bạn có mã giới thiệu từ bạn bè không?<br>
-                    <span style="color: #fbbf24;">Nhập mã để nhận ngay 5 credits miễn phí!</span>
+                    <span style="color: #fbbf24;">Nhập mã để nhận ngay 2 credits miễn phí!</span>
                 </p>
                 
                 <div style="margin-bottom: 15px;">
@@ -6026,7 +6026,7 @@ async function handleApplyReferral() {
             showCustomModal({
                 icon: '🎉',
                 title: 'Chúc mừng!',
-                message: `Áp dụng mã giới thiệu thành công!\n\nBạn nhận được +5 credits.\nTổng credits hiện tại: ${data.totalCredits} credits.\n\nChúc bạn xem phim vui vẻ!`,
+                message: `Áp dụng mã giới thiệu thành công!\n\nBạn nhận được +2 credits.\nTổng credits hiện tại: ${data.totalCredits} credits.\n\nChúc bạn xem phim vui vẻ!`,
                 buttons: [{
                     text: 'Bắt đầu ngay',
                     type: 'primary',
@@ -6047,7 +6047,7 @@ async function handleApplyReferral() {
                 showCustomModal({
                     icon: '⚠️',
                     title: 'Hết lượt nhập mã',
-                    message: 'Bạn đã nhập sai quá nhiều lần.\n\nTài khoản này sẽ không thể áp dụng mã giới thiệu nữa.\n\nBạn vẫn có thể sử dụng dịch vụ bình thường với 5 credits ban đầu.',
+                    message: 'Bạn đã nhập sai quá nhiều lần.\n\nTài khoản này sẽ không thể áp dụng mã giới thiệu nữa.\n\nBạn vẫn có thể sử dụng dịch vụ bình thường với 3 credits ban đầu.',
                     buttons: [{
                         text: 'Tiếp tục',
                         type: 'primary',
@@ -6225,7 +6225,7 @@ function showReferralNotificationModal(data, infoData, token) {
             <div class="referral-notification-item">
                 <div class="referral-notification-item-header">
                     <span class="referral-notification-email">${email}</span>
-                    <span class="referral-notification-credits">+${ref.creditsEarned || 5} credits</span>
+                    <span class="referral-notification-credits">+${ref.creditsEarned || 2} credits</span>
                 </div>
                 <div class="referral-notification-time">🕐 ${time}</div>
             </div>
