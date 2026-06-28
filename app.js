@@ -258,7 +258,7 @@ function showReferralNotificationModalOnLoad(data, infoData, token) {
             <div class="referral-notification-item">
                 <div class="referral-notification-item-header">
                     <span class="referral-notification-email">${email}</span>
-                    <span class="referral-notification-credits">+${ref.creditsEarned || 5} credits</span>
+                    <span class="referral-notification-credits">+${ref.creditsEarned || 2} credits</span>
                 </div>
                 <div class="referral-notification-time">🕐 ${time}</div>
             </div>
@@ -704,8 +704,8 @@ async function handlePcLoginLink(options = {}) {
 
         if (!isReportBypassFlow && freshUser.credits !== undefined && freshUser.credits < PC_LOGIN_COST) {
             let insufficientMessage = typeof window.getInsufficientCreditsMessage === 'function'
-                ? window.getInsufficientCreditsMessage(5, freshUser.credits || 0)
-                : `Bạn cần 5 credits. Hiện tại bạn có ${freshUser.credits || 0} credits.`;
+                ? window.getInsufficientCreditsMessage(PC_LOGIN_COST, freshUser.credits || 0)
+                : `Bạn cần ${PC_LOGIN_COST} credits. Hiện tại bạn có ${freshUser.credits || 0} credits.`;
 
             insufficientMessage = getPcLoginInsufficientCreditsMessage(PC_LOGIN_COST, freshUser.credits || 0);
             setPcLoginStatus(insufficientMessage, 'error');
@@ -775,7 +775,7 @@ async function handlePcLoginLink(options = {}) {
             body: JSON.stringify({})
         });
 
-        if (response.status === 401 || response.status === 403) {
+        if (response.status === 401) {
             localStorage.removeItem('auth_token');
             localStorage.removeItem('current_user');
             localStorage.removeItem('currentUser');
@@ -1083,7 +1083,7 @@ function selectFreePlan() {
 }
 
 /**
- * User chọn Pro Plan - 20k/tháng
+ * User chọn Pro Plan
  */
 function selectProPlan() {
     console.log('⭐ User selected Pro Plan');
@@ -1091,7 +1091,7 @@ function selectProPlan() {
     // Show confirmation
     const confirm = window.confirm(`🚀 Nâng cấp lên Pro Plan?
 
-💰 Giá: 30.000 VNĐ/tháng
+💰 Giá: 35.000 VNĐ/tháng
 
 Bạn sẽ được chuyển đến Zalo để liên hệ chủ trang và thanh toán.
 

@@ -9754,10 +9754,10 @@
                 // Prepare update data
                 const updateData = { name, email, plan, proExpiresAt, monthlyReportLimit, credits };
 
-                // Nếu có freeExpiresAt, tính ngược lại lastCreditsReset (freeExpiresAt - 7 ngày)
+                // Nếu có freeExpiresAt, tính ngược lại lastCreditsReset (freeExpiresAt - 3 ngày)
                 if (freeExpiresAt && plan === 'free') {
                     const expDate = new Date(freeExpiresAt);
-                    expDate.setDate(expDate.getDate() - 7);
+                    expDate.setDate(expDate.getDate() - 3);
                     updateData.lastCreditsReset = expDate.toISOString();
                 }
 
@@ -10098,7 +10098,7 @@
                 const proExpires = user.proExpiresAt ? new Date(user.proExpiresAt).toISOString().split('T')[0] : '';
                 const lastLogin = user.lastLogin ? new Date(user.lastLogin).toLocaleDateString('vi-VN') : 'No login';
 
-                // Tính Free Exp. (số ngày còn lại cho Free credits - 7 ngày từ lastCreditsReset)
+                // Tính Free Exp. (số ngày còn lại cho Free credits - 3 ngày từ lastCreditsReset)
                 let freeExpDays = '-';
                 let freeExpColor = '#6b7280';
                 let freeExpDate = '';
@@ -10106,11 +10106,11 @@
                     const lastReset = user.lastCreditsReset ? new Date(user.lastCreditsReset) : new Date(user.createdAt);
                     const now = new Date();
                     const daysSinceReset = Math.floor((now - lastReset) / (1000 * 60 * 60 * 24));
-                    const daysLeft = Math.max(0, 7 - daysSinceReset);
+                    const daysLeft = Math.max(0, 3 - daysSinceReset);
 
                     // Tính ngày hết hạn
                     const expireDate = new Date(lastReset);
-                    expireDate.setDate(expireDate.getDate() + 7);
+                    expireDate.setDate(expireDate.getDate() + 3);
                     freeExpDate = expireDate.toISOString().split('T')[0];
                     const expireDateStr = expireDate.toLocaleDateString('vi-VN');
 
@@ -10353,18 +10353,18 @@
                     const proExp = user.proExpiresAt ? new Date(user.proExpiresAt).toLocaleDateString('vi-VN') : '-';
                     const proExpRaw = user.proExpiresAt ? user.proExpiresAt.split('T')[0] : '';
 
-                    // Tính Free Exp. từ lastCreditsReset (7 ngày từ reset)
+                    // Tính Free Exp. từ lastCreditsReset (3 ngày từ reset)
                     let freeExp = '-';
                     let freeExpRaw = '';
                     if (plan === 'free') {
                         const lastReset = user.lastCreditsReset ? new Date(user.lastCreditsReset) : new Date(user.createdAt);
                         const now = new Date();
                         const daysSinceReset = Math.floor((now - lastReset) / (1000 * 60 * 60 * 24));
-                        const daysRemaining = 7 - daysSinceReset;
+                        const daysRemaining = 3 - daysSinceReset;
 
                         // Tính ngày hết hạn
                         const expDate = new Date(lastReset);
-                        expDate.setDate(expDate.getDate() + 7);
+                        expDate.setDate(expDate.getDate() + 3);
                         freeExpRaw = expDate.toISOString().split('T')[0];
                         const expDateStr = expDate.toLocaleDateString('vi-VN');
 
@@ -10889,10 +10889,10 @@
                 }
             });
 
-            // Convert freeExpiresAt thành lastCreditsReset (trừ 7 ngày) cho tài khoản Free
+            // Convert freeExpiresAt thành lastCreditsReset (trừ 3 ngày) cho tài khoản Free
             if (freeExpValue && updateData.plan === 'free') {
                 const expDate = new Date(freeExpValue);
-                expDate.setDate(expDate.getDate() - 7);
+                expDate.setDate(expDate.getDate() - 3);
                 updateData.lastCreditsReset = expDate.toISOString();
             }
 
