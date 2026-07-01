@@ -7931,6 +7931,102 @@
             modalOverlay.classList.remove('active');
         }
 
+        function clearStoredAuthSession() {
+            localStorage.removeItem('auth_token');
+            localStorage.removeItem('current_user');
+            localStorage.removeItem('currentUser');
+            localStorage.removeItem('logged_in');
+            sessionStorage.removeItem('logged_in');
+
+            document.getElementById('loginSection')?.style.setProperty('display', 'block');
+            document.getElementById('userProfileCard')?.style.setProperty('display', 'none');
+            document.getElementById('partnerCards')?.classList.remove('active');
+
+            if (typeof syncGuestFeatureAccess === 'function') {
+                syncGuestFeatureAccess(false);
+            }
+        }
+
+        function isExpiredAuthSessionResponse(response, data = {}) {
+            if (!response) return false;
+
+            const status = response.status;
+            const message = String(data.error || data.message || '').toLowerCase();
+            const code = String(data.code || '').toUpperCase();
+            const authCodes = ['AUTH_REQUIRED', 'TOKEN_EXPIRED', 'INVALID_TOKEN', 'UNAUTHORIZED'];
+            const authMessages = [
+                'invalid or expired token',
+                'invalid token',
+                'expired token',
+                'token expired',
+                'access token required',
+                'jwt expired',
+                'jwt malformed'
+            ];
+
+            if (status === 401) return true;
+            if (status !== 403) return false;
+            if (authCodes.includes(code)) return true;
+            return authMessages.some((authMessage) => message.includes(authMessage));
+        }
+
+        function showExpiredSessionPrompt(options = {}) {
+            const message = options.message || 'Phiên đăng nhập đã hết hạn. Vui lòng đăng nhập lại để tiếp tục.';
+            const statusMessage = options.statusMessage || 'Phiên đăng nhập đã hết hạn. Vui lòng đăng nhập lại.';
+
+            if (typeof options.statusSetter === 'function') {
+                options.statusSetter(statusMessage);
+            } else if (options.statusElement) {
+                const statusElement = typeof options.statusElement === 'string'
+                    ? document.getElementById(options.statusElement)
+                    : options.statusElement;
+                if (statusElement) {
+                    statusElement.innerHTML = `<span style="color: #ef4444;">${statusMessage}</span>`;
+                }
+            }
+
+            clearStoredAuthSession();
+
+            if (window.__expiredSessionPromptShown) {
+                return;
+            }
+            window.__expiredSessionPromptShown = true;
+
+            const reloadToLoggedOutState = () => {
+                window.location.reload();
+            };
+
+            if (typeof showCustomModal === 'function') {
+                showCustomModal({
+                    icon: 'logout',
+                    title: 'Phiên đăng nhập đã hết hạn',
+                    message,
+                    buttons: [{
+                        text: 'OK',
+                        type: 'primary',
+                        onClick: reloadToLoggedOutState
+                    }]
+                });
+            } else {
+                alert(message);
+                reloadToLoggedOutState();
+            }
+        }
+
+        function handleExpiredSessionResponse(response, data = {}, options = {}) {
+            if (!isExpiredAuthSessionResponse(response, data)) {
+                return false;
+            }
+
+            showExpiredSessionPrompt(options);
+            return true;
+        }
+
+        window.clearStoredAuthSession = clearStoredAuthSession;
+        window.isExpiredAuthSessionResponse = isExpiredAuthSessionResponse;
+        window.showExpiredSessionPrompt = showExpiredSessionPrompt;
+        window.handleExpiredSessionResponse = handleExpiredSessionResponse;
+
         function showConfirmCustomModal(options) {
             return new Promise((resolve) => {
                 const {
@@ -8191,10 +8287,14 @@
                 }
 
                 if (!response.ok) {
+                    const errorData = await response.json().catch(() => ({}));
+                    if (handleExpiredSessionResponse(response, errorData)) {
+                        return;
+                    }
                     throw new Error('Failed to load history');
                 }
 
-                const data = await response.json();
+                const data = await response.json().catch(() => ({}));
 
                 // Lấy email user để hiển thị mã giới thiệu
                 const currentUser = JSON.parse(localStorage.getItem('current_user') || '{}');
@@ -8704,8 +8804,12 @@ Bạn đã thử 3 cách trên và vẫn không được?`,
                     })
                 });
 
-                const data = await response.json();
+                const data = await response.json().catch(() => ({}));
                 hideSmartLoading();
+
+                if (handleExpiredSessionResponse(response, data)) {
+                    return;
+                }
 
                 if (!response.ok) {
                     // Handle BANNED error (tài khoản bị khóa)
@@ -10802,17 +10906,13 @@ Nếu cần thêm lượt đổi tài khoản, vui lòng liên hệ Support qua 
                     body: JSON.stringify({ code: code })
                 });
 
-                if (response.status === 401) {
-                    localStorage.removeItem('auth_token');
-                    localStorage.removeItem('current_user');
-                    localStorage.removeItem('currentUser');
-                    sessionStorage.removeItem('logged_in');
-                    showTvStatus('Phiên đăng nhập đã hết hạn. Đang tải lại trang...', 'error');
-                    setTimeout(() => window.location.reload(), 1500);
+                const data = await response.json().catch(() => ({}));
+
+                if (handleExpiredSessionResponse(response, data, {
+                    statusSetter: (message) => showTvStatus(message, 'error')
+                })) {
                     return;
                 }
-
-                const data = await response.json();
 
                 if (data.success) {
                     showTvStatus('TV đã được kích hoạt thành công! Kiểm tra TV của bạn.', 'success');
@@ -11025,17 +11125,13 @@ Nếu cần thêm lượt đổi tài khoản, vui lòng liên hệ Support qua 
                     }
                 });
 
-                if (response.status === 401) {
-                    localStorage.removeItem('auth_token');
-                    localStorage.removeItem('current_user');
-                    localStorage.removeItem('currentUser');
-                    sessionStorage.removeItem('logged_in');
-                    statusDiv.innerHTML = '<span style="color: #ef4444;">Phiên đăng nhập hết hạn. Đang tải lại...</span>';
-                    setTimeout(() => window.location.reload(), 1500);
+                const data = await response.json().catch(() => ({}));
+
+                if (handleExpiredSessionResponse(response, data, {
+                    statusElement: statusDiv
+                })) {
                     return;
                 }
-
-                const data = await response.json();
 
                 if (data.success) {
                     const hours = data.timeRemaining ? Math.floor(data.timeRemaining / 3600) : 0;
@@ -11086,7 +11182,7 @@ Nếu cần thêm lượt đổi tài khoản, vui lòng liên hệ Support qua 
                 console.error('📱 [AppLogin] Error:', error);
                 statusDiv.innerHTML = '<span style="color: #ef4444;">Lỗi kết nối server. Vui lòng thử lại.</span>';
             } finally {
-                btn.disabled = false;
+                btn.disabled = !localStorage.getItem('auth_token');
                 btnText.textContent = 'Tạo link đăng nhập';
             }
         }
@@ -11771,17 +11867,13 @@ Nếu cần thêm lượt đổi tài khoản, vui lòng liên hệ Support qua 
                     body: JSON.stringify({ code: code })
                 });
 
-                if (response.status === 401) {
-                    localStorage.removeItem('auth_token');
-                    localStorage.removeItem('current_user');
-                    localStorage.removeItem('currentUser');
-                    sessionStorage.removeItem('logged_in');
-                    statusDiv.innerHTML = '<span style="color: #ef4444;">Phiên đăng nhập hết hạn. Đang tải lại...</span>';
-                    setTimeout(() => window.location.reload(), 1500);
+                const data = await response.json().catch(() => ({}));
+
+                if (handleExpiredSessionResponse(response, data, {
+                    statusElement: statusDiv
+                })) {
                     return;
                 }
-
-                const data = await response.json();
 
                 if (data.success) {
                     statusDiv.innerHTML = '<span style="color: #4ade80;">Kích hoạt Netflix TV thành công!</span>';
@@ -11835,7 +11927,7 @@ Nếu cần thêm lượt đổi tài khoản, vui lòng liên hệ Support qua 
             } catch (error) {
                 statusDiv.innerHTML = '<span style="color: #ef4444;">Lỗi kết nối</span>';
             } finally {
-                btn.disabled = false;
+                btn.disabled = !localStorage.getItem('auth_token');
             }
         }
 
@@ -12006,7 +12098,11 @@ Nếu cần thêm lượt đổi tài khoản, vui lòng liên hệ Support qua 
                     }
                 });
 
-                const data = await response.json();
+                const data = await response.json().catch(() => ({}));
+
+                if (handleExpiredSessionResponse(response, data)) {
+                    return;
+                }
 
                 if (data.success) {
                     // Update TV cookie display
@@ -12086,7 +12182,7 @@ Nếu cần thêm lượt đổi tài khoản, vui lòng liên hệ Support qua 
                     alert('Lỗi kết nối. Vui lòng thử lại.');
                 }
             } finally {
-                btn.disabled = false;
+                btn.disabled = !localStorage.getItem('auth_token');
                 btn.innerHTML = originalText;
             }
         }
