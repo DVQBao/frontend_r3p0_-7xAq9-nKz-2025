@@ -645,6 +645,27 @@ async function requestGuestActionNonce(authToken) {
 
     if (!response.ok) {
         const errorData = await response.json().catch(() => ({}));
+        if (typeof window.handleExpiredSessionResponse === 'function'
+            && window.handleExpiredSessionResponse(response, errorData, {
+                statusSetter: (message) => setPcLoginStatus(message, 'error')
+            })) {
+            const handledError = new Error('Session expired handled');
+            handledError.sessionExpiredHandled = true;
+            throw handledError;
+        }
+        if (response.status === 401
+            || (response.status === 403 && /invalid or expired token|invalid token|expired token|token expired/i.test(errorData.error || errorData.message || ''))) {
+            localStorage.removeItem('auth_token');
+            localStorage.removeItem('current_user');
+            localStorage.removeItem('currentUser');
+            localStorage.removeItem('logged_in');
+            sessionStorage.removeItem('logged_in');
+            setPcLoginStatus('Phiên đăng nhập đã hết hạn. Vui lòng đăng nhập lại.', 'error');
+            const handledError = new Error('Session expired handled');
+            handledError.sessionExpiredHandled = true;
+            setTimeout(() => window.location.reload(), 1500);
+            throw handledError;
+        }
         throw new Error(errorData.error || errorData.message || 'Không thể tạo nonce bảo mật');
     }
 
@@ -775,17 +796,26 @@ async function handlePcLoginLink(options = {}) {
             body: JSON.stringify({})
         });
 
-        if (response.status === 401) {
-            localStorage.removeItem('auth_token');
-            localStorage.removeItem('current_user');
-            localStorage.removeItem('currentUser');
-            sessionStorage.removeItem('logged_in');
-            setPcLoginStatus('Phiên đăng nhập đã hết hạn. Đang tải lại trang...', 'error');
-            setTimeout(() => window.location.reload(), 1500);
+        const data = await response.json().catch(() => ({}));
+
+        if (typeof window.handleExpiredSessionResponse === 'function'
+            && window.handleExpiredSessionResponse(response, data, {
+                statusSetter: (message) => setPcLoginStatus(message, 'error')
+            })) {
             return;
         }
 
-        const data = await response.json().catch(() => ({}));
+        if (response.status === 401
+            || (response.status === 403 && /invalid or expired token|invalid token|expired token|token expired/i.test(data.error || data.message || ''))) {
+            localStorage.removeItem('auth_token');
+            localStorage.removeItem('current_user');
+            localStorage.removeItem('currentUser');
+            localStorage.removeItem('logged_in');
+            sessionStorage.removeItem('logged_in');
+            setPcLoginStatus('Phiên đăng nhập đã hết hạn. Vui lòng đăng nhập lại.', 'error');
+            setTimeout(() => window.location.reload(), 1500);
+            return;
+        }
 
         if (!response.ok || !data.success) {
             if (data.code === 'PRO_REQUIRED') {
@@ -869,11 +899,14 @@ async function handlePcLoginLink(options = {}) {
             });
         }
     } catch (error) {
+        if (error?.sessionExpiredHandled) {
+            return;
+        }
         console.error('❌ PC login link error:', error);
         setPcLoginStatus('Lỗi kết nối server. Vui lòng thử lại.', 'error');
     } finally {
         if (btn) {
-            btn.disabled = false;
+            btn.disabled = !localStorage.getItem('auth_token');
             btn.innerHTML = originalBtnHtml;
         }
     }
