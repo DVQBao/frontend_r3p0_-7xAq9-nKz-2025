@@ -143,12 +143,41 @@
             height: fit-content;
         }
 
+        .mobile-action-hub {
+            display: none;
+        }
+
+        .mobile-primary-section-label {
+            display: none;
+        }
+
+        .mobile-primary-tabs {
+            display: none;
+        }
+
+        .mobile-partner-section-label {
+            display: none;
+        }
+
+        :root {
+            --mobile-font-family: "SF Pro Web", "Segoe UI", sans-serif;
+        }
+
         /* ========== MOBILE RESPONSIVE (Phone + Tablet/iPad) ========== */
         @media (max-width: 1024px) {
             body {
                 padding: 20px;
                 background: #000 !important;
+                font-family: var(--mobile-font-family);
+                font-synthesis: none;
                 /* Nền đen thuần */
+            }
+
+            body button,
+            body input,
+            body textarea,
+            body select {
+                font-family: var(--mobile-font-family) !important;
             }
 
             .main-wrapper {
@@ -201,8 +230,22 @@
                 text-align: center;
             }
 
+            #userProfileCard[style*="display: block"],
+            #userProfileCard[style*="display:block"] {
+                display: grid !important;
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+                column-gap: 10px;
+                align-items: stretch;
+            }
+
             #userProfileCard>div:first-child {
-                margin-bottom: 15px;
+                margin-bottom: 6px !important;
+                order: 0;
+                grid-column: 1 / -1;
+            }
+
+            #userProfileCard>div:first-child>div[style*="gap: 8px"] {
+                margin-bottom: 0 !important;
             }
 
             /* Avatar smaller */
@@ -226,6 +269,7 @@
                 border: 1px solid rgba(255, 255, 255, 0.1) !important;
                 padding: 12px !important;
                 border-radius: 8px !important;
+                margin-top: 0 !important;
             }
 
             #userInfoCard span {
@@ -296,24 +340,30 @@
                 display: block !important;
                 width: 100%;
                 box-sizing: border-box;
-                margin-bottom: 15px;
-                padding: 12px;
-                border: 1px solid rgba(255, 255, 255, 0.1);
+                margin-bottom: 16px;
+                padding: 14px;
+                border: 1px solid rgba(251, 191, 36, 0.22);
                 border-radius: 8px;
+                order: 4;
+                grid-column: 1 / -1;
+                align-self: stretch;
+                background: rgba(251, 191, 36, 0.035);
             }
 
             #mobileTvForm .tv-title {
-                font-size: 0.75rem;
+                font-size: 0.78rem;
                 color: #fbbf24;
-                font-weight: 700;
-                margin-bottom: 8px;
-                text-align: center;
+                font-weight: 850;
+                margin-bottom: 10px;
+                text-align: left;
+                letter-spacing: 0.04em;
             }
 
             #mobileTvForm .tv-input-row {
-                display: flex;
+                display: grid;
+                grid-template-columns: minmax(0, 1fr) auto;
                 gap: 8px;
-                align-items: center;
+                align-items: stretch;
             }
 
             #mobileTvForm input {
@@ -335,6 +385,8 @@
             }
 
             #mobileTvForm button {
+                width: auto;
+                min-width: 112px;
                 padding: 10px 15px;
                 font-size: 0.75rem;
                 background: rgba(34, 197, 94, 0.1);
@@ -343,7 +395,6 @@
                 border-radius: 6px;
                 cursor: pointer;
                 font-weight: 600;
-                min-width: 85px;
                 flex-shrink: 0;
                 /* Giữ chiều rộng cố định để không giật UI khi loading */
             }
@@ -359,26 +410,29 @@
                 display: block !important;
                 width: 100%;
                 box-sizing: border-box;
-                margin-bottom: 15px;
-                padding: 12px;
-                border: 1px solid rgba(34, 197, 94, 0.25);
+                margin-bottom: 16px;
+                padding: 14px;
+                border: 1px solid rgba(34, 197, 94, 0.24);
                 border-radius: 8px;
-                background: rgba(34, 197, 94, 0.04);
+                background: rgba(34, 197, 94, 0.035);
+                order: 4;
+                grid-column: 1 / -1;
+                align-self: stretch;
             }
 
             #mobileAppLoginForm .app-login-title {
-                font-size: 0.75rem;
+                font-size: 0.78rem;
                 color: #22c55e;
-                font-weight: 700;
+                font-weight: 850;
                 margin-bottom: 10px;
-                text-align: center;
-                letter-spacing: 0.5px;
+                text-align: left;
+                letter-spacing: 0.04em;
             }
 
             #mobileAppLoginForm .app-login-desc {
                 font-size: 0.7rem;
                 color: #aaa;
-                text-align: center;
+                text-align: left;
                 margin-bottom: 10px;
                 line-height: 1.4;
             }
@@ -424,13 +478,257 @@
                 text-underline-offset: 2px;
             }
 
-            /* Mini Partner Cards (hiển thị trong sidebar, ngay dưới Account Overview - mobile only) */
-            #partnerCards.active {
+            .mobile-action-hub {
+                display: block;
+                margin: 12px 0 14px;
+                text-align: left;
+                order: 5;
+                grid-column: 1 / -1;
+            }
+
+            .mobile-action-heading {
+                display: none !important;
+            }
+
+            .mobile-action-title {
+                color: #fff;
+                font-size: 0.82rem;
+                font-weight: 850;
+                letter-spacing: 0.08em;
+                text-transform: uppercase;
+            }
+
+            .mobile-action-badge {
+                color: #fbbf24;
+                font-size: 0.62rem;
+                font-weight: 800;
+                letter-spacing: 0.08em;
+                text-transform: uppercase;
+                padding: 4px 7px;
+                border-radius: 999px;
+                border: 1px solid rgba(251, 191, 36, 0.26);
+                background: rgba(251, 191, 36, 0.08);
+                white-space: nowrap;
+            }
+
+            .mobile-action-grid {
                 display: grid;
-                grid-template-columns: 1fr;
-                gap: 12px;
-                padding: 4px 0 10px 0;
-                margin-bottom: 15px;
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+                gap: 8px;
+            }
+
+            .mobile-action-card {
+                width: 100%;
+                min-height: 42px;
+                padding: 9px 8px;
+                border-radius: 8px;
+                border: 1px solid rgba(34, 197, 94, 0.28);
+                background: rgba(34, 197, 94, 0.06);
+                color: #4ade80;
+                cursor: pointer;
+                display: flex;
+                flex-direction: row;
+                align-items: center;
+                justify-content: center;
+                gap: 5px;
+                text-align: center;
+                transition: transform 0.16s ease, border-color 0.16s ease, background 0.16s ease;
+            }
+
+            .mobile-action-card:active {
+                transform: scale(0.98);
+            }
+
+            .mobile-action-card svg {
+                width: 14px;
+                height: 14px;
+                flex-shrink: 0;
+            }
+
+            .mobile-action-card>div {
+                display: flex;
+                align-items: center;
+                min-width: 0;
+            }
+
+            .mobile-action-card strong {
+                display: block;
+                color: #fff;
+                font-size: 0.72rem;
+                font-weight: 500;
+                line-height: 1.2;
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+            }
+
+            .mobile-action-card span {
+                display: none;
+            }
+
+            .mobile-action-card--pro {
+                border-color: rgba(34, 197, 94, 0.28);
+                background: rgba(34, 197, 94, 0.06);
+                color: #4ade80;
+            }
+
+            .mobile-action-card--switch {
+                border-color: rgba(34, 197, 94, 0.28);
+                background: rgba(34, 197, 94, 0.06);
+                color: #4ade80;
+            }
+
+            .mobile-action-card--credits {
+                border-color: rgba(34, 197, 94, 0.28);
+                background: rgba(34, 197, 94, 0.06);
+                color: #4ade80;
+            }
+
+            .mobile-action-card--support {
+                border-color: rgba(34, 197, 94, 0.28);
+                background: rgba(34, 197, 94, 0.06);
+                color: #4ade80;
+            }
+
+            #userProfileCard .mobile-legacy-action {
+                display: none !important;
+            }
+
+            #userInfoCard {
+                order: 1;
+                grid-column: 1 / -1;
+            }
+
+            .mobile-primary-section-label {
+                display: none !important;
+                align-items: center;
+                justify-content: space-between;
+                order: 2;
+                grid-column: 1 / -1;
+                color: #fff;
+                font-size: 0.86rem;
+                font-weight: 900;
+                letter-spacing: 0.08em;
+                text-transform: uppercase;
+                margin: 4px 0 10px;
+                text-align: left;
+            }
+
+            .mobile-primary-tabs {
+                display: flex;
+                grid-column: 1 / -1;
+                order: 3;
+                gap: 6px;
+                padding: 4px;
+                margin: 4px 0 10px;
+                border-radius: 8px;
+                border: 1px solid rgba(255, 255, 255, 0.08);
+                background: rgba(255, 255, 255, 0.04);
+            }
+
+            .mobile-primary-tab {
+                flex: 1;
+                min-width: 0;
+                border: 1px solid transparent;
+                border-radius: 6px;
+                background: transparent;
+                color: #cbd5e1;
+                padding: 9px 8px;
+                font-size: 0.72rem;
+                font-weight: 850;
+                line-height: 1.15;
+                letter-spacing: 0.02em;
+                cursor: pointer;
+                transition: background 0.16s ease, color 0.16s ease, border-color 0.16s ease;
+            }
+
+            .mobile-primary-tab.active {
+                color: #fff;
+                background: rgba(34, 197, 94, 0.12);
+                border-color: rgba(34, 197, 94, 0.34);
+            }
+
+            .mobile-primary-tab--tv.active {
+                background: rgba(251, 191, 36, 0.11);
+                border-color: rgba(251, 191, 36, 0.34);
+            }
+
+            #mobileAppLoginForm.mobile-primary-panel-hidden,
+            #mobileTvForm.mobile-primary-panel-hidden {
+                display: none !important;
+            }
+
+            .mobile-primary-section-label::after {
+                content: "Chính";
+                color: #22c55e;
+                font-size: 0.62rem;
+                font-weight: 850;
+                letter-spacing: 0.08em;
+                padding: 4px 7px;
+                border-radius: 999px;
+                border: 1px solid rgba(34, 197, 94, 0.28);
+                background: rgba(34, 197, 94, 0.08);
+            }
+
+            .mobile-partner-section-label {
+                display: none !important;
+                align-items: center;
+                justify-content: space-between;
+                order: 6;
+                grid-column: 1 / -1;
+                color: #fff;
+                font-size: 0.82rem;
+                font-weight: 850;
+                letter-spacing: 0.08em;
+                text-transform: uppercase;
+                margin: 2px 0 10px;
+                text-align: left;
+            }
+
+            .mobile-partner-section-label::after {
+                content: "Mới";
+                color: #60a5fa;
+                font-size: 0.62rem;
+                font-weight: 800;
+                letter-spacing: 0.08em;
+                padding: 4px 7px;
+                border-radius: 999px;
+                border: 1px solid rgba(96, 165, 250, 0.26);
+                background: rgba(96, 165, 250, 0.08);
+            }
+
+            #partnerCards {
+                order: 7;
+                grid-column: 1 / -1;
+            }
+
+            #userProfileCard>button[onclick*="handleLogout"] {
+                order: 90;
+                grid-column: 1 / -1;
+            }
+
+            @media (max-width: 380px) {
+                .mobile-action-grid {
+                    grid-template-columns: 1fr;
+                }
+
+                #mobileAppLoginForm,
+                #mobileTvForm {
+                    grid-column: 1 / -1;
+                }
+
+                #mobileTvForm .tv-input-row {
+                    grid-template-columns: 1fr;
+                }
+
+                #mobileTvForm button {
+                    width: 100%;
+                }
+            }
+
+            /* Partner cards đã chuyển vào hamburger menu trên mobile */
+            #partnerCards.active {
+                display: none !important;
             }
 
             .partner-mini-card {
@@ -1013,6 +1311,113 @@
             .mobile-slide-menu .menu-item:active .arrow {
                 transform: translateX(3px);
                 color: #e50914;
+            }
+
+            .mobile-slide-menu .menu-section-label {
+                margin: 18px 2px 9px;
+                color: #94a3b8;
+                font-size: 0.68rem;
+                font-weight: 800;
+                letter-spacing: 0.09em;
+                text-transform: uppercase;
+            }
+
+            .mobile-slide-menu .menu-service-card {
+                width: 100%;
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                gap: 8px;
+                padding: 11px 10px;
+                margin-bottom: 8px;
+                border-radius: 10px;
+                border: 1px solid rgba(255, 255, 255, 0.1);
+                background: rgba(255, 255, 255, 0.035);
+                color: inherit;
+                text-decoration: none;
+                cursor: pointer;
+                font: inherit;
+                appearance: none;
+                box-sizing: border-box;
+                text-align: left;
+                transition: background 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
+            }
+
+            .mobile-slide-menu .menu-service-card:active {
+                transform: scale(0.98);
+                background: rgba(255, 255, 255, 0.08);
+            }
+
+            .mobile-slide-menu .menu-service-left {
+                display: flex;
+                align-items: center;
+                gap: 9px;
+                min-width: 0;
+                flex: 1 1 auto;
+            }
+
+            .mobile-slide-menu .menu-service-icon {
+                width: 32px;
+                height: 32px;
+                border-radius: 10px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                flex: 0 0 auto;
+                border: 1px solid rgba(255, 255, 255, 0.1);
+                background: rgba(255, 255, 255, 0.045);
+            }
+
+            .mobile-slide-menu .menu-service-icon svg {
+                width: 16px;
+                height: 16px;
+            }
+
+            .mobile-slide-menu .menu-service-card--study .menu-service-icon {
+                color: #60a5fa;
+                border-color: rgba(96, 165, 250, 0.24);
+                background: rgba(96, 165, 250, 0.08);
+            }
+
+            .mobile-slide-menu .menu-service-card--digital .menu-service-icon {
+                color: #5eead4;
+                border-color: rgba(45, 212, 191, 0.24);
+                background: rgba(20, 184, 166, 0.08);
+            }
+
+            .mobile-slide-menu .menu-service-copy {
+                min-width: 0;
+                flex: 1 1 auto;
+            }
+
+            .mobile-slide-menu .menu-service-copy strong {
+                display: block;
+                color: #fff;
+                font-size: 0.8rem;
+                font-weight: 600;
+                line-height: 1.2;
+                margin-bottom: 2px;
+                white-space: nowrap;
+                overflow: visible;
+                text-overflow: clip;
+            }
+
+            .mobile-slide-menu .menu-service-copy span {
+                display: block;
+                color: #9ca3af;
+                font-size: 0.68rem;
+                line-height: 1.3;
+                white-space: normal;
+                overflow: hidden;
+                display: -webkit-box;
+                -webkit-line-clamp: 2;
+                -webkit-box-orient: vertical;
+            }
+
+            .mobile-slide-menu .menu-service-arrow {
+                color: #64748b;
+                font-size: 1rem;
+                flex: 0 0 auto;
             }
 
             /* Overlay backdrop */
@@ -3118,6 +3523,7 @@
 
         :root {
             --desktop-home-font-family: "SF Pro Web", "Segoe UI", sans-serif;
+            --mobile-font-family: "SF Pro Web", "Segoe UI", sans-serif;
             --desktop-home-bg: #030407;
             --desktop-home-bg-soft: #0a0b10;
             --desktop-home-surface: rgba(15, 17, 21, 0.7);
@@ -6129,6 +6535,46 @@
                 </div>
                 <span class="arrow">›</span>
             </a>
+
+            <div class="menu-section-label">Dịch vụ khác</div>
+
+            <a class="menu-service-card menu-service-card--study" href="/study/" target="_blank"
+                rel="noopener noreferrer" onclick="closeMobileMenu();" aria-label="Mở Góc học tập">
+                <div class="menu-service-left">
+                    <div class="menu-service-icon" aria-hidden="true">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M12 7v14" />
+                            <path d="M3 18a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h5a4 4 0 0 1 4 4 4 4 0 0 1 4-4h5a1 1 0 0 1 1 1v13a1 1 0 0 1-1 1h-6a3 3 0 0 0-3 3 3 3 0 0 0-3-3z" />
+                        </svg>
+                    </div>
+                    <div class="menu-service-copy">
+                        <strong>Góc học tập</strong>
+                        <span>Định dạng văn bản, báo cáo, tiểu luận</span>
+                    </div>
+                </div>
+                <span class="menu-service-arrow">›</span>
+            </a>
+
+            <button type="button" class="menu-service-card menu-service-card--digital"
+                onclick="closeMobileMenu(); showDigitalUpgradeModal();" aria-label="Mở nâng cấp tài khoản số">
+                <div class="menu-service-left">
+                    <div class="menu-service-icon" aria-hidden="true">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M12 3v18" />
+                            <path d="m17 8-5-5-5 5" />
+                            <path d="M6 17h12" />
+                            <path d="M8 21h8" />
+                        </svg>
+                    </div>
+                    <div class="menu-service-copy">
+                        <strong>Nâng cấp tài khoản số</strong>
+                        <span>Google 5TB, ChatGPT Plus, CapCut Pro</span>
+                    </div>
+                </div>
+                <span class="menu-service-arrow">›</span>
+            </button>
         </div>
 
         <!-- Mobile Menu Overlay -->
@@ -6385,7 +6831,7 @@
                                         <p id="userEmail" style="font-size: 0.95rem; color: #aaa; margin: 0;">
                                             email@example.com</p>
                                         <span id="verifiedBadge"
-                                            style="display: none; background: rgba(34, 197, 94, 0.15); color: #22c55e; padding: 3px 10px; border-radius: 6px; font-size: 0.75rem; font-weight: 600; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif; border: 1px solid rgba(34, 197, 94, 0.3);">Verified</span>
+                                            style="display: none; background: rgba(34, 197, 94, 0.15); color: #22c55e; padding: 3px 10px; border-radius: 6px; font-size: 0.75rem; font-weight: 600; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif; border: 1px solid rgba(34, 197, 94, 0.3);">Đã xác minh</span>
                                     </div>
                                 </div>
 
@@ -6404,15 +6850,15 @@
                                         style="display: none; border-top: 1px solid rgba(99, 102, 241, 0.25); padding-top: 12px; margin-top: 12px;">
                                         <div
                                             style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
-                                            <span style="color: #fff; font-weight: 500; font-size: 0.9rem;">Active
-                                                from:</span>
+                                            <span style="color: #fff; font-weight: 500; font-size: 0.9rem;">Kích
+                                                hoạt:</span>
                                             <span id="proUpgradedDate"
                                                 style="color: #22c55e; font-size: 0.9rem; font-weight: 600;">-</span>
                                         </div>
                                         <div
                                             style="display: flex; justify-content: space-between; align-items: center;">
-                                            <span style="color: #fff; font-weight: 500; font-size: 0.9rem;">Expires
-                                                on:</span>
+                                            <span style="color: #fff; font-weight: 500; font-size: 0.9rem;">Hết
+                                                hạn:</span>
                                             <span id="proExpiresDate"
                                                 style="color: #22c55e; font-size: 0.9rem; font-weight: 600;">-</span>
                                         </div>
@@ -6422,7 +6868,8 @@
                                         <div
                                             style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
                                             <span
-                                                style="color: #fff; font-weight: 500; font-size: 0.9rem;">Credits:</span>
+                                                style="color: #fff; font-weight: 500; font-size: 0.9rem;">Credits hiện
+                                                có:</span>
                                             <span id="userCredits"
                                                 style="color: #22c55e; font-size: 0.9rem; font-weight: 600;">3</span>
                                         </div>
@@ -6430,38 +6877,39 @@
                                         <div id="creditsExpiresRow"
                                             style="display: none; justify-content: space-between; align-items: center; margin-bottom: 8px;">
                                             <span
-                                                style="color: #fff; font-weight: 500; font-size: 0.9rem;">Expires:</span>
+                                                style="color: #fff; font-weight: 500; font-size: 0.9rem;">Hạn
+                                                credits:</span>
                                             <span id="creditsExpires"
-                                                style="color: #22c55e; font-size: 0.9rem; font-weight: 600;">3 days
-                                                left</span>
+                                                style="color: #22c55e; font-size: 0.9rem; font-weight: 600;">Còn 3
+                                                ngày</span>
                                         </div>
                                         <!-- Assigned Account (PC) - ẩn trên mobile -->
                                         <div id="pcAccountRow"
                                             style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
-                                            <span style="color: #fff; font-weight: 500; font-size: 0.9rem;">Assigned
-                                                Account:</span>
+                                            <span style="color: #fff; font-weight: 500; font-size: 0.9rem;">Tài khoản
+                                                Netflix số:</span>
                                             <span id="assignedCookie"
                                                 style="color: #22c55e; font-size: 0.9rem; font-weight: 600;">-</span>
                                         </div>
-                                        <!-- TV Account - chỉ hiện trên mobile, thay thế Assigned Account -->
+                                        <!-- Tài khoản Netflix số - chỉ hiện trên mobile, thay thế dòng PC -->
                                         <div id="tvAccountRow"
                                             style="display: none; justify-content: space-between; align-items: center; margin-bottom: 8px;">
-                                            <span style="color: #fff; font-weight: 500; font-size: 0.9rem;">Assigned
-                                                Account:</span>
+                                            <span style="color: #fff; font-weight: 500; font-size: 0.9rem;">Tài khoản
+                                                Netflix số:</span>
                                             <span id="assignedTvCookie"
                                                 style="color: #8b5cf6; font-size: 0.9rem; font-weight: 600;">-</span>
                                         </div>
                                         <div
                                             style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
-                                            <span style="color: #fff; font-weight: 500; font-size: 0.9rem;">Switches
-                                                Left:</span>
+                                            <span style="color: #fff; font-weight: 500; font-size: 0.9rem;">Lượt đổi
+                                                còn lại:</span>
                                             <span id="reportLimit"
                                                 style="color: #22c55e; font-size: 0.9rem; font-weight: 600;">2/2</span>
                                         </div>
                                         <div
                                             style="display: flex; justify-content: space-between; align-items: center;">
-                                            <span style="color: #fff; font-weight: 500; font-size: 0.9rem;">Monthly
-                                                Invites:</span>
+                                            <span style="color: #fff; font-weight: 500; font-size: 0.9rem;">Lượt giới
+                                                thiệu:</span>
                                             <span id="referralsRemaining"
                                                 style="color: #22c55e; font-size: 0.9rem; font-weight: 600;">2/2</span>
                                         </div>
@@ -6472,6 +6920,63 @@
                                                 Xem lịch sử giới thiệu
                                             </a>
                                         </div>
+                                    </div>
+                                </div>
+
+                                <div class="mobile-action-hub" aria-label="Thao tác nhanh">
+                                    <div class="mobile-action-grid">
+                                        <button type="button" class="mobile-action-card mobile-action-card--pro"
+                                            onclick="openUpgradeToProModal()">
+                                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+                                                stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                                stroke-linejoin="round" aria-hidden="true">
+                                                <path d="M12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2Z" />
+                                            </svg>
+                                            <div>
+                                                <strong>Nâng cấp Pro Plan</strong>
+                                            </div>
+                                        </button>
+                                        <button type="button" class="mobile-action-card mobile-action-card--switch"
+                                            onclick="switchMobileTvAccount(this)">
+                                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+                                                stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                                stroke-linejoin="round" aria-hidden="true">
+                                                <path d="M21 12a9 9 0 0 0-9-9 9.75 9.75 0 0 0-6.74 2.74L3 8" />
+                                                <path d="M3 3v5h5" />
+                                                <path d="M3 12a9 9 0 0 0 9 9 9.75 9.75 0 0 0 6.74-2.74L21 16" />
+                                                <path d="M16 21v-5h5" />
+                                            </svg>
+                                            <div>
+                                                <strong>Đổi tài khoản Netflix</strong>
+                                            </div>
+                                        </button>
+                                        <button type="button" class="mobile-action-card mobile-action-card--credits"
+                                            onclick="openPurchaseCreditsModal()">
+                                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+                                                stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                                stroke-linejoin="round" aria-hidden="true">
+                                                <circle cx="8" cy="8" r="6" />
+                                                <path d="M18.09 10.37A6 6 0 1 1 10.34 18" />
+                                                <path d="M7 6h1v4" />
+                                                <path d="m16.71 13.88.7.71-2.82 2.82" />
+                                            </svg>
+                                            <div>
+                                                <strong>Mua thêm credits</strong>
+                                            </div>
+                                        </button>
+                                        <button type="button" class="mobile-action-card mobile-action-card--support"
+                                            onclick="window.open('https://www.facebook.com/tiembanh4k/', '_blank')">
+                                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+                                                stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                                stroke-linejoin="round" aria-hidden="true">
+                                                <path d="M3 11h3a2 2 0 0 1 2 2v3a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-5Z" />
+                                                <path d="M21 11h-3a2 2 0 0 0-2 2v3a2 2 0 0 0 2 2h1a2 2 0 0 0 2-2v-5Z" />
+                                                <path d="M3 11a9 9 0 1 1 18 0" />
+                                            </svg>
+                                            <div>
+                                                <strong>Liên hệ hỗ trợ</strong>
+                                            </div>
+                                        </button>
                                     </div>
                                 </div>
 
@@ -6543,10 +7048,18 @@
                                 </div>
 
                                 <!-- Mobile App Login (chỉ hiển thị trên mobile) -->
+                                <div class="mobile-primary-tabs" role="tablist" aria-label="Chọn chức năng chính">
+                                    <button type="button" class="mobile-primary-tab mobile-primary-tab--app active"
+                                        id="mobilePrimaryTabApp" onclick="setMobilePrimaryPanel('app')">
+                                        NETFLIX APP
+                                    </button>
+                                    <button type="button" class="mobile-primary-tab mobile-primary-tab--tv"
+                                        id="mobilePrimaryTabTv" onclick="setMobilePrimaryPanel('tv')">
+                                        NETFLIX TV
+                                    </button>
+                                </div>
                                 <div id="mobileAppLoginForm">
                                     <div class="app-login-title">ĐĂNG NHẬP NETFLIX APP</div>
-                                    <div class="app-login-desc">Tạo link đăng nhập để xem trực tiếp trên app
-                                        điện thoại</div>
                                     <button type="button" id="mobileAppLoginBtn" onclick="handleMobileAppLogin()">
                                         <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14"
                                             viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
@@ -6661,7 +7174,7 @@
                                 </div>
 
                                 <!-- Mobile TV Activation Form (chỉ hiển thị trên mobile) -->
-                                <div id="mobileTvForm">
+                                <div id="mobileTvForm" class="mobile-primary-panel-hidden">
                                     <div class="tv-title">KÍCH HOẠT NETFLIX TV</div>
                                     <div class="tv-input-row">
                                         <input type="text" id="mobileTvCodeInput" placeholder="Nhập mã 8 số"
@@ -6760,7 +7273,7 @@
                                     </div>
                                 </div>
 
-                                <button id="purchaseCreditsBtn" onclick="openPurchaseCreditsModal()" class="btn"
+                                <button id="purchaseCreditsBtn" onclick="openPurchaseCreditsModal()" class="btn mobile-legacy-action"
                                     style="background: rgba(245, 158, 11, 0.1); color: #fbbf24; margin-bottom: 10px; border: 1px solid rgba(245, 158, 11, 0.3); border-radius: 8px; transition: all 0.3s; display: flex; align-items: center; justify-content: center; gap: 8px;">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"
                                         fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
@@ -6773,8 +7286,8 @@
                                     Mua thêm Credits
                                 </button>
 
-                                <!-- Nút đổi tài khoản TV - chỉ hiện trên mobile -->
-                                <button id="switchTvAccountBtn" onclick="switchMobileTvAccount()" class="btn"
+                                <!-- Nút đổi tài khoản Netflix số - chỉ hiện trên mobile -->
+                                <button id="switchTvAccountBtn" onclick="switchMobileTvAccount()" class="btn mobile-legacy-action"
                                     style="display: none; background: rgba(139, 92, 246, 0.1); color: #8b5cf6; margin-bottom: 10px; border: 1px solid rgba(139, 92, 246, 0.3); border-radius: 8px; transition: all 0.3s; align-items: center; justify-content: center; gap: 8px;">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"
                                         fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
@@ -6799,7 +7312,7 @@
                                 </button>
 
                                 <button onclick="window.open('https://www.facebook.com/tiembanh4k/', '_blank')"
-                                    class="btn"
+                                    class="btn mobile-legacy-action"
                                     style="background: rgba(16, 185, 129, 0.1); color: #34d399; margin-bottom: 10px; border: 1px solid rgba(16, 185, 129, 0.3); border-radius: 8px; transition: all 0.3s; display: flex; align-items: center; justify-content: center; gap: 8px;">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"
                                         fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
@@ -8443,11 +8956,11 @@
                 icon: 'â„¹ï¸',
                 title: 'Giải thích thông tin tài khoản',
                 message: `<div style="text-align: justify; line-height: 1.5; width: 400px;">
-<p style="margin: 0 0 6px 0;"><strong style="color: #fbbf24;">Credits:</strong> Số lượt đăng nhập Netflix còn lại. Mỗi lần bấm "Watch as Guest" thành công sẽ trừ 1 credit.</p>
-<p style="margin: 0 0 6px 0;"><strong style="color: #fbbf24;">Expires:</strong> Ngày hết hạn credits. Với gói Free, credits sẽ hết hạn sau 3 ngày kể từ ngày đăng ký hoặc được cấp lại. Sau khi hết hạn, credits sẽ về 0.</p>
-<p style="margin: 0 0 6px 0;"><strong style="color: #fbbf24;">Assigned Account:</strong> Tài khoản Netflix đang được gán cho bạn. Mỗi user sẽ được gán 1 tài khoản riêng.</p>
-<p style="margin: 0 0 6px 0;"><strong style="color: #fbbf24;">Switches Left:</strong> Số lần đổi tài khoản Netflix còn lại trong tháng. Dùng khi tài khoản hiện tại bị lỗi.</p>
-<p style="margin: 0;"><strong style="color: #fbbf24;">Monthly Invites:</strong> Số lượt mời bạn bè còn lại trong tháng. Khi bạn bè nhập mã giới thiệu của bạn để đăng ký thành công tài khoản tại Tiệm Bánh, cả 2 sẽ được nhận thêm 2 credits.<br><br><strong style="text-align: left; display: block;">Mã giới thiệu của bạn là:</strong><span style="color: #22c55e; user-select: all; display: block;">${userEmail}</span></p>
+<p style="margin: 0 0 6px 0;"><strong style="color: #fbbf24;">Credits hiện có:</strong> Số lượt đăng nhập Netflix còn lại. Mỗi lần bấm "Watch as Guest" thành công sẽ trừ 1 credit.</p>
+<p style="margin: 0 0 6px 0;"><strong style="color: #fbbf24;">Hạn credits:</strong> Ngày hết hạn credits. Với gói Free, credits sẽ hết hạn sau 3 ngày kể từ ngày đăng ký hoặc được cấp lại. Sau khi hết hạn, credits sẽ về 0.</p>
+<p style="margin: 0 0 6px 0;"><strong style="color: #fbbf24;">Tài khoản Netflix số:</strong> Tài khoản Netflix đang được gán cho bạn. Mỗi user sẽ được gán 1 tài khoản riêng.</p>
+<p style="margin: 0 0 6px 0;"><strong style="color: #fbbf24;">Lượt đổi còn lại:</strong> Số lần đổi tài khoản Netflix còn lại trong tháng. Dùng khi tài khoản hiện tại bị lỗi.</p>
+<p style="margin: 0;"><strong style="color: #fbbf24;">Lượt giới thiệu:</strong> Số lượt mời bạn bè còn lại trong tháng. Khi bạn bè nhập mã giới thiệu của bạn để đăng ký thành công tài khoản tại Tiệm Bánh, cả 2 sẽ được nhận thêm 2 credits.<br><br><strong style="text-align: left; display: block;">Mã giới thiệu của bạn là:</strong><span style="color: #22c55e; user-select: all; display: block;">${userEmail}</span></p>
 </div>`,
                 buttons: [{ text: 'Đã hiểu', type: 'primary' }]
             });
@@ -10464,16 +10977,16 @@ Nếu cần thêm lượt đổi tài khoản, vui lòng liên hệ Support qua 
             // Cập nhật text và màu sắc
             if (daysLeft <= 0 || user.credits <= 0) {
                 // Đã hết hạn - hiện ngày hết hạn
-                expiresText.textContent = isDesktopHudRow ? `Hết hạn (${expireDateStr})` : `Expired (${expireDateStr})`;
+                expiresText.textContent = `Hết hạn (${expireDateStr})`;
                 expiresText.style.color = '#ef4444'; // Đỏ
             } else if (daysLeft === 1) {
-                expiresText.textContent = isDesktopHudRow ? 'Còn 1 ngày' : '1 day left';
+                expiresText.textContent = 'Còn 1 ngày';
                 expiresText.style.color = '#ef4444'; // Đỏ
             } else if (daysLeft <= 3) {
-                expiresText.textContent = isDesktopHudRow ? `Còn ${daysLeft} ngày` : `${daysLeft} days left`;
+                expiresText.textContent = `Còn ${daysLeft} ngày`;
                 expiresText.style.color = '#f59e0b'; // Cam
             } else {
-                expiresText.textContent = isDesktopHudRow ? `Còn ${daysLeft} ngày` : `${daysLeft} days left`;
+                expiresText.textContent = `Còn ${daysLeft} ngày`;
                 expiresText.style.color = '#22c55e'; // Xanh
             }
         }
@@ -11186,6 +11699,27 @@ Nếu cần thêm lượt đổi tài khoản, vui lòng liên hệ Support qua 
                 btnText.textContent = 'Tạo link đăng nhập';
             }
         }
+
+        function setMobilePrimaryPanel(panel) {
+            const showTv = panel === 'tv';
+            const appPanel = document.getElementById('mobileAppLoginForm');
+            const tvPanel = document.getElementById('mobileTvForm');
+            const appTab = document.getElementById('mobilePrimaryTabApp');
+            const tvTab = document.getElementById('mobilePrimaryTabTv');
+
+            if (appPanel) appPanel.classList.toggle('mobile-primary-panel-hidden', showTv);
+            if (tvPanel) tvPanel.classList.toggle('mobile-primary-panel-hidden', !showTv);
+            if (appTab) {
+                appTab.classList.toggle('active', !showTv);
+                appTab.setAttribute('aria-selected', String(!showTv));
+            }
+            if (tvTab) {
+                tvTab.classList.toggle('active', showTv);
+                tvTab.setAttribute('aria-selected', String(showTv));
+            }
+        }
+
+        window.setMobilePrimaryPanel = setMobilePrimaryPanel;
 
         function toggleAccordion(accordionId) {
             const accordion = document.getElementById(accordionId);
@@ -12056,14 +12590,14 @@ Nếu cần thêm lượt đổi tài khoản, vui lòng liên hệ Support qua 
                 const confirmed = await showConfirmCustomModal({
                     icon: '🔄',
                     title: 'Đổi tài khoản Netflix',
-                    message: 'Bạn muốn đổi sang tài khoản Netflix khác?\n\nLưu ý: Mỗi lần đổi sẽ trừ 1 vào Switches Left.',
+                    message: 'Bạn muốn đổi sang tài khoản Netflix khác?\n\nLưu ý: Mỗi lần đổi sẽ trừ 1 vào lượt đổi còn lại.',
                     confirmText: 'Đổi tài khoản',
                     cancelText: 'Hủy'
                 });
 
                 if (!confirmed) return;
             } else {
-                const confirmed = confirm('Bạn muốn đổi sang tài khoản Netflix khác?\n\nLưu ý: Mỗi lần đổi sẽ trừ 1 vào Switches Left.');
+                const confirmed = confirm('Bạn muốn đổi sang tài khoản Netflix khác?\n\nLưu ý: Mỗi lần đổi sẽ trừ 1 vào lượt đổi còn lại.');
                 if (!confirmed) return;
             }
 
@@ -12817,7 +13351,7 @@ Nếu cần thêm lượt đổi tài khoản, vui lòng liên hệ Support qua 
                             <div id="netflixInfoBorder">
                                 <div class="hud-row" id="creditsExpiresRow" style="display:none;"><span class="hud-label">Hạn credits</span><span id="creditsExpires" class="hud-value val-green">Còn 3 ngày</span></div>
                                 <div class="hud-row" id="pcAccountRow"><span class="hud-label">Tài khoản Netflix số</span><span id="assignedCookie" class="hud-value val-green">-</span></div>
-                                <div class="hud-row mobile-only" id="tvAccountRow" style="display:none !important;"><span class="hud-label">Tài khoản TV</span><span id="assignedTvCookie" class="hud-value" style="color:var(--desktop-home-purple);">-</span></div>
+                                <div class="hud-row mobile-only" id="tvAccountRow" style="display:none !important;"><span class="hud-label">Tài khoản Netflix số</span><span id="assignedTvCookie" class="hud-value" style="color:var(--desktop-home-purple);">-</span></div>
                                 <div class="hud-row"><span class="hud-label">Lượt giới thiệu</span><span id="referralsRemaining" class="hud-value val-green">2/2</span></div>
                                 <div class="hud-footer"><a href="javascript:void(0)" onclick="showReferralHistoryModal()" class="help-link">Xem lịch sử giới thiệu →</a></div>
                             </div>
@@ -12838,7 +13372,7 @@ Nếu cần thêm lượt đổi tài khoản, vui lòng liên hệ Support qua 
                         </div>
                         <div class="menu-grid">
                             <button id="purchaseCreditsBtn" class="menu-btn" onclick="openPurchaseCreditsModal()"><div class="menu-icon" style="background:rgba(251,191,36,0.1);color:var(--desktop-home-gold);"><svg class="icon"><circle cx="8" cy="8" r="6"/><path d="M18.09 10.37A6 6 0 1 1 10.34 18"/><path d="M7 6h1v4"/><path d="m16.71 13.88.7.71-2.82 2.82"/></svg></div><div class="menu-copy"><strong>Mua thêm credits</strong><span>Và quyền truy cập Netflix Mobile App.</span></div></button>
-                            <button id="switchTvAccountBtn" class="menu-btn mobile-only" style="display:none !important;" onclick="switchMobileTvAccount()"><div class="menu-icon" style="background:rgba(139,92,246,0.1);color:var(--desktop-home-purple);"><svg class="icon"><path d="M21 12a9 9 0 0 0-9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/><path d="M3 12a9 9 0 0 0 9 9 9.75 9.75 0 0 0 6.74-2.74L21 16"/><path d="M16 21v-5h5"/></svg></div><div class="menu-copy"><strong>Đổi tài khoản Netflix</strong><span>Chuyển tài khoản TV.</span></div></button>
+                            <button id="switchTvAccountBtn" class="menu-btn mobile-only" style="display:none !important;" onclick="switchMobileTvAccount()"><div class="menu-icon" style="background:rgba(139,92,246,0.1);color:var(--desktop-home-purple);"><svg class="icon"><path d="M21 12a9 9 0 0 0-9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/><path d="M3 12a9 9 0 0 0 9 9 9.75 9.75 0 0 0 6.74-2.74L21 16"/><path d="M16 21v-5h5"/></svg></div><div class="menu-copy"><strong>Đổi tài khoản Netflix</strong><span>Chuyển tài khoản Netflix số.</span></div></button>
                             <button class="menu-btn" onclick="showReportIssueModal()"><div class="menu-icon" style="background:rgba(239,68,68,0.1);color:var(--desktop-home-danger);"><svg class="icon"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg></div><div class="menu-copy"><strong>Báo hỏng / đổi tài khoản</strong><span>Khi gặp tài khoản Netflix lỗi.</span></div></button>
                             <button class="menu-btn" onclick="handleLogout()"><div class="menu-icon"><svg class="icon"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" x2="9" y1="12" y2="12"/></svg></div><div class="menu-copy"><strong>Đăng xuất</strong><span>Thoát phiên hiện tại.</span></div></button>
                         </div>
