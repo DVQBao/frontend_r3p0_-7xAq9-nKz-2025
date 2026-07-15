@@ -10600,20 +10600,40 @@ Nếu cần thêm lượt đổi tài khoản, vui lòng liên hệ Support qua 
         }
 
         @media (max-width: 768px) {
+            #paymentModal.active {
+                align-items: flex-start;
+                overflow-y: auto;
+                overscroll-behavior: contain;
+                touch-action: pan-y;
+                -webkit-overflow-scrolling: touch;
+                scrollbar-width: none;
+                -ms-overflow-style: none;
+            }
+
+            #paymentModal::-webkit-scrollbar {
+                display: none;
+                width: 0;
+                height: 0;
+            }
+
             .payment-modal-grid {
                 grid-template-columns: 1fr;
-                gap: 18px;
+                gap: 12px;
             }
 
             #paymentModal .modal-content {
-                width: 100% !important;
-                max-width: none !important;
+                width: min(calc(100% - 20px), 340px) !important;
+                max-width: 340px !important;
+                max-height: none !important;
                 padding: 0 !important;
+                margin: 0 auto !important;
                 background: transparent !important;
                 border: 0 !important;
                 border-radius: 0 !important;
                 box-shadow: none !important;
                 backdrop-filter: none !important;
+                overflow: visible !important;
+                font-size: 0.8rem;
             }
 
             #paymentModal .modal-content::before {
@@ -10621,11 +10641,57 @@ Nếu cần thêm lượt đổi tài khoản, vui lòng liên hệ Support qua 
             }
 
             #paymentModal h2 {
-                font-size: 1.1rem;
+                font-size: 0.95rem !important;
+                margin-bottom: 12px !important;
             }
 
-            .payment-modal-qr {
-                padding: 16px 12px;
+            #paymentModal .payment-modal-grid,
+            #paymentModal .payment-modal-qr,
+            #paymentModal .payment-modal-info {
+                width: 100%;
+                min-width: 0;
+                box-sizing: border-box;
+            }
+
+            #paymentModal .payment-modal-qr {
+                padding: 12px 9px !important;
+            }
+
+            #paymentModal #paymentQrImage {
+                width: 100% !important;
+                max-width: 200px !important;
+                margin: 10px 0 !important;
+            }
+
+            #paymentModal .payment-section-title {
+                gap: 7px;
+                font-size: 0.8rem;
+            }
+
+            #paymentModal .payment-section-icon {
+                width: 23px;
+                height: 23px;
+            }
+
+            #paymentModal p {
+                font-size: 0.78rem !important;
+                line-height: 1.5 !important;
+            }
+
+            #paymentModal .payment-card > div {
+                font-size: 0.78rem;
+                line-height: 1.55 !important;
+            }
+
+            #paymentModal .payment-card,
+            #paymentModal .payment-alert-card,
+            #paymentModal .payment-info-card {
+                padding: 10px 11px;
+            }
+
+            #paymentModal button {
+                padding: 11px 0 !important;
+                font-size: 0.8rem !important;
             }
         }
 
