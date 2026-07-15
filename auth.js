@@ -5735,10 +5735,18 @@ window.openPurchaseCreditsModal = function () {
     const modal = document.getElementById('purchaseCreditsModal');
     if (modal) {
         modal.style.display = 'flex';
-        // Reset form
-        document.getElementById('purchaseAmount').value = '';
-        document.getElementById('creditsPreview').style.display = 'none';
-        document.getElementById('confirmPurchaseBtn').disabled = true;
+        const input = document.getElementById('purchaseAmount');
+        const creditsAmount = document.getElementById('creditsAmount');
+        const totalAmount = document.getElementById('totalAmount');
+        const confirmBtn = document.getElementById('confirmPurchaseBtn');
+
+        if (input) input.value = '';
+        if (creditsAmount) creditsAmount.textContent = '0';
+        if (totalAmount) totalAmount.textContent = '0 VNĐ';
+        if (confirmBtn) {
+            confirmBtn.disabled = true;
+            confirmBtn.style.opacity = '0.5';
+        }
     }
 }
 
@@ -5756,37 +5764,40 @@ window.closePurchaseCreditsModal = function () {
  * Calculate credits from amount
  */
 window.calculateCredits = function (amount) {
-    const numAmount = parseInt(String(amount || '').replace(/\D/g, ''), 10);
-    const preview = document.getElementById('creditsPreview');
+    const digits = String(amount || '').replace(/\D/g, '');
+    const numAmount = parseInt(digits, 10);
+    const input = document.getElementById('purchaseAmount');
     const creditsAmount = document.getElementById('creditsAmount');
+    const totalAmount = document.getElementById('totalAmount');
     const confirmBtn = document.getElementById('confirmPurchaseBtn');
 
-    if (!amount || isNaN(numAmount)) {
-        preview.style.display = 'none';
-        confirmBtn.disabled = true;
+    const formatted = digits ? Number(digits).toLocaleString('vi-VN') : '';
+    if (input) input.value = formatted;
+
+    const isValid = digits
+        && Number.isFinite(numAmount)
+        && numAmount >= 40000
+        && numAmount % 1000 === 0;
+
+    if (!isValid) {
+        if (creditsAmount) creditsAmount.textContent = '0';
+        if (totalAmount) totalAmount.textContent = '0 VNĐ';
+        if (confirmBtn) {
+            confirmBtn.disabled = true;
+            confirmBtn.style.opacity = '0.4';
+        }
         return;
     }
 
-    // Check minimum
-    if (numAmount < 35000) {
-        preview.style.display = 'none';
-        confirmBtn.disabled = true;
-        return;
+    // Calculate credits: 1.000 VNĐ = 1 credit (40.000 = 40 credits)
+    const credits = Math.floor(numAmount / 1000);
+
+    if (creditsAmount) creditsAmount.textContent = credits.toLocaleString('vi-VN');
+    if (totalAmount) totalAmount.textContent = `${formatted} VNĐ`;
+    if (confirmBtn) {
+        confirmBtn.disabled = false;
+        confirmBtn.style.opacity = '1';
     }
-
-    // Check if round number (multiple of 1000)
-    if (numAmount % 1000 !== 0) {
-        preview.style.display = 'none';
-        confirmBtn.disabled = true;
-        return;
-    }
-
-    // Calculate credits: 500 VNĐ = 1 credit (35.000 = 70 credits)
-    const credits = Math.floor(numAmount / 500);
-
-    creditsAmount.textContent = `${credits} Credits`;
-    preview.style.display = 'block';
-    confirmBtn.disabled = false;
 }
 
 /**
@@ -5795,8 +5806,8 @@ window.calculateCredits = function (amount) {
 window.confirmPurchaseCredits = async function () {
     const amount = parseInt(String(document.getElementById('purchaseAmount').value || '').replace(/\D/g, ''), 10);
 
-    if (!amount || amount < 35000 || amount % 1000 !== 0) {
-        alert('⚠️ Vui lòng nhập số tiền hợp lệ (tối thiểu 35.000 VNĐ, số tròn nghìn)');
+    if (!amount || amount < 40000 || amount % 1000 !== 0) {
+        alert('⚠️ Vui lòng nhập số tiền hợp lệ (tối thiểu 40.000 VNĐ, số tròn nghìn)');
         return;
     }
 

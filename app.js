@@ -26,7 +26,7 @@ const CONFIG = {
     EXTENSION_DOWNLOAD_LINK: 'https://drive.google.com/drive/folders/1eozcbA4q54f8Ox46d2HlptSD92tDFHCl?usp=sharing'
 };
 
-const PC_LOGIN_COST = 3;
+const PC_LOGIN_COST = 1;
 
 // ========================================
 // DOM ELEMENTS
@@ -841,7 +841,7 @@ async function handlePcLoginLink(options = {}) {
 
             if (false && data.code === 'INSUFFICIENT_CREDITS') {
                 const insufficientMessage = typeof window.getInsufficientCreditsMessage === 'function'
-                    ? window.getInsufficientCreditsMessage(data.required || 5, data.current || 0)
+                    ? window.getInsufficientCreditsMessage(data.required || PC_LOGIN_COST, data.current || 0)
                     : (data.error || 'Không đủ credits.');
                 setPcLoginStatus(insufficientMessage, 'error');
                 return;
@@ -1124,7 +1124,7 @@ function selectProPlan() {
     // Show confirmation
     const confirm = window.confirm(`🚀 Nâng cấp lên Pro Plan?
 
-💰 Giá: 35.000 VNĐ/tháng
+💰 Giá: 40.000 VNĐ/tháng
 
 Bạn sẽ được chuyển đến Zalo để liên hệ chủ trang và thanh toán.
 
