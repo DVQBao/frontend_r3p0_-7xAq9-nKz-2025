@@ -387,6 +387,75 @@
             display: none;
         }
 
+        .mobile-render-canplay-control {
+            display: none;
+        }
+
+        .render-canplay-control .render-canplay-copy {
+            display: grid;
+            gap: 3px;
+            min-width: 0;
+            flex: 1;
+        }
+
+        .render-canplay-control .render-canplay-label {
+            font-weight: 800;
+            line-height: 1.15;
+        }
+
+        .render-canplay-control .render-canplay-status {
+            color: #a1a1aa;
+            font-size: 10px;
+            font-weight: 700;
+            line-height: 1.25;
+        }
+
+        .render-canplay-control .render-canplay-toggle {
+            position: relative;
+            width: 34px;
+            height: 20px;
+            flex: 0 0 34px;
+            border-radius: 999px;
+            border: 1px solid rgba(148, 163, 184, 0.42);
+            background: rgba(71, 85, 105, 0.9);
+            transition: 0.2s ease;
+        }
+
+        .render-canplay-control .render-canplay-toggle::after {
+            content: '';
+            position: absolute;
+            top: 3px;
+            left: 3px;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: #ffffff;
+            box-shadow: 0 2px 7px rgba(0, 0, 0, 0.34);
+            transition: 0.2s ease;
+        }
+
+        .render-canplay-control.is-enabled .render-canplay-toggle {
+            border-color: rgba(74, 222, 128, 0.72);
+            background: #16a34a;
+        }
+
+        .render-canplay-control.is-enabled .render-canplay-toggle::after {
+            transform: translateX(14px);
+        }
+
+        .render-canplay-control.is-enabled .render-canplay-status {
+            color: #86efac;
+        }
+
+        .render-canplay-control.is-disabled .render-canplay-status {
+            color: #fca5a5;
+        }
+
+        .render-canplay-control.is-loading {
+            opacity: 0.62;
+            cursor: wait !important;
+        }
+
         .mobile-admin-mark,
         .mobile-stat-icon,
         .mobile-actions-title,
@@ -4894,6 +4963,23 @@
                 border-color: rgba(248, 113, 113, 0.44);
             }
 
+            .sidebar-nav button.render-canplay-control {
+                gap: 10px;
+                padding-right: 10px;
+            }
+
+            .sidebar-nav button.render-canplay-control.is-enabled {
+                color: #dcfce7;
+                border-color: rgba(74, 222, 128, 0.3);
+                background: linear-gradient(145deg, rgba(22, 163, 74, 0.18), rgba(255, 255, 255, 0.025));
+            }
+
+            .sidebar-nav button.render-canplay-control.is-disabled {
+                color: #fee2e2;
+                border-color: rgba(248, 113, 113, 0.3);
+                background: linear-gradient(145deg, rgba(185, 28, 28, 0.18), rgba(255, 255, 255, 0.025));
+            }
+
             .sidebar-icon {
                 display: inline-flex;
                 width: 18px;
@@ -6850,7 +6936,7 @@
                 width: 100%;
                 margin-top: 0;
                 align-items: stretch;
-                order: 4;
+                order: 5;
             }
 
             .search-wrapper .search-box {
@@ -6916,9 +7002,48 @@
                 order: 2;
             }
 
+            .mobile-render-canplay-control {
+                order: 3;
+                width: 100%;
+                min-height: 48px;
+                display: flex;
+                align-items: center;
+                gap: 10px;
+                padding: 8px 11px;
+                border-radius: 8px;
+                border: 1px solid rgba(148, 163, 184, 0.22);
+                background: linear-gradient(145deg, rgba(255, 255, 255, 0.07), rgba(255, 255, 255, 0.025));
+                color: #e5e7eb;
+                text-align: left;
+                cursor: pointer;
+                -webkit-tap-highlight-color: transparent;
+                touch-action: manipulation;
+            }
+
+            .mobile-render-canplay-control.is-enabled {
+                border-color: rgba(74, 222, 128, 0.34);
+                background: linear-gradient(145deg, rgba(22, 163, 74, 0.17), rgba(15, 23, 42, 0.72));
+            }
+
+            .mobile-render-canplay-control.is-disabled {
+                border-color: rgba(248, 113, 113, 0.34);
+                background: linear-gradient(145deg, rgba(185, 28, 28, 0.17), rgba(15, 23, 42, 0.72));
+            }
+
+            .mobile-render-canplay-control .mobile-btn-icon {
+                display: inline-flex;
+                width: 19px;
+                height: 19px;
+                flex-basis: 19px;
+            }
+
+            .mobile-render-canplay-control .render-canplay-toggle {
+                margin-left: auto;
+            }
+
             .mobile-action-drawer {
                 display: block;
-                order: 3;
+                order: 4;
                 width: 100%;
             }
 
@@ -8423,6 +8548,20 @@
                         </span>
                         Check Canplay
                     </button>
+                    <button type="button" class="render-canplay-control is-loading" data-render-canplay-control onclick="toggleRenderCanplayQuickAction()" aria-pressed="false">
+                        <span class="sidebar-icon" aria-hidden="true">
+                            <svg viewBox="0 0 24 24" focusable="false">
+                                <rect x="3" y="4" width="18" height="6" rx="2" />
+                                <rect x="3" y="14" width="18" height="6" rx="2" />
+                                <path d="M7 7h.01M7 17h.01M11 7h6M11 17h6" />
+                            </svg>
+                        </span>
+                        <span class="render-canplay-copy">
+                            <span class="render-canplay-label">Render Canplay</span>
+                            <span class="render-canplay-status" data-render-canplay-status>Đang tải trạng thái...</span>
+                        </span>
+                        <span class="render-canplay-toggle" aria-hidden="true"></span>
+                    </button>
                     <button type="button" class="sidebar-danger" onclick="logoutAdmin()">
                         <span class="sidebar-icon" aria-hidden="true">
                             <svg viewBox="0 0 24 24" focusable="false">
@@ -8600,6 +8739,20 @@
                     CTV
                 </button>
             </div>
+            <button type="button" class="mobile-render-canplay-control render-canplay-control is-loading" data-render-canplay-control onclick="toggleRenderCanplayQuickAction()" aria-pressed="false">
+                <span class="mobile-btn-icon" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" focusable="false">
+                        <rect x="3" y="4" width="18" height="6" rx="2" />
+                        <rect x="3" y="14" width="18" height="6" rx="2" />
+                        <path d="M7 7h.01M7 17h.01M11 7h6M11 17h6" />
+                    </svg>
+                </span>
+                <span class="render-canplay-copy">
+                    <span class="render-canplay-label">Render Canplay</span>
+                    <span class="render-canplay-status" data-render-canplay-status>Đang tải trạng thái...</span>
+                </span>
+                <span class="render-canplay-toggle" aria-hidden="true"></span>
+            </button>
             <!-- Mobile: Hàng 2 - Quản lý Cookies -->
             <details class="mobile-action-drawer">
                 <summary>Thao tác khác</summary>
@@ -9114,6 +9267,7 @@
 
                 if (response.ok) {
                     loadUsers(1, '', ''); // Start fresh on page 1
+                    loadRenderCanplayState();
                     setupSearch();
                 } else {
                     localStorage.removeItem('admin_token');
@@ -9490,6 +9644,7 @@
 
                     showMessage('Đăng nhập Admin thành công!', 'success');
                     loadUsers(1, '', '');
+                    loadRenderCanplayState();
                     setupSearch();
                 } else {
                     errorDiv.textContent = data.error || 'Sai tên đăng nhập hoặc mật khẩu!';
@@ -9517,6 +9672,106 @@
             setTimeout(() => {
                 window.location.href = '/';
             }, 1000);
+        }
+
+        // ========================================
+        // RENDER CANPLAY QUICK ACTION
+        // ========================================
+
+        let renderCanplayEnabled = null;
+        let renderCanplayBusy = false;
+        let renderCanplayError = '';
+
+        function updateRenderCanplayControls() {
+            const isKnown = typeof renderCanplayEnabled === 'boolean';
+            const statusText = renderCanplayBusy
+                ? (isKnown ? 'Đang cập nhật...' : 'Đang tải trạng thái...')
+                : renderCanplayError
+                    ? (isKnown
+                        ? `Lỗi cập nhật · vẫn đang ${renderCanplayEnabled ? 'bật' : 'tắt'}`
+                        : 'Không tải được · nhấn để thử lại')
+                    : renderCanplayEnabled
+                        ? 'Đang bật · nhấn để tắt'
+                        : 'Đang tắt · nhấn để bật';
+
+            document.querySelectorAll('[data-render-canplay-control]').forEach(control => {
+                control.classList.toggle('is-enabled', renderCanplayEnabled === true);
+                control.classList.toggle('is-disabled', renderCanplayEnabled === false);
+                control.classList.toggle('is-loading', renderCanplayBusy);
+                control.disabled = renderCanplayBusy;
+                control.setAttribute('aria-pressed', renderCanplayEnabled === true ? 'true' : 'false');
+                control.setAttribute('aria-label', isKnown
+                    ? `${renderCanplayEnabled ? 'Tắt' : 'Bật'} check canplay trên server Render`
+                    : 'Tải trạng thái check canplay trên server Render');
+
+                const status = control.querySelector('[data-render-canplay-status]');
+                if (status) status.textContent = statusText;
+            });
+        }
+
+        async function loadRenderCanplayState() {
+            if (renderCanplayBusy) return;
+            renderCanplayBusy = true;
+            renderCanplayError = '';
+            updateRenderCanplayControls();
+
+            try {
+                const response = await fetch(`${BACKEND_URL}/api/admin/canplay/server-check`, {
+                    headers: { 'Authorization': `Bearer ${localStorage.getItem('admin_token')}` }
+                });
+                const data = await response.json();
+                if (!response.ok) throw new Error(data.error || 'Không tải được trạng thái Render canplay');
+                renderCanplayEnabled = data.serverCheck?.enabled !== false;
+            } catch (error) {
+                console.error('Load Render canplay state error:', error);
+                renderCanplayEnabled = null;
+                renderCanplayError = error.message || 'Không tải được trạng thái';
+            } finally {
+                renderCanplayBusy = false;
+                updateRenderCanplayControls();
+            }
+        }
+
+        async function toggleRenderCanplayQuickAction() {
+            if (renderCanplayBusy) return;
+            if (typeof renderCanplayEnabled !== 'boolean') {
+                await loadRenderCanplayState();
+                return;
+            }
+
+            const nextEnabled = !renderCanplayEnabled;
+            const warning = nextEnabled
+                ? 'Bật lại check canplay trực tiếp từ server Render?'
+                : 'Tắt check canplay trên server Render? Link/cookie vẫn được trả nhưng server sẽ không xác minh canplay.';
+            if (!confirm(warning)) return;
+
+            const previousEnabled = renderCanplayEnabled;
+            renderCanplayBusy = true;
+            renderCanplayError = '';
+            updateRenderCanplayControls();
+
+            try {
+                const response = await fetch(`${BACKEND_URL}/api/admin/canplay/server-check`, {
+                    method: 'PUT',
+                    headers: {
+                        'Authorization': `Bearer ${localStorage.getItem('admin_token')}`,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ enabled: nextEnabled })
+                });
+                const data = await response.json();
+                if (!response.ok) throw new Error(data.error || 'Không cập nhật được Render canplay');
+                renderCanplayEnabled = data.serverCheck?.enabled !== false;
+                showMessage(data.message, 'success');
+            } catch (error) {
+                console.error('Update Render canplay state error:', error);
+                renderCanplayEnabled = previousEnabled;
+                renderCanplayError = error.message || 'Không cập nhật được trạng thái';
+                showMessage(renderCanplayError, 'error');
+            } finally {
+                renderCanplayBusy = false;
+                updateRenderCanplayControls();
+            }
         }
 
         // ========================================
