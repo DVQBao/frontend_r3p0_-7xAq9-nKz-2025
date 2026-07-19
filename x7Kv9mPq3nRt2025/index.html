@@ -11844,6 +11844,7 @@
         // ========================================
         // PC COOKIE CANPLAY CHECK (GitHub Actions)
         // ========================================
+        const PC_CANPLAY_RULE_VERSION = 'account-plan-payment-v1';
         let pcCanplayLatestRun = null;
 
         function formatCanplayDuration(ms) {
@@ -11898,7 +11899,7 @@
                         <div class="pc-canplay-hero-copy">
                             <div class="pc-canplay-pill">${getAdminModalSvg('cookie')}<span>PC Cookies</span></div>
                             <h3 class="pc-canplay-title">Check canplay</h3>
-                            <p class="pc-canplay-subtitle">Chạy GitHub Actions để kiểm tra CAN PLAY / NO PLAY / UNKNOWN cho PC cookies.</p>
+                            <p class="pc-canplay-subtitle">CAN PLAY chỉ khi nhận diện được gói không quảng cáo và Payment OK trên trang tài khoản.</p>
                         </div>
                         <div class="pc-canplay-orbit" aria-hidden="true">
                             <div class="pc-canplay-orbit-ring"></div>
@@ -12214,7 +12215,7 @@
                     ? 'Kết quả đã được cập nhật vào kho PC cookies.'
                     : isError
                         ? 'Kiểm tra lại điều kiện đồng bộ rồi thử lại.'
-                        : 'Reset active trước, sau đó mark die các cookie NO PLAY và UNKNOWN.');
+                        : 'Reset các cookie thuộc lượt check, mark die NO PLAY; UNKNOWN được giữ để kiểm tra lại.');
             const icon = isSuccess ? 'checkCircle' : isError ? 'alertTriangle' : isRunning ? 'sync' : 'uploadCloud';
             const statusClass = isRunning ? 'is-running' : isSuccess ? 'is-success' : isError ? 'is-error' : '';
             const statusIcon = isRunning ? '<span class="pc-canplay-spinner" aria-hidden="true"></span>' : getAdminModalSvg(icon);
@@ -12289,6 +12290,14 @@
             }
 
             const settings = pcCanplayLatestRun.settings || {};
+            if (settings.ruleVersion !== PC_CANPLAY_RULE_VERSION) {
+                showPcCanplaySyncModal('error', {
+                    title: 'Lượt check dùng logic cũ',
+                    text: 'Kết quả này không được tạo bằng tiêu chí plan + payment hiện tại.',
+                    statusText: 'Hãy chạy một lượt check mới sau khi deploy rồi mới đồng bộ.'
+                });
+                return;
+            }
             if (settings.activeOnly || Number(settings.limit || 0) > 0) {
                 showPcCanplaySyncModal('error', {
                     title: 'Không đồng bộ lượt partial',
@@ -12318,7 +12327,7 @@
                         'Authorization': `Bearer ${localStorage.getItem('admin_token')}`,
                         'Content-Type': 'application/json'
                     },
-                    body: JSON.stringify({ markUnknownAsDie: true })
+                    body: JSON.stringify({ markUnknownAsDie: false })
                 });
                 const data = await response.json();
                 if (!response.ok) throw new Error(data.error || 'Đồng bộ thất bại');
