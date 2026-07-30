@@ -2628,29 +2628,61 @@
             margin-bottom: 10px !important;
         }
 
-        #teamModal #modalProductsGrid1 > a,
-        #teamModal #modalProductsGrid2 > a {
+        #teamModal .digital-promo-card {
             padding: 7px !important;
             gap: 7px !important;
             border-radius: 11px !important;
         }
 
-        #teamModal #modalProductsGrid1 > a img,
-        #teamModal #modalProductsGrid2 > a img {
+        #teamModal .digital-promo-icon {
             width: 38px !important;
             height: 38px !important;
             border-radius: 8px !important;
         }
 
-        #teamModal #modalProductsGrid1 > a p:first-child,
-        #teamModal #modalProductsGrid2 > a p:first-child {
+        .digital-brand-icon {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 42px;
+            height: 42px;
+            flex: 0 0 auto;
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            border-radius: 12px;
+            box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.1);
+        }
+
+        .digital-brand-icon img {
+            width: 24px;
+            height: 24px;
+            display: block;
+            object-fit: contain;
+        }
+
+        .digital-brand-icon--gemini {
+            background: linear-gradient(145deg, #ffffff, #eaf2ff);
+        }
+
+        .digital-brand-icon--openai {
+            background: linear-gradient(145deg, #fff, #dbe4ee);
+        }
+
+        .digital-brand-icon--capcut {
+            background: linear-gradient(145deg, #fff, #e5e7eb);
+        }
+
+        .digital-brand-icon--capcut img {
+            width: 27px;
+            height: 22px;
+        }
+
+        #teamModal .digital-promo-name {
             margin-bottom: 2px !important;
             font-size: 0.75rem !important;
             line-height: 1.22 !important;
         }
 
-        #teamModal #modalProductsGrid1 > a p:last-child,
-        #teamModal #modalProductsGrid2 > a p:last-child {
+        #teamModal .digital-promo-price {
             font-size: 0.76rem !important;
             line-height: 1.18 !important;
         }
@@ -5245,7 +5277,7 @@
         .digital-upgrade-overlay {
             position: fixed;
             inset: 0;
-            z-index: 10060;
+            z-index: 10000020;
             display: none;
             align-items: center;
             justify-content: center;
@@ -5437,6 +5469,33 @@
             justify-content: space-between;
             gap: 10px;
             margin-bottom: 10px;
+        }
+
+        .digital-upgrade-product-identity,
+        .digital-upgrade-detail-identity {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            min-width: 0;
+        }
+
+        .digital-upgrade-product-identity .digital-brand-icon {
+            width: 34px;
+            height: 34px;
+            border-radius: 10px;
+        }
+
+        .digital-upgrade-product-identity .digital-brand-icon img {
+            width: 20px;
+            height: 20px;
+        }
+
+        .digital-upgrade-product-identity .digital-brand-icon--capcut img {
+            width: 23px;
+        }
+
+        .digital-upgrade-detail-identity > div:last-child {
+            min-width: 0;
         }
 
         .digital-upgrade-product-badges {
@@ -5787,7 +5846,7 @@
         .digital-product-detail-overlay {
             position: fixed;
             inset: 0;
-            z-index: 10080;
+            z-index: 10000040;
             display: none;
             align-items: center;
             justify-content: center;
@@ -7627,7 +7686,7 @@
                     </div>
 
                     <p style="color: #aaa; margin-bottom: 15px; line-height: 1.6; flex: 1;">
-                        • 3 credits sử dụng trong 3 ngày đầu đăng ký<br>
+                        • 3 credits sử dụng trong 1 ngày đầu đăng ký<br>
                         • 1 credit = 1 lần đăng nhập thành công Netflix<br>
                         • 2 lượt đổi tài khoản Netflix/tháng<br>
                         <span style="color: #ffd700;">• Thiết bị hỗ trợ: PC</span><br>
@@ -7948,22 +8007,20 @@
                     <!-- Lời nhắn cảm động -->
                     <p
                         style="color: #ddd; font-size: 0.9rem; line-height: 1.7; margin-bottom: 18px; text-align: justify;">
-                        Để duy trì hoạt động và mang đến trải nghiệm tốt nhất cho mọi người, Ban Quản Lý Tiệm Bánh đã mở
-                        thêm <strong style="color: #fbbf24;">Quầy Lưu Niệm</strong> – nơi giới thiệu một số sản phẩm
-                        tiếp thị liên kết (affiliate) với giá ưu đãi.
-                        Mỗi đơn hàng bạn ủng hộ sẽ giúp chúng mình có thêm nguồn lực để tiếp tục vận hành và phát triển.
+                        Tiệm Bánh hiện có thêm các gói <strong style="color: #fbbf24;">nâng cấp tài khoản số</strong>
+                        dành cho học tập, làm việc và sáng tạo, gồm Google AI Pro/Gemini, ChatGPT Plus và CapCut Pro.
+                        Các gói được hỗ trợ và bảo hành theo toàn bộ thời gian sử dụng đã công bố.
                         <strong style="color: #4ade80;">Cảm ơn bạn đã luôn đồng hành cùng Tiệm Bánh!</strong>
                     </p>
 
-                    <!-- 4 Product Cards - Load động từ featured-products.js -->
+                    <!-- Digital account products - shared with the Digital Upgrade section -->
                     <div id="modalProductsGrid1"
                         style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; margin-bottom: 15px;">
-                        <!-- Sản phẩm sẽ được load bằng JS -->
+                        <!-- Sản phẩm tài khoản số sẽ được load bằng JS -->
                     </div>
 
-                    <p style="color: #aaa; font-size: 0.85rem; text-align: center; margin-bottom: 15px;">
-                        Còn nhiều sản phẩm khác đang chờ bạn khám phá! <a href="/shop/" target="_blank"
-                            style="color: #fbbf24; font-weight: 600;">Ghé qua Quầy lưu niệm →</a>
+                    <p style="color: #fbbf24; font-size: 0.9rem; font-weight: 800; letter-spacing: 0.2px; text-align: center; margin-bottom: 15px; text-shadow: 0 0 14px rgba(251, 191, 36, 0.35);">
+                        Uy tín - Chất lượng - Bảo hành toàn thời gian
                     </p>
 
                     <div
@@ -9001,7 +9058,7 @@
                 title: 'Giải thích thông tin tài khoản',
                 message: `<div style="text-align: justify; line-height: 1.5; width: 400px;">
 <p style="margin: 0 0 6px 0;"><strong style="color: #fbbf24;">Credits hiện có:</strong> Số lượt đăng nhập Netflix còn lại. Mỗi lần bấm "Watch as Guest" thành công sẽ trừ 1 credit.</p>
-<p style="margin: 0 0 6px 0;"><strong style="color: #fbbf24;">Hạn credits:</strong> Ngày hết hạn credits. Với gói Free, credits sẽ hết hạn sau 3 ngày kể từ ngày đăng ký hoặc được cấp lại. Sau khi hết hạn, credits sẽ về 0.</p>
+<p style="margin: 0 0 6px 0;"><strong style="color: #fbbf24;">Hạn credits:</strong> Ngày hết hạn credits. Với gói Free, credits sẽ hết hạn sau 1 ngày kể từ ngày đăng ký hoặc được cấp lại. Sau khi hết hạn, credits sẽ về 0.</p>
 <p style="margin: 0 0 6px 0;"><strong style="color: #fbbf24;">Tài khoản Netflix số:</strong> Tài khoản Netflix đang được gán cho bạn. Mỗi user sẽ được gán 1 tài khoản riêng.</p>
 <p style="margin: 0 0 6px 0;"><strong style="color: #fbbf24;">Lượt đổi còn lại:</strong> Số lần đổi tài khoản Netflix còn lại trong tháng. Dùng khi tài khoản hiện tại bị lỗi.</p>
 <p style="margin: 0;"><strong style="color: #fbbf24;">Lượt giới thiệu:</strong> Số lượt mời bạn bè còn lại trong tháng. Khi bạn bè nhập mã giới thiệu của bạn để đăng ký thành công tài khoản tại Tiệm Bánh, cả 2 sẽ được nhận thêm 2 credits.<br><br><strong style="text-align: left; display: block;">Mã giới thiệu của bạn là:</strong><span style="color: #22c55e; user-select: all; display: block;">${userEmail}</span></p>
@@ -9059,7 +9116,7 @@
                 const cancelBtn = document.getElementById('cancelBtn');
                 const messageSection = document.getElementById('messageSection');
                 const watchingSection = document.getElementById('watchingSection');
-                let countdown = 15; // 15 seconds duration
+                let countdown = 5; // 5 seconds duration
 
                 // RESET MODAL STATE - Show message section, hide watching section
                 if (messageSection) messageSection.style.display = 'block';
@@ -9320,7 +9377,7 @@ Do cơ chế ANTIBOT của Netflix, đôi khi bạn cần:
 
 Nếu vẫn không được, bạn cần đổi tài khoản với một số lưu ý sau:
 • Sẽ trừ 1 lượt đổi tài khoản của tháng
-• Phải xem quảng cáo 15 giây
+• Phải xem quảng cáo 5 giây
 • Nếu hệ thống phát hiện tài khoản Netflix cũ vẫn hoạt động, tài khoản của bạn có thể bị hạn chế vì lạm dụng
 
 Bạn đã thử 3 cách trên và vẫn không được?`,
@@ -11137,15 +11194,15 @@ Nếu cần thêm lượt đổi tài khoản, vui lòng liên hệ Support qua 
                 return;
             }
 
-            // Tính số ngày còn lại (3 ngày từ lastCreditsReset)
+            // Tính số ngày còn lại (1 ngày từ lastCreditsReset)
             const lastReset = user.lastCreditsReset ? new Date(user.lastCreditsReset) : new Date();
             const now = new Date();
             const daysSinceReset = Math.floor((now - lastReset) / (1000 * 60 * 60 * 24));
-            const daysLeft = Math.max(0, 3 - daysSinceReset);
+            const daysLeft = Math.max(0, 1 - daysSinceReset);
 
             // Tính ngày hết hạn
             const expireDate = new Date(lastReset);
-            expireDate.setDate(expireDate.getDate() + 3);
+            expireDate.setDate(expireDate.getDate() + 1);
             const expireDateStr = expireDate.toLocaleDateString('vi-VN', { day: '2-digit', month: '2-digit', year: 'numeric' });
 
             // Hiển thị row
@@ -12191,7 +12248,7 @@ Nếu cần thêm lượt đổi tài khoản, vui lòng liên hệ Support qua 
 
                         <!-- Row: Credits -->
                         <div class="fpb-tbl-row">
-                            <div class="fpb-td free">03 credits / 03 ngày</div>
+                            <div class="fpb-td free">03 credits / 01 ngày</div>
                             <div class="fpb-td pro" style="color:#f59e0b;font-weight:600;">40 credits / 30 ngày</div>
                         </div>
 
@@ -12285,6 +12342,23 @@ Nếu cần thêm lượt đổi tài khoản, vui lòng liên hệ Support qua 
                 const overlay = document.createElement('div');
                 overlay.id = 'promoModalOverlay';
 
+                const promoProducts = typeof window.getDigitalUpgradePromoProducts === 'function'
+                    ? window.getDigitalUpgradePromoProducts()
+                    : [];
+                const promoCardsMarkup = promoProducts.map(product => `
+                    <button type="button" class="promo-card promo-digital-product" data-promo-digital-product="${product.id}"
+                        style="width:100%;display:flex;align-items:center;gap:12px;padding:12px 14px;background:rgba(20,184,166,0.08);border:1px solid rgba(45,212,191,0.28);border-radius:14px;border-left:3px solid #14b8a6;color:inherit;text-align:left;cursor:pointer;font:inherit;">
+                        <span class="digital-brand-icon digital-brand-icon--${product.brand}" style="width:38px;height:38px;border-radius:10px;">${product.iconSvg}</span>
+                        <div style="flex:1;min-width:0;">
+                            <div style="display:flex;align-items:center;justify-content:space-between;gap:8px;">
+                                <div style="font-size:0.8rem;font-weight:700;color:#5eead4;">${product.name}</div>
+                                <span style="color:#fbbf24;font-size:0.72rem;font-weight:800;white-space:nowrap;">${product.priceText}</span>
+                            </div>
+                            <div style="font-size:0.7rem;color:#fff;margin-top:3px;line-height:1.4;">${product.shortMeta}</div>
+                        </div>
+                    </button>
+                `).join('');
+
                 // Add keyframe animation
                 const style = document.createElement('style');
                 style.textContent = `
@@ -12314,154 +12388,12 @@ Nếu cần thêm lượt đổi tài khoản, vui lòng liên hệ Support qua 
                                 <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#60a5fa" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v4"/><path d="m6.41 6.41 2.83 2.83"/><path d="M2 12h4"/><path d="m6.41 17.59 2.83-2.83"/><path d="M12 18v4"/><path d="m17.59 17.59-2.83-2.83"/><path d="M18 12h4"/><path d="m17.59 6.41-2.83 2.83"/></svg>
                             </div>
                             <h3 style="color:#fff;font-size:0.95rem;margin:0 0 4px;font-weight:700;letter-spacing:0.3px;">Có thể bạn sẽ thích</h3>
-                            <p style="color:#fbbf24;font-size:0.72rem;margin:0;">Ưu đãi đặc biệt từ đối tác uy tín của Tiệm Bánh</p>
+                            <p style="color:#fbbf24;font-size:0.72rem;margin:0;">Ưu đãi nâng cấp tài khoản số từ Tiệm Bánh</p>
                         </div>
 
                         <div style="padding:0 14px 14px;display:flex;flex-direction:column;gap:10px;">
 
-                            <!-- Shopee -->
-                            <div class="promo-card" style="background:linear-gradient(135deg,rgba(251,191,36,0.06),rgba(245,158,11,0.03));border:1px solid rgba(251,191,36,0.28);border-radius:14px;padding:12px 14px;display:flex;align-items:center;gap:12px;border-left:3px solid #fbbf24;">
-                                <div style="width:34px;height:34px;background:linear-gradient(135deg,#fbbf24,#f59e0b);border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z"/><path d="M3 6h18"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
-                                </div>
-                                <div style="font-size:0.78rem;color:#fff;line-height:1.6;">Ủng hộ Tiệm Bánh qua link Shopee <a href="https://s.shopee.vn/6pvewnQbSk" target="_blank" style="color:#fbbf24;text-decoration:none;font-weight:600;border-bottom:1px solid #fbbf24;">tại đây</a></div>
-                            </div>
-
-                            <!-- CTV Program -->
-                            <a href="https://www.facebook.com/tiembanh4k" target="_blank" class="promo-card" style="display:flex;align-items:center;gap:12px;padding:12px 14px;background:rgba(34,197,94,0.07);border:1px solid rgba(34,197,94,0.28);border-radius:14px;text-decoration:none;border-left:3px solid #22c55e;">
-                                <div style="flex-shrink:0;width:34px;height:34px;background:rgba(34,197,94,0.15);border-radius:8px;display:flex;align-items:center;justify-content:center;">
-                                    <svg width="18" height="18" viewBox="0 0 24 24" fill="#22c55e"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
-                                </div>
-                                <div style="flex:1;min-width:0;">
-                                    <div style="font-size:0.78rem;font-weight:700;color:#22c55e;margin-bottom:2px;">Đăng ký CTV</div>
-                                    <div style="font-size:0.7rem;color:#fff;">Resell dịch vụ của Tiệm Bánh</div>
-                                </div>
-                            </a>
-
-                            <!-- Study: Tiệm Bánh Netflix -->
-                            <a href="/study/" target="_blank" rel="noopener noreferrer" class="promo-card" style="display:flex;align-items:center;gap:12px;padding:12px 14px;background:rgba(96,165,250,0.07);border:1px solid rgba(96,165,250,0.28);border-radius:14px;text-decoration:none;border-left:3px solid #60a5fa;">
-                                <div style="flex-shrink:0;width:34px;height:34px;background:rgba(96,165,250,0.15);border-radius:8px;display:flex;align-items:center;justify-content:center;">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#60a5fa" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                                        <path d="M2 8a3 3 0 0 1 3-3h14a2 2 0 0 1 2 2v14a2 2 0 0 0-2-2H5a3 3 0 0 0-3 3z"></path>
-                                        <path d="M22 19V5"></path>
-                                        <path d="M2 8v14"></path>
-                                    </svg>
-                                </div>
-                                <div style="flex:1;min-width:0;">
-                                    <div style="font-size:0.78rem;font-weight:700;color:#60a5fa;margin-bottom:2px;">Góc học tập - Tiệm Bánh Netflix</div>
-                                    <div style="font-size:0.7rem;color:#fff;">Dịch vụ hỗ trợ định dạng văn bản</div>
-                                </div>
-                            </a>
-
-                            <!-- Nâng cấp tài khoản số -->
-                            <button type="button" onclick="if (typeof showDigitalUpgradeModal === 'function') showDigitalUpgradeModal();" class="promo-card" style="width:100%;display:flex;align-items:center;gap:12px;padding:12px 14px;background:rgba(20,184,166,0.08);border:1px solid rgba(45,212,191,0.28);border-radius:14px;text-decoration:none;border-left:3px solid #14b8a6;color:inherit;text-align:left;cursor:pointer;font:inherit;">
-                                <div style="flex-shrink:0;width:34px;height:34px;display:flex;align-items:center;justify-content:center;">
-                                    <span style="display:inline-flex;align-items:center;justify-content:center;color:#ccfbf1;font-size:0.74rem;font-weight:900;line-height:1;">AI</span>
-                                </div>
-                                <div style="flex:1;min-width:0;">
-                                    <div style="font-size:0.78rem;font-weight:700;color:#5eead4;margin-bottom:2px;">Nâng cấp tài khoản số</div>
-                                    <div style="font-size:0.7rem;color:#fff;">Google AI Pro 5TB, ChatGPT Plus, CapCut Pro</div>
-                                </div>
-                            </button>
-
-                            <!-- Capcut Pro -->
-                            <div class="promo-card" style="display:none;background:rgba(167,139,250,0.04);border:1px solid rgba(167,139,250,0.25);border-radius:14px;padding:14px 14px 12px;border-left:3px solid #a78bfa;">
-                                <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;">
-                                    <div style="display:flex;align-items:center;gap:10px;">
-                                        <div style="width:34px;height:34px;background:linear-gradient(135deg,#a78bfa,#7c3aed);border-radius:10px;display:flex;align-items:center;justify-content:center;">
-                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 12-8.5 8.5c-.83.83-2.17.83-3 0 0 0 0 0 0 0a2.12 2.12 0 0 1 0-3L12 9"/><path d="M17.64 15 22 10.64"/><path d="m20.91 11.7-1.25-1.25c-.6-.6-.93-1.4-.93-2.25v-.86L16.01 4.6a5.56 5.56 0 0 0-3.94-1.64H9l.92.82A6.18 6.18 0 0 1 12 8.4v1.56l2 2h2.47l2.26 1.91"/></svg>
-                                        </div>
-                                        <div>
-                                            <div style="color:#fff;font-size:0.82rem;font-weight:600;">Capcut Pro</div>
-                                            <div style="color:#a78bfa;font-size:0.68rem;">Liên hệ Minh Nguyễn</div>
-                                        </div>
-                                    </div>
-                                    <div style="background:linear-gradient(135deg,rgba(167,139,250,0.2),rgba(167,139,250,0.08));padding:4px 10px;border-radius:20px;border:1px solid rgba(167,139,250,0.2);">
-                                        <span style="color:#a78bfa;font-size:0.7rem;font-weight:700;">8.000đ</span>
-                                    </div>
-                                </div>
-                                <div style="display:flex;flex-direction:column;gap:4px;">
-                                    <div class="promo-contact-row">
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#a78bfa" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.81.32 1.6.57 2.36a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.76.25 1.55.44 2.36.57A2 2 0 0 1 22 16.92z"/></svg>
-                                        <span style="color:#fff;font-size:0.78rem;">0396933284</span>
-                                        <span class="promo-copy-btn" onclick="navigator.clipboard.writeText('0396933284');this.textContent='✓ Copied';setTimeout(()=>this.textContent='Copy',1500)">Copy</span>
-                                    </div>
-                                    <div class="promo-contact-row">
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#a78bfa" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m22 2-7 20-4-9-9-4Z"/><path d="M22 2 11 13"/></svg>
-                                        <a href="https://t.me/minhais_8888_bot" target="_blank" class="promo-link">Bot Telegram</a>
-                                    </div>
-                                    <div class="promo-contact-row">
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#a78bfa" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
-                                        <a href="https://zalo.me/0396933284" target="_blank" class="promo-link">Chat ngay</a>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <!-- Google One -->
-                            <div class="promo-card" style="display:none;background:rgba(52,211,153,0.04);border:1px solid rgba(52,211,153,0.25);border-radius:14px;padding:14px 14px 12px;border-left:3px solid #34d399;">
-                                <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;">
-                                    <div style="display:flex;align-items:center;gap:10px;">
-                                        <div style="width:34px;height:34px;background:linear-gradient(135deg,#34d399,#059669);border-radius:10px;display:flex;align-items:center;justify-content:center;">
-                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20h16a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.93a2 2 0 0 1-1.66-.9l-.82-1.2A2 2 0 0 0 7.93 3H4a2 2 0 0 0-2 2v13c0 1.1.9 2 2 2Z"/></svg>
-                                        </div>
-                                        <div>
-                                            <div style="color:#fff;font-size:0.82rem;font-weight:600;">Google One</div>
-                                            <div style="color:#34d399;font-size:0.68rem;">Liên hệ Nguyễn Bá Việt</div>
-                                        </div>
-                                    </div>
-                                    <div style="background:linear-gradient(135deg,rgba(52,211,153,0.2),rgba(52,211,153,0.08));padding:4px 10px;border-radius:20px;border:1px solid rgba(52,211,153,0.2);">
-                                        <span style="color:#34d399;font-size:0.7rem;font-weight:700;">40.000đ</span>
-                                    </div>
-                                </div>
-                                <div style="display:flex;flex-direction:column;gap:4px;">
-                                    <div class="promo-contact-row">
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#34d399" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.81.32 1.6.57 2.36a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.76.25 1.55.44 2.36.57A2 2 0 0 1 22 16.92z"/></svg>
-                                        <span style="color:#fff;font-size:0.78rem;">0332435329</span>
-                                        <span class="promo-copy-btn" onclick="navigator.clipboard.writeText('0332435329');this.textContent='✓ Copied';setTimeout(()=>this.textContent='Copy',1500)">Copy</span>
-                                    </div>
-                                    <div class="promo-contact-row">
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#34d399" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m22 2-7 20-4-9-9-4Z"/><path d="M22 2 11 13"/></svg>
-                                        <a href="https://t.me/mucphemmo_bot" target="_blank" class="promo-link">Bot Telegram</a>
-                                    </div>
-                                    <div class="promo-contact-row">
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#34d399" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
-                                        <a href="https://zalo.me/0332435329" target="_blank" class="promo-link">Chat ngay</a>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <!-- Netflix chính chủ -->
-                            <div class="promo-card" style="display:none;background:rgba(239,68,68,0.04);border:1px solid rgba(239,68,68,0.25);border-radius:14px;padding:14px 14px 12px;border-left:3px solid #ef4444;">
-                                <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;">
-                                    <div style="display:flex;align-items:center;gap:10px;">
-                                        <div style="width:34px;height:34px;background:linear-gradient(135deg,#ef4444,#b91c1c);border-radius:10px;display:flex;align-items:center;justify-content:center;">
-                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="15" x="2" y="7" rx="2" ry="2"/><polyline points="17 2 12 7 7 2"/></svg>
-                                        </div>
-                                        <div>
-                                            <div style="color:#fff;font-size:0.82rem;font-weight:600;">Netflix chính chủ</div>
-                                            <div style="color:#ef4444;font-size:0.68rem;">Liên hệ Nghĩa Netflix</div>
-                                        </div>
-                                    </div>
-                                    <div style="background:linear-gradient(135deg,rgba(239,68,68,0.2),rgba(239,68,68,0.08));padding:4px 10px;border-radius:20px;border:1px solid rgba(239,68,68,0.2);">
-                                        <span style="color:#ef4444;font-size:0.7rem;font-weight:700;">75.000đ</span>
-                                    </div>
-                                </div>
-                                <div style="display:flex;flex-direction:column;gap:4px;">
-                                    <div class="promo-contact-row">
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#ef4444" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.81.32 1.6.57 2.36a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.76.25 1.55.44 2.36.57A2 2 0 0 1 22 16.92z"/></svg>
-                                        <span style="color:#fff;font-size:0.78rem;">0704787887</span>
-                                        <span class="promo-copy-btn" onclick="navigator.clipboard.writeText('0704787887');this.textContent='✓ Copied';setTimeout(()=>this.textContent='Copy',1500)">Copy</span>
-                                    </div>
-                                    <div class="promo-contact-row">
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#ef4444" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M2 12h20"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
-                                        <a href="https://www.nghianetflix.com" target="_blank" class="promo-link">www.nghianetflix.com</a>
-                                    </div>
-                                    <div class="promo-contact-row">
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#ef4444" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
-                                        <a href="https://zalo.me/0704787887" target="_blank" class="promo-link">Chat ngay</a>
-                                    </div>
-                                </div>
-                            </div>
+                            ${promoCardsMarkup}
 
                             <!-- Button -->
                             <div style="margin-top:16px;position:relative;">
@@ -12476,6 +12408,14 @@ Nếu cần thêm lượt đổi tài khoản, vui lòng liên hệ Support qua 
 
                 document.body.appendChild(overlay);
                 document.body.style.overflow = 'hidden';
+
+                overlay.querySelectorAll('[data-promo-digital-product]').forEach(productButton => {
+                    productButton.addEventListener('click', () => {
+                        if (typeof window.showDigitalUpgradeModal === 'function') {
+                            window.showDigitalUpgradeModal(productButton.dataset.promoDigitalProduct);
+                        }
+                    });
+                });
 
                 const btn = document.getElementById('promoCloseBtn');
                 const timer = setInterval(() => {
@@ -12914,14 +12854,15 @@ Nếu cần thêm lượt đổi tài khoản, vui lòng liên hệ Support qua 
             const products = [
                 {
                     id: 'google-ai-pro-slot',
+                    brand: 'gemini',
                     name: 'Google AI Pro (5TB)',
                     badge: '1 slot riêng',
                     term: '12 tháng',
                     price: 165000,
-                    billingSuffix: '',
+                    billingSuffix: '/12 tháng',
                     referencePrice: googleAiProYearly,
                     referenceLabel: 'Tự nâng cấp 12 tháng',
-                    shortMeta: '1 slot chính chủ · bảo hành toàn thời gian',
+                    shortMeta: '1 slot chính chủ',
                     description: 'Dành cho người cần dùng Google AI Pro trên tài khoản Google cá nhân với chi phí thấp, phù hợp học tập, làm việc và lưu trữ dài hạn.',
                     benefits: [
                         'Gemini 3.1 Pro, Deep Research và Gemini trong Google apps',
@@ -12933,14 +12874,15 @@ Nếu cần thêm lượt đổi tài khoản, vui lòng liên hệ Support qua 
                 },
                 {
                     id: 'google-ai-pro-family',
+                    brand: 'gemini',
                     name: 'Google AI Pro (5TB)',
                     badge: 'Full family',
                     term: '12 tháng',
                     price: 665000,
-                    billingSuffix: '',
+                    billingSuffix: '/12 tháng',
                     referencePrice: googleAiProYearly,
                     referenceLabel: 'Tự nâng cấp 12 tháng',
-                    shortMeta: 'Mời thêm 05 thành viên · bảo hành toàn thời gian',
+                    shortMeta: 'Mời thêm 05 thành viên',
                     description: 'Dành cho nhóm gia đình hoặc team nhỏ cần một gói Google AI Pro full family, có thể mời thêm 05 thành viên khác cùng sử dụng.',
                     benefits: [
                         'Quyền lợi Google AI Pro cho family, có thể chia sẻ với tối đa 05 thành viên khác',
@@ -12952,6 +12894,7 @@ Nếu cần thêm lượt đổi tài khoản, vui lòng liên hệ Support qua 
                 },
                 {
                     id: 'chatgpt-plus',
+                    brand: 'openai',
                     name: 'ChatGPT Plus',
                     badge: 'Plus',
                     term: '1 tháng',
@@ -12959,7 +12902,7 @@ Nếu cần thêm lượt đổi tài khoản, vui lòng liên hệ Support qua 
                     billingSuffix: '/tháng',
                     referencePrice: chatGptPlusMonthly,
                     referenceLabel: 'Tự nâng cấp mỗi tháng',
-                    shortMeta: 'Bảo hành toàn thời gian sử dụng',
+                    shortMeta: 'Gói Plus · thời hạn 1 tháng',
                     description: 'Dành cho người cần ChatGPT Plus để làm việc, học tập, viết nội dung, phân tích file, tạo ảnh và dùng các mô hình suy luận mạnh hơn.',
                     benefits: [
                         'GPT-5.5 giới hạn cao hơn và GPT-5.5 Thinking theo hạn mức Plus',
@@ -12971,6 +12914,7 @@ Nếu cần thêm lượt đổi tài khoản, vui lòng liên hệ Support qua 
                 },
                 {
                     id: 'capcut-pro',
+                    brand: 'capcut',
                     name: 'CapCut Pro',
                     badge: 'Pro',
                     trustBadge: 'Acc cấp',
@@ -12979,10 +12923,10 @@ Nếu cần thêm lượt đổi tài khoản, vui lòng liên hệ Support qua 
                     priceMeta: 'Bảo hành toàn thời gian',
                     price: 50000,
                     pricePrefix: 'Từ',
-                    billingSuffix: '',
+                    billingSuffix: '/tháng',
                     referencePrice: capCutProMonthly,
                     referenceLabel: 'Tự nâng cấp mỗi tháng',
-                    shortMeta: 'Acc cấp · đổi acc 1 lần · bảo hành toàn thời gian',
+                    shortMeta: 'Acc cấp · đổi acc 1 lần',
                     description: 'Dành cho người cần CapCut Pro chi phí thấp theo thời hạn linh hoạt, tài khoản được cấp sẵn và bảo hành trong toàn thời gian sử dụng.',
                     variants: [
                         { label: '1 tháng', price: 50000, referencePrice: capCutProMonthly, note: 'Đổi acc 1 lần' },
@@ -13005,6 +12949,16 @@ Nếu cần thêm lượt đổi tài khoản, vui lòng liên hệ Support qua 
 
             function getProductById(productId) {
                 return products.find(product => product.id === productId) || products[0];
+            }
+
+            function digitalProductIconSvg(brand) {
+                const brandAssets = {
+                    openai: 'brand-openai.svg',
+                    capcut: 'brand-capcut.svg',
+                    gemini: 'brand-gemini.svg'
+                };
+                const asset = brandAssets[brand] || brandAssets.gemini;
+                return `<img class="digital-brand-svg" src="${asset}" alt="" aria-hidden="true">`;
             }
 
             function getSavings(product) {
@@ -13085,7 +13039,10 @@ Nếu cần thêm lượt đổi tài khoản, vui lòng liên hệ Support qua 
                 return `
                     <button type="button" class="digital-upgrade-product${isActive ? ' active' : ''}" data-product-id="${product.id}" aria-pressed="${isActive ? 'true' : 'false'}">
                         <div class="digital-upgrade-product-top">
-                            <div class="digital-upgrade-product-name">${product.name}</div>
+                            <div class="digital-upgrade-product-identity">
+                                <span class="digital-brand-icon digital-brand-icon--${product.brand}">${digitalProductIconSvg(product.brand)}</span>
+                                <div class="digital-upgrade-product-name">${product.name}</div>
+                            </div>
                             <div class="digital-upgrade-product-badges">
                                 <span class="digital-upgrade-badge digital-upgrade-badge--official">${product.trustBadge || 'Chính chủ'}</span>
                                 <span class="digital-upgrade-badge">${product.badge}</span>
@@ -13107,10 +13064,13 @@ Nếu cần thêm lượt đổi tài khoản, vui lòng liên hệ Support qua 
                 const priceMeta = product.priceMeta || `${product.term} · bảo hành toàn thời gian`;
                 return `
                     <div class="digital-upgrade-detail-head">
-                        <div>
-                            <div class="digital-upgrade-kicker">${detailKicker}</div>
-                            <h3>${product.name}</h3>
-                            <p class="digital-upgrade-detail-desc">${product.description}</p>
+                        <div class="digital-upgrade-detail-identity">
+                            <span class="digital-brand-icon digital-brand-icon--${product.brand}">${digitalProductIconSvg(product.brand)}</span>
+                            <div>
+                                <div class="digital-upgrade-kicker">${detailKicker}</div>
+                                <h3>${product.name}</h3>
+                                <p class="digital-upgrade-detail-desc">${product.description}</p>
+                            </div>
                         </div>
                         <div class="digital-upgrade-pricebox">
                             <span class="digital-upgrade-price-label">Giá ưu đãi</span>
@@ -13307,6 +13267,17 @@ Nếu cần thêm lượt đổi tài khoản, vui lòng liên hệ Support qua 
                 document.body.style.overflow = previousBodyOverflow;
             }
 
+            function getDigitalUpgradePromoProducts() {
+                return products.map(product => ({
+                    id: product.id,
+                    brand: product.brand,
+                    name: product.name,
+                    shortMeta: product.shortMeta,
+                    priceText: `${product.pricePrefix ? product.pricePrefix + ' ' : ''}${formatVnd(product.price)}${product.billingSuffix || ''}`,
+                    iconSvg: digitalProductIconSvg(product.brand)
+                }));
+            }
+
             document.addEventListener('keydown', function (event) {
                 if (event.key !== 'Escape') return;
                 const detailOverlay = document.getElementById('digitalProductDetailOverlay');
@@ -13322,6 +13293,7 @@ Nếu cần thêm lượt đổi tài khoản, vui lòng liên hệ Support qua 
 
             window.showDigitalUpgradeModal = showDigitalUpgradeModal;
             window.closeDigitalUpgradeModal = closeDigitalUpgradeModal;
+            window.getDigitalUpgradePromoProducts = getDigitalUpgradePromoProducts;
         })();
     </script>
 
@@ -13329,30 +13301,41 @@ Nếu cần thêm lượt đổi tài khoản, vui lòng liên hệ Support qua 
     <script src="config.js"></script>
     <script src="auth.js"></script>
     <script src="cookie-retry-handler.js"></script>
-    <script src="shop/featured-products.js"></script>
     <script>
-        // Load sản phẩm featured vào các modal
-        function renderFeaturedProducts() {
+        // Reuse the Digital Upgrade catalog in advertising modals.
+        function renderDigitalPromoProducts() {
             const grids = ['modalProductsGrid1', 'modalProductsGrid2'];
+            const products = typeof window.getDigitalUpgradePromoProducts === 'function'
+                ? window.getDigitalUpgradePromoProducts()
+                : [];
 
             grids.forEach(gridId => {
                 const grid = document.getElementById(gridId);
-                if (!grid || typeof featuredProducts === 'undefined') return;
+                if (!grid) return;
 
-                grid.innerHTML = featuredProducts.map(product => `
-                    <a href="${product.buyLink}" target="_blank" style="text-decoration: none; background: rgba(0,0,0,0.4); border-radius: 10px; padding: 10px; border: 1px solid rgba(255,255,255,0.1); transition: all 0.3s; display: flex; gap: 10px; align-items: center;" onmouseover="this.style.borderColor='#e50914'; this.style.transform='translateY(-2px)';" onmouseout="this.style.borderColor='rgba(255,255,255,0.1)'; this.style.transform='translateY(0)';">
-                        <img src="${product.image}" alt="${product.name}" style="width: 50px; height: 50px; object-fit: cover; border-radius: 6px; flex-shrink: 0;">
+                grid.innerHTML = products.map(product => `
+                    <button type="button" class="digital-promo-card" data-digital-product-id="${product.id}" style="width:100%;text-decoration:none;background:rgba(0,0,0,0.4);border-radius:10px;padding:10px;border:1px solid rgba(45,212,191,0.25);transition:all 0.3s;display:flex;gap:10px;align-items:center;cursor:pointer;font:inherit;" onmouseover="this.style.borderColor='#14b8a6';this.style.transform='translateY(-2px)';" onmouseout="this.style.borderColor='rgba(45,212,191,0.25)';this.style.transform='translateY(0)';">
+                        <span class="digital-promo-icon digital-brand-icon digital-brand-icon--${product.brand}" style="width:50px;height:50px;border-radius:10px;">${product.iconSvg}</span>
                         <div style="text-align: left;">
-                            <p style="color: #fff; font-size: 0.95rem; font-weight: 600; margin: 0 0 4px 0; line-height: 1.3;">${product.name}</p>
-                            <p style="color: #4ade80; font-size: 0.9rem; margin: 0;">${product.priceNow} ${product.priceOriginal ? `<span style="color: #888; text-decoration: line-through; font-size: 0.85rem;">${product.priceOriginal}</span>` : ''}</p>
+                            <p class="digital-promo-name" style="color:#fff;font-size:0.95rem;font-weight:600;margin:0 0 4px;line-height:1.3;">${product.name}</p>
+                            <p class="digital-promo-price" style="color:#4ade80;font-size:0.84rem;margin:0 0 3px;">${product.priceText}</p>
+                            <p style="color:#94a3b8;font-size:0.72rem;margin:0;line-height:1.25;">${product.shortMeta}</p>
                         </div>
-                    </a>
+                    </button>
                 `).join('');
+
+                grid.querySelectorAll('[data-digital-product-id]').forEach(productButton => {
+                    productButton.addEventListener('click', () => {
+                        if (typeof window.showDigitalUpgradeModal === 'function') {
+                            window.showDigitalUpgradeModal(productButton.dataset.digitalProductId);
+                        }
+                    });
+                });
             });
         }
 
         // Chạy khi DOM ready
-        document.addEventListener('DOMContentLoaded', renderFeaturedProducts);
+        document.addEventListener('DOMContentLoaded', renderDigitalPromoProducts);
     </script>
     <script type="text/plain" id="desktopFeaturesTemplate">
         <div class="main-topbar">
@@ -13526,7 +13509,7 @@ Nếu cần thêm lượt đổi tài khoản, vui lòng liên hệ Support qua 
                                 <div class="hud-row"><span class="hud-label">Hết hạn</span><span id="proExpiresDate" class="hud-value" style="color:var(--desktop-home-danger);">-</span></div>
                             </div>
                             <div id="netflixInfoBorder">
-                                <div class="hud-row" id="creditsExpiresRow" style="display:none;"><span class="hud-label">Hạn credits</span><span id="creditsExpires" class="hud-value val-green">Còn 3 ngày</span></div>
+                                <div class="hud-row" id="creditsExpiresRow" style="display:none;"><span class="hud-label">Hạn credits</span><span id="creditsExpires" class="hud-value val-green">Còn 1 ngày</span></div>
                                 <div class="hud-row" id="pcAccountRow"><span class="hud-label">Tài khoản Netflix số</span><span id="assignedCookie" class="hud-value val-green">-</span></div>
                                 <div class="hud-row mobile-only" id="tvAccountRow" style="display:none !important;"><span class="hud-label">Tài khoản Netflix số</span><span id="assignedTvCookie" class="hud-value" style="color:var(--desktop-home-purple);">-</span></div>
                                 <div class="hud-row"><span class="hud-label">Lượt giới thiệu</span><span id="referralsRemaining" class="hud-value val-green">2/2</span></div>
