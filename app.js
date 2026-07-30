@@ -15,7 +15,7 @@ const BACKEND_URL = window.APP_CONFIG && window.APP_CONFIG.BACKEND_URL ? window.
 // ========================================
 
 const CONFIG = {
-    AD_DURATION: 15, // seconds - Thời gian quảng cáo và tâm sự từ team
+    AD_DURATION: 5, // seconds - Thời gian quảng cáo và tâm sự từ team
     NETFLIX_URL: 'https://www.netflix.com',
     NETFLIX_TAB_NAME: 'NETFLIX_TAB',
     COOKIE_FILE: 'cookie.txt',
@@ -1075,7 +1075,7 @@ async function handleWatchAsGuest() {
 
 /**
  * Internal function - Tự động chạy sau khi báo hỏng (không check quota, không xem ad/plan)
- * User đã bị trừ lượt và xem quảng cáo 2s rồi, phải cho inject cookie ngay để công bằng
+ * User đã bị trừ lượt và xem quảng cáo 5s rồi, phải cho inject cookie ngay để công bằng
  */
 async function handleWatchAsGuestAfterReport() {
     console.log('🔄 Auto-triggering Watch as Guest after report issue...');
