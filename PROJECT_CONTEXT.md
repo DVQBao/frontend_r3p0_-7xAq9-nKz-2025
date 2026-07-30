@@ -708,6 +708,10 @@ Important:
   `POST_LOGIN_MESSAGE_MODAL = 'OFF'` in `NetflixBackend/routes/message.js`. Keep the
   celebration content and `BIG_UPDATE_MODAL` intact; switch the master flag back to `ON`
   when the modal is needed again.
+- Do not log `Free credits expiring soon` from `User.resetCreditsIfNeeded()`. With a
+  one-day Free validity period that warning applies throughout almost the entire cycle
+  and is invoked repeatedly by quota middleware. Keep only the one-time log when credits
+  actually expire and are changed to zero.
 
 ## 7. TV Activation
 
