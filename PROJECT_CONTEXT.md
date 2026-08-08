@@ -1,6 +1,6 @@
 # AI Project Context - TiemBanhNetflix_Web
 
-Last major update: 2026-07-30
+Last major update: 2026-08-08
 
 This file is the primary handoff document for any AI assistant or engineer working on
 `TiemBanhNetflix_Web`. It is intentionally written as a technical operating manual,
@@ -45,26 +45,33 @@ The most important runtime concepts are:
   `auth_showcase_config` for the auth-page movie showcase and
   `server_canplay_enabled` for the live Render canplay switch.
 - `CanplayCheckRun`: persistent audit of GitHub Actions based PC-cookie `canPlay`
-  checks.
+  checks. Current runs use the CLCS-aware rule version.
 
-## Canonical canPlay Contract (2026-07-19)
+## Canonical canPlay Contract (2026-08-08)
 
 This section supersedes every older `/browse`, PACS `CAN_PLAYBACK`, movie-ID, or
 "return the link on an inconclusive check" note that may remain in historical
 parts of this document.
 
-`CAN PLAY` is now proven only from `GET https://www.netflix.com/account`:
+`CAN PLAY` is now proven by the Netflix account flow: first
+`GET https://www.netflix.com/account`, then the client-rendered payment state from
+`POST https://web.prod.cloud.netflix.com/graphql` using the same Netflix session:
 
 1. The membership plan must be extracted and recognized as Premium, Standard,
    Basic, or Mobile.
 2. The plan must not be an ad-supported variant. Requests prefer Vietnamese and
    the parser recognizes ad labels across the supported localized markers.
-3. The exact visible Netflix payment-error `<p>` class
-   `default-ltr-iqcdef-cache-r98rqt` must be absent, producing `payment=OK`.
+3. The persisted GraphQL operation `CLCSInterstitialAccountPages` must complete.
+   A clean response with `data.clcsInterstitialAccountPages=null` and no GraphQL errors
+   produces `payment=OK`. A returned component
+   tree containing `testId=UPDATE_PAYMENT_METHOD` or the workflow
+   `payment_failure_interstitial` produces `payment=FAIL`. CSS hashes and localized
+   warning text are not payment authorities.
 
 Classification and fallback rules:
 
-- Missing/unrecognized plan, ad-supported plan, payment failure, and login/signup
+- Missing/unrecognized plan, unknown payment status, ad-supported plan, payment failure,
+  and login/signup
   redirects are never canPlay.
 - Missing/unrecognized plan is eligibility-inconclusive: do not return a cookie/link
   and do not deactivate it. Technical failures such as timeout, hard timeout,
@@ -76,7 +83,7 @@ Classification and fallback rules:
 - Batch admin sync marks confirmed `NO_PLAY` dead. `UNKNOWN` is kept for recheck by
   default (`markUnknownAsDie=false`). Sync only resets Cookie IDs present in that
   run, so it cannot reactivate cookies excluded from or added after the scan.
-- New batch runs store `settings.ruleVersion=account-plan-payment-v1`; admin sync
+- New batch runs store `settings.ruleVersion=account-plan-payment-clcs-v2`; admin sync
   rejects older/unversioned PACS runs and requires a fresh scan after deployment.
 - Live Render checks have an independent admin switch stored under the SystemConfig
   key `server_canplay_enabled` (default `true`). When disabled, PC guest/login,
@@ -399,7 +406,7 @@ Important fields:
 - `runId`, `githubRunId`, workflow/repository/ref metadata.
 - `status`: `running`, `completed`, `failed`.
 - `settings`: workers, delay, timeout, activeOnly, limit, run label, and
-  `ruleVersion=account-plan-payment-v1` for current runs.
+  `ruleVersion=account-plan-payment-clcs-v2` for current runs.
 - `summary`: aggregate counts.
 - `results`: per-cookie `CAN_PLAY`, `NO_PLAY`, or `UNKNOWN`.
 - `sync`: audit of syncing the run back into `Cookie` records.
@@ -528,6 +535,7 @@ findPlayableGuestCookie(...)
   -> collect candidates up to max attempts
   -> for each candidate:
        run checkServerCanPlay(cleanNetflixId) with 12s timeout
+       (`/account` HTML for plan + CLCS GraphQL for payment)
        also wrap with hard timeout at 13s
        if playable:
           return this candidate
@@ -550,15 +558,18 @@ Technical details that qualify for link/cookie fallback currently include:
 - `Hard timeout`
 - `Connection error`
 - `Empty account response`
+- `Empty CLCS response`
 - `Account blocked HTTP 403`
 - HTTP `429` and `5xx`
 - details starting with `Error:`
 - `Server canPlay disabled`
 - `Server canPlay control unavailable`
 
-Eligibility-inconclusive details such as `Plan not found` and
-`Plan type not recognized` are also non-deactivating, but they do not qualify for
-availability fallback and therefore withhold/skip the candidate.
+Eligibility-inconclusive details such as `Plan not found`, `Plan type not recognized`,
+and `Payment status unknown` are also non-deactivating, but they do not qualify for
+availability fallback and therefore withhold/skip the candidate. A technical CLCS
+failure such as timeout, connection failure, HTTP 403/429/5xx, empty response, or an
+invalid response remains a technical fallback instead of being guessed as payment OK.
 
 Why this matters:
 
@@ -851,7 +862,7 @@ Admin route behavior:
 - `POST /api/admin/canplay/runs/:id/sync`
   - sync completed run into `Cookie` documents.
   - rejects runs that do not declare the current
-    `settings.ruleVersion=account-plan-payment-v1`.
+    `settings.ruleVersion=account-plan-payment-clcs-v2`.
   - resets canplay metadata only for Cookie IDs present in the selected run.
   - sets `isActive=false` for `NO_PLAY`.
   - keeps `UNKNOWN` active for recheck by default (`markUnknownAsDie=false`).
@@ -1382,18 +1393,23 @@ the existing WebKit behavior.
 This section records the account-based canplay migration, operational Render switch,
 admin UI changes, and local NetflixId tooling completed in this session.
 
-### A. Canonical account-based canplay migration
+### A. Canonical account-based canplay migration (payment portion superseded 2026-08-08)
 
-All current product paths now evaluate eligibility from `https://www.netflix.com/account`
-through `NetflixBackend/utils/canPlayChecker.js`. The former `/browse`, movie-ID, and
-PACS playback-capability approaches are historical and must not be restored.
+All current product paths evaluate plan eligibility from `https://www.netflix.com/account`
+through `NetflixBackend/utils/canPlayChecker.js`; payment eligibility additionally uses
+the CLCS GraphQL operation documented in the canonical contract above. The former
+`/browse`, movie-ID, PACS playback-capability, and CSS-hash payment approaches are
+historical and must not be restored.
 
-The current rule is `account-plan-payment-v1`:
+The current rule is `account-plan-payment-clcs-v2`:
 
 1. Extract and recognize Premium, Standard, Basic, or Mobile plan information.
 2. Reject a recognized plan if it is an ad-supported variant.
-3. Reject payment only when the exact visible payment-error paragraph is present:
-   `p.default-ltr-iqcdef-cache-r98rqt`.
+3. Query `CLCSInterstitialAccountPages` with the cookies collected from `/account`.
+   Reject payment when the component tree contains `UPDATE_PAYMENT_METHOD` or
+   `payment_failure_interstitial`; accept payment when the operation returns a null
+   interstitial. Treat GraphQL errors or a missing/malformed successful payload as
+   payment unknown; `null` alongside `errors` is not payment OK.
 4. Reject login/signup responses as confirmed no-play.
 
 Plan extraction strips HTML/CSS artifacts and normalizes known localized Netflix plan
@@ -1444,7 +1460,7 @@ and redeploy because it is stored in MongoDB. GitHub Actions is intentionally un
 
 `NetflixBackend/scripts/check-pc-canplay.js` now uses the canonical checker directly and
 writes artifacts with `schemaVersion: 2` and
-`settings.ruleVersion=account-plan-payment-v1`. Both workflow copies must stay aligned:
+`settings.ruleVersion=account-plan-payment-clcs-v2`. Both workflow copies must stay aligned:
 
 - `.github/workflows/check-pc-canplay.yml` for the monorepo deployment.
 - `NetflixBackend/.github/workflows/check-pc-canplay.yml` for the standalone backend repo.
@@ -1472,8 +1488,9 @@ inside the modal.
 - `netflix_v2_netflixid.py` is the GUI conversion of the old SVB flow. It accepts a TXT
   file with one owned `NetflixId` per line instead of email/password input.
 - `TokenGenerator/CookieChecker_v5.py` mirrors the account-based rule, displays Plan and
-  Payment (`OK`/`FAIL`), detects payment failure from the exact visible paragraph, and
-  removes Payment Method/Next Billing from the current table.
+  Payment (`OK`/`FAIL`/`UNKNOWN`), calls the same CLCS persisted GraphQL operation after
+  `/account`, and uses the rendered semantic alert only as an HTML fallback. It removes
+  Payment Method/Next Billing from the current table.
 - Plan text is HTML-cleaned and normalized for multilingual labels. Unknown plan text is
   not cached as a confirmed result; confirmed results use a 60-second cache.
 - Technical `UNKNOWN` still returns the generated token/link. Eligibility `UNKNOWN`
@@ -1482,7 +1499,7 @@ inside the modal.
   remains the preferred default when present, while localized or newly observed plan
   names can also be selected without adding another hard-coded export option.
 
-### F. Verification completed before handoff
+### F. Verification completed for the 2026-07-19 handoff (historical)
 
 - Backend test suite passed via `npm.cmd test`, including account parsing/classification,
   disabled mode making zero outbound HTTPS calls, control-read fallback, default/persisted
@@ -1494,6 +1511,84 @@ inside the modal.
 - Static desktop/mobile breakpoint inspection passed. A live CTV smoke test was not run
   because it would consume or mutate a real cookie; perform that test with controlled
   inventory if needed.
+
+## Session Changes From 2026-08-08
+
+### A. Payment classification moved from CSS markup to CLCS GraphQL
+
+Two sanitized Chrome HAR captures, one payment-healthy account and one payment-failed
+account, established the client-side source of truth:
+
+- Both pages load plan/account HTML from `GET /account`.
+- Both call the persisted GraphQL operation `CLCSInterstitialAccountPages` at
+  `https://web.prod.cloud.netflix.com/graphql` with variables `format=HTML`,
+  `resolutionMode=WEB_1X`, and `accountSubpage=/account`.
+- The healthy account returns `data.clcsInterstitialAccountPages=null` without GraphQL
+  errors.
+- The failed account returns a CLCS component tree containing
+  `testId=UPDATE_PAYMENT_METHOD`; its feedback metadata also identifies
+  `workflowName=payment_failure_interstitial`.
+- The warning banner is rendered after the initial HTML response. DevTools `Elements`
+  therefore shows it even when a plain HTTP client cannot find it in `resp.text`.
+
+The former `p.default-ltr-iqcdef-cache-r98rqt` detector was removed as the authority.
+Netflix CSS hashes vary by rollout and ordinary payment-healthy paragraphs can use the
+same generated class prefix. Do not restore class-prefix or localized-text matching.
+
+### B. Runtime implementation
+
+`NetflixBackend/utils/canPlayChecker.js` now:
+
+1. Fetches `/account`, follows redirects, and retains Netflix `Set-Cookie` values in a
+   small per-check cookie jar.
+2. Validates plan eligibility first. Missing/unrecognized plans remain withheld and
+   ad-supported plans remain confirmed no-play without depending on CLCS availability.
+3. Extracts the current Netflix UI/Hawkins versions from account HTML for request headers.
+4. Calls the CLCS persisted query with the same session only for recognized non-ad plans.
+5. Classifies null interstitial as payment OK and the stable payment action/workflow
+   markers as payment FAIL.
+6. Returns `Payment status unknown` for a structurally inconclusive successful payload.
+   A payload containing GraphQL `errors` is never accepted as payment OK, even if its
+   data field contains a null interstitial.
+   GraphQL timeout, connection error, 403/429/5xx, empty response, or invalid response
+   remains a technical failure and follows existing fallback/non-deactivation policy.
+7. Uses one shared per-attempt timeout budget across `/account` and CLCS so bounded live
+   routes do not accidentally double their wait time.
+
+The batch runner `NetflixBackend/scripts/check-pc-canplay.js` keeps its global pacing and
+cooldown logic but now retains the same cookie session and calls the shared CLCS payment
+helper. Live routes still go through `serverCanPlayControl.js`; batch runs remain
+independent of the Render switch.
+
+The HTML semantic check (`role=alert` plus `data-uia=UPDATE_PAYMENT_METHOD`) remains only
+as a fallback for already-rendered/synthetic HTML and for unit tests. Product network
+classification uses the GraphQL payload.
+
+The persisted-query ID is deployment-sensitive Netflix metadata, not a credential. If
+Netflix rotates it or changes the operation schema, the request should fail closed to
+`UNKNOWN`/technical fallback. Capture a new sanitized HAR and update both backend and
+Python constants together; never compensate by guessing payment OK.
+
+### C. Batch compatibility and local tooling
+
+- `CANPLAY_RULE_VERSION` and the admin UI expectation are now
+  `account-plan-payment-clcs-v2`. Admin sync rejects `account-plan-payment-v1` results,
+  requiring a fresh batch before inventory can be changed under the new rule.
+- `TokenGenerator/CookieChecker_v5.py` uses the same operation, persisted-query ID,
+  runtime-version headers, and OK/FAIL/UNKNOWN behavior.
+- The local Python checker was validated against both captured HAR responses: healthy
+  classified OK and failed classified FAIL.
+- HAR files may include nftoken URLs or account metadata even when exported sanitized.
+  Keep diagnostic HARs out of Git and delete them after the investigation is complete.
+
+### D. Verification completed
+
+- `NetflixBackend`: `npm.cmd test` passes with CLCS null, payment-failure, session-cookie,
+  technical fallback, runtime switch, and existing plan/ad classification coverage.
+- `test_netflix_v2_netflixid.py`: 19 tests pass.
+- Updated JavaScript files pass `node --check`.
+- Both captured HAR GraphQL responses classify correctly through the new backend and
+  Python payload classifiers without printing credentials.
 
 ## Known Technical Debt and Sharp Edges
 
@@ -1585,6 +1680,24 @@ Operational response:
 Turning the switch off does not cancel an already-running request. If the admin endpoint
 cannot read MongoDB, live checking fails safely to `Server canPlay control unavailable`
 instead of sending an uncontrolled Netflix request.
+
+### Payment-failed account is reported as payment OK or UNKNOWN
+
+Check:
+
+1. Capture Chrome Network after reloading `/account` and waiting for the banner; the
+   initial Document/DevTools Elements alone is insufficient.
+2. Find the `CLCSInterstitialAccountPages` POST to
+   `web.prod.cloud.netflix.com/graphql`.
+3. Healthy response should contain `clcsInterstitialAccountPages:null`.
+4. Failed response should contain `UPDATE_PAYMENT_METHOD` or
+   `payment_failure_interstitial` in the returned component tree/feedback metadata.
+5. Confirm the checker retained cookies set by `/account` and extracted current UI and
+   Hawkins versions. A non-200/empty/malformed CLCS response must be UNKNOWN or technical
+   fallback, never guessed as OK.
+
+Do not debug this by copying only the rendered warning element or by adding another CSS
+hash. Use a sanitized HAR and compare the GraphQL responses.
 
 ### `skipCurrent=true DENIED`
 
@@ -1734,6 +1847,7 @@ Read/edit:
 - `NetflixBackend/routes/admin-canplay.js`
 - `NetflixBackend/scripts/check-pc-canplay.js`
 - `NetflixFrontend/x7Kv9mPq3nRt2025/index.html`
+- `TokenGenerator/CookieChecker_v5.py`
 
 Remember:
 
@@ -1743,6 +1857,10 @@ Remember:
 - `server_canplay_enabled=false` skips outbound Netflix checks on live Render paths but
   does not disable GitHub Actions.
 - Batch admin canplay can mark inventory inactive when synced.
+- Payment requires the CLCS GraphQL response from the same `/account` session. Do not
+  infer payment from a CSS class, class prefix, or translated warning copy.
+- Bump `CANPLAY_RULE_VERSION` and the admin UI expectation whenever a classification
+  change would make old batch results unsafe to sync.
 
 ### Change auth/register/OTP
 
