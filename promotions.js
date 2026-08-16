@@ -7,7 +7,7 @@
     const originalCalculateCredits = window.calculateCredits;
     const originalClosePurchaseCreditsModal = window.closePurchaseCreditsModal;
     const INVALID_COUPON_MESSAGE = 'Mã ưu đãi không hợp lệ, vui lòng kiểm tra lại!';
-    const COUPON_FORFEIT_CAUTION = 'Lưu ý: Nếu tiếp tục thanh toán mà không áp dụng mã ưu đãi, mã ưu đãi hiện có của bạn vẫn sẽ bị mất hiệu lực.';
+    const COUPON_FORFEIT_CAUTION = 'Lưu ý: Tiếp tục thanh toán mà không áp dụng mã ưu đãi, mã ưu đãi hiện có của bạn vẫn sẽ bị mất hiệu lực.';
 
     const state = {
         activeCoupon: null,
@@ -44,7 +44,14 @@
         if (!element) return;
         const message = document.createElement('span');
         message.className = 'coupon-gift-message';
-        message.textContent = couponGiftMessage(discountAmountVnd);
+        const highlight = document.createElement('strong');
+        highlight.className = 'coupon-gift-highlight';
+        highlight.textContent = `01 mã ưu đãi để giảm ${formatVnd(discountAmountVnd)}`;
+        message.append(
+            document.createTextNode('Tài khoản của bạn đang được tặng '),
+            highlight,
+            document.createTextNode('. Kiểm tra email nhé!')
+        );
         const caution = document.createElement('em');
         caution.className = 'coupon-forfeit-caution';
         caution.textContent = COUPON_FORFEIT_CAUTION;
@@ -253,9 +260,9 @@
             modal.style.zIndex = '10000100';
             modal.innerHTML = `
                 <div class="modal-content premium-modal-shell" style="max-width:520px;">
-                    <h2 style="margin:0 0 14px;text-align:center;">Bạn đang có ưu đãi</h2>
+                    <h2 class="coupon-forfeit-warning-title" style="margin:0 0 14px;text-align:center;">Bạn đang có ưu đãi</h2>
                     <p id="couponForfeitWarningNotice" style="margin:0;color:#e4e4e7;line-height:1.7;text-align:center;"></p>
-                    <div style="display:flex;gap:10px;margin-top:20px;">
+                    <div class="coupon-forfeit-warning-actions" style="display:flex;gap:10px;margin-top:20px;">
                         <button type="button" class="btn btn-secondary" data-coupon-warning-cancel style="flex:1">Quay lại nhập mã</button>
                         <button type="button" class="btn" data-coupon-warning-confirm style="flex:1">Tiếp tục thanh toán</button>
                     </div>
