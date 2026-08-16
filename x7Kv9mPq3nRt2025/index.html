@@ -14000,8 +14000,28 @@
 
         function promotionLocalDateTime(date) {
             const value = new Date(date);
-            const offset = value.getTimezoneOffset() * 60000;
-            return new Date(value.getTime() - offset).toISOString().slice(0, 16);
+            const parts = Object.fromEntries(
+                new Intl.DateTimeFormat('en-CA', {
+                    timeZone: 'Asia/Ho_Chi_Minh',
+                    year: 'numeric',
+                    month: '2-digit',
+                    day: '2-digit',
+                    hour: '2-digit',
+                    minute: '2-digit',
+                    hourCycle: 'h23'
+                }).formatToParts(value).map(part => [part.type, part.value])
+            );
+            return `${parts.year}-${parts.month}-${parts.day}T${parts.hour}:${parts.minute}`;
+        }
+
+        function promotionVietnamDateTimeToIso(value) {
+            const text = String(value || '').trim();
+            if (!text) return '';
+            const vietnamDateTime = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}$/.test(text)
+                ? `${text}:00+07:00`
+                : `${text}+07:00`;
+            const parsed = new Date(vietnamDateTime);
+            return Number.isFinite(parsed.getTime()) ? parsed.toISOString() : text;
         }
 
         function optionalPromotionNumber(id) {
@@ -14041,8 +14061,8 @@
                     discountValue: Number(document.getElementById('promoDiscountValue').value || 0),
                     maxDiscountVnd: optionalPromotionNumber('promoMaxDiscount'),
                     minOrderAmountVnd: optionalPromotionNumber('promoMinOrder') || 0,
-                    validFrom: document.getElementById('promoValidFrom').value,
-                    expiresAt: document.getElementById('promoExpiresAt').value
+                    validFrom: promotionVietnamDateTimeToIso(document.getElementById('promoValidFrom').value),
+                    expiresAt: promotionVietnamDateTimeToIso(document.getElementById('promoExpiresAt').value)
                 } : null,
                 email: {
                     subject: document.getElementById('promoEmailSubject').value.trim(),
