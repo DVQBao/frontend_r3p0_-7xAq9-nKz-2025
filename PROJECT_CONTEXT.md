@@ -1,6 +1,6 @@
 # AI Project Context - TiemBanhNetflix_Web
 
-Last major update: 2026-08-08
+Last major update: 2026-08-16
 
 This file is the primary handoff document for any AI assistant or engineer working on
 `TiemBanhNetflix_Web`. It is intentionally written as a technical operating manual,
@@ -46,6 +46,83 @@ The most important runtime concepts are:
   `server_canplay_enabled` for the live Render canplay switch.
 - `CanplayCheckRun`: persistent audit of GitHub Actions based PC-cookie `canPlay`
   checks. Current runs use the CLCS-aware rule version.
+
+## Coupon And Promotion Campaign Contract (2026-08-16)
+
+Coupon payment remains a manual-verification flow. Applying a code only records the
+discounted amount and the intended product; it never upgrades Pro, adds credits, or
+marks the code used. If a valid coupon exists but is not applied, checkout shows a
+generic warning without revealing the code. Continuing at full price records a
+pending `forfeited` decision, but the coupon remains usable until an admin explicitly
+decides otherwise. On both desktop and mobile admin, saving an edited account or
+confirming a Pro upgrade checks the already-loaded active-voucher summary. If a voucher
+exists, the admin chooses either to keep it while still saving the account change, or
+to deactivate it. Deactivation records an applied checkout as `redeemed` and a code
+that was never applied as `forfeited`; both outcomes make the admin list return
+`No voucher`. The anti-reuse ledger is saved in the same `User` write before the
+separate coupon reporting document is finalized. New admin clients send the explicit
+boolean `deactivateActiveVoucher`; backend routes preserve the former fulfillment
+behavior only for older clients that omit this field entirely.
+
+The main data sources are:
+
+- `PromotionCampaign`: audience snapshot, coupon/email rules, lifecycle, and totals.
+- `CampaignRecipient`: persistent bounded email queue with leases and retry state.
+- `Coupon`: globally unique code bound to one campaign, user, and email snapshot.
+- `User`: post-deployment counters and timestamps plus an internal redeemed-code
+  ledger and marketing opt-out flag.
+
+Existing users are not mass-migrated or backfilled. Missing promotion/purchase
+counters are treated as zero in MongoDB audience filters; defaults are written only
+when a user is subsequently saved through normal application activity. Campaigns
+can filter by Free/Pro, Pro expiry, recent activity, credit balance, coupon issuance
+count, and post-deployment Pro/credit purchase counts. Audience preview returns only
+a count and never renders the complete matching user list.
+
+Public coupon endpoints are under `/api/promotions`. Admin campaign endpoints are
+under `/api/admin/promotions`. `POST /api/credits/purchase` is validation-only and
+must not grant credits; fulfillment authority remains the existing admin routes.
+The public credit-purchase and Pro-payment views both support coupon entry. Pro first
+shows a coupon prompt and the subsequent QR/payment modal retains a second entry
+point in case the prompt was skipped. The QR amount is the server-calculated final
+amount while the granted credit quantity is still based on the original order.
+The Pro coupon status check completes before its prompt is revealed so transient
+loading copy cannot resize the open modal and cause a visible layout jump.
+That status response includes only the calculated discount amount (never the coupon
+code), allowing the prompt to explain the available saving before the user checks email.
+
+Campaign coupon codes are per-user and unique. Code checks enforce user/email
+binding, active campaign, validity window, product scope, minimum order, single use,
+and a minimum payable amount. Campaign reporting distinguishes coupons that actually
+reduced a payment from coupons forfeited after the customer explicitly continued at
+full price. Cancelling a campaign revokes unused codes and skips
+queued recipients. Admin can also forcibly recall and permanently delete any campaign;
+recall removes its coupons and recipient history, then rebuilds affected users' coupon
+counters from the remaining coupons. It never reverses Pro or Credits already granted.
+Rejected coupon states intentionally share the customer-facing message
+`Mã ưu đãi không hợp lệ, vui lòng kiểm tra lại!`; detailed rejection reasons are not
+shown in the purchase UI. New coupon campaigns default to the `both` scope.
+Promotional email content is HTML-escaped, uses an SF Pro-first font stack and a
+responsive Netflix red/white/black light theme, and contains no unsubscribe link or
+copy-code button. Coupon mail includes a discount-aware usage guide. Campaign content
+may include admin-authored emoji. The worker defaults
+to 10 messages per batch and 250 successful messages per Bangkok day; deployments may
+tune `PROMOTION_EMAIL_INTERVAL_MS`, `PROMOTION_EMAIL_BATCH_SIZE`,
+`PROMOTION_EMAIL_DAILY_LIMIT`, `PUBLIC_WEB_URL`, and `BREVO_REPLY_TO_EMAIL`.
+
+The campaign-management UI is intentionally desktop-only in
+`NetflixFrontend/x7Kv9mPq3nRt2025/index.html`. Do not add it to or change the mobile
+admin workflow. Relevant automated checks live in `NetflixBackend/tests/promotion*`
+and `NetflixFrontend/tests/promotions-ui.test.js`.
+Its issued-coupon table is a separate subview opened from the campaign header, not a
+section appended below campaign history. It uses `GET /api/admin/promotions/coupons`
+and server-side pagination capped at 50 users. Search is limited to coupon code/email;
+each user occupies one row with aggregate receipt/status counters and their current
+unfinalized coupon, if any.
+
+The main Admin user API exposes `activeCoupon` for concise voucher badges on both PC
+and mobile, while `pendingCoupon` remains separate for fulfillment logic. The PC user
+table keeps voucher value in its own column; never append coupon details to email text.
 
 ## Canonical canPlay Contract (2026-08-08)
 
@@ -1928,6 +2005,8 @@ Remember:
 - Preserve the connected App/TV tab geometry and keep the inactive tab visible.
 - `updateMobilePlanAction` and `handleMobilePlanAction` control the plan-aware quick
   action; CSS alone is not enough when changing its Free/Pro behavior.
+- `updateDesktopPlanAction` keeps the PC account action plan-aware: Free upgrades Pro,
+  while Pro purchases additional Credits.
 - Do not let mobile-only visual changes alter the desktop premium modal or PC layout.
 
 ### Change TV activation/app-login

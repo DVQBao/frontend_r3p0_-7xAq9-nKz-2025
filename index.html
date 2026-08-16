@@ -1076,9 +1076,20 @@
                 width: 100% !important;
                 padding: 15px !important;
                 margin: 0 !important;
-                max-height: none !important;
-                overflow-y: visible !important;
+                max-height: calc(100dvh - 30px) !important;
+                overflow-y: auto !important;
+                overscroll-behavior: contain;
+                touch-action: pan-y;
+                -webkit-overflow-scrolling: touch;
+                scrollbar-width: none;
+                -ms-overflow-style: none;
                 border-radius: 12px !important;
+            }
+
+            #purchaseCreditsModal .modal-content::-webkit-scrollbar {
+                display: none;
+                width: 0;
+                height: 0;
             }
 
             #purchaseCreditsModal h2 {
@@ -3993,19 +4004,37 @@
             box-shadow: inset 0 1px 0 rgba(219, 234, 254, 0.06);
         }
 
+        .verified-icon-badge {
+            align-items: center;
+            justify-content: center;
+            width: 22px;
+            height: 22px;
+            flex: 0 0 22px;
+            padding: 0;
+            border: 0;
+            border-radius: 50%;
+            color: #22c55e;
+            vertical-align: middle;
+        }
+
         body.desktop-home-v2 .badge-verified,
         body.desktop-home-v2 #verifiedBadge {
             display: inline-flex;
             align-items: center;
             justify-content: center;
-            padding: 4px 10px;
-            border-radius: 6px;
-            background: rgba(16, 185, 129, 0.15);
-            border: 1px solid rgba(16, 185, 129, 0.3);
+            width: 22px;
+            height: 22px;
+            padding: 0;
+            border-radius: 50%;
+            background: transparent;
+            border: 0;
             color: var(--desktop-home-green) !important;
-            font-size: 0.7rem !important;
-            font-weight: 700 !important;
-            text-transform: uppercase;
+        }
+
+        .verified-icon-badge svg {
+            display: block;
+            width: 22px;
+            height: 22px;
         }
 
         body.desktop-home-v2 .stats-grid {
@@ -6932,8 +6961,10 @@
                                         style="display: flex; align-items: center; justify-content: center; gap: 8px; margin-bottom: 20px;">
                                         <p id="userEmail" style="font-size: 0.95rem; color: #aaa; margin: 0;">
                                             email@example.com</p>
-                                        <span id="verifiedBadge"
-                                            style="display: none; background: rgba(34, 197, 94, 0.15); color: #22c55e; padding: 3px 10px; border-radius: 6px; font-size: 0.75rem; font-weight: 600; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif; border: 1px solid rgba(34, 197, 94, 0.3);">Đã xác minh</span>
+                                        <span id="verifiedBadge" class="verified-icon-badge" role="img"
+                                            aria-label="Đã xác minh" title="Đã xác minh" style="display:none;color:#22c55e;">
+                                            <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="10" fill="currentColor"></circle><path d="m7.8 12.2 2.6 2.6 5.8-6" fill="none" stroke="#ffffff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+                                        </span>
                                     </div>
                                 </div>
 
@@ -7465,6 +7496,188 @@
     <!-- End Main Wrapper -->
 
     <!-- Purchase Credits Modal -->
+    <style>
+        .coupon-entry-card {
+            margin: 0 0 16px;
+            padding: 14px;
+            border: 1px solid rgba(251, 191, 36, 0.22);
+            border-radius: 12px;
+            background: rgba(251, 191, 36, 0.055);
+        }
+
+        .coupon-entry-title {
+            margin: 0 0 8px;
+            color: #f8fafc;
+            font-size: 0.88rem;
+            font-weight: 750;
+        }
+
+        .coupon-entry-row {
+            display: grid;
+            grid-template-columns: minmax(0, 1fr) auto;
+            align-items: stretch;
+            gap: 8px;
+        }
+
+        .coupon-entry-row input {
+            min-width: 0;
+            width: 100%;
+            box-sizing: border-box;
+            padding: 11px 12px;
+            border: 1px solid rgba(255, 255, 255, 0.14);
+            border-radius: 9px;
+            outline: none;
+            background: rgba(2, 6, 23, 0.78);
+            color: #fff;
+            font: inherit;
+            text-transform: uppercase;
+        }
+
+        .coupon-entry-row input:focus {
+            border-color: rgba(251, 191, 36, 0.65);
+        }
+
+        .coupon-apply-btn,
+        .coupon-remove-btn {
+            border: 0;
+            border-radius: 9px;
+            padding: 0 14px;
+            cursor: pointer;
+            font-weight: 750;
+            min-width: 88px;
+            min-height: 42px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            line-height: 1.15;
+            white-space: nowrap;
+        }
+
+        .coupon-apply-btn {
+            background: #fbbf24;
+            color: #111827;
+        }
+
+        .coupon-remove-btn {
+            display: none;
+            background: rgba(239, 68, 68, 0.14);
+            color: #fca5a5;
+        }
+
+        .coupon-entry-message {
+            min-height: 18px;
+            margin: 7px 0 0;
+            color: #94a3b8;
+            font-size: 0.78rem;
+            line-height: 1.45;
+        }
+
+        .coupon-entry-message.is-success { color: #4ade80; }
+        .coupon-entry-message.is-error { color: #fca5a5; }
+        .coupon-entry-message:empty { display: none; }
+
+        .coupon-gift-message { display: block; }
+
+        .coupon-forfeit-caution {
+            display: block;
+            margin-top: 8px;
+            color: #fbbf24;
+            font-style: italic;
+            line-height: 1.5;
+        }
+
+        .coupon-price-breakdown {
+            display: none;
+            gap: 6px;
+            margin-top: 10px;
+            padding-top: 10px;
+            border-top: 1px solid rgba(255, 255, 255, 0.08);
+            color: #cbd5e1;
+            font-size: 0.82rem;
+        }
+
+        .coupon-price-breakdown.is-active { display: grid; }
+        .coupon-price-line { display: flex; justify-content: space-between; gap: 12px; }
+        .coupon-price-line strong { color: #4ade80; }
+
+        @media (max-width: 768px) {
+            .coupon-entry-card { padding: 12px; }
+            .coupon-entry-row { grid-template-columns: minmax(0, 1fr) minmax(82px, auto); }
+            .coupon-entry-row input { padding: 10px; font-size: 0.82rem; }
+            .coupon-apply-btn, .coupon-remove-btn { min-height: 40px; padding: 0 11px; font-size: 0.82rem; }
+
+            #proCouponPromptModal .modal-content {
+                width: calc(100% - 28px) !important;
+                max-width: 360px !important;
+                padding: 16px !important;
+                border-radius: 18px !important;
+            }
+
+            #proCouponPromptModal .pro-coupon-prompt-title {
+                margin-bottom: 7px !important;
+                font-size: 1rem !important;
+                line-height: 1.3 !important;
+            }
+
+            #proCouponPromptNotice {
+                margin-bottom: 12px !important;
+                font-size: 0.74rem !important;
+                line-height: 1.45 !important;
+            }
+
+            #proPromptCouponCard {
+                margin-bottom: 0;
+                padding: 10px;
+                border-radius: 10px;
+            }
+
+            #proPromptCouponCard .coupon-entry-row {
+                grid-template-columns: minmax(0, 1fr) minmax(76px, auto);
+                gap: 6px;
+            }
+
+            #proPromptCouponCard .coupon-entry-row input {
+                padding: 8px 9px;
+                font-size: 0.72rem;
+            }
+
+            #proPromptCouponCard .coupon-apply-btn,
+            #proPromptCouponCard .coupon-remove-btn {
+                min-width: 76px;
+                min-height: 35px;
+                padding: 0 9px;
+                font-size: 0.74rem;
+            }
+
+            #proPromptCouponCard .coupon-entry-message {
+                min-height: 15px;
+                margin-top: 6px;
+                font-size: 0.68rem;
+                line-height: 1.4;
+            }
+
+            #proPromptCouponCard .coupon-price-breakdown {
+                gap: 4px;
+                margin-top: 8px;
+                padding-top: 8px;
+                font-size: 0.72rem;
+            }
+
+            #proCouponPromptModal .pro-coupon-prompt-actions {
+                gap: 7px !important;
+                margin-top: 12px !important;
+            }
+
+            #proCouponPromptModal .pro-coupon-prompt-actions .btn {
+                min-height: 39px;
+                padding: 8px 10px;
+                font-size: 0.78rem;
+                line-height: 1.2;
+            }
+        }
+    </style>
+
     <div class="modal" id="purchaseCreditsModal">
         <div class="modal-content premium-modal-shell premium-modal-shell--wide"
             style="max-width: 640px; background: linear-gradient(180deg, #1a1a1a 0%, #0f0f0f 100%); border-radius: 16px; border: 1px solid rgba(251, 191, 36, 0.15); box-shadow: 0 25px 80px rgba(0, 0, 0, 0.8); padding: 26px;">
@@ -7631,6 +7844,20 @@
                             </div>
                         </button>
                     </div>
+                </div>
+            </div>
+
+            <div class="coupon-entry-card" id="creditsCouponCard">
+                <p class="coupon-entry-title">Bạn có mã ưu đãi?</p>
+                <div class="coupon-entry-row">
+                    <input id="creditsCouponInput" maxlength="32" autocomplete="off" placeholder="Nhập mã khuyến mãi">
+                    <button type="button" class="coupon-apply-btn" id="creditsCouponApplyBtn" onclick="applyCreditsCoupon()">Áp dụng</button>
+                    <button type="button" class="coupon-remove-btn" id="creditsCouponRemoveBtn" onclick="removeAppliedCoupon('credits')">Gỡ mã</button>
+                </div>
+                <p class="coupon-entry-message" id="creditsCouponMessage">Kiểm tra email xem bạn có đang được tặng mã ưu đãi nào không nhé!</p>
+                <div class="coupon-price-breakdown" id="creditsCouponBreakdown">
+                    <div class="coupon-price-line"><span>Giá trị đơn</span><span id="creditsCouponOriginal">0 VNĐ</span></div>
+                    <div class="coupon-price-line"><span>Ưu đãi</span><strong id="creditsCouponDiscount">-0 VNĐ</strong></div>
                 </div>
             </div>
 
@@ -9666,6 +9893,32 @@ Nếu cần thêm lượt đổi tài khoản, vui lòng liên hệ Support qua 
             icon.innerHTML = '<path d="M12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2Z"></path>';
         }
 
+        function updateDesktopPlanAction(user = {}) {
+            if (typeof window.matchMedia === 'function' && !window.matchMedia('(min-width: 1025px)').matches) return;
+
+            const isPro = String(user.plan || '').toLowerCase() === 'pro';
+            document.querySelectorAll('#purchaseCreditsBtn').forEach((button) => {
+                const label = button.querySelector('.menu-copy strong');
+                const description = button.querySelector('.menu-copy span');
+                const icon = button.querySelector('.menu-icon svg');
+
+                button.onclick = isPro ? openPurchaseCreditsModal : openUpgradeToProModal;
+                button.setAttribute('aria-label', isPro ? 'Mua thêm Credits' : 'Nâng cấp Pro Plan');
+
+                if (label) label.textContent = isPro ? 'Mua thêm Credits' : 'Nâng cấp Pro Plan';
+                if (description) {
+                    description.textContent = isPro
+                        ? 'Và quyền truy cập Netflix Mobile App.'
+                        : 'Mở khóa đầy đủ quyền lợi Pro trong 30 ngày.';
+                }
+                if (icon) {
+                    icon.innerHTML = isPro
+                        ? '<circle cx="8" cy="8" r="6"></circle><path d="M18.09 10.37A6 6 0 1 1 10.34 18"></path><path d="M7 6h1v4"></path><path d="m16.71 13.88.7.71-2.82 2.82"></path>'
+                        : '<path d="M12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2Z"></path>';
+                }
+            });
+        }
+
         function handleMobilePlanAction() {
             const button = document.getElementById('mobilePlanActionBtn');
             const storedUser = getStoredUserForMobilePlanAction();
@@ -9778,7 +10031,7 @@ Nếu cần thêm lượt đổi tài khoản, vui lòng liên hệ Support qua 
                 // Show verified badge if email is verified
                 const verifiedBadge = document.getElementById('verifiedBadge');
                 if (user.emailVerified) {
-                    verifiedBadge.style.display = 'inline-block';
+                    verifiedBadge.style.display = 'inline-flex';
                 } else {
                     verifiedBadge.style.display = 'none';
                 }
@@ -9791,6 +10044,7 @@ Nếu cần thêm lượt đổi tài khoản, vui lòng liên hệ Support qua 
                 userTypeBadge.classList.add(user.plan === 'pro' ? 'badge-pro' : 'badge-free');
                 userTypeBadge.style.color = '';
                 updateMobilePlanAction(user);
+                updateDesktopPlanAction(user);
 
                 // Show Pro info if Pro plan
                 if (user.plan === 'pro') {
@@ -10429,6 +10683,21 @@ Nếu cần thêm lượt đổi tài khoản, vui lòng liên hệ Support qua 
                             </div>
                         </div>
 
+                        <div class="coupon-entry-card" id="paymentCouponCard" style="margin-top:12px;">
+                            <p class="coupon-entry-title">Bạn có mã ưu đãi?</p>
+                            <div class="coupon-entry-row">
+                                <input id="paymentCouponInput" maxlength="32" autocomplete="off" placeholder="Nhập mã khuyến mãi">
+                                <button type="button" class="coupon-apply-btn" id="paymentCouponApplyBtn" onclick="applyPaymentCoupon()">Áp dụng</button>
+                                <button type="button" class="coupon-remove-btn" id="paymentCouponRemoveBtn" onclick="removeAppliedCoupon()">Gỡ mã</button>
+                            </div>
+                            <p class="coupon-entry-message" id="paymentCouponMessage"></p>
+                            <div class="coupon-price-breakdown" id="paymentCouponBreakdown">
+                                <div class="coupon-price-line"><span>Giá gốc</span><span id="paymentCouponOriginal">0 VNĐ</span></div>
+                                <div class="coupon-price-line"><span>Ưu đãi</span><strong id="paymentCouponDiscount">-0 VNĐ</strong></div>
+                                <div class="coupon-price-line"><span>Cần chuyển khoản</span><strong id="paymentCouponFinal">0 VNĐ</strong></div>
+                            </div>
+                        </div>
+
                         <div class="payment-alert-card" style="margin-top: 12px;">
                             <p style="margin: 0; font-size: 0.9rem; line-height: 1.6; color: #fbbf24;">
                                 <strong>Lưu ý quan trọng:</strong><br>
@@ -10654,6 +10923,19 @@ Nếu cần thêm lượt đổi tài khoản, vui lòng liên hệ Support qua 
             border: 1px solid rgba(59, 130, 246, 0.65);
             border-radius: 10px;
             padding: 12px 14px;
+        }
+
+        #paymentModal,
+        #paymentModal .modal-content {
+            scrollbar-width: none;
+            -ms-overflow-style: none;
+        }
+
+        #paymentModal::-webkit-scrollbar,
+        #paymentModal .modal-content::-webkit-scrollbar {
+            display: none;
+            width: 0;
+            height: 0;
         }
 
         @media (max-width: 768px) {
@@ -13300,6 +13582,7 @@ Nếu cần thêm lượt đổi tài khoản, vui lòng liên hệ Support qua 
     <!-- Environment Configuration - Must load first -->
     <script src="config.js"></script>
     <script src="auth.js"></script>
+    <script src="promotions.js"></script>
     <script src="cookie-retry-handler.js"></script>
     <script>
         // Reuse the Digital Upgrade catalog in advertising modals.
@@ -13487,7 +13770,9 @@ Nếu cần thêm lượt đổi tài khoản, vui lòng liên hệ Support qua 
                             <p id="userEmail" class="user-email">email@example.com</p>
                             <div class="user-badges">
                                 <div id="userType" class="badge-free">GÓI FREE</div>
-                                <div id="verifiedBadge" class="badge-verified" style="display:none;">Đã xác minh</div>
+                                <div id="verifiedBadge" class="badge-verified verified-icon-badge" role="img" aria-label="Đã xác minh" title="Đã xác minh" style="display:none;">
+                                    <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="10" fill="currentColor"></circle><path d="m7.8 12.2 2.6 2.6 5.8-6" fill="none" stroke="#ffffff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+                                </div>
                             </div>
                         </div>
                         <div class="stats-grid">

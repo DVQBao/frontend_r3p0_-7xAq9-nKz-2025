@@ -8436,6 +8436,14 @@
             }
         }
     </style>
+    <style>
+        @media (max-width: 768px) {
+            .promotion-pc-only,
+            #promotionManagement {
+                display: none !important;
+            }
+        }
+    </style>
 </head>
 
 <body>
@@ -8522,6 +8530,18 @@
                             </svg>
                         </span>
                         Auth Showcase
+                    </button>
+                    <button type="button" class="promotion-pc-only" data-admin-nav="promotions" onclick="showUsersTable(); showPromotionManagement()">
+                        <span class="sidebar-icon" aria-hidden="true">
+                            <svg viewBox="0 0 24 24" focusable="false">
+                                <path d="M20 12v8H4v-8"></path>
+                                <path d="M2 7h20v5H2z"></path>
+                                <path d="M12 7v13"></path>
+                                <path d="M12 7H7.5A2.5 2.5 0 1 1 10 4.5L12 7Z"></path>
+                                <path d="M12 7h4.5A2.5 2.5 0 1 0 14 4.5L12 7Z"></path>
+                            </svg>
+                        </span>
+                        Coupon & Email
                     </button>
                 </div>
             </div>
@@ -9008,6 +9028,7 @@
                         <option value="9999">Vĩnh viễn</option>
                     </select>
                 </div>
+                <div id="upgradePendingCoupon" style="display:none;padding:12px;border-radius:10px;border:1px solid rgba(251,191,36,.3);background:rgba(251,191,36,.08);color:#fde68a;font-size:.84rem;line-height:1.55;"></div>
                 <div class="modal-actions plan-modal-actions">
                     <button type="button" class="btn plan-btn-cancel" onclick="closeModal('upgradeModal')">
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
@@ -9148,6 +9169,7 @@
         const BACKEND_URL = window.APP_CONFIG && window.APP_CONFIG.BACKEND_URL ? window.APP_CONFIG.BACKEND_URL : '';
         let currentUsers = [];
         let currentUserId = null;
+        const adminVoucherByUserId = new Map();
         let authShowcaseItems = [];
         let authShowcaseInventory = [];
         let authShowcaseEnabled = true;
@@ -9809,6 +9831,7 @@
 
                 const data = await response.json();
                 currentUsers = data.users;
+                cacheAdminUserVouchers(currentUsers);
                 currentPage = data.pagination.page;
                 totalPages = data.pagination.totalPages;
 
@@ -9831,7 +9854,7 @@
             }
         }
 
-        async function upgradeUser(userId, duration) {
+        async function upgradeUser(userId, duration, deactivateActiveVoucher = false) {
             try {
                 // Convert ngày thành tháng (30 ngày = 1 tháng)
                 const months = Math.ceil(parseInt(duration) / 30);
@@ -9842,7 +9865,10 @@
                         'Content-Type': 'application/json',
                         'Authorization': `Bearer ${localStorage.getItem('admin_token')}`
                     },
-                    body: JSON.stringify({ months: months })
+                    body: JSON.stringify({
+                        months: months,
+                        deactivateActiveVoucher: deactivateActiveVoucher === true
+                    })
                 });
 
                 if (!response.ok) {
@@ -9850,7 +9876,12 @@
                 }
 
                 const data = await response.json();
-                showMessage(`Nâng cấp thành công! ${data.message}`, 'success');
+                const couponText = data.couponRedemption?.redeemed
+                    ? ` · Voucher ${data.couponRedemption.code} đã được xác nhận sử dụng`
+                    : (data.couponRedemption?.forfeited
+                        ? ` · Voucher ${data.couponRedemption.code} đã được vô hiệu hóa`
+                        : (data.couponRedemption?.warning ? ` · ${data.couponRedemption.warning}` : ''));
+                showMessage(`Nâng cấp thành công! ${data.message}${couponText}`, data.couponRedemption?.warning ? 'info' : 'success');
                 loadUsers(currentPage, currentSearch, currentPlanFilter);
 
                 // Refresh mobile search nếu đang trên mobile
@@ -9959,6 +9990,38 @@
             loadUsers(currentPage, currentSearch, currentPlanFilter);
         }
 
+        function fulfillPendingCreditCoupon(userId, credits, code) {
+            const amount = Number(credits || 0);
+            if (!Number.isInteger(amount) || amount <= 0) return;
+            showConfirmModal(`Cộng <strong>${amount.toLocaleString('vi-VN')} credits</strong> và xác nhận coupon <strong>${escapeHtml(code)}</strong> đã được sử dụng?`, async () => {
+                try {
+                    const response = await fetch(`${BACKEND_URL}/api/admin-users/${userId}/add-credits`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Authorization': `Bearer ${localStorage.getItem('admin_token')}`
+                        },
+                        body: JSON.stringify({
+                            credits: amount,
+                            purchaseFulfillment: true,
+                            note: `Manual coupon fulfillment: ${code}`
+                        })
+                    });
+                    const data = await response.json();
+                    if (!response.ok) throw new Error(data.error || 'Không cộng được credit');
+                    const couponText = data.couponRedemption?.redeemed
+                        ? ` Coupon ${data.couponRedemption.code} đã được đánh dấu sử dụng.`
+                        : (data.couponRedemption?.forfeited
+                            ? ` Coupon ${data.couponRedemption.code} đã mất hiệu lực theo lựa chọn thanh toán đủ giá của khách.`
+                            : (data.couponRedemption?.warning || ''));
+                    showMessage(`Đã cộng ${amount.toLocaleString('vi-VN')} credits.${couponText}`, data.couponRedemption?.warning ? 'info' : 'success');
+                    loadUsers(currentPage, currentSearch, currentPlanFilter);
+                } catch (error) {
+                    showMessage(`Lỗi xác nhận mua credit: ${error.message}`, 'error');
+                }
+            }, 'Xác nhận mua credit', 'Cộng credit', 'btn-success');
+        }
+
         // Save edited user row
         async function saveUserRow(userId) {
             const row = document.getElementById(`row-${userId}`);
@@ -9999,6 +10062,9 @@
                 return;
             }
 
+            const voucherDecision = await requestAdminVoucherDecision(userId);
+            if (voucherDecision === null) return;
+
             try {
                 // Show loading on save button
                 const saveBtn = row.querySelector('.save-btn');
@@ -10007,7 +10073,15 @@
                 saveBtn.disabled = true;
 
                 // Prepare update data
-                const updateData = { name, email, plan, proExpiresAt, monthlyReportLimit, credits };
+                const updateData = {
+                    name,
+                    email,
+                    plan,
+                    proExpiresAt,
+                    monthlyReportLimit,
+                    credits,
+                    deactivateActiveVoucher: voucherDecision
+                };
 
                 // Nếu có freeExpiresAt, tính ngược lại lastCreditsReset (freeExpiresAt - 1 ngày)
                 if (freeExpiresAt && plan === 'free') {
@@ -10026,9 +10100,9 @@
                     body: JSON.stringify(updateData)
                 });
 
+                const updateResult = await response.json();
                 if (!response.ok) {
-                    const error = await response.json();
-                    throw new Error(error.error || 'Failed to update user');
+                    throw new Error(updateResult.error || 'Failed to update user');
                 }
 
                 // Update password if provided
@@ -10069,7 +10143,12 @@
                 }
 
                 // Show success message
-                showMessage('Cập nhật thành công!', 'success');
+                const couponText = updateResult.couponRedemption?.redeemed
+                    ? ` Voucher ${updateResult.couponRedemption.code} đã được xác nhận sử dụng.`
+                    : (updateResult.couponRedemption?.forfeited
+                        ? ` Voucher ${updateResult.couponRedemption.code} đã được vô hiệu hóa.`
+                        : (updateResult.couponRedemption?.warning ? ` ${updateResult.couponRedemption.warning}` : ''));
+                showMessage(`Cập nhật thành công!${couponText}`, updateResult.couponRedemption?.warning ? 'info' : 'success');
 
                 // Reload current page
                 await loadUsers(currentPage, currentSearch, currentPlanFilter);
@@ -10298,6 +10377,71 @@
             renderUsersTable(currentUsers || []);
         }
 
+        function formatAdminVoucherValue(coupon) {
+            if (!coupon) return 'No voucher';
+            const value = Number(coupon.discountValue || 0);
+            if (!Number.isFinite(value) || value <= 0) return 'No voucher';
+            if (coupon.discountType === 'percent') return `-${value.toLocaleString('vi-VN')}%`;
+            const amount = value % 1000 === 0
+                ? `${(value / 1000).toLocaleString('vi-VN')}k`
+                : `${value.toLocaleString('vi-VN')}đ`;
+            return `-${amount}`;
+        }
+
+        function cacheAdminUserVouchers(users) {
+            (users || []).forEach(user => {
+                const key = String(user._id || '');
+                if (!key) return;
+                if (user.activeCoupon) {
+                    adminVoucherByUserId.set(key, user.activeCoupon);
+                } else {
+                    adminVoucherByUserId.delete(key);
+                }
+            });
+        }
+
+        function requestAdminVoucherDecision(userId) {
+            const coupon = adminVoucherByUserId.get(String(userId));
+            if (!coupon) return Promise.resolve(false);
+
+            const existing = document.getElementById('adminVoucherDecisionModal');
+            if (existing) existing.remove();
+
+            return new Promise(resolve => {
+                const voucherValue = formatAdminVoucherValue(coupon);
+                const modal = document.createElement('div');
+                modal.id = 'adminVoucherDecisionModal';
+                modal.setAttribute('role', 'dialog');
+                modal.setAttribute('aria-modal', 'true');
+                modal.setAttribute('aria-labelledby', 'adminVoucherDecisionTitle');
+                modal.style.cssText = 'position:fixed;inset:0;z-index:100001;background:rgba(0,0,0,.82);display:flex;align-items:center;justify-content:center;padding:18px;box-sizing:border-box;';
+                modal.innerHTML = `
+                    <div style="width:min(430px,100%);background:#171717;border:1px solid rgba(239,68,68,.45);border-radius:14px;padding:20px;box-shadow:0 24px 70px rgba(0,0,0,.55);color:#fff;">
+                        <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:14px;">
+                            <div>
+                                <h3 id="adminVoucherDecisionTitle" style="margin:0 0 9px;font-size:18px;line-height:1.3;">Tài khoản đang có voucher</h3>
+                                <p style="margin:0;color:#d4d4d8;font-size:14px;line-height:1.55;">Người dùng đang có voucher <strong style="color:#4ade80;">${voucherValue}</strong>. Bạn có muốn xác nhận thay đổi và vô hiệu hóa voucher này không?</p>
+                            </div>
+                            <button type="button" data-voucher-action="abort" aria-label="Đóng" style="border:0;background:transparent;color:#a1a1aa;font-size:23px;line-height:1;cursor:pointer;padding:0 2px;">×</button>
+                        </div>
+                        <p style="margin:13px 0 18px;color:#fbbf24;font-size:12px;line-height:1.5;font-style:italic;">Chọn “Giữ voucher” để vẫn lưu thay đổi nhưng không làm mất ưu đãi của người dùng.</p>
+                        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+                            <button type="button" data-voucher-action="keep" style="min-height:42px;border:1px solid rgba(255,255,255,.2);border-radius:8px;background:#27272a;color:#fff;font-weight:700;cursor:pointer;">Giữ voucher</button>
+                            <button type="button" data-voucher-action="deactivate" style="min-height:42px;border:1px solid #ef4444;border-radius:8px;background:#b91c1c;color:#fff;font-weight:800;cursor:pointer;">Vô hiệu hóa voucher</button>
+                        </div>
+                    </div>`;
+
+                const finish = decision => {
+                    modal.remove();
+                    resolve(decision);
+                };
+                modal.querySelector('[data-voucher-action="keep"]').onclick = () => finish(false);
+                modal.querySelector('[data-voucher-action="deactivate"]').onclick = () => finish(true);
+                modal.querySelector('[data-voucher-action="abort"]').onclick = () => finish(null);
+                document.body.appendChild(modal);
+            });
+        }
+
         function renderUsersTable(users) {
             const tableContainer = document.getElementById('usersTable');
             updateUserTableDetailsToggle();
@@ -10328,6 +10472,7 @@
                                 <th style="width: 56px;">STT</th>
                                 <th style="width: 260px;">Name</th>
                                 <th style="width: 260px;">Email</th>
+                                <th style="width: 110px;">Voucher</th>
                                 <th class="user-detail-col" style="width: 120px;">Password</th>
                                 <th style="width: 120px;">Plan</th>
                                 <th class="user-detail-col" style="width: 150px;">Cookie No.</th>
@@ -10409,6 +10554,8 @@
                 // Monthly Invites (2 - monthlyReferralsUsed)
                 const invitesUsed = user.monthlyReferralsUsed || 0;
                 const invitesRemaining = Math.max(0, 2 - invitesUsed);
+                const voucherValue = formatAdminVoucherValue(user.activeCoupon);
+                const hasVoucher = voucherValue !== 'No voucher';
 
                 tableHTML += `
                     <tr data-user-id="${user._id}" id="row-${user._id}">
@@ -10429,6 +10576,7 @@
                             <span class="view-mode">${user.email}</span>
                             <input type="email" class="edit-mode" value="${user.email}" style="display: none; width: 100%; padding: 4px; border: 1px solid #ddd; border-radius: 4px;">
                         </td>
+                        <td><span style="color:${hasVoucher ? '#22c55e' : 'var(--text-primary)'};font-weight:${hasVoucher ? '800' : '500'};white-space:nowrap;">${voucherValue}</span></td>
                         <td class="user-detail-col">
                             <span class="view-mode" style="color: #e11d48; font-weight: 600;">••••••••</span>
                             <input type="text" class="edit-mode" placeholder="Nhập mật khẩu mới" style="display: none; width: 100%; padding: 4px; border: 1px solid #ddd; border-radius: 4px;">
@@ -10595,6 +10743,7 @@
 
                 const data = await response.json();
                 const users = data.users || [];
+                cacheAdminUserVouchers(users);
 
                 if (users.length === 0) {
                     container.innerHTML = '<div class="mobile-search-placeholder">Không tìm thấy kết quả</div>';
@@ -10635,6 +10784,8 @@
                     const ip = user.lastLoginIP || '-';
                     const monthlyLimit = user.monthlyReportLimit !== undefined ? user.monthlyReportLimit : (plan === 'pro' ? 5 : 2);
                     const credits = user.credits || 0;
+                    const voucherValue = formatAdminVoucherValue(user.activeCoupon);
+                    const hasVoucher = voucherValue !== 'No voucher';
 
                     html += `
                         <div class="mobile-user-card" data-user-id="${user._id}" id="mobile-card-${user._id}">
@@ -10677,6 +10828,10 @@
                                     <span class="info-label">Credits</span>
                                     <span class="info-value view-mode">${credits}</span>
                                     <input type="number" class="edit-mode edit-input" value="${credits}" min="0" data-field="credits" style="display:none;">
+                                </div>
+                                <div class="info-item">
+                                    <span class="info-label">VOUCHER</span>
+                                    <span class="info-value view-mode" style="color:${hasVoucher ? '#22c55e' : 'inherit'};font-weight:${hasVoucher ? '800' : 'inherit'};">${voucherValue}</span>
                                 </div>
                                 <div class="info-item">
                                     <span class="info-label">IP</span>
@@ -10854,6 +11009,34 @@
             document.getElementById('upgradeUserName').value = userName;
             document.getElementById('upgradeUserEmail').value = userEmail;
             document.getElementById('upgradeModal').style.display = 'block';
+            loadUpgradePendingCoupon(userId);
+        }
+
+        async function loadUpgradePendingCoupon(userId) {
+            const notice = document.getElementById('upgradePendingCoupon');
+            if (!notice || window.innerWidth <= 768) {
+                if (notice) notice.style.display = 'none';
+                return;
+            }
+            notice.style.display = 'block';
+            notice.textContent = 'Đang kiểm tra coupon chờ xác nhận...';
+            try {
+                const response = await fetch(`${BACKEND_URL}/api/admin/promotions/users/${userId}/pending?productType=pro`, {
+                    headers: { 'Authorization': `Bearer ${localStorage.getItem('admin_token')}` }
+                });
+                const data = await response.json();
+                if (!response.ok) throw new Error(data.error || 'Không kiểm tra được coupon');
+                if (!data.coupon) {
+                    notice.style.display = 'none';
+                    return;
+                }
+                const app = data.coupon.application || {};
+                notice.textContent = app.decision === 'forfeited'
+                    ? `Khách đã chọn thanh toán đủ ${Number(app.originalAmountVnd || 0).toLocaleString('vi-VN')} VNĐ và bỏ qua coupon ${data.coupon.code}. Khi xác nhận nâng cấp, hệ thống sẽ hỏi bạn muốn vô hiệu hóa hay giữ lại voucher.`
+                    : `Coupon chờ xác nhận: ${data.coupon.code} · Khách chuyển ${Number(app.finalAmountVnd || 0).toLocaleString('vi-VN')} VNĐ cho 30 ngày Pro. Khi xác nhận nâng cấp, hệ thống sẽ hỏi bạn muốn ghi nhận sử dụng hay giữ lại voucher.`;
+            } catch (error) {
+                notice.textContent = `Không kiểm tra được coupon: ${error.message}`;
+            }
         }
 
         function openDowngradeModal(userId, userName, userEmail) {
@@ -11157,6 +11340,10 @@
                 return;
             }
 
+            const voucherDecision = await requestAdminVoucherDecision(userId);
+            if (voucherDecision === null) return;
+            updateData.deactivateActiveVoucher = voucherDecision;
+
             try {
                 const adminToken = localStorage.getItem('admin_token');
                 const response = await fetch(BACKEND_URL + '/api/admin-users/' + userId, {
@@ -11187,10 +11374,13 @@
             currentUserId = null;
         }
 
-        function confirmUpgrade() {
+        async function confirmUpgrade() {
+            const userId = currentUserId;
             const duration = document.getElementById('proDuration').value;
-            upgradeUser(currentUserId, duration);
+            const voucherDecision = await requestAdminVoucherDecision(userId);
+            if (voucherDecision === null) return;
             closeModal('upgradeModal');
+            await upgradeUser(userId, duration, voucherDecision);
         }
 
         function confirmDowngrade() {
@@ -11643,6 +11833,7 @@
             const mobileCookiesContainer = document.getElementById('mobileCookiesManagement');
             const ctvContainer = document.getElementById('ctvManagement');
             const authShowcaseContainer = document.getElementById('authShowcaseManagement');
+            const promotionContainer = document.getElementById('promotionManagement');
             const usersTable = document.querySelector('.users-table');
             const controls = document.querySelector('.controls');
             const pagination = document.getElementById('pagination');
@@ -11651,6 +11842,7 @@
             if (mobileCookiesContainer) mobileCookiesContainer.remove();
             if (ctvContainer) ctvContainer.remove();
             if (authShowcaseContainer) authShowcaseContainer.remove();
+            if (promotionContainer) promotionContainer.remove();
             if (usersTable) usersTable.style.display = 'block';
             if (controls) controls.style.display = 'flex';
             if (pagination) pagination.style.display = 'block';
@@ -13436,6 +13628,7 @@
             const cookiesContainer = document.getElementById('cookiesManagement');
             const mobileCookiesContainer = document.getElementById('mobileCookiesManagement');
             const authShowcaseContainer = document.getElementById('authShowcaseManagement');
+            const promotionContainer = document.getElementById('promotionManagement');
 
             // Khôi phục mobile search results và title
             const mobileSearchResults = document.getElementById('mobileSearchResults');
@@ -13449,6 +13642,7 @@
             if (cookiesContainer) cookiesContainer.remove();
             if (mobileCookiesContainer) mobileCookiesContainer.remove();
             if (authShowcaseContainer) authShowcaseContainer.remove();
+            if (promotionContainer) promotionContainer.remove();
             const ctvMgmt = document.getElementById('ctvManagement');
             if (ctvMgmt) ctvMgmt.remove();
             if (usersTable) usersTable.style.display = 'block';
@@ -13786,6 +13980,555 @@
                 showMessage(error.message, 'error');
                 renderAuthShowcaseList();
             }
+        }
+
+        // ========================================
+        // PROMOTION CAMPAIGNS (DESKTOP ADMIN ONLY)
+        // ========================================
+
+        let promotionAudienceCount = null;
+        let promotionCouponPage = 1;
+        let promotionCouponSearchTimer = null;
+        let promotionCouponRequestKey = 0;
+
+        function promotionHeaders() {
+            return {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${localStorage.getItem('admin_token')}`
+            };
+        }
+
+        function promotionLocalDateTime(date) {
+            const value = new Date(date);
+            const offset = value.getTimezoneOffset() * 60000;
+            return new Date(value.getTime() - offset).toISOString().slice(0, 16);
+        }
+
+        function optionalPromotionNumber(id) {
+            const value = document.getElementById(id)?.value;
+            return value === '' || value === undefined ? null : Number(value);
+        }
+
+        function collectPromotionFilters() {
+            return {
+                plan: document.getElementById('promoFilterPlan').value,
+                proExpiryMode: document.getElementById('promoExpiryMode').value,
+                proExpiryDays: optionalPromotionNumber('promoExpiryDays'),
+                activeWithinDays: optionalPromotionNumber('promoActiveDays'),
+                maxCredits: optionalPromotionNumber('promoMaxCredits'),
+                couponIssuedMin: optionalPromotionNumber('promoCouponMin'),
+                couponIssuedMax: optionalPromotionNumber('promoCouponMax'),
+                proPurchaseMin: optionalPromotionNumber('promoProPurchaseMin'),
+                proPurchaseMax: optionalPromotionNumber('promoProPurchaseMax'),
+                creditPurchaseMin: optionalPromotionNumber('promoCreditPurchaseMin'),
+                creditPurchaseMax: optionalPromotionNumber('promoCreditPurchaseMax'),
+                verifiedActiveOnly: document.getElementById('promoVerifiedOnly').checked,
+                excludeUsersWithActiveCoupon: document.getElementById('promoExcludeActiveCoupon').checked
+            };
+        }
+
+        function collectPromotionPayload() {
+            const type = document.getElementById('promoType').value;
+            return {
+                type,
+                name: document.getElementById('promoName').value.trim(),
+                audienceFilters: collectPromotionFilters(),
+                selectionLimit: Number(document.getElementById('promoLimit').value || 100),
+                selectionStrategy: document.getElementById('promoStrategy').value,
+                couponConfig: type === 'coupon' ? {
+                    scope: document.getElementById('promoCouponScope').value,
+                    discountType: document.getElementById('promoDiscountType').value,
+                    discountValue: Number(document.getElementById('promoDiscountValue').value || 0),
+                    maxDiscountVnd: optionalPromotionNumber('promoMaxDiscount'),
+                    minOrderAmountVnd: optionalPromotionNumber('promoMinOrder') || 0,
+                    validFrom: document.getElementById('promoValidFrom').value,
+                    expiresAt: document.getElementById('promoExpiresAt').value
+                } : null,
+                email: {
+                    subject: document.getElementById('promoEmailSubject').value.trim(),
+                    message: document.getElementById('promoEmailMessage').value.trim(),
+                    buttonLabel: document.getElementById('promoButtonLabel').value.trim(),
+                    buttonUrl: document.getElementById('promoButtonUrl').value.trim()
+                }
+            };
+        }
+
+        function markPromotionAudienceDirty() {
+            promotionAudienceCount = null;
+            const result = document.getElementById('promoAudienceResult');
+            if (result) result.innerHTML = '<strong>Chưa đếm</strong><span>Nhấn “Đếm đối tượng” sau khi hoàn tất bộ lọc.</span>';
+        }
+
+        function togglePromotionType() {
+            const isCoupon = document.getElementById('promoType')?.value === 'coupon';
+            const couponSection = document.getElementById('promoCouponSection');
+            if (couponSection) couponSection.style.display = isCoupon ? 'block' : 'none';
+        }
+
+        async function countPromotionAudience(silent = false) {
+            const result = document.getElementById('promoAudienceResult');
+            if (result) result.innerHTML = '<strong>Đang đếm...</strong><span>Không tải danh sách tài khoản.</span>';
+            try {
+                const response = await fetch(`${BACKEND_URL}/api/admin/promotions/audience/count`, {
+                    method: 'POST', headers: promotionHeaders(),
+                    body: JSON.stringify({ audienceFilters: collectPromotionFilters() })
+                });
+                const data = await response.json();
+                if (!response.ok) throw new Error(data.error || 'Không đếm được đối tượng');
+                promotionAudienceCount = Number(data.count || 0);
+                const limit = Math.max(1, Number(document.getElementById('promoLimit').value || 100));
+                const selected = Math.min(promotionAudienceCount, limit);
+                if (result) result.innerHTML = `<strong>${promotionAudienceCount.toLocaleString('vi-VN')} tài khoản phù hợp</strong><span>Chiến dịch sẽ chọn tối đa ${selected.toLocaleString('vi-VN')} tài khoản. Không render danh sách đầy đủ.</span>`;
+                if (!silent) showMessage('Đã đếm đối tượng chiến dịch', 'success');
+                return promotionAudienceCount;
+            } catch (error) {
+                promotionAudienceCount = null;
+                if (result) result.innerHTML = `<strong>Không thể đếm</strong><span>${escapeHtml(error.message)}</span>`;
+                if (!silent) showMessage(error.message, 'error');
+                throw error;
+            }
+        }
+
+        async function submitPromotionCampaign() {
+            try {
+                const payload = collectPromotionPayload();
+                const response = await fetch(`${BACKEND_URL}/api/admin/promotions/campaigns`, {
+                    method: 'POST', headers: promotionHeaders(), body: JSON.stringify(payload)
+                });
+                const data = await response.json();
+                if (!response.ok) throw new Error(data.error || 'Không tạo được chiến dịch');
+                showMessage(data.message, 'success');
+                promotionAudienceCount = null;
+                await Promise.all([loadPromotionCampaigns(), loadPromotionCoupons(1)]);
+            } catch (error) {
+                showMessage(`Lỗi tạo chiến dịch: ${error.message}`, 'error');
+            }
+        }
+
+        async function preparePromotionCampaign() {
+            try {
+                const count = await countPromotionAudience(true);
+                if (count <= 0) return showMessage('Không có tài khoản phù hợp bộ lọc', 'error');
+                const payload = collectPromotionPayload();
+                const selected = Math.min(count, payload.selectionLimit);
+                let exposure = 'phụ thuộc giá trị đơn hàng';
+                if (payload.type === 'coupon' && payload.couponConfig.discountType === 'fixed') {
+                    exposure = `${(selected * payload.couponConfig.discountValue).toLocaleString('vi-VN')} VNĐ`;
+                } else if (payload.type === 'coupon' && payload.couponConfig.maxDiscountVnd) {
+                    exposure = `${(selected * payload.couponConfig.maxDiscountVnd).toLocaleString('vi-VN')} VNĐ`;
+                }
+                const message = `Tạo <strong>${escapeHtml(payload.name || 'chiến dịch')}</strong> cho <strong>${selected.toLocaleString('vi-VN')}</strong> tài khoản?<br><br>${payload.type === 'coupon' ? `Mức giảm tối đa dự kiến: <strong>${exposure}</strong>.<br>` : ''}Danh sách sẽ được chốt tại thời điểm tạo và email được đưa vào hàng đợi.`;
+                showConfirmModal(message, submitPromotionCampaign, 'Xác nhận chiến dịch', 'Tạo & gửi', 'btn-success');
+            } catch (_error) {
+                // countPromotionAudience already reports the failure.
+            }
+        }
+
+        async function sendPromotionTestEmail() {
+            try {
+                const payload = collectPromotionPayload();
+                payload.testEmail = document.getElementById('promoTestEmail').value.trim();
+                const response = await fetch(`${BACKEND_URL}/api/admin/promotions/test-email`, {
+                    method: 'POST', headers: promotionHeaders(), body: JSON.stringify(payload)
+                });
+                const data = await response.json();
+                if (!response.ok) throw new Error(data.error || 'Không gửi được email thử');
+                showMessage(data.message, 'success');
+            } catch (error) {
+                showMessage(`Email thử thất bại: ${error.message}`, 'error');
+            }
+        }
+
+        function promotionStatusLabel(status) {
+            const labels = {
+                preparing: 'Đang chuẩn bị', queued: 'Đang chờ gửi', sending: 'Đang gửi',
+                completed: 'Hoàn tất', partial: 'Hoàn tất một phần', cancelled: 'Đã hủy', failed: 'Thất bại'
+            };
+            return labels[status] || status;
+        }
+
+        function renderPromotionCampaigns(campaigns) {
+            const container = document.getElementById('promoCampaignList');
+            if (!container) return;
+            if (!campaigns.length) {
+                container.innerHTML = '<div class="promo-empty">Chưa có chiến dịch nào.</div>';
+                return;
+            }
+            container.innerHTML = campaigns.map(campaign => {
+                const stats = campaign.stats || {};
+                const canCancel = ['preparing', 'queued', 'sending', 'partial'].includes(campaign.status);
+                const canRetry = campaign.status === 'partial' && Number(stats.failed || 0) > 0;
+                const finalizedCoupons = Number(stats.couponRedeemed || 0) + Number(stats.couponForfeited || 0);
+                return `<article class="promo-campaign-card">
+                    <div class="promo-campaign-main">
+                        <div><span class="promo-type">${campaign.type === 'coupon' ? 'COUPON' : 'EMAIL'}</span><h4>${escapeHtml(campaign.name)}</h4></div>
+                        <span class="promo-status promo-status--${escapeHtml(campaign.status)}">${escapeHtml(promotionStatusLabel(campaign.status))}</span>
+                    </div>
+                    <div class="promo-campaign-stats">
+                        <span>Đối tượng <strong>${Number(campaign.selectedCount || 0).toLocaleString('vi-VN')}</strong></span>
+                        <span>Đã gửi <strong>${Number(stats.sent || 0).toLocaleString('vi-VN')}</strong></span>
+                        <span>Lỗi <strong>${Number(stats.failed || 0).toLocaleString('vi-VN')}</strong></span>
+                        <span>Bỏ qua <strong>${Number(stats.skipped || 0).toLocaleString('vi-VN')}</strong></span>
+                        ${campaign.type === 'coupon' ? `<span>Đã giảm giá <strong>${Number(stats.couponRedeemed || 0).toLocaleString('vi-VN')}</strong></span><span>Đã bỏ qua <strong>${Number(stats.couponForfeited || 0).toLocaleString('vi-VN')}</strong></span>` : ''}
+                    </div>
+                    <div class="promo-campaign-footer">
+                        <small>${new Date(campaign.createdAt).toLocaleString('vi-VN')}</small>
+                        <div>${canRetry ? `<button class="btn btn-secondary" onclick="retryPromotionCampaign('${campaign._id}')">Gửi lại lỗi</button>` : ''}${canCancel ? `<button class="btn btn-danger" onclick="cancelPromotionCampaign('${campaign._id}')">Hủy chiến dịch</button>` : ''}<button class="btn btn-danger" onclick="recallPromotionCampaign('${campaign._id}', ${finalizedCoupons})">Thu hồi & xóa</button></div>
+                    </div>
+                </article>`;
+            }).join('');
+        }
+
+        async function loadPromotionCampaigns() {
+            const container = document.getElementById('promoCampaignList');
+            if (container) container.innerHTML = '<div class="loading"><p>Đang tải chiến dịch...</p></div>';
+            try {
+                const response = await fetch(`${BACKEND_URL}/api/admin/promotions/campaigns?limit=20`, { headers: promotionHeaders() });
+                const data = await response.json();
+                if (!response.ok) throw new Error(data.error || 'Không tải được chiến dịch');
+                renderPromotionCampaigns(data.campaigns || []);
+            } catch (error) {
+                if (container) container.innerHTML = `<div class="promo-empty">${escapeHtml(error.message)}</div>`;
+            }
+        }
+
+        function promotionCouponDate(value) {
+            if (!value) return '-';
+            const date = new Date(value);
+            return Number.isNaN(date.getTime()) ? '-' : date.toLocaleString('vi-VN');
+        }
+
+        function promotionCouponRemaining(expiresAt) {
+            const expires = new Date(expiresAt);
+            if (Number.isNaN(expires.getTime())) return { text: '-', className: 'promo-expiry--muted' };
+            const remainingMs = expires.getTime() - Date.now();
+            if (remainingMs <= 0) {
+                const expiredDays = Math.max(1, Math.floor(Math.abs(remainingMs) / 86400000));
+                return { text: `Hết hạn ${expiredDays.toLocaleString('vi-VN')} ngày`, className: 'promo-expiry--danger' };
+            }
+            if (remainingMs < 86400000) {
+                const hours = Math.max(1, Math.ceil(remainingMs / 3600000));
+                return { text: `Còn ${hours.toLocaleString('vi-VN')} giờ`, className: 'promo-expiry--danger' };
+            }
+            const days = Math.ceil(remainingMs / 86400000);
+            const className = days <= 3
+                ? 'promo-expiry--warning'
+                : days <= 7 ? 'promo-expiry--soon' : 'promo-expiry--safe';
+            return { text: `Còn ${days.toLocaleString('vi-VN')} ngày`, className };
+        }
+
+        function promotionCouponState(coupon) {
+            if (coupon.status === 'redeemed') return { text: 'Đã kích hoạt', className: 'promo-coupon-state--success', at: coupon.redeemedAt };
+            if (coupon.status === 'forfeited') return { text: 'Đã bỏ ưu đãi', className: 'promo-coupon-state--muted', at: coupon.forfeitedAt };
+            if (coupon.status === 'revoked') return { text: 'Đã thu hồi', className: 'promo-coupon-state--danger', at: null };
+            if (coupon.pendingApplication?.productType) {
+                const forfeited = coupon.pendingApplication.decision === 'forfeited';
+                return {
+                    text: forfeited ? 'Chờ chốt bỏ ưu đãi' : 'Chờ kích hoạt',
+                    className: forfeited ? 'promo-coupon-state--warning' : 'promo-coupon-state--pending',
+                    at: coupon.pendingApplication.appliedAt
+                };
+            }
+            if (new Date(coupon.expiresAt).getTime() <= Date.now()) {
+                return { text: 'Đã hết hạn', className: 'promo-coupon-state--danger', at: coupon.expiresAt };
+            }
+            return { text: 'Chưa kích hoạt', className: 'promo-coupon-state--available', at: null };
+        }
+
+        function promotionCouponDiscount(coupon) {
+            if (coupon.discountType === 'percent') {
+                const maximum = coupon.maxDiscountVnd
+                    ? `<small>Tối đa ${Number(coupon.maxDiscountVnd).toLocaleString('vi-VN')}đ</small>`
+                    : '';
+                return `<strong>-${Number(coupon.discountValue || 0).toLocaleString('vi-VN')}%</strong>${maximum}`;
+            }
+            return `<strong>-${Number(coupon.discountValue || 0).toLocaleString('vi-VN')}đ</strong>`;
+        }
+
+        function promotionCouponScope(scope) {
+            return scope === 'pro'
+                ? 'Nâng cấp Pro Plan'
+                : scope === 'credits'
+                    ? 'Mua thêm Credits'
+                    : 'Nâng cấp Pro Plan hoặc mua thêm Credits';
+        }
+
+        function promotionCouponDelivery(delivery = {}) {
+            const labels = {
+                sent: ['Email đã gửi', 'promo-delivery--sent'],
+                sending: ['Đang gửi email', 'promo-delivery--sending'],
+                pending: ['Email đang chờ', 'promo-delivery--pending'],
+                failed: ['Gửi email lỗi', 'promo-delivery--failed'],
+                skipped: ['Không gửi email', 'promo-delivery--skipped']
+            };
+            const [text, className] = labels[delivery.status] || ['Không có dữ liệu gửi', 'promo-delivery--skipped'];
+            return `<span class="promo-delivery ${className}"${delivery.lastError ? ` title="${escapeHtml(delivery.lastError)}"` : ''}>${text}</span>${delivery.sentAt ? `<small>${promotionCouponDate(delivery.sentAt)}</small>` : ''}`;
+        }
+
+        function renderPromotionCoupons(recipients, pagination) {
+            const body = document.getElementById('promoCouponTableBody');
+            const summary = document.getElementById('promoCouponSummary');
+            const pager = document.getElementById('promoCouponPagination');
+            if (!body || !summary || !pager) return;
+
+            const total = Number(pagination?.total || 0);
+            const page = Number(pagination?.page || 1);
+            const limit = Number(pagination?.limit || 50);
+            const totalPages = Number(pagination?.totalPages || 0);
+            summary.textContent = `${total.toLocaleString('vi-VN')} người đã nhận coupon · tối đa ${limit} người/trang`;
+
+            if (!recipients.length) {
+                body.innerHTML = '<tr><td colspan="8" class="promo-coupon-empty">Không có người nhận phù hợp.</td></tr>';
+            } else {
+                body.innerHTML = recipients.map((recipient, index) => {
+                    const user = recipient.user || {};
+                    const coupon = recipient.currentCoupon || null;
+                    const campaign = recipient.campaign || {};
+                    const remaining = coupon ? promotionCouponRemaining(coupon.expiresAt) : null;
+                    const state = coupon ? promotionCouponState(coupon) : null;
+                    const order = (page - 1) * limit + index + 1;
+                    const pending = coupon?.pendingApplication;
+                    const paymentDetail = pending?.productType
+                        ? `<small>${pending.productType === 'credits' ? `${Number(pending.expectedCredits || 0).toLocaleString('vi-VN')} credits` : 'Pro 30 ngày'} · CK ${Number(pending.finalAmountVnd || pending.originalAmountVnd || 0).toLocaleString('vi-VN')}đ</small>`
+                        : '';
+                    const currentCouponHtml = coupon
+                        ? `<button type="button" class="promo-code-copy" data-code="${escapeHtml(coupon.code)}" onclick="copyPromotionCouponCode(this)">${escapeHtml(coupon.code)} <span>⧉</span></button><small>${promotionCouponScope(coupon.scope)}</small>`
+                        : '<span class="promo-no-current-coupon">Không có mã đang hoạt động</span>';
+                    const currentCampaignHtml = coupon
+                        ? `<strong>${escapeHtml(campaign.name || 'Chiến dịch đã xóa')}</strong><small>Cấp gần nhất: ${promotionCouponDate(coupon.createdAt)}</small>`
+                        : `<span>-</span><small>Lần cấp gần nhất: ${promotionCouponDate(recipient.lastIssuedAt)}</small>`;
+                    const discountHtml = coupon
+                        ? `<div class="promo-discount">${promotionCouponDiscount(coupon)}<small>Đơn tối thiểu ${Number(coupon.minOrderAmountVnd || 0).toLocaleString('vi-VN')}đ</small></div>`
+                        : '<span>-</span>';
+                    const expiryHtml = coupon
+                        ? `<strong class="promo-expiry ${remaining.className}">${remaining.text}</strong><small>${promotionCouponDate(coupon.expiresAt)}</small>`
+                        : '<span>-</span>';
+                    const stateHtml = state
+                        ? `<span class="promo-coupon-state ${state.className}">${state.text}</span>${state.at ? `<small>${promotionCouponDate(state.at)}</small>` : ''}${paymentDetail}`
+                        : '<span class="promo-coupon-state promo-coupon-state--muted">Không có mã hiện tại</span>';
+                    return `<tr>
+                        <td class="promo-coupon-index">${order.toLocaleString('vi-VN')}</td>
+                        <td><strong class="promo-user-name">${escapeHtml(user.name || 'Tài khoản không còn tồn tại')}</strong><span class="promo-plan promo-plan--${user.plan === 'pro' ? 'pro' : 'free'}">${user.plan === 'pro' ? 'PRO' : 'FREE'}</span><span class="promo-email">${escapeHtml(user.email || recipient.emailSnapshot || '-')}</span>${user.email && recipient.emailSnapshot && user.email !== recipient.emailSnapshot ? `<small>Email lúc cấp gần nhất: ${escapeHtml(recipient.emailSnapshot)}</small>` : ''}</td>
+                        <td><strong>${Number(recipient.totalReceived || 0).toLocaleString('vi-VN')} lần đã nhận</strong><span class="promo-history-count promo-history-count--available">Chưa kích hoạt: ${Number(recipient.availableCount || 0).toLocaleString('vi-VN')}</span><span class="promo-history-count promo-history-count--redeemed">Đã kích hoạt: ${Number(recipient.redeemedCount || 0).toLocaleString('vi-VN')}</span><small>Chờ xác nhận ${Number(recipient.pendingCount || 0).toLocaleString('vi-VN')} · Hết hạn ${Number(recipient.expiredCount || 0).toLocaleString('vi-VN')} · Bỏ ưu đãi ${Number(recipient.forfeitedCount || 0).toLocaleString('vi-VN')} · Thu hồi ${Number(recipient.revokedCount || 0).toLocaleString('vi-VN')}</small></td>
+                        <td>${currentCouponHtml}</td>
+                        <td>${currentCampaignHtml}</td>
+                        <td>${discountHtml}</td>
+                        <td>${expiryHtml}</td>
+                        <td>${stateHtml}</td>
+                    </tr>`;
+                }).join('');
+            }
+
+            pager.innerHTML = `
+                <button type="button" class="btn btn-secondary" onclick="loadPromotionCoupons(${Math.max(1, page - 1)})" ${pagination?.hasPrev ? '' : 'disabled'}>← Trang trước</button>
+                <span>Trang <strong>${totalPages ? page.toLocaleString('vi-VN') : '0'}</strong> / ${totalPages.toLocaleString('vi-VN')}</span>
+                <button type="button" class="btn btn-secondary" onclick="loadPromotionCoupons(${page + 1})" ${pagination?.hasNext ? '' : 'disabled'}>Trang sau →</button>`;
+        }
+
+        async function loadPromotionCoupons(page = 1) {
+            const body = document.getElementById('promoCouponTableBody');
+            if (!body) return;
+            const requestKey = ++promotionCouponRequestKey;
+            promotionCouponPage = Math.max(1, Number(page) || 1);
+            body.innerHTML = '<tr><td colspan="8" class="promo-coupon-empty">Đang tải danh sách người nhận...</td></tr>';
+            const search = document.getElementById('promoCouponSearch')?.value.trim() || '';
+            const status = document.getElementById('promoCouponStatus')?.value || 'all';
+            const params = new URLSearchParams({ page: promotionCouponPage, limit: 50, search, status });
+            try {
+                const response = await fetch(`${BACKEND_URL}/api/admin/promotions/coupons?${params.toString()}`, { headers: promotionHeaders() });
+                const data = await response.json();
+                if (requestKey !== promotionCouponRequestKey) return;
+                if (!response.ok) throw new Error(data.error || 'Không tải được danh sách coupon');
+                renderPromotionCoupons(data.recipients || [], data.pagination || {});
+            } catch (error) {
+                if (requestKey !== promotionCouponRequestKey) return;
+                body.innerHTML = `<tr><td colspan="8" class="promo-coupon-empty promo-expiry--danger">${escapeHtml(error.message)}</td></tr>`;
+            }
+        }
+
+        function schedulePromotionCouponSearch() {
+            clearTimeout(promotionCouponSearchTimer);
+            promotionCouponSearchTimer = setTimeout(() => loadPromotionCoupons(1), 350);
+        }
+
+        function copyPromotionCouponCode(button) {
+            const code = String(button?.dataset?.code || '');
+            if (!code) return;
+            const done = () => showMessage(`Đã sao chép mã ${code}`, 'success');
+            if (navigator.clipboard?.writeText) {
+                navigator.clipboard.writeText(code).then(done).catch(() => fallbackCopy(code, done));
+            } else {
+                fallbackCopy(code, done);
+            }
+        }
+
+        function showPromotionCampaignView() {
+            const campaignView = document.getElementById('promoCampaignView');
+            const couponListView = document.getElementById('promoCouponListView');
+            const title = document.getElementById('promotionManagementTitle');
+            const listButton = document.getElementById('promotionCouponListNavBtn');
+            if (campaignView) campaignView.style.display = 'grid';
+            if (couponListView) couponListView.style.display = 'none';
+            if (title) title.textContent = 'Coupon & Email Campaigns';
+            if (listButton) listButton.style.display = '';
+        }
+
+        function showPromotionCouponListView() {
+            const campaignView = document.getElementById('promoCampaignView');
+            const couponListView = document.getElementById('promoCouponListView');
+            const title = document.getElementById('promotionManagementTitle');
+            const listButton = document.getElementById('promotionCouponListNavBtn');
+            if (campaignView) campaignView.style.display = 'none';
+            if (couponListView) couponListView.style.display = 'grid';
+            if (title) title.textContent = 'Danh sách coupon đã cấp';
+            if (listButton) listButton.style.display = 'none';
+            loadPromotionCoupons(promotionCouponPage);
+        }
+
+        function cancelPromotionCampaign(id) {
+            showConfirmModal('Hủy chiến dịch này? Email chưa gửi sẽ dừng và toàn bộ coupon chưa dùng của chiến dịch sẽ bị thu hồi.', async () => {
+                try {
+                    const response = await fetch(`${BACKEND_URL}/api/admin/promotions/campaigns/${id}/cancel`, { method: 'POST', headers: promotionHeaders() });
+                    const data = await response.json();
+                    if (!response.ok) throw new Error(data.error || 'Không hủy được chiến dịch');
+                    showMessage('Đã hủy chiến dịch và thu hồi coupon chưa dùng', 'success');
+                    loadPromotionCampaigns();
+                    loadPromotionCoupons(promotionCouponPage);
+                } catch (error) { showMessage(error.message, 'error'); }
+            }, 'Hủy chiến dịch', 'Hủy chiến dịch', 'btn-danger');
+        }
+
+        function recallPromotionCampaign(id, finalizedCoupons = 0) {
+            const finalizedNotice = finalizedCoupons > 0
+                ? ` Chiến dịch có ${finalizedCoupons.toLocaleString('vi-VN')} coupon đã chốt; quyền lợi Pro/Credits đã cấp sẽ KHÔNG được hoàn tác.`
+                : '';
+            showConfirmModal(`Thu hồi chiến dịch này? Toàn bộ mã coupon và lịch sử chiến dịch sẽ bị xóa vĩnh viễn.${finalizedNotice} Thao tác này không thể hoàn tác.`, async () => {
+                try {
+                    const response = await fetch(`${BACKEND_URL}/api/admin/promotions/campaigns/${id}`, { method: 'DELETE', headers: promotionHeaders() });
+                    const data = await response.json();
+                    if (!response.ok) throw new Error(data.error || 'Không thu hồi được chiến dịch');
+                    const deletedCoupons = Number(data.deleted?.coupons || 0).toLocaleString('vi-VN');
+                    const finalized = Number(data.finalizedCoupons || 0);
+                    const inFlight = Number(data.inFlightRecipients || 0);
+                    const suffix = inFlight > 0 ? ` Có ${inFlight.toLocaleString('vi-VN')} email đang gửi dở nhưng coupon trong email đã mất hiệu lực.` : '';
+                    const benefitNotice = finalized > 0 ? ` ${finalized.toLocaleString('vi-VN')} quyền lợi đã cấp được giữ nguyên.` : '';
+                    const warning = data.warning ? ` Cảnh báo: ${data.warning}.` : '';
+                    showMessage(`Đã thu hồi ${deletedCoupons} coupon và xóa lịch sử chiến dịch.${benefitNotice}${suffix}${warning}`, data.warning ? 'error' : 'success');
+                    loadPromotionCampaigns();
+                    loadPromotionCoupons(1);
+                } catch (error) { showMessage(error.message, 'error'); }
+            }, 'Thu hồi chiến dịch', 'Thu hồi & xóa', 'btn-danger');
+        }
+
+        async function retryPromotionCampaign(id) {
+            try {
+                const response = await fetch(`${BACKEND_URL}/api/admin/promotions/campaigns/${id}/retry-failed`, { method: 'POST', headers: promotionHeaders() });
+                const data = await response.json();
+                if (!response.ok) throw new Error(data.error || 'Không đưa email lỗi vào hàng đợi được');
+                showMessage(`Đã đưa ${Number(data.retried || 0).toLocaleString('vi-VN')} email vào hàng đợi`, 'success');
+                loadPromotionCampaigns();
+                loadPromotionCoupons(promotionCouponPage);
+            } catch (error) { showMessage(error.message, 'error'); }
+        }
+
+        async function showPromotionManagement() {
+            if (window.innerWidth <= 768) return;
+            const usersTable = document.querySelector('.users-table');
+            const controls = document.querySelector('.controls');
+            const pagination = document.getElementById('pagination');
+            if (!usersTable || !controls) return;
+
+            ['cookiesManagement', 'mobileCookiesManagement', 'rateLimitManagement', 'ctvManagement', 'authShowcaseManagement', 'promotionManagement']
+                .forEach(id => document.getElementById(id)?.remove());
+            usersTable.style.display = 'none';
+            controls.style.display = 'none';
+            if (pagination) pagination.style.display = 'none';
+            document.getElementById('mobileSearchResults')?.style.setProperty('display', 'none');
+            document.querySelector('.mobile-search-title')?.style.setProperty('display', 'none');
+
+            const now = new Date();
+            const expires = new Date(now.getTime() + 7 * 24 * 60 * 60 * 1000);
+            const container = document.createElement('div');
+            container.id = 'promotionManagement';
+            container.className = 'users-table';
+            container.innerHTML = `
+                <style>
+                    @media(max-width:768px){.promotion-pc-only,#promotionManagement{display:none!important}}
+                    body:has(#promotionManagement) .sidebar-nav button[data-admin-nav="promotions"]{background:linear-gradient(135deg,rgba(251,191,36,.2),rgba(245,158,11,.08));color:#fde68a;border-color:rgba(251,191,36,.28)}
+                    .promo-manager{padding:20px;display:grid;gap:18px}.promo-panel{padding:18px;border:1px solid rgba(148,163,184,.16);border-radius:14px;background:rgba(15,23,42,.55)}
+                    .promo-panel h3{margin:0 0 5px;color:#f8fafc}.promo-panel>p{margin:0 0 16px;color:#94a3b8;font-size:.86rem}.promo-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
+                    .promo-field{display:grid;gap:6px}.promo-field--wide{grid-column:span 2}.promo-field label{color:#cbd5e1;font-size:.78rem;font-weight:700}.promo-field input,.promo-field select,.promo-field textarea{width:100%;box-sizing:border-box;padding:10px;border:1px solid rgba(148,163,184,.2);border-radius:9px;background:#0f172a;color:#f8fafc;font:inherit}.promo-field textarea{min-height:120px;resize:vertical}
+                    .promo-checks{display:flex;gap:20px;flex-wrap:wrap;margin-top:14px;color:#cbd5e1;font-size:.84rem}.promo-checks label{display:flex;gap:7px;align-items:center}.promo-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:16px}.promo-audience-result{margin-top:14px;padding:14px;border:1px solid rgba(96,165,250,.2);border-radius:10px;background:rgba(59,130,246,.07);display:grid;gap:3px}.promo-audience-result strong{color:#bfdbfe}.promo-audience-result span{color:#94a3b8;font-size:.82rem}
+                    .promo-campaign-list{display:grid;gap:10px}.promo-campaign-card{padding:14px;border:1px solid rgba(148,163,184,.14);border-radius:11px;background:rgba(2,6,23,.45)}.promo-campaign-main,.promo-campaign-footer{display:flex;align-items:center;justify-content:space-between;gap:12px}.promo-campaign-main h4{display:inline;margin:0 0 0 8px;color:#f8fafc}.promo-type{color:#fbbf24;font-size:.68rem;font-weight:800}.promo-status{padding:5px 8px;border-radius:999px;background:rgba(96,165,250,.12);color:#93c5fd;font-size:.72rem;font-weight:700}.promo-status--completed{color:#86efac;background:rgba(34,197,94,.12)}.promo-status--cancelled,.promo-status--failed{color:#fca5a5;background:rgba(239,68,68,.12)}.promo-campaign-stats{display:flex;gap:18px;flex-wrap:wrap;margin:12px 0;color:#94a3b8;font-size:.8rem}.promo-campaign-stats strong{color:#f8fafc}.promo-campaign-footer small{color:#64748b}.promo-campaign-footer>div{display:flex;gap:7px}.promo-empty{padding:20px;text-align:center;color:#94a3b8}
+                    .promo-coupon-toolbar{display:grid;grid-template-columns:minmax(260px,1fr) 240px auto;gap:10px;align-items:center;margin-bottom:12px}.promo-coupon-toolbar input,.promo-coupon-toolbar select{width:100%;box-sizing:border-box;padding:10px;border:1px solid rgba(148,163,184,.2);border-radius:9px;background:#0f172a;color:#f8fafc;font:inherit}.promo-coupon-summary{margin:0 0 10px;color:#93c5fd;font-size:.8rem;font-weight:700}.promo-coupon-table-wrap{overflow:auto;border:1px solid rgba(148,163,184,.14);border-radius:11px;background:rgba(2,6,23,.5)}.promo-coupon-table{width:100%;min-width:1450px;border-collapse:collapse;font-size:.77rem}.promo-coupon-table th{position:sticky;top:0;z-index:1;padding:11px 10px;background:#111827;color:#bfdbfe;text-align:left;white-space:nowrap}.promo-coupon-table td{padding:11px 10px;border-top:1px solid rgba(148,163,184,.1);color:#d4d4d8;vertical-align:top}.promo-coupon-table tbody tr:hover{background:rgba(59,130,246,.045)}.promo-coupon-table td>span,.promo-coupon-table td>small,.promo-coupon-table td>strong{display:block}.promo-coupon-table small,.promo-discount small,.promo-delivery+small{margin-top:4px;color:#71717a;font-size:.68rem;line-height:1.35}.promo-coupon-index{color:#64748b!important;text-align:center}.promo-user-name{display:inline!important;color:#f8fafc}.promo-plan{display:inline-block!important;margin-left:7px;padding:2px 5px;border-radius:999px;font-size:.58rem;font-weight:800}.promo-plan--pro{background:rgba(16,185,129,.13);color:#6ee7b7}.promo-plan--free{background:rgba(96,165,250,.12);color:#93c5fd}.promo-email{margin-top:5px;color:#cbd5e1;word-break:break-word}.promo-code-copy{border:1px solid rgba(251,191,36,.25);border-radius:7px;padding:6px 8px;background:rgba(251,191,36,.08);color:#fde68a;cursor:pointer;font:750 .7rem ui-monospace,SFMono-Regular,Consolas,monospace;white-space:nowrap}.promo-code-copy:hover{background:rgba(251,191,36,.16)}.promo-no-current-coupon{color:#64748b}.promo-history-count{margin-top:5px;font-size:.7rem;font-weight:800}.promo-history-count--available{color:#60a5fa}.promo-history-count--redeemed{color:#f87171}.promo-discount strong{display:block;color:#4ade80}.promo-expiry{font-weight:800}.promo-expiry--safe{color:#4ade80}.promo-expiry--soon{color:#67e8f9}.promo-expiry--warning{color:#facc15}.promo-expiry--danger{color:#f87171!important}.promo-expiry--muted{color:#94a3b8}.promo-coupon-state,.promo-delivery{display:inline-block!important;width:max-content;max-width:180px;padding:4px 7px;border-radius:999px;font-size:.66rem;font-weight:800}.promo-coupon-state--success{color:#fca5a5;background:rgba(239,68,68,.13)}.promo-coupon-state--available{color:#93c5fd;background:rgba(59,130,246,.13)}.promo-delivery--sent{color:#86efac;background:rgba(34,197,94,.12)}.promo-coupon-state--pending,.promo-delivery--sending{color:#93c5fd;background:rgba(59,130,246,.13)}.promo-coupon-state--warning,.promo-delivery--pending{color:#fde68a;background:rgba(234,179,8,.12)}.promo-coupon-state--danger,.promo-delivery--failed{color:#fca5a5;background:rgba(239,68,68,.13)}.promo-coupon-state--muted,.promo-delivery--skipped{color:#c4b5fd;background:rgba(139,92,246,.12)}.promo-coupon-empty{padding:24px!important;text-align:center;color:#94a3b8!important}.promo-coupon-pagination{display:flex;justify-content:center;align-items:center;gap:14px;margin-top:14px;color:#94a3b8;font-size:.82rem}.promo-coupon-pagination .btn:disabled{opacity:.38;cursor:not-allowed}
+                    @media(max-width:1200px){.promo-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+                </style>
+                <div class="table-header"><span id="promotionManagementTitle">Coupon & Email Campaigns</span><div style="display:flex;gap:8px"><button id="promotionCouponListNavBtn" class="btn btn-primary" onclick="showPromotionCouponListView()">Danh sách coupon đã cấp</button><button class="btn btn-secondary" onclick="showUsersTable(); loadUsers(currentPage,currentSearch,currentPlanFilter)">Back</button></div></div>
+                <div class="promo-manager" id="promoCampaignView">
+                    <section class="promo-panel"><h3>1. Loại chiến dịch và đối tượng</h3><p>Hệ thống chỉ đếm và chốt đối tượng; không render danh sách hàng nghìn tài khoản.</p>
+                        <div class="promo-grid">
+                            <div class="promo-field"><label>Loại chiến dịch</label><select id="promoType" onchange="togglePromotionType()"><option value="coupon">Coupon cá nhân + email</option><option value="broadcast">Email tùy chỉnh</option></select></div>
+                            <div class="promo-field promo-field--wide"><label>Tên chiến dịch</label><input id="promoName" maxlength="120" placeholder="VD: Pro sắp hết hạn tháng 8"></div>
+                            <div class="promo-field"><label>Gói tài khoản</label><select id="promoFilterPlan" onchange="markPromotionAudienceDirty()"><option value="all">Tất cả</option><option value="free">Free</option><option value="pro">Pro</option></select></div>
+                            <div class="promo-field"><label>Trạng thái hết hạn Pro</label><select id="promoExpiryMode" onchange="markPromotionAudienceDirty()"><option value="any">Không lọc</option><option value="within_days">Sắp hết hạn trong</option><option value="expired">Đã hết hạn</option></select></div>
+                            <div class="promo-field"><label>Số ngày sắp hết hạn</label><input id="promoExpiryDays" type="number" min="1" value="7" oninput="markPromotionAudienceDirty()"></div>
+                            <div class="promo-field"><label>Hoạt động trong N ngày</label><input id="promoActiveDays" type="number" min="1" placeholder="Để trống" oninput="markPromotionAudienceDirty()"></div>
+                            <div class="promo-field"><label>Credits tối đa</label><input id="promoMaxCredits" type="number" min="0" placeholder="Để trống" oninput="markPromotionAudienceDirty()"></div>
+                            <div class="promo-field"><label>Coupon đã được cấp (từ)</label><input id="promoCouponMin" type="number" min="0" placeholder="0" oninput="markPromotionAudienceDirty()"></div>
+                            <div class="promo-field"><label>Coupon đã được cấp (đến)</label><input id="promoCouponMax" type="number" min="0" placeholder="Không giới hạn" oninput="markPromotionAudienceDirty()"></div>
+                            <div class="promo-field"><label>Lần mua Pro (từ / đến)</label><div style="display:flex;gap:6px"><input id="promoProPurchaseMin" type="number" min="0" placeholder="0" oninput="markPromotionAudienceDirty()"><input id="promoProPurchaseMax" type="number" min="0" placeholder="∞" oninput="markPromotionAudienceDirty()"></div></div>
+                            <div class="promo-field"><label>Lần mua credit (từ / đến)</label><div style="display:flex;gap:6px"><input id="promoCreditPurchaseMin" type="number" min="0" placeholder="0" oninput="markPromotionAudienceDirty()"><input id="promoCreditPurchaseMax" type="number" min="0" placeholder="∞" oninput="markPromotionAudienceDirty()"></div></div>
+                            <div class="promo-field"><label>Số người tối đa</label><input id="promoLimit" type="number" min="1" max="10000" value="100" oninput="markPromotionAudienceDirty()"></div>
+                            <div class="promo-field"><label>Cách chọn khi vượt giới hạn</label><select id="promoStrategy"><option value="least_targeted">Ít được nhận chiến dịch nhất</option><option value="oldest">Tài khoản cũ nhất</option><option value="random">Ngẫu nhiên</option></select></div>
+                        </div>
+                        <div class="promo-checks"><label><input id="promoVerifiedOnly" type="checkbox" checked onchange="markPromotionAudienceDirty()"> Chỉ email xác minh, tài khoản active</label><label><input id="promoExcludeActiveCoupon" type="checkbox" checked onchange="markPromotionAudienceDirty()"> Loại người đang có coupon còn hiệu lực</label></div>
+                        <div class="promo-actions"><button class="btn btn-primary" onclick="countPromotionAudience()">Đếm đối tượng</button></div>
+                        <div id="promoAudienceResult" class="promo-audience-result"><strong>Chưa đếm</strong><span>Nhấn “Đếm đối tượng” sau khi hoàn tất bộ lọc.</span></div>
+                    </section>
+                    <section class="promo-panel" id="promoCouponSection"><h3>2. Quy tắc coupon</h3><p>Mỗi tài khoản nhận một mã duy nhất. Mã chỉ tiêu thụ sau khi admin cấp Pro hoặc cộng đúng số credit.</p>
+                        <div class="promo-grid">
+                            <div class="promo-field"><label>Áp dụng cho</label><select id="promoCouponScope"><option value="both" selected>Nâng cấp Pro Plan hoặc mua thêm Credits</option><option value="pro">Nâng cấp Pro Plan</option><option value="credits">Mua thêm Credits</option></select></div>
+                            <div class="promo-field"><label>Kiểu giảm</label><select id="promoDiscountType"><option value="fixed">Số tiền cố định</option><option value="percent">Phần trăm</option></select></div>
+                            <div class="promo-field"><label>Giá trị giảm</label><input id="promoDiscountValue" type="number" min="1" value="10000"></div>
+                            <div class="promo-field"><label>Giảm tối đa VNĐ (cho %)</label><input id="promoMaxDiscount" type="number" min="1000" placeholder="Để trống"></div>
+                            <div class="promo-field"><label>Đơn tối thiểu VNĐ</label><input id="promoMinOrder" type="number" min="0" step="1000" value="40000"></div>
+                            <div class="promo-field"><label>Bắt đầu</label><input id="promoValidFrom" type="datetime-local" value="${promotionLocalDateTime(now)}"></div>
+                            <div class="promo-field"><label>Hết hạn</label><input id="promoExpiresAt" type="datetime-local" value="${promotionLocalDateTime(expires)}"></div>
+                        </div>
+                    </section>
+                    <section class="promo-panel"><h3>3. Nội dung email</h3><p>Gửi thử trước khi tạo. Nếu gửi lỗi, hệ thống retry đúng email và coupon cũ, không sinh mã mới.</p>
+                        <div class="promo-grid">
+                            <div class="promo-field promo-field--wide"><label>Tiêu đề</label><input id="promoEmailSubject" maxlength="180" value="TẶNG BẠN VOUCHER KHUYẾN MÃI NÈ ❤️"></div>
+                            <div class="promo-field"><label>Nhãn nút</label><input id="promoButtonLabel" maxlength="60" value="Nhận ưu đãi ngay"></div>
+                            <div class="promo-field"><label>Liên kết nút</label><input id="promoButtonUrl" value="https://tiembanh4k.com/"></div>
+                            <div class="promo-field promo-field--wide"><label>Nội dung</label><textarea id="promoEmailMessage">Cảm ơn bạn đã đồng hành cùng Tiệm Bánh Netflix thời gian vừa qua. Chúng mình xin gửi bạn một voucher cá nhân để tiếp tục trải nghiệm dịch vụ nhé.</textarea></div>
+                            <div class="promo-field"><label>Email admin nhận thử</label><input id="promoTestEmail" type="email" placeholder="admin@example.com"></div>
+                        </div>
+                        <div class="promo-actions"><button class="btn btn-secondary" onclick="sendPromotionTestEmail()">Gửi email thử</button><button class="btn btn-success" onclick="preparePromotionCampaign()">Tạo chiến dịch & gửi</button></div>
+                    </section>
+                    <section class="promo-panel"><div style="display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:14px"><div><h3>Lịch sử chiến dịch</h3><p style="margin:4px 0 0;color:#94a3b8;font-size:.84rem">Email được xử lý theo hàng đợi và giới hạn an toàn của máy chủ.</p></div><button class="btn btn-secondary" onclick="loadPromotionCampaigns()">Làm mới</button></div><div id="promoCampaignList" class="promo-campaign-list"></div></section>
+                </div>
+                <div class="promo-manager" id="promoCouponListView" style="display:none">
+                    <section class="promo-panel">
+                        <div style="display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:14px"><div><h3>Danh sách coupon đã cấp</h3><p style="margin:4px 0 0;color:#94a3b8;font-size:.84rem">Mỗi trang tối đa 50 tài khoản; dữ liệu được phân trang trực tiếp từ máy chủ.</p></div><button type="button" class="btn btn-secondary" onclick="showPromotionCampaignView()">← Quay lại quản lý chiến dịch</button></div>
+                        <div class="promo-coupon-toolbar">
+                            <input id="promoCouponSearch" type="search" maxlength="100" placeholder="Tìm người nhận theo email hoặc mã coupon..." oninput="schedulePromotionCouponSearch()">
+                            <select id="promoCouponStatus" onchange="loadPromotionCoupons(1)"><option value="all">Tất cả trạng thái</option><option value="available">Chưa kích hoạt</option><option value="pending">Chờ xác nhận</option><option value="redeemed">Đã kích hoạt</option><option value="forfeited">Đã bỏ ưu đãi</option><option value="expired">Đã hết hạn</option><option value="revoked">Đã thu hồi</option></select>
+                            <button type="button" class="btn btn-secondary" onclick="loadPromotionCoupons(promotionCouponPage)">Làm mới</button>
+                        </div>
+                        <div id="promoCouponSummary" class="promo-coupon-summary">Đang tải dữ liệu...</div>
+                        <div class="promo-coupon-table-wrap">
+                            <table class="promo-coupon-table">
+                                <thead><tr><th>STT</th><th>Người dùng / Email</th><th>Lịch sử nhận</th><th>Coupon hiện tại</th><th>Chiến dịch hiện tại</th><th>Ưu đãi</th><th>Thời hạn</th><th>Trạng thái hiện tại</th></tr></thead>
+                                <tbody id="promoCouponTableBody"><tr><td colspan="8" class="promo-coupon-empty">Đang tải danh sách người nhận...</td></tr></tbody>
+                            </table>
+                        </div>
+                        <div id="promoCouponPagination" class="promo-coupon-pagination"></div>
+                    </section>
+                </div>`;
+            usersTable.parentNode.insertBefore(container, usersTable.nextSibling);
+            togglePromotionType();
+            loadPromotionCampaigns();
         }
 
         // ========================================
