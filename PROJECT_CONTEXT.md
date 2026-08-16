@@ -79,6 +79,15 @@ can filter by Free/Pro, Pro expiry, recent activity, credit balance, coupon issu
 count, and post-deployment Pro/credit purchase counts. Audience preview returns only
 a count and never renders the complete matching user list.
 
+Desktop admin campaigns support two audience modes: `filters` and `emails`. The
+`emails` mode accepts newline/comma/semicolon-separated addresses, lowercases and
+deduplicates them on both client and server, rejects malformed addresses, and matches
+exact existing user emails. It intentionally ignores plan/history filters but still
+honors the verified/active checkbox, active-coupon exclusion checkbox, and the absolute
+marketing opt-out rule. Campaigns store `audienceMode` plus `targetEmailCount`; the
+actual selected accounts remain represented by `CampaignRecipient` documents rather
+than duplicating the raw address list in the campaign document.
+
 Public coupon endpoints are under `/api/promotions`. Admin campaign endpoints are
 under `/api/admin/promotions`. `POST /api/credits/purchase` is validation-only and
 must not grant credits; fulfillment authority remains the existing admin routes.
@@ -90,6 +99,10 @@ The Pro coupon status check completes before its prompt is revealed so transient
 loading copy cannot resize the open modal and cause a visible layout jump.
 That status response includes only the calculated discount amount (never the coupon
 code), allowing the prompt to explain the available saving before the user checks email.
+On mobile, that saving phrase is highlighted in yellow and the prompt actions use a
+30/70 cancel-to-continue width ratio. The same saving phrase is highlighted in the
+mobile forfeit warning, whose caution begins `Lưu ý: Tiếp tục thanh toán...`; desktop
+prompt styling remains unchanged.
 
 Campaign coupon codes are per-user and unique. Code checks enforce user/email
 binding, active campaign, validity window, product scope, minimum order, single use,
@@ -1189,11 +1202,23 @@ Mobile App/TV tabs and payment modal:
   Netflix TV. These rules must stay mobile-only; desktop layout is intentionally
   unchanged.
 - Under `max-width: 768px`, the payment modal's outer premium shell is visually
-  removed (transparent background, no border/radius/shadow/padding). Its content is
-  capped at 340px, QR at 200px, and typography/card/button spacing is reduced.
+  removed (solid-black full-height surface, no border/radius/shadow). Its content
+  uses the full mobile width, is vertically centered while it fits the viewport,
+  caps the QR at 178px, and reduces typography/card/button spacing. Longer payment
+  content starts at the top and remains vertically scrollable.
 - On mobile, payment scrolling belongs to `#paymentModal` rather than its inner
   `.modal-content`. The overlay scrollbar is hidden for Firefox/WebKit, but vertical
   touch scrolling remains enabled, including iOS momentum scrolling.
+- The mobile Credits purchase modal uses a full-height solid-black surface without
+  the desktop card shell. Its service cards, amount/credit fields, quick choices,
+  coupon area, summary, and buttons are compact. The content is vertically centered
+  while it fits and remains internally scrollable with its scrollbar hidden when it
+  does not. Desktop Credits modal styling is unchanged.
+- The coupon-forfeit reminder is also compacted only under the mobile breakpoint;
+  its desktop dimensions and typography remain unchanged.
+- Every web page uses `maximum-scale=1.0, user-scalable=no` in its viewport so iOS
+  does not zoom into compact form fields on focus. The browser-extension popup is
+  separate from the mobile website and intentionally keeps its existing viewport.
 - The mobile two-line text clamp declares both `-webkit-line-clamp: 2` and the
   standard `line-clamp: 2` compatibility property.
 

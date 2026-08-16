@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 
     <!-- SEO Meta Tags -->
     <meta name="description"
@@ -14047,13 +14047,35 @@
             };
         }
 
+        function collectPromotionTargetEmails() {
+            const value = document.getElementById('promoTargetEmails')?.value || '';
+            return [...new Set(
+                value
+                    .split(/[\s,;]+/)
+                    .map(email => email.trim().toLowerCase())
+                    .filter(Boolean)
+            )];
+        }
+
+        function collectPromotionAudienceSelection() {
+            const audienceMode = document.getElementById('promoAudienceMode')?.value || 'filters';
+            return {
+                audienceMode,
+                targetEmails: audienceMode === 'emails' ? collectPromotionTargetEmails() : [],
+                audienceFilters: collectPromotionFilters()
+            };
+        }
+
         function collectPromotionPayload() {
             const type = document.getElementById('promoType').value;
+            const audience = collectPromotionAudienceSelection();
             return {
                 type,
                 name: document.getElementById('promoName').value.trim(),
-                audienceFilters: collectPromotionFilters(),
-                selectionLimit: Number(document.getElementById('promoLimit').value || 100),
+                ...audience,
+                selectionLimit: audience.audienceMode === 'emails'
+                    ? audience.targetEmails.length
+                    : Number(document.getElementById('promoLimit').value || 100),
                 selectionStrategy: document.getElementById('promoStrategy').value,
                 couponConfig: type === 'coupon' ? {
                     scope: document.getElementById('promoCouponScope').value,
@@ -14076,7 +14098,16 @@
         function markPromotionAudienceDirty() {
             promotionAudienceCount = null;
             const result = document.getElementById('promoAudienceResult');
-            if (result) result.innerHTML = '<strong>Chưa đếm</strong><span>Nhấn “Đếm đối tượng” sau khi hoàn tất bộ lọc.</span>';
+            if (result) result.innerHTML = '<strong>Chưa đếm</strong><span>Nhấn “Đếm đối tượng” sau khi hoàn tất cách chọn người nhận.</span>';
+        }
+
+        function togglePromotionAudienceMode() {
+            const emailMode = document.getElementById('promoAudienceMode')?.value === 'emails';
+            const filterFields = document.getElementById('promoFilterAudienceFields');
+            const emailFields = document.getElementById('promoEmailAudienceFields');
+            if (filterFields) filterFields.style.display = emailMode ? 'none' : 'grid';
+            if (emailFields) emailFields.style.display = emailMode ? 'block' : 'none';
+            markPromotionAudienceDirty();
         }
 
         function togglePromotionType() {
@@ -14089,16 +14120,25 @@
             const result = document.getElementById('promoAudienceResult');
             if (result) result.innerHTML = '<strong>Đang đếm...</strong><span>Không tải danh sách tài khoản.</span>';
             try {
+                const audience = collectPromotionAudienceSelection();
                 const response = await fetch(`${BACKEND_URL}/api/admin/promotions/audience/count`, {
                     method: 'POST', headers: promotionHeaders(),
-                    body: JSON.stringify({ audienceFilters: collectPromotionFilters() })
+                    body: JSON.stringify(audience)
                 });
                 const data = await response.json();
                 if (!response.ok) throw new Error(data.error || 'Không đếm được đối tượng');
                 promotionAudienceCount = Number(data.count || 0);
-                const limit = Math.max(1, Number(document.getElementById('promoLimit').value || 100));
+                const limit = audience.audienceMode === 'emails'
+                    ? audience.targetEmails.length
+                    : Math.max(1, Number(document.getElementById('promoLimit').value || 100));
                 const selected = Math.min(promotionAudienceCount, limit);
-                if (result) result.innerHTML = `<strong>${promotionAudienceCount.toLocaleString('vi-VN')} tài khoản phù hợp</strong><span>Chiến dịch sẽ chọn tối đa ${selected.toLocaleString('vi-VN')} tài khoản. Không render danh sách đầy đủ.</span>`;
+                if (result && audience.audienceMode === 'emails') {
+                    const requested = Number(data.requestedCount || audience.targetEmails.length);
+                    const excluded = Number(data.excludedCount || 0);
+                    result.innerHTML = `<strong>${promotionAudienceCount.toLocaleString('vi-VN')} / ${requested.toLocaleString('vi-VN')} email có tài khoản đủ điều kiện</strong><span>${excluded > 0 ? `${excluded.toLocaleString('vi-VN')} email không tồn tại hoặc không đáp ứng hai điều kiện an toàn bên dưới.` : 'Toàn bộ email chỉ định đều đủ điều kiện nhận chiến dịch.'}</span>`;
+                } else if (result) {
+                    result.innerHTML = `<strong>${promotionAudienceCount.toLocaleString('vi-VN')} tài khoản phù hợp</strong><span>Chiến dịch sẽ chọn tối đa ${selected.toLocaleString('vi-VN')} tài khoản. Không render danh sách đầy đủ.</span>`;
+                }
                 if (!silent) showMessage('Đã đếm đối tượng chiến dịch', 'success');
                 return promotionAudienceCount;
             } catch (error) {
@@ -14128,7 +14168,7 @@
         async function preparePromotionCampaign() {
             try {
                 const count = await countPromotionAudience(true);
-                if (count <= 0) return showMessage('Không có tài khoản phù hợp bộ lọc', 'error');
+                if (count <= 0) return showMessage('Không có tài khoản hợp lệ nào trong đối tượng đã chọn', 'error');
                 const payload = collectPromotionPayload();
                 const selected = Math.min(count, payload.selectionLimit);
                 let exposure = 'phụ thuộc giá trị đơn hàng';
@@ -14185,6 +14225,7 @@
                         <span class="promo-status promo-status--${escapeHtml(campaign.status)}">${escapeHtml(promotionStatusLabel(campaign.status))}</span>
                     </div>
                     <div class="promo-campaign-stats">
+                        <span>Nguồn <strong>${campaign.audienceMode === 'emails' ? 'Email chỉ định' : 'Bộ lọc'}</strong></span>
                         <span>Đối tượng <strong>${Number(campaign.selectedCount || 0).toLocaleString('vi-VN')}</strong></span>
                         <span>Đã gửi <strong>${Number(stats.sent || 0).toLocaleString('vi-VN')}</strong></span>
                         <span>Lỗi <strong>${Number(stats.failed || 0).toLocaleString('vi-VN')}</strong></span>
@@ -14477,7 +14518,7 @@
                     body:has(#promotionManagement) .sidebar-nav button[data-admin-nav="promotions"]{background:linear-gradient(135deg,rgba(251,191,36,.2),rgba(245,158,11,.08));color:#fde68a;border-color:rgba(251,191,36,.28)}
                     .promo-manager{padding:20px;display:grid;gap:18px}.promo-panel{padding:18px;border:1px solid rgba(148,163,184,.16);border-radius:14px;background:rgba(15,23,42,.55)}
                     .promo-panel h3{margin:0 0 5px;color:#f8fafc}.promo-panel>p{margin:0 0 16px;color:#94a3b8;font-size:.86rem}.promo-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
-                    .promo-field{display:grid;gap:6px}.promo-field--wide{grid-column:span 2}.promo-field label{color:#cbd5e1;font-size:.78rem;font-weight:700}.promo-field input,.promo-field select,.promo-field textarea{width:100%;box-sizing:border-box;padding:10px;border:1px solid rgba(148,163,184,.2);border-radius:9px;background:#0f172a;color:#f8fafc;font:inherit}.promo-field textarea{min-height:120px;resize:vertical}
+                    .promo-field{display:grid;gap:6px}.promo-field--wide{grid-column:span 2}.promo-field--full{grid-column:1/-1}.promo-field label{color:#cbd5e1;font-size:.78rem;font-weight:700}.promo-field input,.promo-field select,.promo-field textarea{width:100%;box-sizing:border-box;padding:10px;border:1px solid rgba(148,163,184,.2);border-radius:9px;background:#0f172a;color:#f8fafc;font:inherit}.promo-field textarea{min-height:120px;resize:vertical}.promo-field-help{margin:0;color:#64748b;font-size:.76rem;line-height:1.45}.promo-email-audience{margin-top:12px}
                     .promo-checks{display:flex;gap:20px;flex-wrap:wrap;margin-top:14px;color:#cbd5e1;font-size:.84rem}.promo-checks label{display:flex;gap:7px;align-items:center}.promo-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:16px}.promo-audience-result{margin-top:14px;padding:14px;border:1px solid rgba(96,165,250,.2);border-radius:10px;background:rgba(59,130,246,.07);display:grid;gap:3px}.promo-audience-result strong{color:#bfdbfe}.promo-audience-result span{color:#94a3b8;font-size:.82rem}
                     .promo-campaign-list{display:grid;gap:10px}.promo-campaign-card{padding:14px;border:1px solid rgba(148,163,184,.14);border-radius:11px;background:rgba(2,6,23,.45)}.promo-campaign-main,.promo-campaign-footer{display:flex;align-items:center;justify-content:space-between;gap:12px}.promo-campaign-main h4{display:inline;margin:0 0 0 8px;color:#f8fafc}.promo-type{color:#fbbf24;font-size:.68rem;font-weight:800}.promo-status{padding:5px 8px;border-radius:999px;background:rgba(96,165,250,.12);color:#93c5fd;font-size:.72rem;font-weight:700}.promo-status--completed{color:#86efac;background:rgba(34,197,94,.12)}.promo-status--cancelled,.promo-status--failed{color:#fca5a5;background:rgba(239,68,68,.12)}.promo-campaign-stats{display:flex;gap:18px;flex-wrap:wrap;margin:12px 0;color:#94a3b8;font-size:.8rem}.promo-campaign-stats strong{color:#f8fafc}.promo-campaign-footer small{color:#64748b}.promo-campaign-footer>div{display:flex;gap:7px}.promo-empty{padding:20px;text-align:center;color:#94a3b8}
                     .promo-coupon-toolbar{display:grid;grid-template-columns:minmax(260px,1fr) 240px auto;gap:10px;align-items:center;margin-bottom:12px}.promo-coupon-toolbar input,.promo-coupon-toolbar select{width:100%;box-sizing:border-box;padding:10px;border:1px solid rgba(148,163,184,.2);border-radius:9px;background:#0f172a;color:#f8fafc;font:inherit}.promo-coupon-summary{margin:0 0 10px;color:#93c5fd;font-size:.8rem;font-weight:700}.promo-coupon-table-wrap{overflow:auto;border:1px solid rgba(148,163,184,.14);border-radius:11px;background:rgba(2,6,23,.5)}.promo-coupon-table{width:100%;min-width:1450px;border-collapse:collapse;font-size:.77rem}.promo-coupon-table th{position:sticky;top:0;z-index:1;padding:11px 10px;background:#111827;color:#bfdbfe;text-align:left;white-space:nowrap}.promo-coupon-table td{padding:11px 10px;border-top:1px solid rgba(148,163,184,.1);color:#d4d4d8;vertical-align:top}.promo-coupon-table tbody tr:hover{background:rgba(59,130,246,.045)}.promo-coupon-table td>span,.promo-coupon-table td>small,.promo-coupon-table td>strong{display:block}.promo-coupon-table small,.promo-discount small,.promo-delivery+small{margin-top:4px;color:#71717a;font-size:.68rem;line-height:1.35}.promo-coupon-index{color:#64748b!important;text-align:center}.promo-user-name{display:inline!important;color:#f8fafc}.promo-plan{display:inline-block!important;margin-left:7px;padding:2px 5px;border-radius:999px;font-size:.58rem;font-weight:800}.promo-plan--pro{background:rgba(16,185,129,.13);color:#6ee7b7}.promo-plan--free{background:rgba(96,165,250,.12);color:#93c5fd}.promo-email{margin-top:5px;color:#cbd5e1;word-break:break-word}.promo-code-copy{border:1px solid rgba(251,191,36,.25);border-radius:7px;padding:6px 8px;background:rgba(251,191,36,.08);color:#fde68a;cursor:pointer;font:750 .7rem ui-monospace,SFMono-Regular,Consolas,monospace;white-space:nowrap}.promo-code-copy:hover{background:rgba(251,191,36,.16)}.promo-no-current-coupon{color:#64748b}.promo-history-count{margin-top:5px;font-size:.7rem;font-weight:800}.promo-history-count--available{color:#60a5fa}.promo-history-count--redeemed{color:#f87171}.promo-discount strong{display:block;color:#4ade80}.promo-expiry{font-weight:800}.promo-expiry--safe{color:#4ade80}.promo-expiry--soon{color:#67e8f9}.promo-expiry--warning{color:#facc15}.promo-expiry--danger{color:#f87171!important}.promo-expiry--muted{color:#94a3b8}.promo-coupon-state,.promo-delivery{display:inline-block!important;width:max-content;max-width:180px;padding:4px 7px;border-radius:999px;font-size:.66rem;font-weight:800}.promo-coupon-state--success{color:#fca5a5;background:rgba(239,68,68,.13)}.promo-coupon-state--available{color:#93c5fd;background:rgba(59,130,246,.13)}.promo-delivery--sent{color:#86efac;background:rgba(34,197,94,.12)}.promo-coupon-state--pending,.promo-delivery--sending{color:#93c5fd;background:rgba(59,130,246,.13)}.promo-coupon-state--warning,.promo-delivery--pending{color:#fde68a;background:rgba(234,179,8,.12)}.promo-coupon-state--danger,.promo-delivery--failed{color:#fca5a5;background:rgba(239,68,68,.13)}.promo-coupon-state--muted,.promo-delivery--skipped{color:#c4b5fd;background:rgba(139,92,246,.12)}.promo-coupon-empty{padding:24px!important;text-align:center;color:#94a3b8!important}.promo-coupon-pagination{display:flex;justify-content:center;align-items:center;gap:14px;margin-top:14px;color:#94a3b8;font-size:.82rem}.promo-coupon-pagination .btn:disabled{opacity:.38;cursor:not-allowed}
@@ -14488,7 +14529,10 @@
                     <section class="promo-panel"><h3>1. Loại chiến dịch và đối tượng</h3><p>Hệ thống chỉ đếm và chốt đối tượng; không render danh sách hàng nghìn tài khoản.</p>
                         <div class="promo-grid">
                             <div class="promo-field"><label>Loại chiến dịch</label><select id="promoType" onchange="togglePromotionType()"><option value="coupon">Coupon cá nhân + email</option><option value="broadcast">Email tùy chỉnh</option></select></div>
+                            <div class="promo-field"><label>Cách chọn đối tượng</label><select id="promoAudienceMode" onchange="togglePromotionAudienceMode()"><option value="filters">Theo bộ lọc</option><option value="emails">Email chỉ định</option></select></div>
                             <div class="promo-field promo-field--wide"><label>Tên chiến dịch</label><input id="promoName" maxlength="120" placeholder="VD: Pro sắp hết hạn tháng 8"></div>
+                        </div>
+                        <div class="promo-grid" id="promoFilterAudienceFields" style="margin-top:12px">
                             <div class="promo-field"><label>Gói tài khoản</label><select id="promoFilterPlan" onchange="markPromotionAudienceDirty()"><option value="all">Tất cả</option><option value="free">Free</option><option value="pro">Pro</option></select></div>
                             <div class="promo-field"><label>Trạng thái hết hạn Pro</label><select id="promoExpiryMode" onchange="markPromotionAudienceDirty()"><option value="any">Không lọc</option><option value="within_days">Sắp hết hạn trong</option><option value="expired">Đã hết hạn</option></select></div>
                             <div class="promo-field"><label>Số ngày sắp hết hạn</label><input id="promoExpiryDays" type="number" min="1" value="7" oninput="markPromotionAudienceDirty()"></div>
@@ -14499,7 +14543,10 @@
                             <div class="promo-field"><label>Lần mua Pro (từ / đến)</label><div style="display:flex;gap:6px"><input id="promoProPurchaseMin" type="number" min="0" placeholder="0" oninput="markPromotionAudienceDirty()"><input id="promoProPurchaseMax" type="number" min="0" placeholder="∞" oninput="markPromotionAudienceDirty()"></div></div>
                             <div class="promo-field"><label>Lần mua credit (từ / đến)</label><div style="display:flex;gap:6px"><input id="promoCreditPurchaseMin" type="number" min="0" placeholder="0" oninput="markPromotionAudienceDirty()"><input id="promoCreditPurchaseMax" type="number" min="0" placeholder="∞" oninput="markPromotionAudienceDirty()"></div></div>
                             <div class="promo-field"><label>Số người tối đa</label><input id="promoLimit" type="number" min="1" max="10000" value="100" oninput="markPromotionAudienceDirty()"></div>
-                            <div class="promo-field"><label>Cách chọn khi vượt giới hạn</label><select id="promoStrategy"><option value="least_targeted">Ít được nhận chiến dịch nhất</option><option value="oldest">Tài khoản cũ nhất</option><option value="random">Ngẫu nhiên</option></select></div>
+                            <div class="promo-field"><label>Cách chọn khi vượt giới hạn</label><select id="promoStrategy" onchange="markPromotionAudienceDirty()"><option value="least_targeted">Ít được nhận chiến dịch nhất</option><option value="oldest">Tài khoản cũ nhất</option><option value="random">Ngẫu nhiên</option></select></div>
+                        </div>
+                        <div class="promo-email-audience" id="promoEmailAudienceFields" style="display:none">
+                            <div class="promo-field promo-field--full"><label>Danh sách email chỉ định</label><textarea id="promoTargetEmails" maxlength="800000" spellcheck="false" oninput="markPromotionAudienceDirty()" placeholder="Mỗi email một dòng, hoặc ngăn cách bằng dấu phẩy&#10;user1@example.com&#10;user2@example.com"></textarea><p class="promo-field-help">Email được tự động chuyển thành chữ thường và loại bỏ mục trùng. Các bộ lọc gói và lịch sử không áp dụng trong chế độ này.</p></div>
                         </div>
                         <div class="promo-checks"><label><input id="promoVerifiedOnly" type="checkbox" checked onchange="markPromotionAudienceDirty()"> Chỉ email xác minh, tài khoản active</label><label><input id="promoExcludeActiveCoupon" type="checkbox" checked onchange="markPromotionAudienceDirty()"> Loại người đang có coupon còn hiệu lực</label></div>
                         <div class="promo-actions"><button class="btn btn-primary" onclick="countPromotionAudience()">Đếm đối tượng</button></div>
@@ -14548,6 +14595,7 @@
                 </div>`;
             usersTable.parentNode.insertBefore(container, usersTable.nextSibling);
             togglePromotionType();
+            togglePromotionAudienceMode();
             loadPromotionCampaigns();
         }
 

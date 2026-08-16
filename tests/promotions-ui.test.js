@@ -7,6 +7,29 @@ const publicHtml = fs.readFileSync(path.join(root, 'index.html'), 'utf8');
 const promotionScript = fs.readFileSync(path.join(root, 'promotions.js'), 'utf8');
 const adminHtml = fs.readFileSync(path.join(root, 'x7Kv9mPq3nRt2025', 'index.html'), 'utf8');
 
+const zoomLockedPages = [
+    'index.html',
+    path.join('auth', 'index.html'),
+    path.join('x7Kv9mPq3nRt2025', 'index.html'),
+    path.join('mK7xCtv9pR2026', 'index.html'),
+    path.join('maintenance', 'index.html'),
+    path.join('install-guide', 'index.html'),
+    path.join('terms-of-service', 'index.html'),
+    path.join('contact', 'index.html'),
+    path.join('privacy-policy', 'index.html'),
+    path.join('shop', 'index.html'),
+    path.join('study', 'index.html')
+];
+
+for (const page of zoomLockedPages) {
+    const html = fs.readFileSync(path.join(root, page), 'utf8');
+    assert.match(
+        html,
+        /<meta\s+name=["']viewport["']\s+content=["'][^"']*maximum-scale=1\.0[^"']*user-scalable=no[^"']*["']\s*\/?>/i,
+        `${page} must disable viewport zoom on mobile`
+    );
+}
+
 new Function(promotionScript);
 
 function parseExecutableInlineScripts(fileName, html) {
@@ -35,9 +58,24 @@ function loadAdminFunction(name, nextName) {
 
 const formatVietnamDateTime = loadAdminFunction('promotionLocalDateTime', 'promotionVietnamDateTimeToIso');
 const vietnamDateTimeToIso = loadAdminFunction('promotionVietnamDateTimeToIso', 'optionalPromotionNumber');
+const collectPromotionTargetEmails = loadAdminFunction('collectPromotionTargetEmails', 'collectPromotionAudienceSelection');
 assert.equal(formatVietnamDateTime('2026-08-16T10:26:00.000Z'), '2026-08-16T17:26');
 assert.equal(vietnamDateTimeToIso('2026-08-16T17:26'), '2026-08-16T10:26:00.000Z');
 assert.equal(vietnamDateTimeToIso('2026-08-16T17:26:45'), '2026-08-16T10:26:45.000Z');
+const originalDocument = global.document;
+try {
+    global.document = {
+        getElementById: id => id === 'promoTargetEmails'
+            ? { value: ' User@One.com\nuser@one.com, TWO@example.com;three@example.com ' }
+            : null
+    };
+    assert.deepEqual(collectPromotionTargetEmails(), [
+        'user@one.com', 'two@example.com', 'three@example.com'
+    ]);
+} finally {
+    if (originalDocument === undefined) delete global.document;
+    else global.document = originalDocument;
+}
 
 const publicIds = [
     'creditsCouponCard', 'creditsCouponInput', 'creditsCouponApplyBtn', 'creditsCouponRemoveBtn',
@@ -60,7 +98,7 @@ assert.match(promotionScript, /\/api\/promotions\/checkout\/status/);
 assert.match(promotionScript, /\/api\/promotions\/checkout\/forfeit/);
 assert.doesNotMatch(promotionScript, /Tài khoản của bạn đang có mã ưu đãi\. Vui lòng kiểm tra email để sử dụng/);
 assert.match(promotionScript, /Tài khoản của bạn đang được tặng 01 mã ưu đãi để giảm \$\{formatVnd\(discountAmountVnd\)\}\. Kiểm tra email nhé!/);
-assert.match(promotionScript, /Lưu ý: Nếu tiếp tục thanh toán mà không áp dụng mã ưu đãi, mã ưu đãi hiện có của bạn vẫn sẽ bị mất hiệu lực\./);
+assert.match(promotionScript, /Lưu ý: Tiếp tục thanh toán mà không áp dụng mã ưu đãi, mã ưu đãi hiện có của bạn vẫn sẽ bị mất hiệu lực\./);
 assert.match(promotionScript, /renderCouponGiftNotice\(notice, context\.discountAmountVnd\)/);
 assert.match(promotionScript, /showCouponForfeitWarning\(status\.discountAmountVnd\)/);
 assert.match(promotionScript, /originalAmountVnd/);
@@ -96,6 +134,16 @@ assert.match(adminHtml, /@media \(max-width: 768px\)[\s\S]*?\.promotion-pc-only/
 assert.match(adminHtml, /function showPromotionManagement\(\)/);
 assert.match(adminHtml, /function countPromotionAudience\(/);
 assert.match(adminHtml, /function promotionVietnamDateTimeToIso\(/);
+assert.match(adminHtml, /id="promoAudienceMode"[\s\S]*?<option value="filters">Theo bộ lọc<\/option>[\s\S]*?<option value="emails">Email chỉ định<\/option>/);
+assert.match(adminHtml, /id="promoFilterAudienceFields"/);
+assert.match(adminHtml, /id="promoEmailAudienceFields" style="display:none"/);
+assert.match(adminHtml, /id="promoTargetEmails"[\s\S]*?oninput="markPromotionAudienceDirty\(\)"/);
+assert.match(adminHtml, /function collectPromotionTargetEmails\(\)/);
+assert.match(adminHtml, /function collectPromotionAudienceSelection\(\)/);
+assert.match(adminHtml, /function togglePromotionAudienceMode\(\)/);
+assert.match(adminHtml, /audienceMode === 'emails'[\s\S]*?audience\.targetEmails\.length/);
+assert.match(adminHtml, /body: JSON\.stringify\(audience\)/);
+assert.match(adminHtml, /Email chỉ định' : 'Bộ lọc'/);
 assert.match(adminHtml, /timeZone: 'Asia\/Ho_Chi_Minh'/);
 assert.match(adminHtml, /promotionVietnamDateTimeToIso\(document\.getElementById\('promoValidFrom'\)\.value\)/);
 assert.match(adminHtml, /promotionVietnamDateTimeToIso\(document\.getElementById\('promoExpiresAt'\)\.value\)/);
@@ -146,12 +194,37 @@ assert.match(publicHtml, /Nâng cấp Pro Plan/);
 assert.match(publicHtml, /grid-template-columns: minmax\(0, 1fr\) minmax\(82px, auto\)/);
 assert.match(publicHtml, /#proCouponPromptModal \.modal-content[\s\S]*?max-width: 360px !important/);
 assert.match(publicHtml, /#proCouponPromptModal \.pro-coupon-prompt-title[\s\S]*?font-size: 1rem !important/);
+assert.match(publicHtml, /#proCouponPromptNotice \.coupon-gift-highlight \{[\s\S]*?color: #fbbf24;[\s\S]*?font-weight: 800;/);
+assert.match(publicHtml, /#proCouponPromptModal \.pro-coupon-prompt-actions > \.btn-secondary \{[\s\S]*?flex: 3 1 0 !important;/);
+assert.match(publicHtml, /#proCouponPromptModal #proPromptContinueBtn \{[\s\S]*?flex: 7 1 0 !important;/);
+assert.match(promotionScript, /highlight\.className = 'coupon-gift-highlight'/);
+assert.match(promotionScript, /01 mã ưu đãi để giảm \$\{formatVnd\(discountAmountVnd\)\}/);
 assert.match(publicHtml, /Kiểm tra email xem bạn có đang được tặng mã ưu đãi nào không nhé!/);
 assert.match(publicHtml, /\.coupon-entry-message:empty \{ display: none; \}/);
 assert.match(publicHtml, /\.coupon-forfeit-caution[\s\S]*?color: #fbbf24;[\s\S]*?font-style: italic;/);
 assert.match(publicHtml, /#purchaseCreditsModal \.modal-content[\s\S]*?overflow-y: auto !important;[\s\S]*?scrollbar-width: none;/);
 assert.match(publicHtml, /#purchaseCreditsModal \.modal-content::\-webkit-scrollbar[\s\S]*?display: none;/);
+assert.match(publicHtml, /#purchaseCreditsModal \{[\s\S]*?padding: 0 !important;[\s\S]*?background: #050505 !important;/);
+assert.match(publicHtml, /#purchaseCreditsModal \.modal-content \{[\s\S]*?min-height: auto !important;[\s\S]*?margin: auto !important;[\s\S]*?max-height: calc\(100dvh - 16px\) !important;[\s\S]*?background: #050505 !important;[\s\S]*?border: 0 !important;[\s\S]*?border-radius: 0 !important;[\s\S]*?box-shadow: none !important;/);
+assert.match(publicHtml, /#purchaseCreditsModal \.purchase-credits-login-cards[\s\S]*?grid-template-columns: repeat\(3, minmax\(0, 1fr\)\) !important;/);
+assert.match(publicHtml, /#purchaseCreditsModal \.purchase-credits-amount-panel[\s\S]*?grid-template-columns: minmax\(0, 1fr\) minmax\(0, 1fr\) !important;/);
+for (const className of [
+    'purchase-credits-header', 'purchase-credits-rate', 'purchase-credits-body',
+    'purchase-credits-amount-panel', 'purchase-credits-receive-card',
+    'purchase-credits-quick', 'purchase-credits-quick-options',
+    'purchase-credits-summary', 'purchase-credits-actions'
+]) {
+    assert.match(publicHtml, new RegExp(`class=["'][^"']*${className}`));
+}
 assert.match(publicHtml, /#paymentModal \.modal-content::\-webkit-scrollbar[\s\S]*?display: none;/);
+assert.match(publicHtml, /#paymentModal \{[\s\S]*?padding: 0 !important;[\s\S]*?background: #050505 !important;/);
+assert.match(publicHtml, /#paymentModal \.modal-content \{[\s\S]*?width: 100% !important;[\s\S]*?min-height: auto !important;[\s\S]*?margin: auto !important;[\s\S]*?background: #050505 !important;[\s\S]*?border-radius: 0 !important;[\s\S]*?box-shadow: none !important;/);
+assert.match(publicHtml, /class="payment-modal-actions"/);
+assert.match(publicHtml, /#paymentModal #paymentQrImage \{[\s\S]*?max-width: 178px !important;/);
+assert.match(publicHtml, /#couponForfeitWarningModal \.modal-content \{[\s\S]*?max-width: 315px !important;[\s\S]*?padding: 17px 15px !important;/);
+assert.match(publicHtml, /#couponForfeitWarningNotice \{[\s\S]*?font-size: 0\.7rem !important;/);
+assert.match(publicHtml, /#couponForfeitWarningNotice \.coupon-gift-highlight \{[\s\S]*?color: #fbbf24;[\s\S]*?font-weight: 800;/);
+assert.match(promotionScript, /class="coupon-forfeit-warning-actions"/);
 assert.match(publicHtml, /class="badge-verified verified-icon-badge"/);
 assert.match(publicHtml, /aria-label="Đã xác minh"/);
 assert.doesNotMatch(publicHtml, /id="verifiedBadge"[^>]*>Đã xác minh</);
