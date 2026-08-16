@@ -25,6 +25,20 @@ function parseExecutableInlineScripts(fileName, html) {
 assert.ok(parseExecutableInlineScripts('index.html', publicHtml) > 0);
 assert.ok(parseExecutableInlineScripts('admin index.html', adminHtml) > 0);
 
+function loadAdminFunction(name, nextName) {
+    const start = adminHtml.indexOf(`function ${name}(`);
+    const end = adminHtml.indexOf(`function ${nextName}(`, start);
+    assert.ok(start >= 0 && end > start, `Unable to extract admin function ${name}`);
+    const source = adminHtml.slice(start, end);
+    return new Function(`${source}; return ${name};`)();
+}
+
+const formatVietnamDateTime = loadAdminFunction('promotionLocalDateTime', 'promotionVietnamDateTimeToIso');
+const vietnamDateTimeToIso = loadAdminFunction('promotionVietnamDateTimeToIso', 'optionalPromotionNumber');
+assert.equal(formatVietnamDateTime('2026-08-16T10:26:00.000Z'), '2026-08-16T17:26');
+assert.equal(vietnamDateTimeToIso('2026-08-16T17:26'), '2026-08-16T10:26:00.000Z');
+assert.equal(vietnamDateTimeToIso('2026-08-16T17:26:45'), '2026-08-16T10:26:45.000Z');
+
 const publicIds = [
     'creditsCouponCard', 'creditsCouponInput', 'creditsCouponApplyBtn', 'creditsCouponRemoveBtn',
     'creditsCouponMessage', 'creditsCouponBreakdown', 'creditsCouponOriginal', 'creditsCouponDiscount',
@@ -81,6 +95,10 @@ assert.match(adminHtml, /class="promotion-pc-only"/);
 assert.match(adminHtml, /@media \(max-width: 768px\)[\s\S]*?\.promotion-pc-only/);
 assert.match(adminHtml, /function showPromotionManagement\(\)/);
 assert.match(adminHtml, /function countPromotionAudience\(/);
+assert.match(adminHtml, /function promotionVietnamDateTimeToIso\(/);
+assert.match(adminHtml, /timeZone: 'Asia\/Ho_Chi_Minh'/);
+assert.match(adminHtml, /promotionVietnamDateTimeToIso\(document\.getElementById\('promoValidFrom'\)\.value\)/);
+assert.match(adminHtml, /promotionVietnamDateTimeToIso\(document\.getElementById\('promoExpiresAt'\)\.value\)/);
 assert.match(adminHtml, /function fulfillPendingCreditCoupon\(/);
 assert.match(adminHtml, /couponForfeited/);
 assert.match(adminHtml, /\/api\/admin\/promotions\/campaigns/);

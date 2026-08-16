@@ -102,6 +102,11 @@ counters from the remaining coupons. It never reverses Pro or Credits already gr
 Rejected coupon states intentionally share the customer-facing message
 `Mã ưu đãi không hợp lệ, vui lòng kiểm tra lại!`; detailed rejection reasons are not
 shown in the purchase UI. New coupon campaigns default to the `both` scope.
+Coupon campaign `datetime-local` inputs are Vietnam wall-clock values. The desktop
+admin converts them to timezone-qualified ISO timestamps before sending, and the
+backend also interprets legacy timezone-less campaign timestamps as UTC+07:00. This
+keeps `validFrom` and `expiresAt` identical across local development and UTC Render
+instances; do not replace this parsing with environment-dependent `new Date(rawValue)`.
 Promotional email content is HTML-escaped, uses an SF Pro-first font stack and a
 responsive Netflix red/white/black light theme, and contains no unsubscribe link or
 copy-code button. Coupon mail includes a discount-aware usage guide. Campaign content
