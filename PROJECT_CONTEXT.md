@@ -810,10 +810,16 @@ Important:
   App Login, Guest/Guest Preview, CTV portal/API/auth, and Admin CTV. Repeated attempt/canPlay/pool
   details are hidden unless `FLOW_LOG_VERBOSE=true`; cookie/credential previews and OTP
   values must never be written to logs.
-- The post-login message modal is temporarily disabled by
-  `POST_LOGIN_MESSAGE_MODAL = 'OFF'` in `NetflixBackend/routes/message.js`. Keep the
-  celebration content and `BIG_UPDATE_MODAL` intact; switch the master flag back to `ON`
-  when the modal is needed again.
+- The post-login message modal is enabled by `POST_LOGIN_MESSAGE_MODAL = 'ON'` in
+  `NetflixBackend/routes/message.js`. `PRO_CANVA_OFFER_MODAL = 'ON'` takes priority and
+  shows the limited PRO + Canva trial offer to every account after login. Free accounts
+  see the upgrade CTA; existing Pro accounts see the renewal CTA. Both continue into the
+  existing Pro checkout and coupon prompt through a one-time session intent consumed by
+  `NetflixFrontend/index.html`. The offer component explicitly owns its button font so
+  auth-page button styles cannot change the CTA typography, respects reduced-motion
+  settings, and opens with a backdrop fade plus a soft welcome zoom/stagger animation.
+  The former celebration content remains intact behind
+  `BIG_UPDATE_MODAL`, which is currently `OFF`.
 - Do not log `Free credits expiring soon` from `User.resetCreditsIfNeeded()`. With a
   one-day Free validity period that warning applies throughout almost the entire cycle
   and is invoked repeatedly by quota middleware. Keep only the one-time log when credits

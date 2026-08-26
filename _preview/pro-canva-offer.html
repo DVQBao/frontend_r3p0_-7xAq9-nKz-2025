@@ -1,0 +1,834 @@
+<!doctype html>
+<html lang="vi">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <title>Preview - Ưu đãi PRO + Canva</title>
+    <style>
+        :root {
+            color-scheme: dark;
+            font-family: "SF Pro Display", "SF Pro Text", "Segoe UI", system-ui, sans-serif;
+            --red: #e50914;
+            --gold: #fbbf24;
+            --surface: #111114;
+            --surface-soft: #18181d;
+            --line: rgba(255, 255, 255, 0.1);
+            --muted: #a9a9b2;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            min-height: 100vh;
+            margin: 0;
+            overflow: hidden;
+            color: #fff;
+            background: #09090b;
+        }
+
+        button {
+            font: inherit;
+        }
+
+        .dashboard-preview {
+            min-height: 100vh;
+            padding: 30px;
+            background:
+                radial-gradient(circle at 72% 10%, rgba(229, 9, 20, 0.14), transparent 29%),
+                linear-gradient(135deg, #121216 0%, #08080a 58%, #111116 100%);
+        }
+
+        .fake-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            max-width: 1180px;
+            margin: 0 auto;
+        }
+
+        .fake-brand {
+            display: flex;
+            align-items: center;
+            gap: 11px;
+            font-size: 1rem;
+            font-weight: 760;
+        }
+
+        .fake-brand-mark {
+            display: grid;
+            width: 36px;
+            height: 36px;
+            place-items: center;
+            border-radius: 11px;
+            background: linear-gradient(145deg, #ff3942, #a90009);
+            box-shadow: 0 8px 24px rgba(229, 9, 20, 0.25);
+        }
+
+        .fake-avatar {
+            width: 35px;
+            height: 35px;
+            border: 1px solid rgba(255, 255, 255, 0.14);
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.08);
+        }
+
+        .fake-content {
+            display: grid;
+            grid-template-columns: 1.15fr 0.85fr;
+            gap: 18px;
+            max-width: 940px;
+            margin: 82px auto 0;
+            opacity: 0.56;
+        }
+
+        .fake-card {
+            min-height: 155px;
+            padding: 23px;
+            border: 1px solid var(--line);
+            border-radius: 20px;
+            background: rgba(255, 255, 255, 0.045);
+        }
+
+        .fake-card.large {
+            min-height: 256px;
+        }
+
+        .fake-line {
+            height: 11px;
+            margin: 10px 0;
+            border-radius: 999px;
+            background: rgba(255, 255, 255, 0.11);
+        }
+
+        .fake-line.short {
+            width: 52%;
+        }
+
+        .preview-toolbar {
+            position: fixed;
+            z-index: 30;
+            top: 18px;
+            left: 50%;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px;
+            border: 1px solid rgba(255, 255, 255, 0.14);
+            border-radius: 14px;
+            background: rgba(20, 20, 24, 0.86);
+            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.36);
+            backdrop-filter: blur(16px);
+            transform: translateX(-50%);
+        }
+
+        .preview-toolbar span {
+            padding: 0 7px;
+            color: #b9b9c2;
+            font-size: 0.74rem;
+            font-weight: 650;
+        }
+
+        .preview-toolbar button {
+            padding: 8px 12px;
+            border: 0;
+            border-radius: 9px;
+            color: #c7c7cf;
+            background: transparent;
+            font-size: 0.75rem;
+            font-weight: 720;
+            cursor: pointer;
+        }
+
+        .preview-toolbar button.active {
+            color: #fff;
+            background: rgba(255, 255, 255, 0.12);
+        }
+
+        .offer-overlay {
+            position: fixed;
+            z-index: 20;
+            inset: 0;
+            display: grid;
+            place-items: center;
+            padding: 78px 18px 24px;
+            background: rgba(0, 0, 0, 0.69);
+            backdrop-filter: blur(8px);
+        }
+
+        .offer-overlay.is-opening {
+            animation: offer-backdrop-in 480ms ease-out both;
+        }
+
+        .offer-modal {
+            position: relative;
+            width: min(100%, 520px);
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.14);
+            border-radius: 24px;
+            background:
+                radial-gradient(circle at 92% 3%, rgba(122, 79, 255, 0.22), transparent 32%),
+                radial-gradient(circle at 5% 7%, rgba(0, 196, 204, 0.15), transparent 30%),
+                linear-gradient(160deg, #17171c 0%, #0d0d10 66%);
+            box-shadow: 0 28px 90px rgba(0, 0, 0, 0.72), 0 0 0 1px rgba(229, 9, 20, 0.04);
+            transform-origin: center 42%;
+            will-change: opacity, transform, filter;
+        }
+
+        .offer-overlay.is-opening .offer-modal {
+            animation: offer-welcome-in 680ms cubic-bezier(.16, 1, .3, 1) both;
+        }
+
+        .offer-modal::before {
+            position: absolute;
+            top: 0;
+            right: 0;
+            left: 0;
+            height: 3px;
+            content: "";
+            background: linear-gradient(90deg, var(--red) 0 38%, #12c2e9 58%, #9b5cff 100%);
+        }
+
+        @keyframes offer-backdrop-in {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes offer-welcome-in {
+            0% {
+                opacity: 0;
+                filter: blur(5px);
+                transform: translateY(24px) scale(0.88);
+            }
+            62% {
+                opacity: 1;
+                filter: blur(0);
+                transform: translateY(-3px) scale(1.018);
+            }
+            82% {
+                transform: translateY(1px) scale(0.994);
+            }
+            100% {
+                opacity: 1;
+                filter: blur(0);
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        @keyframes offer-item-in {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .offer-overlay.is-opening .offer-content > * {
+            animation: offer-item-in 440ms cubic-bezier(.22, .8, .2, 1) backwards;
+        }
+
+        .offer-overlay.is-opening .offer-topline { animation-delay: 100ms; }
+        .offer-overlay.is-opening .offer-title { animation-delay: 150ms; }
+        .offer-overlay.is-opening .offer-intro { animation-delay: 200ms; }
+        .offer-overlay.is-opening .offer-gift-card { animation-delay: 250ms; }
+        .offer-overlay.is-opening .offer-benefits { animation-delay: 300ms; }
+        .offer-overlay.is-opening .offer-note { animation-delay: 350ms; }
+        .offer-overlay.is-opening .offer-actions { animation-delay: 400ms; }
+
+        @media (prefers-reduced-motion: reduce) {
+            .offer-overlay.is-opening,
+            .offer-overlay.is-opening .offer-modal,
+            .offer-overlay.is-opening .offer-content > * {
+                animation: none;
+            }
+        }
+
+        .offer-close {
+            position: absolute;
+            z-index: 2;
+            top: 14px;
+            right: 14px;
+            display: grid;
+            width: 34px;
+            height: 34px;
+            place-items: center;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            color: #c9c9cf;
+            background: rgba(0, 0, 0, 0.24);
+            font-size: 1.15rem;
+            cursor: pointer;
+        }
+
+        .offer-content {
+            padding: 30px 30px 26px;
+        }
+
+        .offer-topline {
+            display: flex;
+            align-items: center;
+            gap: 9px;
+            margin-bottom: 18px;
+        }
+
+        .offer-pro-badge,
+        .offer-limited-badge {
+            display: inline-flex;
+            align-items: center;
+            min-height: 26px;
+            padding: 5px 9px;
+            border-radius: 999px;
+            font-size: 0.67rem;
+            font-weight: 800;
+            letter-spacing: 0.055em;
+        }
+
+        .offer-pro-badge {
+            color: #fff;
+            background: var(--red);
+            box-shadow: 0 7px 18px rgba(229, 9, 20, 0.24);
+        }
+
+        .offer-limited-badge {
+            color: #ffdda0;
+            border: 1px solid rgba(251, 191, 36, 0.25);
+            background: rgba(251, 191, 36, 0.09);
+        }
+
+        .offer-title {
+            max-width: 435px;
+            margin: 0;
+            color: #fff;
+            font-size: clamp(1.65rem, 4vw, 2.1rem);
+            font-weight: 830;
+            line-height: 1.12;
+            letter-spacing: -0.035em;
+        }
+
+        .offer-title .canva-gradient {
+            color: transparent;
+            background: linear-gradient(90deg, #19cfd6, #55a8ff 43%, #a66cff 88%);
+            background-clip: text;
+            -webkit-background-clip: text;
+        }
+
+        .offer-intro {
+            margin: 11px 0 20px;
+            color: #bdbdc7;
+            font-size: 0.93rem;
+            line-height: 1.55;
+        }
+
+        .offer-gift-card {
+            position: relative;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 15px;
+            overflow: hidden;
+            padding: 16px;
+            border: 1px solid rgba(74, 213, 225, 0.32);
+            border-radius: 17px;
+            background:
+                radial-gradient(circle at 7% 50%, rgba(0, 196, 204, 0.2), transparent 40%),
+                linear-gradient(105deg, rgba(0, 196, 204, 0.13), rgba(125, 42, 231, 0.18));
+            box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.05), 0 10px 34px rgba(78, 55, 206, 0.09);
+        }
+
+        .canva-mark {
+            display: grid;
+            flex: 0 0 auto;
+            width: 94px;
+            height: 54px;
+            place-items: center;
+            padding: 10px 11px;
+            border: 1px solid rgba(255, 255, 255, 0.88);
+            border-radius: 14px;
+            background: #fff;
+            box-shadow:
+                0 0 0 3px rgba(99, 91, 255, 0.1),
+                0 11px 28px rgba(0, 196, 204, 0.18);
+        }
+
+        .canva-mark img {
+            display: block;
+            width: 100%;
+            height: auto;
+            filter: saturate(1.12) contrast(1.05);
+        }
+
+        .gift-copy {
+            min-width: 0;
+        }
+
+        .gift-copy strong,
+        .gift-copy span {
+            display: block;
+        }
+
+        .gift-copy .gift-eyebrow {
+            margin: 0 0 4px;
+            color: #78ecf1;
+            font-size: 0.61rem;
+            font-weight: 850;
+            letter-spacing: 0.085em;
+            line-height: 1.2;
+        }
+
+        .gift-copy strong {
+            color: #fff;
+            font-size: 1.01rem;
+            line-height: 1.35;
+        }
+
+        .gift-copy .gift-caption {
+            margin-top: 4px;
+            color: #ceced7;
+            font-size: 0.79rem;
+            line-height: 1.4;
+        }
+
+        .offer-benefits {
+            display: grid;
+            gap: 9px;
+            margin: 0 0 16px;
+            padding: 0;
+            list-style: none;
+        }
+
+        .offer-benefits li {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: #e7e7eb;
+            font-size: 0.84rem;
+            font-weight: 590;
+        }
+
+        .benefit-check {
+            display: grid;
+            flex: 0 0 auto;
+            width: 20px;
+            height: 20px;
+            place-items: center;
+            border-radius: 50%;
+            color: #a7f3d0;
+            background: rgba(16, 185, 129, 0.14);
+            font-size: 0.72rem;
+            font-weight: 900;
+        }
+
+        .offer-note {
+            margin: 0 0 20px;
+            padding: 10px 12px;
+            border-radius: 12px;
+            color: #9797a1;
+            background: rgba(255, 255, 255, 0.035);
+            font-size: 0.7rem;
+            line-height: 1.48;
+        }
+
+        .offer-note strong {
+            color: #c9c9d0;
+        }
+
+        .offer-actions {
+            display: grid;
+            grid-template-columns: 1fr 1.75fr;
+            gap: 10px;
+        }
+
+        .offer-action {
+            min-height: 48px;
+            border: 0;
+            border-radius: 13px;
+            font-size: 0.84rem;
+            font-weight: 760;
+            cursor: pointer;
+            transition: transform 150ms ease, filter 150ms ease;
+        }
+
+        .offer-action:hover {
+            transform: translateY(-1px);
+            filter: brightness(1.08);
+        }
+
+        .offer-action.secondary {
+            color: #c7c7cf;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            background: rgba(255, 255, 255, 0.055);
+        }
+
+        .offer-action.primary {
+            color: #fff;
+            background: linear-gradient(135deg, #f01420, #bd0710);
+            box-shadow: 0 11px 28px rgba(229, 9, 20, 0.25);
+        }
+
+        .preview-toast {
+            position: fixed;
+            z-index: 50;
+            bottom: 22px;
+            left: 50%;
+            max-width: calc(100% - 30px);
+            padding: 11px 15px;
+            border: 1px solid rgba(255, 255, 255, 0.14);
+            border-radius: 12px;
+            color: #fff;
+            background: rgba(18, 18, 22, 0.94);
+            font-size: 0.78rem;
+            opacity: 0;
+            pointer-events: none;
+            transform: translate(-50%, 10px);
+            transition: 180ms ease;
+        }
+
+        .preview-toast.show {
+            opacity: 1;
+            transform: translate(-50%, 0);
+        }
+
+        body.mobile-preview .offer-modal {
+            width: 348px;
+            max-width: calc(100vw - 24px);
+            border-radius: 19px;
+        }
+
+        body.mobile-preview .offer-content {
+            padding: 22px 17px 17px;
+        }
+
+        body.mobile-preview .offer-close {
+            top: 12px;
+            right: 12px;
+            width: 30px;
+            height: 30px;
+        }
+
+        body.mobile-preview .offer-topline {
+            gap: 7px;
+            margin-bottom: 14px;
+        }
+
+        body.mobile-preview .offer-pro-badge,
+        body.mobile-preview .offer-limited-badge {
+            min-height: 23px;
+            padding: 4px 7px;
+            font-size: 0.59rem;
+        }
+
+        body.mobile-preview .offer-title {
+            max-width: 286px;
+            padding-right: 14px;
+            font-size: clamp(1.18rem, 5.4vw, 1.3rem);
+            line-height: 1.1;
+            white-space: nowrap;
+        }
+
+        body.mobile-preview .offer-intro {
+            margin: 8px 0 13px;
+            font-size: 0.77rem;
+            line-height: 1.48;
+        }
+
+        body.mobile-preview .offer-gift-card {
+            gap: 11px;
+            margin-bottom: 12px;
+            padding: 11px;
+        }
+
+        body.mobile-preview .canva-mark {
+            width: 76px;
+            height: 44px;
+            padding: 8px;
+            border-radius: 11px;
+        }
+
+        body.mobile-preview .gift-copy .gift-eyebrow {
+            margin-bottom: 3px;
+            font-size: 0.54rem;
+        }
+
+        body.mobile-preview .gift-copy strong {
+            font-size: 0.87rem;
+        }
+
+        body.mobile-preview .gift-copy .gift-caption {
+            margin-top: 2px;
+            font-size: 0.69rem;
+        }
+
+        body.mobile-preview .offer-benefits {
+            gap: 7px;
+            margin-bottom: 12px;
+        }
+
+        body.mobile-preview .offer-benefits li {
+            gap: 8px;
+            font-size: 0.76rem;
+        }
+
+        body.mobile-preview .benefit-check {
+            width: 18px;
+            height: 18px;
+            font-size: 0.66rem;
+        }
+
+        body.mobile-preview .offer-note {
+            margin-bottom: 14px;
+            padding: 8px 10px;
+            font-size: 0.64rem;
+        }
+
+        body.mobile-preview .offer-actions {
+            grid-template-columns: 0.9fr 1.65fr;
+            gap: 8px;
+        }
+
+        body.mobile-preview .offer-action {
+            min-height: 43px;
+            border-radius: 11px;
+            font-size: 0.76rem;
+        }
+
+        @media (max-width: 620px) {
+            .preview-toolbar {
+                top: 10px;
+            }
+
+            .preview-toolbar span {
+                display: none;
+            }
+
+            .offer-overlay {
+                padding: 62px 12px 18px;
+            }
+
+            .offer-modal {
+                width: min(100%, 348px);
+                border-radius: 19px;
+            }
+
+            .offer-content {
+                padding: 22px 17px 17px;
+            }
+
+            .offer-close {
+                top: 12px;
+                right: 12px;
+                width: 30px;
+                height: 30px;
+            }
+
+            .offer-topline {
+                gap: 7px;
+                margin-bottom: 14px;
+            }
+
+            .offer-pro-badge,
+            .offer-limited-badge {
+                min-height: 23px;
+                padding: 4px 7px;
+                font-size: 0.59rem;
+            }
+
+            .offer-title {
+                max-width: 286px;
+                padding-right: 14px;
+                font-size: clamp(1.18rem, 5.4vw, 1.3rem);
+                line-height: 1.1;
+                white-space: nowrap;
+            }
+
+            .offer-intro {
+                margin: 8px 0 13px;
+                font-size: 0.77rem;
+                line-height: 1.48;
+            }
+
+            .offer-gift-card {
+                gap: 11px;
+                margin-bottom: 12px;
+                padding: 11px;
+            }
+
+            .canva-mark {
+                width: 76px;
+                height: 44px;
+                padding: 8px;
+                border-radius: 11px;
+            }
+
+            .gift-copy .gift-eyebrow {
+                margin-bottom: 3px;
+                font-size: 0.54rem;
+            }
+
+            .gift-copy strong {
+                font-size: 0.87rem;
+            }
+
+            .gift-copy .gift-caption {
+                margin-top: 2px;
+                font-size: 0.69rem;
+            }
+
+            .offer-benefits {
+                gap: 7px;
+                margin-bottom: 12px;
+            }
+
+            .offer-benefits li {
+                gap: 8px;
+                font-size: 0.76rem;
+            }
+
+            .benefit-check {
+                width: 18px;
+                height: 18px;
+                font-size: 0.66rem;
+            }
+
+            .offer-note {
+                margin-bottom: 14px;
+                padding: 8px 10px;
+                font-size: 0.64rem;
+            }
+
+            .offer-actions {
+                gap: 8px;
+            }
+
+            .offer-action {
+                min-height: 43px;
+                border-radius: 11px;
+                font-size: 0.76rem;
+            }
+        }
+
+        @media (max-height: 650px) {
+            .offer-overlay {
+                align-items: start;
+                overflow-y: auto;
+            }
+        }
+    </style>
+</head>
+<body>
+    <main class="dashboard-preview" aria-hidden="true">
+        <div class="fake-header">
+            <div class="fake-brand"><span class="fake-brand-mark">T</span> Tiệm Bánh Netflix</div>
+            <div class="fake-avatar"></div>
+        </div>
+        <div class="fake-content">
+            <section class="fake-card large">
+                <div class="fake-line short"></div>
+                <div class="fake-line"></div>
+                <div class="fake-line"></div>
+            </section>
+            <section class="fake-card">
+                <div class="fake-line short"></div>
+                <div class="fake-line"></div>
+            </section>
+        </div>
+    </main>
+
+    <div class="preview-toolbar" aria-label="Công cụ preview">
+        <span>PREVIEW ONLY</span>
+        <button id="desktopPreviewBtn" class="active" type="button">Desktop</button>
+        <button id="mobilePreviewBtn" type="button">Mobile</button>
+        <button id="reopenBtn" type="button">Mở lại</button>
+    </div>
+
+    <div id="offerOverlay" class="offer-overlay is-opening" role="dialog" aria-modal="true" aria-labelledby="offerTitle">
+        <section class="offer-modal">
+            <button class="offer-close" type="button" aria-label="Đóng thông báo">×</button>
+            <div class="offer-content">
+                <div class="offer-topline">
+                    <span class="offer-pro-badge">PRO</span>
+                    <span class="offer-limited-badge">SỐ LƯỢNG CÓ HẠN</span>
+                </div>
+
+                <h1 id="offerTitle" class="offer-title">
+                    Nâng cấp PRO,<br>tặng <span class="canva-gradient">Canva Pro</span> trải nghiệm
+                </h1>
+                <p class="offer-intro">
+                    Cảm ơn bạn đã đồng hành cùng Tiệm Bánh Netflix. Nâng cấp ngay để nhận thêm quà tặng miễn phí.
+                </p>
+
+                <div class="offer-gift-card">
+                    <div class="canva-mark">
+                        <img src="../brand-canva.svg" alt="" width="80" height="30">
+                    </div>
+                    <div class="gift-copy">
+                        <span class="gift-eyebrow">QUÀ TẶNG ĐẶC BIỆT</span>
+                        <strong>01 slot Canva Pro trải nghiệm</strong>
+                        <span class="gift-caption">Tặng kèm khi nâng cấp gói PRO</span>
+                    </div>
+                </div>
+
+                <ul class="offer-benefits">
+                    <li><span class="benefit-check">✓</span> Đầy đủ quyền lợi của gói PRO</li>
+                    <li><span class="benefit-check">✓</span> Tặng Canva Pro, không thêm chi phí</li>
+                    <li><span class="benefit-check">✓</span> Áp dụng trong thời gian ưu đãi</li>
+                </ul>
+
+                <p class="offer-note">
+                    <strong>Lưu ý:</strong> Canva Pro là quà trải nghiệm tặng kèm; thời gian sử dụng có thể thay đổi và không cam kết duy trì cố định.
+                </p>
+
+                <div class="offer-actions">
+                    <button class="offer-action secondary" type="button">Để sau</button>
+                    <button class="offer-action primary" type="button">Nâng cấp PRO ngay</button>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <div id="previewToast" class="preview-toast" role="status"></div>
+
+    <script>
+        const overlay = document.getElementById('offerOverlay');
+        const toast = document.getElementById('previewToast');
+        const desktopBtn = document.getElementById('desktopPreviewBtn');
+        const mobileBtn = document.getElementById('mobilePreviewBtn');
+        let toastTimer = null;
+
+        function showToast(message) {
+            toast.textContent = message;
+            toast.classList.add('show');
+            clearTimeout(toastTimer);
+            toastTimer = setTimeout(() => toast.classList.remove('show'), 1800);
+        }
+
+        function closePreview() {
+            overlay.style.display = 'none';
+            showToast('Preview đã đóng — nhấn “Mở lại” để xem tiếp.');
+        }
+
+        function reopenPreview() {
+            overlay.style.display = 'grid';
+            overlay.classList.remove('is-opening');
+            void overlay.offsetWidth;
+            overlay.classList.add('is-opening');
+        }
+
+        function setPreviewMode(mode) {
+            const isMobile = mode === 'mobile';
+            document.body.classList.toggle('mobile-preview', isMobile);
+            desktopBtn.classList.toggle('active', !isMobile);
+            mobileBtn.classList.toggle('active', isMobile);
+            reopenPreview();
+        }
+
+        document.querySelector('.offer-close').addEventListener('click', closePreview);
+        document.querySelector('.offer-action.secondary').addEventListener('click', closePreview);
+        document.querySelector('.offer-action.primary').addEventListener('click', () => {
+            showToast('Preview: nút này sẽ mở luồng nâng cấp PRO.');
+        });
+        desktopBtn.addEventListener('click', () => setPreviewMode('desktop'));
+        mobileBtn.addEventListener('click', () => setPreviewMode('mobile'));
+        document.getElementById('reopenBtn').addEventListener('click', () => {
+            reopenPreview();
+        });
+    </script>
+</body>
+</html>
