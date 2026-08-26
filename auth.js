@@ -1839,6 +1839,61 @@ window.netflixAuthGetCurrentUser = getCurrentUser;
 // ========================================
 
 let tiembanhCountdownInterval = null;
+const POST_LOGIN_PRO_UPGRADE_KEY = 'tiembanh_open_pro_upgrade_after_login';
+
+function completeProCanvaOfferLogin(token, user, openProUpgrade) {
+    localStorage.setItem('auth_token', token);
+    localStorage.setItem('current_user', JSON.stringify(user));
+    sessionStorage.setItem('logged_in', 'true');
+    sessionStorage.removeItem('pending_tiembanh_token');
+    sessionStorage.removeItem('pending_tiembanh_user');
+
+    if (openProUpgrade) {
+        sessionStorage.setItem(POST_LOGIN_PRO_UPGRADE_KEY, '1');
+    } else {
+        sessionStorage.removeItem(POST_LOGIN_PRO_UPGRADE_KEY);
+    }
+
+    window.location.href = '/';
+}
+
+function showProCanvaOfferModal(offerData, token, user) {
+    const isProRenewal = String(user?.plan || '').toLowerCase() === 'pro';
+    const data = offerData || {};
+    const resolvedData = {
+        limitedLabel: data.limitedLabel || 'SỐ LƯỢNG CÓ HẠN',
+        title: isProRenewal
+            ? (data.renewalTitle || 'Gia hạn PRO,')
+            : (data.upgradeTitle || 'Nâng cấp PRO,'),
+        highlightTitle: data.highlightTitle || 'tặng Canva Pro trải nghiệm',
+        intro: isProRenewal
+            ? (data.renewalIntro || 'Cảm ơn bạn đã đồng hành cùng Tiệm Bánh Netflix. Gia hạn ngay để nhận thêm quà tặng miễn phí.')
+            : (data.upgradeIntro || 'Cảm ơn bạn đã đồng hành cùng Tiệm Bánh Netflix. Nâng cấp ngay để nhận thêm quà tặng miễn phí.'),
+        giftEyebrow: data.giftEyebrow || 'QUÀ TẶNG ĐẶC BIỆT',
+        giftTitle: data.giftTitle || '01 slot Canva Pro trải nghiệm',
+        giftCaption: isProRenewal
+            ? (data.renewalGiftCaption || 'Tặng kèm khi gia hạn gói PRO')
+            : (data.upgradeGiftCaption || 'Tặng kèm khi nâng cấp gói PRO'),
+        benefits: Array.isArray(data.benefits) ? data.benefits : [],
+        note: data.note || 'Canva Pro là quà trải nghiệm tặng kèm; thời gian sử dụng có thể thay đổi và không cam kết duy trì cố định.',
+        secondaryAction: data.secondaryAction || 'Để sau',
+        primaryAction: isProRenewal
+            ? (data.renewalAction || 'Gia hạn PRO ngay')
+            : (data.upgradeAction || 'Nâng cấp PRO ngay')
+    };
+
+    if (typeof window.showPostLoginProOffer !== 'function') {
+        console.error('Post-login PRO offer component is unavailable; continuing to dashboard.');
+        completeProCanvaOfferLogin(token, user, false);
+        return;
+    }
+
+    window.showPostLoginProOffer({
+        data: resolvedData,
+        onDismiss: () => completeProCanvaOfferLogin(token, user, false),
+        onUpgrade: () => completeProCanvaOfferLogin(token, user, true)
+    });
+}
 
 /**
  * Check for message from Tiệm bánh and show modal if exists
@@ -2113,6 +2168,11 @@ function showTiembanhMessage(data, token, user) {
     // If video, show fullscreen video player
     if (data.type === 'video' && data.videoUrl) {
         showTiembanhVideo(data.videoUrl, token, user);
+        return;
+    }
+
+    if (data.type === 'pro-canva-offer' && data.offerData) {
+        showProCanvaOfferModal(data.offerData, token, user);
         return;
     }
 

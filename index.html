@@ -13835,6 +13835,44 @@ Nếu cần thêm lượt đổi tài khoản, vui lòng liên hệ Support qua 
     <script src="config.js"></script>
     <script src="auth.js"></script>
     <script src="promotions.js"></script>
+    <script>
+        (function openPendingPostLoginProUpgrade() {
+            const intentKey = 'tiembanh_open_pro_upgrade_after_login';
+            if (sessionStorage.getItem(intentKey) !== '1') return;
+
+            let attempts = 0;
+            const maxAttempts = 20;
+
+            function openUpgradeFlow() {
+                if (!localStorage.getItem('auth_token')) {
+                    sessionStorage.removeItem(intentKey);
+                    return;
+                }
+
+                if (typeof window.openPaymentModal === 'function') {
+                    sessionStorage.removeItem(intentKey);
+                    window.openPaymentModal('pro', '40.000đ/tháng', 'pro');
+                    return;
+                }
+
+                attempts += 1;
+                if (attempts >= maxAttempts) {
+                    sessionStorage.removeItem(intentKey);
+                    console.error('Không thể mở luồng nâng cấp/gia hạn PRO sau đăng nhập.');
+                    return;
+                }
+
+                setTimeout(openUpgradeFlow, 100);
+            }
+
+            const scheduleUpgradeFlow = () => setTimeout(openUpgradeFlow, 300);
+            if (document.readyState === 'loading') {
+                document.addEventListener('DOMContentLoaded', scheduleUpgradeFlow, { once: true });
+            } else {
+                scheduleUpgradeFlow();
+            }
+        })();
+    </script>
     <script src="cookie-retry-handler.js"></script>
     <script>
         // Reuse the Digital Upgrade catalog in advertising modals.
