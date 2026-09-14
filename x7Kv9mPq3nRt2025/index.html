@@ -383,6 +383,10 @@
             display: none;
         }
 
+        .mobile-payment-notice {
+            display: none;
+        }
+
         .mobile-action-drawer {
             display: none;
         }
@@ -6999,11 +7003,110 @@
                 gap: 8px;
                 width: 100%;
                 margin-bottom: 0;
+                order: 3;
+            }
+
+            .mobile-payment-notice {
                 order: 2;
+                display: flex;
+                width: 100%;
+                min-height: 70px;
+                align-items: center;
+                gap: 11px;
+                padding: 12px;
+                border: 1px solid rgba(96, 165, 250, 0.26);
+                border-radius: 10px;
+                background: linear-gradient(145deg, rgba(30, 64, 175, 0.18), rgba(15, 23, 42, 0.76));
+                color: #e5e7eb;
+                text-align: left;
+                cursor: pointer;
+                font-family: var(--admin-font);
+                -webkit-tap-highlight-color: transparent;
+            }
+
+            .mobile-payment-notice.has-orders {
+                border-color: rgba(251, 191, 36, 0.5);
+                background: linear-gradient(145deg, rgba(146, 64, 14, 0.24), rgba(15, 23, 42, 0.86));
+                box-shadow: 0 10px 26px rgba(0, 0, 0, 0.22);
+            }
+
+            .mobile-payment-notice-icon {
+                position: relative;
+                display: grid;
+                width: 42px;
+                height: 42px;
+                flex: 0 0 42px;
+                place-items: center;
+                color: #93c5fd;
+                border: 1px solid rgba(96, 165, 250, 0.24);
+                border-radius: 12px;
+                background: rgba(59, 130, 246, 0.1);
+            }
+
+            .mobile-payment-notice.has-orders .mobile-payment-notice-icon {
+                color: #fbbf24;
+                border-color: rgba(251, 191, 36, 0.3);
+                background: rgba(245, 158, 11, 0.12);
+            }
+
+            .mobile-payment-notice-icon svg {
+                width: 21px;
+                height: 21px;
+            }
+
+            .mobile-payment-notice-count {
+                position: absolute;
+                top: -7px;
+                right: -7px;
+                display: none;
+                min-width: 21px;
+                height: 21px;
+                align-items: center;
+                justify-content: center;
+                padding: 0 5px;
+                color: #111827;
+                background: #fbbf24;
+                border: 2px solid #111827;
+                border-radius: 999px;
+                font-size: 9px;
+                font-weight: 900;
+            }
+
+            .mobile-payment-notice.has-orders .mobile-payment-notice-count {
+                display: inline-flex;
+            }
+
+            .mobile-payment-notice-copy {
+                display: grid;
+                min-width: 0;
+                flex: 1;
+                gap: 3px;
+            }
+
+            .mobile-payment-notice-copy strong {
+                color: #f8fafc;
+                font-size: 12px;
+                font-weight: 850;
+            }
+
+            .mobile-payment-notice-copy span {
+                overflow: hidden;
+                color: #94a3b8;
+                font-size: 10px;
+                line-height: 1.35;
+                text-overflow: ellipsis;
+                white-space: nowrap;
+            }
+
+            .mobile-payment-notice-chevron {
+                width: 18px;
+                height: 18px;
+                flex: 0 0 18px;
+                color: #64748b;
             }
 
             .mobile-render-canplay-control {
-                order: 3;
+                order: 4;
                 width: 100%;
                 min-height: 48px;
                 display: flex;
@@ -7043,7 +7146,7 @@
 
             .mobile-action-drawer {
                 display: block;
-                order: 4;
+                order: 5;
                 width: 100%;
             }
 
@@ -7190,7 +7293,8 @@
             /* Hiện Rate Limit và Cookie Management trên mobile */
             #rateLimitManagement .users-table,
             #cookiesManagement .users-table,
-            #ctvManagement.users-table {
+            #ctvManagement.users-table,
+            #paymentManagement.users-table {
                 display: block !important;
                 background: transparent;
                 border: none;
@@ -8481,6 +8585,16 @@
                         </span>
                         Người dùng
                     </button>
+                    <button type="button" data-admin-nav="payments" onclick="showUsersTable(); showPaymentManagement()">
+                        <span class="sidebar-icon" aria-hidden="true">
+                            <svg viewBox="0 0 24 24" focusable="false">
+                                <rect x="3" y="5" width="18" height="14" rx="2"></rect>
+                                <path d="M3 10h18"></path>
+                                <path d="M7 15h4"></path>
+                            </svg>
+                        </span>
+                        <span>Thanh toán</span>
+                    </button>
                     <button type="button" data-admin-nav="cookies" onclick="showUsersTable(); showCookieManagement()">
                         <span class="sidebar-icon" aria-hidden="true">
                             <svg viewBox="0 0 24 24" focusable="false">
@@ -8723,6 +8837,17 @@
                 </svg>
                 <span>THAO TÁC NHANH</span>
             </div>
+            <button type="button" class="mobile-payment-notice" id="mobilePaymentNotice" onclick="showPaymentManagement('action_required')">
+                <span class="mobile-payment-notice-icon" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"></rect><path d="M3 10h18M7 15h4"></path></svg>
+                    <span class="mobile-payment-notice-count" id="mobilePaymentNoticeCount">0</span>
+                </span>
+                <span class="mobile-payment-notice-copy">
+                    <strong id="mobilePaymentNoticeTitle">Đơn thanh toán</strong>
+                    <span id="mobilePaymentNoticeText">Đang kiểm tra đơn cần xử lý...</span>
+                </span>
+                <svg class="mobile-payment-notice-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="m9 18 6-6-6-6"></path></svg>
+            </button>
             <!-- Mobile: Hàng 1 - Nút chính -->
             <div class="mobile-top-buttons mobile-primary-actions">
                 <button class="btn btn-primary mobile-action-btn" onclick="mobileRefresh()">
@@ -9208,6 +9333,7 @@
                 edit: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 20h9"></path><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4Z"></path></svg>',
                 lock: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="11" width="16" height="10" rx="2"></rect><path d="M8 11V7a4 4 0 1 1 8 0v4"></path></svg>',
                 eye: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 12s3.6-6 10-6 10 6 10 6-3.6 6-10 6-10-6-10-6Z"></path><circle cx="12" cy="12" r="3"></circle></svg>',
+                search: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"></circle><path d="m20 20-4-4"></path></svg>',
                 eyeOff: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m3 3 18 18"></path><path d="M10.58 10.58a2 2 0 0 0 2.83 2.83"></path><path d="M9.88 5.09A10.94 10.94 0 0 1 12 5c6.4 0 10 7 10 7a18.78 18.78 0 0 1-4.24 5.08"></path><path d="M6.61 6.61C3.93 8.35 2 12 2 12a18.7 18.7 0 0 0 5.39 5.39"></path></svg>',
                 copy: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="13" height="13" rx="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>',
                 refresh: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12a9 9 0 0 0-15.2-6.5L3 8"></path><path d="M3 3v5h5"></path><path d="M3 12a9 9 0 0 0 15.2 6.5L21 16"></path><path d="M16 16h5v5"></path></svg>',
@@ -9290,6 +9416,7 @@
                 if (response.ok) {
                     loadUsers(1, '', ''); // Start fresh on page 1
                     loadRenderCanplayState();
+                    checkPendingPaymentOrdersOnEntry();
                     setupSearch();
                 } else {
                     localStorage.removeItem('admin_token');
@@ -9667,6 +9794,8 @@
                     showMessage('Đăng nhập Admin thành công!', 'success');
                     loadUsers(1, '', '');
                     loadRenderCanplayState();
+                    paymentEntryAlertShown = false;
+                    checkPendingPaymentOrdersOnEntry();
                     setupSearch();
                 } else {
                     errorDiv.textContent = data.error || 'Sai tên đăng nhập hoặc mật khẩu!';
@@ -9690,6 +9819,8 @@
 
         function logoutAdmin() {
             localStorage.removeItem('admin_token');
+            paymentEntryAlertShown = false;
+            closePaymentEntryAlert();
             showMessage('Đã đăng xuất Admin!', 'info');
             setTimeout(() => {
                 window.location.href = '/';
@@ -11834,6 +11965,7 @@
             const ctvContainer = document.getElementById('ctvManagement');
             const authShowcaseContainer = document.getElementById('authShowcaseManagement');
             const promotionContainer = document.getElementById('promotionManagement');
+            const paymentContainer = document.getElementById('paymentManagement');
             const usersTable = document.querySelector('.users-table');
             const controls = document.querySelector('.controls');
             const pagination = document.getElementById('pagination');
@@ -11843,6 +11975,7 @@
             if (ctvContainer) ctvContainer.remove();
             if (authShowcaseContainer) authShowcaseContainer.remove();
             if (promotionContainer) promotionContainer.remove();
+            if (paymentContainer) paymentContainer.remove();
             if (usersTable) usersTable.style.display = 'block';
             if (controls) controls.style.display = 'flex';
             if (pagination) pagination.style.display = 'block';
@@ -13629,6 +13762,7 @@
             const mobileCookiesContainer = document.getElementById('mobileCookiesManagement');
             const authShowcaseContainer = document.getElementById('authShowcaseManagement');
             const promotionContainer = document.getElementById('promotionManagement');
+            const paymentContainer = document.getElementById('paymentManagement');
 
             // Khôi phục mobile search results và title
             const mobileSearchResults = document.getElementById('mobileSearchResults');
@@ -13643,6 +13777,7 @@
             if (mobileCookiesContainer) mobileCookiesContainer.remove();
             if (authShowcaseContainer) authShowcaseContainer.remove();
             if (promotionContainer) promotionContainer.remove();
+            if (paymentContainer) paymentContainer.remove();
             const ctvMgmt = document.getElementById('ctvManagement');
             if (ctvMgmt) ctvMgmt.remove();
             if (usersTable) usersTable.style.display = 'block';
@@ -14598,6 +14733,563 @@
             togglePromotionAudienceMode();
             loadPromotionCampaigns();
         }
+
+        // ========================================
+        // PAYMENT ORDER MANAGEMENT
+        // ========================================
+
+        let paymentOrderPage = 1;
+        let paymentOrderStatus = 'action_required';
+        let paymentOrderSearch = '';
+        let paymentOrderSearchTimer = null;
+        let paymentOrdersById = new Map();
+        let paymentEntryAlertShown = false;
+
+        function paymentOrderHeaders(includeJson = true) {
+            const headers = { 'Authorization': `Bearer ${localStorage.getItem('admin_token') || ''}` };
+            if (includeJson) headers['Content-Type'] = 'application/json';
+            return headers;
+        }
+
+        function paymentOrderStatusMeta(status) {
+            return {
+                awaiting_payment: ['Chưa báo chuyển khoản', 'payment-status--muted'],
+                awaiting_verification: ['Chờ xác minh', 'payment-status--pending'],
+                needs_support: ['Cần hỗ trợ', 'payment-status--warning'],
+                processing: ['Đang hoàn tất', 'payment-status--processing'],
+                completed: ['Đã hoàn thành', 'payment-status--success'],
+                cancelled: ['Đã hủy', 'payment-status--danger'],
+                expired: ['Đã hết hạn', 'payment-status--muted']
+            }[status] || [status || 'Không rõ', 'payment-status--muted'];
+        }
+
+        function formatPaymentOrderDate(value) {
+            return value ? new Date(value).toLocaleString('vi-VN') : '—';
+        }
+
+        function formatPaymentOrderAmount(value) {
+            return `${Number(value || 0).toLocaleString('vi-VN')}đ`;
+        }
+
+        function renderMobilePaymentNotice(counts) {
+            const notice = document.getElementById('mobilePaymentNotice');
+            if (!notice) return;
+            const awaitingVerification = Number(counts?.awaitingVerification || 0);
+            const needsSupport = Number(counts?.needsSupport || 0);
+            const processing = Number(counts?.processing || 0);
+            const total = awaitingVerification + needsSupport + processing;
+            notice.classList.toggle('has-orders', total > 0);
+            document.getElementById('mobilePaymentNoticeCount').textContent = total > 99 ? '99+' : String(total);
+            document.getElementById('mobilePaymentNoticeTitle').textContent = total > 0
+                ? `${total.toLocaleString('vi-VN')} đơn thanh toán cần xử lý`
+                : 'Đơn thanh toán';
+            document.getElementById('mobilePaymentNoticeText').textContent = total > 0
+                ? `${awaitingVerification} chờ xác minh · ${needsSupport} cần hỗ trợ · ${processing} đang hoàn tất`
+                : 'Không có yêu cầu xác minh đang chờ';
+        }
+
+        function closePaymentEntryAlert() {
+            document.getElementById('paymentEntryAlertModal')?.remove();
+        }
+
+        function openPaymentQueueFromAlert() {
+            closePaymentEntryAlert();
+            showUsersTable();
+            showPaymentManagement('action_required');
+        }
+
+        function showPaymentEntryAlert(counts) {
+            closePaymentEntryAlert();
+            const awaitingVerification = Number(counts?.awaitingVerification || 0);
+            const needsSupport = Number(counts?.needsSupport || 0);
+            const processing = Number(counts?.processing || 0);
+            const total = awaitingVerification + needsSupport + processing;
+            if (total <= 0) return;
+
+            const modal = document.createElement('div');
+            modal.id = 'paymentEntryAlertModal';
+            modal.className = 'admin-modal-overlay';
+            modal.style.cssText = 'position:fixed;inset:0;background:rgba(2,6,23,.86);display:flex;align-items:center;justify-content:center;z-index:11000;padding:clamp(10px,3vw,20px);backdrop-filter:blur(14px);';
+            modal.innerHTML = `
+                <div class="admin-modal-shell admin-modal-shell--compact payment-entry-alert-shell">
+                    <style>
+                        .payment-entry-alert-shell{position:relative;overflow:hidden;text-align:center;border-color:rgba(251,191,36,.24);background:radial-gradient(circle at 50% -15%,rgba(251,191,36,.2),transparent 42%),linear-gradient(160deg,rgba(24,24,27,.99),rgba(5,8,16,.99))}.payment-entry-alert-icon{display:grid;width:76px;height:76px;margin:0 auto 18px;place-items:center;color:#111827;background:linear-gradient(145deg,#fde68a,#f59e0b);border-radius:25px;box-shadow:0 18px 50px rgba(245,158,11,.22)}.payment-entry-alert-icon svg{width:38px;height:38px}.payment-entry-alert-kicker{color:#fbbf24;font-size:.7rem;font-weight:900;letter-spacing:.16em;text-transform:uppercase}.payment-entry-alert-title{margin:8px 0 10px;color:#fff;font-size:1.55rem}.payment-entry-alert-copy{max-width:430px;margin:0 auto 20px;color:#a1a1aa;font-size:.9rem;line-height:1.6}.payment-entry-alert-counts{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:9px;margin-bottom:18px}.payment-entry-alert-counts>div{padding:13px 8px;border:1px solid rgba(148,163,184,.12);border-radius:14px;background:rgba(15,23,42,.65)}.payment-entry-alert-counts strong,.payment-entry-alert-counts span{display:block}.payment-entry-alert-counts strong{color:#f8fafc;font-size:1.25rem}.payment-entry-alert-counts span{margin-top:3px;color:#71717a;font-size:.67rem}.payment-entry-alert-note{margin:0 0 20px;padding:11px 13px;color:#fde68a;background:rgba(234,179,8,.08);border:1px solid rgba(234,179,8,.16);border-radius:12px;font-size:.77rem;line-height:1.5}.payment-entry-alert-actions{display:flex;gap:9px}.payment-entry-alert-actions .btn{flex:1;min-height:44px;border-radius:12px}@media(max-width:560px){.payment-entry-alert-counts{grid-template-columns:1fr}.payment-entry-alert-actions{flex-direction:column-reverse}}
+                    </style>
+                    <style>
+                        .payment-entry-alert-actions{justify-content:center}
+                        .payment-entry-alert-actions .btn{display:flex!important;align-items:center!important;justify-content:center!important;text-align:center!important;line-height:1.15}
+                        @media(max-width:560px){
+                            .payment-entry-alert-shell{width:min(100%,350px);max-height:calc(100dvh - 20px);padding:17px 15px;border-radius:18px;overflow-y:auto}
+                            .payment-entry-alert-icon{width:46px;height:46px;margin-bottom:9px;border-radius:15px;box-shadow:0 10px 28px rgba(245,158,11,.16)}
+                            .payment-entry-alert-icon svg{width:23px;height:23px}
+                            .payment-entry-alert-kicker{font-size:.52rem;letter-spacing:.12em}
+                            .payment-entry-alert-title{margin:5px 0 6px;font-size:1rem;line-height:1.2}
+                            .payment-entry-alert-copy{margin-bottom:11px;font-size:.66rem;line-height:1.42}
+                            .payment-entry-alert-counts{grid-template-columns:repeat(3,minmax(0,1fr));gap:5px;margin-bottom:10px}
+                            .payment-entry-alert-counts>div{padding:7px 3px;border-radius:9px}
+                            .payment-entry-alert-counts strong{font-size:.88rem}
+                            .payment-entry-alert-counts span{font-size:.5rem;line-height:1.25}
+                            .payment-entry-alert-note{margin-bottom:10px;padding:8px 9px;border-radius:9px;font-size:.58rem;line-height:1.4}
+                            .payment-entry-alert-actions{flex-direction:row;gap:6px}
+                            .payment-entry-alert-actions .btn{min-height:35px;padding:7px 6px;border-radius:9px;font-size:.62rem}
+                        }
+                    </style>
+                    <div class="payment-entry-alert-icon">${getAdminModalSvg('alertTriangle')}</div>
+                    <div class="payment-entry-alert-kicker">Thanh toán cần xử lý</div>
+                    <h3 class="payment-entry-alert-title">Có ${total.toLocaleString('vi-VN')} đơn đang chờ anh</h3>
+                    <p class="payment-entry-alert-copy">Khách hàng đã gửi yêu cầu xác minh. Vui lòng đối chiếu lịch sử nhận tiền trước khi cấp quyền lợi.</p>
+                    <div class="payment-entry-alert-counts">
+                        <div><strong>${awaitingVerification.toLocaleString('vi-VN')}</strong><span>Chờ xác minh</span></div>
+                        <div><strong>${needsSupport.toLocaleString('vi-VN')}</strong><span>Cần hỗ trợ</span></div>
+                        <div><strong>${processing.toLocaleString('vi-VN')}</strong><span>Đang hoàn tất</span></div>
+                    </div>
+                    <div class="payment-entry-alert-actions">
+                        <button type="button" class="btn btn-secondary" onclick="closePaymentEntryAlert()">Để sau</button>
+                        <button type="button" class="btn btn-success" onclick="openPaymentQueueFromAlert()">Mở danh sách xác minh</button>
+                    </div>
+                </div>`;
+            modal.addEventListener('click', event => {
+                if (event.target === modal) closePaymentEntryAlert();
+            });
+            document.body.appendChild(modal);
+        }
+
+        async function fetchPaymentOrderSummary() {
+            const response = await fetch(`${BACKEND_URL}/api/admin/payments/summary`, {
+                headers: paymentOrderHeaders(false)
+            });
+            const data = await response.json().catch(() => ({}));
+            if (!response.ok || !data.success) throw new Error(data.error || 'Không tải được số đơn');
+            return data.counts || {};
+        }
+
+        async function refreshPaymentOrderNotice() {
+            if (!localStorage.getItem('admin_token')) return;
+            try {
+                renderMobilePaymentNotice(await fetchPaymentOrderSummary());
+            } catch (error) {
+                console.error('Payment order notice refresh error:', error);
+            }
+        }
+
+        async function checkPendingPaymentOrdersOnEntry() {
+            if (!localStorage.getItem('admin_token') || paymentEntryAlertShown) return;
+            paymentEntryAlertShown = true;
+            try {
+                const counts = await fetchPaymentOrderSummary();
+                renderMobilePaymentNotice(counts);
+                showPaymentEntryAlert(counts);
+            } catch (error) {
+                paymentEntryAlertShown = false;
+                console.error('Payment order entry alert error:', error);
+            }
+        }
+
+        function normalizePaymentOrderCode(value) {
+            return String(value || '').trim().toUpperCase().replace(/\s+/g, '');
+        }
+
+        function closePaymentOrderLookupModal() {
+            document.getElementById('paymentOrderLookupModal')?.remove();
+        }
+
+        function showPaymentOrderLookupModal(prefill = '') {
+            closePaymentOrderLookupModal();
+            const modal = document.createElement('div');
+            modal.id = 'paymentOrderLookupModal';
+            modal.className = 'admin-modal-overlay';
+            modal.style.cssText = 'position:fixed;inset:0;background:rgba(2,6,23,.9);display:flex;align-items:center;justify-content:center;z-index:11100;padding:12px;backdrop-filter:blur(14px);';
+            modal.innerHTML = `
+                <div class="admin-modal-shell admin-modal-shell--compact payment-lookup-shell">
+                    <style>
+                        .payment-lookup-shell{position:relative;font-family:var(--admin-font);border-color:rgba(96,165,250,.2)}.payment-lookup-head{display:flex;align-items:center;gap:12px;margin-bottom:20px}.payment-lookup-icon{display:grid;width:46px;height:46px;flex:0 0 46px;place-items:center;color:#93c5fd;background:rgba(59,130,246,.12);border:1px solid rgba(96,165,250,.2);border-radius:14px}.payment-lookup-icon svg{width:23px;height:23px}.payment-lookup-head-copy{min-width:0;flex:1}.payment-lookup-head h3{margin:0;color:#f8fafc;font-size:1.18rem}.payment-lookup-head p{margin:4px 0 0;color:#94a3b8;font-size:.78rem;line-height:1.45}.payment-lookup-close{display:grid;width:34px;height:34px;place-items:center;color:#94a3b8;background:transparent;border:1px solid rgba(148,163,184,.14);border-radius:10px;cursor:pointer}.payment-lookup-close svg{width:17px;height:17px}.payment-lookup-form{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:8px}.payment-lookup-form input{min-width:0;text-transform:uppercase;letter-spacing:.07em}.payment-lookup-result{margin-top:16px}.payment-lookup-empty{padding:16px;color:#71717a;background:rgba(15,23,42,.5);border:1px dashed rgba(148,163,184,.16);border-radius:13px;text-align:center;font-size:.8rem}.payment-lookup-error{color:#fca5a5;border-color:rgba(248,113,113,.25);background:rgba(127,29,29,.12)}.payment-lookup-card{overflow:hidden;border:1px solid rgba(148,163,184,.14);border-radius:15px;background:rgba(15,23,42,.62)}.payment-lookup-card-head{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:13px 15px;border-bottom:1px solid rgba(148,163,184,.1)}.payment-lookup-code{color:#fbbf24;font-weight:900;letter-spacing:.07em}.payment-lookup-status{padding:5px 8px;color:#bfdbfe;background:rgba(59,130,246,.12);border-radius:999px;font-size:.68rem;font-weight:800}.payment-lookup-account{padding:15px}.payment-lookup-account-label{margin-bottom:5px;color:#64748b;font-size:.65rem;font-weight:850;letter-spacing:.08em;text-transform:uppercase}.payment-lookup-account-name{color:#f8fafc;font-size:1rem;font-weight:850}.payment-lookup-email{margin-top:3px;color:#93c5fd;font-size:.82rem;word-break:break-all}.payment-lookup-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:1px;background:rgba(148,163,184,.1)}.payment-lookup-grid>div{padding:11px 15px;background:#101827}.payment-lookup-grid span,.payment-lookup-grid strong{display:block}.payment-lookup-grid span{color:#64748b;font-size:.65rem}.payment-lookup-grid strong{margin-top:4px;color:#d4d4d8;font-size:.77rem}.payment-lookup-warning{margin:13px 15px;padding:10px 11px;color:#fde68a;background:rgba(234,179,8,.08);border:1px solid rgba(234,179,8,.16);border-radius:10px;font-size:.75rem;line-height:1.5}.payment-lookup-actions{display:flex;gap:8px;padding:0 15px 15px}.payment-lookup-actions .btn{flex:1;min-height:40px;font-size:.76rem}@media(max-width:560px){.payment-lookup-shell{width:100%;padding:20px 16px}.payment-lookup-form{grid-template-columns:1fr}.payment-lookup-grid{grid-template-columns:1fr}.payment-lookup-actions{flex-direction:column-reverse}}
+                    </style>
+                    <style>
+                        @media(max-width:560px){
+                            .payment-lookup-shell{width:min(100%,326px);max-height:calc(100dvh - 24px);padding:0;overflow-y:auto;border-radius:17px;background:linear-gradient(165deg,#151924,#090d15)}
+                            .payment-lookup-head{gap:9px;margin:0;padding:13px 13px 11px;border-bottom:1px solid rgba(148,163,184,.1);background:rgba(15,23,42,.42)}
+                            .payment-lookup-icon{width:34px;height:34px;flex-basis:34px;border-radius:10px}
+                            .payment-lookup-icon svg{width:18px;height:18px}
+                            .payment-lookup-head h3{font-size:15px;line-height:1.2}
+                            .payment-lookup-head p{margin-top:3px;font-size:10px;line-height:1.35}
+                            .payment-lookup-close{width:29px;height:29px;flex:0 0 29px;border-radius:8px}
+                            .payment-lookup-close svg{width:14px;height:14px}
+                            .payment-lookup-form{grid-template-columns:minmax(0,1fr) 72px;gap:6px;padding:12px 13px 0}
+                            #paymentOrderLookupInput{height:36px;padding:0 10px;border-radius:9px;text-transform:none;letter-spacing:0;font-size:11px}
+                            #paymentOrderLookupButton{display:flex;min-width:0;min-height:36px;align-items:center;justify-content:center;padding:7px 6px;color:#fff;border-color:#3b82f6;border-radius:9px;background:linear-gradient(135deg,#2563eb,#1d4ed8);font-size:10px;line-height:1;text-align:center}
+                            .payment-lookup-result{margin:9px 13px 13px}
+                            .payment-lookup-empty{padding:10px 11px;color:#94a3b8;border-style:solid;border-radius:9px;text-align:left;font-size:10px;line-height:1.4}
+                            .payment-lookup-card{border-radius:11px}
+                            .payment-lookup-card-head{padding:9px 10px}
+                            .payment-lookup-code{font-size:11px}
+                            .payment-lookup-status{padding:3px 6px;font-size:9px}
+                            .payment-lookup-account{padding:10px}
+                            .payment-lookup-account-label{margin-bottom:3px;font-size:8px}
+                            .payment-lookup-account-name{font-size:12px}
+                            .payment-lookup-email{margin-top:2px;font-size:10px}
+                            .payment-lookup-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+                            .payment-lookup-grid>div{padding:8px 10px}
+                            .payment-lookup-grid span{font-size:8px}
+                            .payment-lookup-grid strong{margin-top:3px;font-size:10px;line-height:1.3}
+                            .payment-lookup-warning{margin:9px 10px;padding:8px 9px;border-radius:8px;font-size:9px;line-height:1.4}
+                            .payment-lookup-actions{flex-direction:row;gap:6px;padding:0 10px 10px}
+                            .payment-lookup-actions .btn{display:flex;min-width:0;min-height:34px;align-items:center;justify-content:center;padding:6px 5px;border-radius:8px;text-align:center;font-size:9px;line-height:1.15}
+                        }
+                    </style>
+                    <div class="payment-lookup-head">
+                        <div class="payment-lookup-icon">${getAdminModalSvg('search')}</div>
+                        <div class="payment-lookup-head-copy"><h3>Tra cứu mã đơn hàng</h3><p>Dùng khi khách gửi mã qua Support nhưng chưa bấm xác minh.</p></div>
+                        <button type="button" class="payment-lookup-close" onclick="closePaymentOrderLookupModal()" aria-label="Đóng">${getAdminModalSvg('close')}</button>
+                    </div>
+                    <div class="payment-lookup-form">
+                        <input id="paymentOrderLookupInput" maxlength="10" autocomplete="off" placeholder="Nhập mã đơn hàng" value="${escapeHtml(normalizePaymentOrderCode(prefill))}" onkeydown="if(event.key==='Enter') lookupPaymentOrderCode()">
+                        <button type="button" class="btn btn-primary" id="paymentOrderLookupButton" onclick="lookupPaymentOrderCode()">Tra cứu</button>
+                    </div>
+                    <div class="payment-lookup-result" id="paymentOrderLookupResult"><div class="payment-lookup-empty">Nhập mã dạng <strong>TBYV6X2G8P</strong> để xem đúng tài khoản và trạng thái giao dịch.</div></div>
+                </div>`;
+            modal.addEventListener('click', event => {
+                if (event.target === modal) closePaymentOrderLookupModal();
+            });
+            document.body.appendChild(modal);
+            const input = document.getElementById('paymentOrderLookupInput');
+            input?.focus();
+            if (prefill) lookupPaymentOrderCode();
+        }
+
+        async function lookupPaymentOrderCode() {
+            const input = document.getElementById('paymentOrderLookupInput');
+            const result = document.getElementById('paymentOrderLookupResult');
+            const button = document.getElementById('paymentOrderLookupButton');
+            if (!input || !result || !button) return;
+            const code = normalizePaymentOrderCode(input.value);
+            input.value = code;
+            if (!/^TB[23456789ABCDEFGHJKLMNPQRSTUVWXYZ]{8}$/.test(code)) {
+                result.innerHTML = '<div class="payment-lookup-empty payment-lookup-error">Mã đơn phải bắt đầu bằng TB và có đúng 10 ký tự.</div>';
+                return;
+            }
+
+            button.disabled = true;
+            button.textContent = 'Đang tìm...';
+            result.innerHTML = '<div class="payment-lookup-empty">Đang tra cứu tài khoản...</div>';
+            try {
+                const response = await fetch(`${BACKEND_URL}/api/admin/payments/orders/lookup/${encodeURIComponent(code)}`, {
+                    headers: paymentOrderHeaders(false)
+                });
+                const data = await response.json().catch(() => ({}));
+                if (!response.ok || !data.success) throw new Error(data.error || 'Không tìm thấy đơn thanh toán.');
+                const order = data.order;
+                const user = order.user || {};
+                paymentOrdersById.set(String(order._id), order);
+                const statusMeta = paymentOrderStatusMeta(order.status);
+                const canConfirm = ['awaiting_payment', 'awaiting_verification', 'needs_support'].includes(order.status);
+                const unclaimedNotice = order.status === 'awaiting_payment'
+                    ? '<div class="payment-lookup-warning">Khách chưa bấm “Tôi đã chuyển khoản”. Chỉ xác nhận sau khi đã thấy đúng mã đơn và số tiền trong tài khoản ngân hàng.</div>'
+                    : '';
+                result.innerHTML = `
+                    <div class="payment-lookup-card">
+                        <div class="payment-lookup-card-head"><strong class="payment-lookup-code">${escapeHtml(order.orderCode)}</strong><span class="payment-lookup-status">${escapeHtml(statusMeta[0])}</span></div>
+                        <div class="payment-lookup-account">
+                            <div class="payment-lookup-account-label">Tài khoản cần nâng cấp</div>
+                            <div class="payment-lookup-account-name">${escapeHtml(user.name || 'Không tên')}</div>
+                            <div class="payment-lookup-email">${escapeHtml(user.email || order.emailSnapshot || 'Không có email')}</div>
+                        </div>
+                        <div class="payment-lookup-grid">
+                            <div><span>Số tiền</span><strong>${formatPaymentOrderAmount(order.finalAmountVnd)}</strong></div>
+                            <div><span>Gói</span><strong>PRO 30 ngày</strong></div>
+                            <div><span>Tạo lúc</span><strong>${formatPaymentOrderDate(order.createdAt)}</strong></div>
+                            <div><span>Gói hiện tại</span><strong>${user.plan === 'pro' ? `PRO đến ${formatPaymentOrderDate(user.proExpiresAt)}` : 'Free'}</strong></div>
+                        </div>
+                        ${unclaimedNotice}
+                        <div class="payment-lookup-actions">
+                            <button type="button" class="btn btn-secondary" onclick="showPaymentOrderInQueue('${escapeHtml(order.orderCode)}')">Mở trong danh sách</button>
+                            ${canConfirm ? `<button type="button" class="btn btn-success" onclick="confirmPaymentOrderFromLookup('${escapeHtml(order._id)}')">Xác nhận & nâng PRO</button>` : ''}
+                        </div>
+                    </div>`;
+            } catch (error) {
+                result.innerHTML = `<div class="payment-lookup-empty payment-lookup-error">${escapeHtml(error.message)}</div>`;
+            } finally {
+                button.disabled = false;
+                button.textContent = 'Tra cứu';
+            }
+        }
+
+        function confirmPaymentOrderFromLookup(id) {
+            closePaymentOrderLookupModal();
+            confirmPaymentOrder(id);
+        }
+
+        function showPaymentOrderInQueue(code) {
+            closePaymentOrderLookupModal();
+            showUsersTable();
+            showPaymentManagement('all', code);
+        }
+
+        function renderPaymentOrderRows(orders) {
+            const body = document.getElementById('paymentOrderTableBody');
+            if (!body) return;
+            paymentOrdersById = new Map(orders.map(order => [String(order._id), order]));
+            if (!orders.length) {
+                body.innerHTML = '<tr><td colspan="8" class="payment-order-empty">Không có đơn thanh toán phù hợp.</td></tr>';
+                return;
+            }
+
+            body.innerHTML = orders.map(order => {
+                const user = order.user || {};
+                const statusMeta = paymentOrderStatusMeta(order.status);
+                const coupon = order.couponSnapshot?.code
+                    ? `<span class="payment-order-coupon">${escapeHtml(order.couponSnapshot.code)} · giảm ${formatPaymentOrderAmount(order.couponSnapshot.discountAmountVnd)}</span>`
+                    : '<span class="payment-order-secondary">Không dùng coupon</span>';
+                const canConfirm = ['awaiting_payment', 'awaiting_verification', 'needs_support'].includes(order.status);
+                const canRecover = order.status === 'processing';
+                const canSupport = order.status === 'awaiting_verification';
+                const canCancel = ['awaiting_payment', 'awaiting_verification', 'needs_support'].includes(order.status);
+                const actions = [
+                    canConfirm ? `<button type="button" class="btn btn-success payment-order-action-link payment-order-action-link--confirm" onclick="confirmPaymentOrder('${escapeHtml(order._id)}')">Xác nhận & nâng Pro</button>` : '',
+                    canRecover ? `<button type="button" class="btn btn-secondary payment-order-action-link payment-order-action-link--recover" onclick="confirmPaymentOrder('${escapeHtml(order._id)}')">Kiểm tra hoàn tất</button>` : '',
+                    canSupport ? `<button type="button" class="btn btn-secondary payment-order-action-link payment-order-action-link--support" onclick="markPaymentOrderNeedsSupport('${escapeHtml(order._id)}')">Cần hỗ trợ</button>` : '',
+                    canCancel ? `<button type="button" class="btn btn-danger payment-order-action-link payment-order-action-link--cancel" onclick="cancelPaymentOrder('${escapeHtml(order._id)}')">Hủy đơn</button>` : ''
+                ].filter(Boolean).join('');
+                const currentPlan = user.plan === 'pro'
+                    ? `Pro đến ${formatPaymentOrderDate(user.proExpiresAt)}`
+                    : 'Free';
+
+                return `<tr>
+                    <td data-label="Mã đơn"><div><strong class="payment-order-code">${escapeHtml(order.orderCode)}</strong><span class="payment-order-secondary">Tạo ${formatPaymentOrderDate(order.createdAt)}</span></div></td>
+                    <td data-label="Tài khoản"><div><strong>${escapeHtml(user.name || 'Không tên')}</strong><span class="payment-order-secondary">${escapeHtml(user.email || order.emailSnapshot || '')}</span></div></td>
+                    <td data-label="Sản phẩm"><div><strong>Pro 30 ngày</strong><span class="payment-order-secondary">Hiện tại: ${escapeHtml(currentPlan)}</span></div></td>
+                    <td data-label="Số tiền"><div><strong class="payment-order-amount">${formatPaymentOrderAmount(order.finalAmountVnd)}</strong><span class="payment-order-secondary">Giá gốc ${formatPaymentOrderAmount(order.originalAmountVnd)}</span>${coupon}</div></td>
+                    <td data-label="Khách đã báo">${formatPaymentOrderDate(order.customerClaimedAt)}</td>
+                    <td data-label="Trạng thái"><div><span class="payment-status ${statusMeta[1]}">${escapeHtml(statusMeta[0])}</span>${order.supportNote ? `<span class="payment-order-note">${escapeHtml(order.supportNote)}</span>` : ''}</div></td>
+                    <td data-label="Hoàn tất lúc">${order.completedAt ? formatPaymentOrderDate(order.completedAt) : '—'}</td>
+                    <td data-label="Thao tác"><div class="payment-order-actions">${actions || '<span class="payment-order-secondary">Không có thao tác</span>'}</div></td>
+                </tr>`;
+            }).join('');
+        }
+
+        function renderPaymentOrderPagination(pagination) {
+            const container = document.getElementById('paymentOrderPagination');
+            if (!container) return;
+            const page = Number(pagination?.page || 1);
+            const totalPages = Number(pagination?.totalPages || 1);
+            container.innerHTML = `
+                <button type="button" class="btn btn-secondary" ${page <= 1 ? 'disabled' : ''} onclick="loadPaymentOrders(${page - 1})">← Trước</button>
+                <span>Trang ${page}/${totalPages} · ${Number(pagination?.total || 0).toLocaleString('vi-VN')} đơn</span>
+                <button type="button" class="btn btn-secondary" ${page >= totalPages ? 'disabled' : ''} onclick="loadPaymentOrders(${page + 1})">Sau →</button>`;
+        }
+
+        async function loadPaymentOrders(page = 1) {
+            const body = document.getElementById('paymentOrderTableBody');
+            if (!body) return;
+            paymentOrderPage = page;
+            body.innerHTML = '<tr><td colspan="8" class="payment-order-empty">Đang tải danh sách...</td></tr>';
+            const params = new URLSearchParams({
+                page: String(page),
+                limit: '30',
+                status: paymentOrderStatus
+            });
+            if (paymentOrderSearch) params.set('search', paymentOrderSearch);
+            try {
+                const response = await fetch(`${BACKEND_URL}/api/admin/payments/orders?${params.toString()}`, {
+                    headers: paymentOrderHeaders(false)
+                });
+                const data = await response.json();
+                if (!response.ok || !data.success) throw new Error(data.error || 'Không tải được danh sách thanh toán');
+                renderPaymentOrderRows(data.orders || []);
+                renderPaymentOrderPagination(data.pagination);
+                const summary = document.getElementById('paymentOrderSummary');
+                if (summary) {
+                    summary.innerHTML = `
+                        <button type="button" class="payment-order-summary-card ${paymentOrderStatus === 'awaiting_verification' ? 'is-active' : ''}" onclick="changePaymentOrderStatus('awaiting_verification')"><span>Chờ xác minh</span><strong>${Number(data.counts?.awaitingVerification || 0)}</strong></button>
+                        <button type="button" class="payment-order-summary-card ${paymentOrderStatus === 'processing' ? 'is-active' : ''}" onclick="changePaymentOrderStatus('processing')"><span>Đang hoàn tất</span><strong>${Number(data.counts?.processing || 0)}</strong></button>
+                        <button type="button" class="payment-order-summary-card ${paymentOrderStatus === 'needs_support' ? 'is-active' : ''}" onclick="changePaymentOrderStatus('needs_support')"><span>Cần hỗ trợ</span><strong>${Number(data.counts?.needsSupport || 0)}</strong></button>
+                        <button type="button" class="payment-order-summary-card ${paymentOrderStatus === 'awaiting_payment' ? 'is-active' : ''}" onclick="changePaymentOrderStatus('awaiting_payment')"><span>Chưa báo chuyển khoản</span><strong>${Number(data.counts?.awaitingPayment || 0)}</strong></button>`;
+                }
+            } catch (error) {
+                body.innerHTML = `<tr><td colspan="8" class="payment-order-empty payment-order-error">${escapeHtml(error.message)}</td></tr>`;
+            }
+        }
+
+        function changePaymentOrderStatus(value) {
+            paymentOrderStatus = value;
+            const statusSelect = document.querySelector('#paymentManagement .payment-order-toolbar select');
+            if (statusSelect) statusSelect.value = value;
+            loadPaymentOrders(1);
+        }
+
+        function schedulePaymentOrderSearch(value) {
+            paymentOrderSearch = String(value || '').trim();
+            clearTimeout(paymentOrderSearchTimer);
+            paymentOrderSearchTimer = setTimeout(() => loadPaymentOrders(1), 350);
+        }
+
+        async function postPaymentOrderAction(id, action, body = {}) {
+            const response = await fetch(`${BACKEND_URL}/api/admin/payments/orders/${encodeURIComponent(id)}/${action}`, {
+                method: 'POST',
+                headers: paymentOrderHeaders(),
+                body: JSON.stringify(body)
+            });
+            const data = await response.json().catch(() => ({}));
+            if (!response.ok || !data.success) throw new Error(data.error || 'Không thể cập nhật đơn thanh toán');
+            return data;
+        }
+
+        function confirmPaymentOrder(id) {
+            const order = paymentOrdersById.get(String(id));
+            const orderCode = order?.orderCode || id;
+            const amount = formatPaymentOrderAmount(order?.finalAmountVnd);
+            showConfirmModal(
+                `Chỉ xác nhận sau khi đã đối chiếu tiền trong tài khoản ngân hàng.<br><br><strong>${escapeHtml(orderCode)}</strong> · <strong>${escapeHtml(amount)}</strong><br><br>Thao tác này sẽ nâng tài khoản lên Pro 30 ngày và đặt credits về mức Pro.`,
+                async () => {
+                    try {
+                        const data = await postPaymentOrderAction(id, 'confirm');
+                        showMessage(data.alreadyCompleted ? 'Đơn này đã được hoàn tất trước đó.' : 'Đã xác nhận thanh toán và nâng cấp Pro.', 'success');
+                        await loadPaymentOrders(paymentOrderPage);
+                        await refreshPaymentOrderNotice();
+                    } catch (error) {
+                        showMessage(error.message, 'error');
+                        await loadPaymentOrders(paymentOrderPage);
+                    }
+                }
+            );
+        }
+
+        function markPaymentOrderNeedsSupport(id) {
+            const note = prompt('Nhập hướng dẫn hiển thị cho khách hàng:', 'Chưa tìm thấy giao dịch phù hợp. Vui lòng liên hệ Support và cung cấp mã đơn hàng.');
+            if (note === null || !note.trim()) return;
+            postPaymentOrderAction(id, 'needs-support', { note: note.trim() })
+                .then(() => {
+                    showMessage('Đã chuyển đơn sang trạng thái cần hỗ trợ.', 'success');
+                    loadPaymentOrders(paymentOrderPage);
+                })
+                .catch(error => showMessage(error.message, 'error'));
+        }
+
+        function cancelPaymentOrder(id) {
+            showConfirmModal('Hủy đơn thanh toán này? Khách hàng sẽ được yêu cầu tạo đơn mới và mã chuyển khoản cũ không còn hiệu lực.', async () => {
+                try {
+                    await postPaymentOrderAction(id, 'cancel', { note: 'Đơn đã được quản trị viên hủy.' });
+                    showMessage('Đã hủy đơn thanh toán.', 'success');
+                    await loadPaymentOrders(paymentOrderPage);
+                } catch (error) {
+                    showMessage(error.message, 'error');
+                }
+            });
+        }
+
+        async function showPaymentManagement(initialStatus = 'action_required', initialSearch = '') {
+            const usersTable = document.querySelector('.users-table');
+            const controls = document.querySelector('.controls');
+            const pagination = document.getElementById('pagination');
+            if (!usersTable || !controls) return;
+
+            ['cookiesManagement', 'mobileCookiesManagement', 'rateLimitManagement', 'ctvManagement', 'authShowcaseManagement', 'promotionManagement', 'paymentManagement']
+                .forEach(id => document.getElementById(id)?.remove());
+            usersTable.style.display = 'none';
+            controls.style.display = 'none';
+            if (pagination) pagination.style.display = 'none';
+            document.getElementById('mobileSearchResults')?.style.setProperty('display', 'none');
+            document.querySelector('.mobile-search-title')?.style.setProperty('display', 'none');
+
+            const container = document.createElement('div');
+            container.id = 'paymentManagement';
+            container.className = 'users-table';
+            container.innerHTML = `
+                <style>
+                    body:has(#paymentManagement) .sidebar-nav button[data-admin-nav="payments"]{background:linear-gradient(135deg,rgba(34,197,94,.18),rgba(59,130,246,.08));color:#bbf7d0;border-color:rgba(34,197,94,.28)}
+                    .payment-manager{padding:20px;font-family:var(--admin-font)}.payment-order-toolbar{display:grid;grid-template-columns:minmax(220px,1fr) 220px auto auto;gap:10px;margin-bottom:12px}.payment-order-toolbar input,.payment-order-toolbar select{width:100%;box-sizing:border-box;padding:10px;border:1px solid rgba(148,163,184,.2);border-radius:9px;background:#0f172a;color:#f8fafc;font:inherit}.payment-order-summary{margin:0 0 14px;color:#93c5fd;font-size:.82rem;font-weight:750}.payment-order-table-wrap{overflow:auto;border:1px solid rgba(148,163,184,.14);border-radius:11px;background:rgba(2,6,23,.5)}.payment-order-table{width:100%;min-width:1240px;border-collapse:collapse;font-size:.78rem}.payment-order-table th{position:sticky;top:0;z-index:1;padding:11px 10px;background:#111827;color:#bfdbfe;text-align:left;white-space:nowrap}.payment-order-table td{padding:11px 10px;border-top:1px solid rgba(148,163,184,.1);color:#d4d4d8;vertical-align:top}.payment-order-table td>strong,.payment-order-table td>span{display:block}.payment-order-code{color:#fbbf24;letter-spacing:.05em}.payment-order-amount{color:#4ade80}.payment-order-secondary{margin-top:4px;color:#71717a;font-size:.7rem}.payment-order-coupon{margin-top:4px;color:#c4b5fd;font-size:.7rem}.payment-order-note{max-width:250px;margin-top:6px;color:#fcd34d;font-size:.7rem;line-height:1.4}.payment-status{display:inline-block!important;width:max-content;padding:4px 7px;border-radius:999px;font-size:.67rem;font-weight:850}.payment-status--pending{color:#93c5fd;background:rgba(59,130,246,.14)}.payment-status--warning{color:#fde68a;background:rgba(234,179,8,.14)}.payment-status--processing{color:#c4b5fd;background:rgba(139,92,246,.14)}.payment-status--success{color:#86efac;background:rgba(34,197,94,.14)}.payment-status--danger{color:#fca5a5;background:rgba(239,68,68,.14)}.payment-status--muted{color:#cbd5e1;background:rgba(100,116,139,.14)}.payment-order-actions{display:flex;flex-wrap:wrap;gap:6px;min-width:210px}.payment-order-actions .btn{padding:7px 9px;font-size:.7rem}.payment-order-empty{padding:28px!important;text-align:center;color:#94a3b8!important}.payment-order-error{color:#fca5a5!important}.payment-order-pagination{display:flex;justify-content:center;align-items:center;gap:14px;margin-top:14px;color:#94a3b8;font-size:.82rem}@media(min-width:901px){.payment-order-table td>div:not(.payment-order-actions){display:grid;align-content:start;gap:4px}.payment-order-table td>div:not(.payment-order-actions)>strong,.payment-order-table td>div:not(.payment-order-actions)>span{display:block;margin-top:0;line-height:1.4}.payment-order-actions{display:grid;min-width:150px;justify-items:start;gap:7px}.payment-order-actions .payment-order-action-link{display:inline;padding:0!important;min-width:0;min-height:0;width:auto;color:#93c5fd;border:0!important;border-radius:0;background:transparent!important;box-shadow:none!important;font-size:.72rem;line-height:1.35;text-align:left;text-decoration:underline;text-decoration-thickness:1px;text-underline-offset:3px;transform:none!important}.payment-order-actions .payment-order-action-link--confirm{color:#6ee7b7}.payment-order-actions .payment-order-action-link--recover{color:#93c5fd}.payment-order-actions .payment-order-action-link--support{color:#fcd34d}.payment-order-actions .payment-order-action-link--cancel{color:#fca5a5}.payment-order-actions .payment-order-action-link:hover{color:#fff;background:transparent!important;box-shadow:none!important;transform:none!important}}@media(max-width:900px){.payment-order-toolbar{grid-template-columns:1fr}.payment-manager{padding:10px}.payment-order-table-wrap{overflow:visible;border:0;background:transparent}.payment-order-table{display:block;min-width:0}.payment-order-table thead{display:none}.payment-order-table tbody{display:grid;gap:10px}.payment-order-table tr{display:block;overflow:hidden;border:1px solid rgba(148,163,184,.14);border-radius:12px;background:rgba(15,23,42,.72)}.payment-order-table td{display:grid;grid-template-columns:104px minmax(0,1fr);gap:9px;padding:9px 11px;border-top:1px solid rgba(148,163,184,.08);font-size:.72rem}.payment-order-table td:first-child{border-top:0}.payment-order-table td::before{content:attr(data-label);color:#64748b;font-size:.64rem;font-weight:800;text-transform:uppercase}.payment-order-table td>strong,.payment-order-table td>span,.payment-order-table td>div{min-width:0}.payment-order-actions{min-width:0}.payment-order-actions .btn{flex:1;min-height:36px}.payment-order-empty{display:block!important}.payment-order-pagination{gap:8px}.payment-order-pagination .btn{padding:8px 10px;font-size:.7rem}}
+                </style>
+                <style>
+                    .payment-order-actions{justify-content:start}
+                    .payment-order-summary{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}
+                    .payment-order-summary-card{display:flex;min-width:0;align-items:center;justify-content:space-between;gap:8px;padding:9px 10px;color:#cbd5e1;border:1px solid rgba(148,163,184,.12);border-radius:9px;background:rgba(15,23,42,.56);font:inherit;text-align:left;cursor:pointer}
+                    .payment-order-summary-card strong{color:#93c5fd;font-size:.9rem}
+                    .payment-order-summary-card.is-active{color:#f8fafc;border-color:rgba(59,130,246,.5);background:rgba(30,64,175,.22);box-shadow:inset 0 0 0 1px rgba(96,165,250,.08)}
+                    @media(max-width:900px){
+                        #paymentManagement{margin-top:8px;overflow:hidden;border:1px solid rgba(148,163,184,.12)!important;border-radius:15px;background:#0a0e16!important;font-family:var(--admin-font)}
+                        #paymentManagement .table-header{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:11px 12px;color:#f8fafc;border-bottom:1px solid rgba(148,163,184,.1);background:rgba(15,23,42,.72);text-align:left;text-shadow:none;font-size:14px;line-height:1.2}
+                        #paymentManagement .table-header>span{font-weight:850}
+                        #paymentManagement .table-header>div{width:auto;justify-content:flex-end!important;gap:5px!important}
+                        #paymentManagement .table-header .btn{min-width:0;min-height:30px;padding:6px 9px;border-radius:8px;font-size:9px}
+                        .payment-manager{padding:10px}
+                        .payment-order-toolbar{grid-template-columns:repeat(2,minmax(0,1fr));gap:7px;margin-bottom:10px}
+                        .payment-order-toolbar input,.payment-order-toolbar select{grid-column:1/-1}
+                        .payment-order-toolbar input,.payment-order-toolbar select,.payment-order-toolbar .btn{min-width:0;min-height:36px;padding:8px 10px;border-radius:9px;font-size:10px}
+                        .payment-order-toolbar .btn-secondary{color:#6ee7b7;border-color:rgba(16,185,129,.45);background:rgba(6,78,59,.2)}
+                        .payment-order-toolbar .btn-primary{color:#dbeafe;border-color:rgba(59,130,246,.5);background:rgba(30,64,175,.24)}
+                        .payment-order-summary{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:6px;margin:0 0 10px;color:#cbd5e1;font-size:9px;font-weight:650;line-height:1.25}
+                        .payment-order-summary-card{display:flex;align-items:center;justify-content:space-between;gap:6px;padding:7px 8px;border:1px solid rgba(148,163,184,.1);border-radius:8px;background:rgba(15,23,42,.56);font-size:9px}
+                        .payment-order-summary strong{color:#93c5fd;font-size:11px}
+                        .payment-order-table tbody{gap:9px}
+                        .payment-order-table tr{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));overflow:hidden;border:1px solid rgba(148,163,184,.14);border-radius:12px;background:rgba(15,23,42,.78);box-shadow:0 8px 24px rgba(0,0,0,.16)}
+                        .payment-order-table td{display:block;min-width:0;padding:9px 10px;border-top:1px solid rgba(148,163,184,.08);font-size:10px;line-height:1.35}
+                        .payment-order-table td::before{display:block;margin-bottom:4px;padding:0;color:#64748b;font-size:8px;font-weight:850;line-height:1.2;letter-spacing:.06em}
+                        .payment-order-table td>div:not(.payment-order-actions){display:grid;gap:2px}
+                        .payment-order-table td>div>strong{font-size:11px;line-height:1.3}
+                        .payment-order-table td[data-label="Mã đơn"]{order:1;grid-column:1/-1;border-top:0;background:rgba(30,41,59,.42)}
+                        .payment-order-table td[data-label="Mã đơn"]>div{display:flex;align-items:center;justify-content:space-between;gap:10px}
+                        .payment-order-table td[data-label="Mã đơn"]::before{display:none}
+                        .payment-order-table td[data-label="Tài khoản"]{order:2;grid-column:1/-1}
+                        .payment-order-table td[data-label="Sản phẩm"]{order:3}
+                        .payment-order-table td[data-label="Số tiền"]{order:4}
+                        .payment-order-table td[data-label="Khách đã báo"]{order:5}
+                        .payment-order-table td[data-label="Hoàn tất lúc"]{order:6}
+                        .payment-order-table td[data-label="Trạng thái"]{order:7;grid-column:1/-1}
+                        .payment-order-table td[data-label="Thao tác"]{order:8;grid-column:1/-1}
+                        .payment-order-table td[data-label="Sản phẩm"],.payment-order-table td[data-label="Khách đã báo"]{border-right:1px solid rgba(148,163,184,.08)}
+                        .payment-order-code{font-size:12px!important;letter-spacing:.06em}
+                        .payment-order-secondary,.payment-order-coupon,.payment-order-note{margin-top:0;color:#7c8799;font-size:8px;line-height:1.35;overflow-wrap:anywhere}
+                        .payment-order-amount{font-size:12px!important}
+                        .payment-status{padding:3px 7px;font-size:9px;line-height:1.3}
+                        .payment-order-table td[data-label="Thao tác"]{padding:9px 10px 10px}
+                        .payment-order-table td[data-label="Thao tác"]::before{margin-bottom:7px;text-align:center}
+                        .payment-order-actions{display:grid;width:100%;grid-template-columns:repeat(2,minmax(0,1fr));justify-content:center;gap:6px}
+                        .payment-order-actions .btn{width:100%;min-height:33px;padding:7px 5px;justify-content:center;text-align:center;font-size:9px;line-height:1.2}
+                        .payment-order-actions .btn-danger{grid-column:auto}
+                        .payment-order-actions:has(.btn:nth-child(3)) .btn-danger{grid-column:1/-1}
+                        .payment-order-pagination{gap:8px;margin-top:11px;color:#94a3b8;font-size:9px;text-align:center}
+                        .payment-order-pagination .btn{min-height:30px;padding:6px 9px;border-radius:8px;font-size:9px}
+                    }
+                </style>
+                <div class="table-header"><span>Đơn thanh toán Pro</span><div style="display:flex;gap:8px"><button class="btn btn-secondary" onclick="loadPaymentOrders(paymentOrderPage)">Làm mới</button><button class="btn btn-secondary" onclick="showUsersTable();loadUsers(currentPage,currentSearch,currentPlanFilter)">Quay lại</button></div></div>
+                <div class="payment-manager">
+                    <div class="payment-order-toolbar">
+                        <input id="paymentOrderSearchInput" type="search" maxlength="100" placeholder="Tìm mã đơn, email hoặc tên..." oninput="schedulePaymentOrderSearch(this.value)">
+                        <select onchange="changePaymentOrderStatus(this.value)">
+                            <option value="action_required">Tất cả cần xử lý</option>
+                            <option value="awaiting_verification">Chờ xác minh</option>
+                            <option value="needs_support">Cần hỗ trợ</option>
+                            <option value="awaiting_payment">Chưa báo chuyển khoản</option>
+                            <option value="processing">Đang hoàn tất</option>
+                            <option value="completed">Đã hoàn thành</option>
+                            <option value="cancelled">Đã hủy</option>
+                            <option value="expired">Đã hết hạn</option>
+                            <option value="all">Tất cả trạng thái</option>
+                        </select>
+                        <button type="button" class="btn btn-secondary" onclick="showPaymentOrderLookupModal()">Tra mã đơn</button>
+                        <button type="button" class="btn btn-primary" onclick="loadPaymentOrders(paymentOrderPage)">Tải lại</button>
+                    </div>
+                    <div id="paymentOrderSummary" class="payment-order-summary">Đang tải tổng quan...</div>
+                    <div class="payment-order-table-wrap">
+                        <table class="payment-order-table">
+                            <thead><tr><th>Mã đơn</th><th>Khách hàng</th><th>Sản phẩm</th><th>Số tiền</th><th>Khách đã báo lúc</th><th>Trạng thái</th><th>Hoàn tất lúc</th><th>Thao tác</th></tr></thead>
+                            <tbody id="paymentOrderTableBody"><tr><td colspan="8" class="payment-order-empty">Đang tải danh sách...</td></tr></tbody>
+                        </table>
+                    </div>
+                    <div id="paymentOrderPagination" class="payment-order-pagination"></div>
+                </div>`;
+            usersTable.parentNode.insertBefore(container, usersTable.nextSibling);
+            paymentOrderStatus = initialStatus;
+            paymentOrderSearch = String(initialSearch || '').trim();
+            const statusSelect = container.querySelector('.payment-order-toolbar select');
+            if (statusSelect) statusSelect.value = paymentOrderStatus;
+            const searchInput = document.getElementById('paymentOrderSearchInput');
+            if (searchInput) searchInput.value = paymentOrderSearch;
+            await loadPaymentOrders(1);
+        }
+
+        window.setInterval(() => {
+            if (localStorage.getItem('admin_token')) refreshPaymentOrderNotice();
+        }, 30000);
 
         // ========================================
         // MANUAL BAN FUNCTIONS

@@ -403,7 +403,7 @@
                 }
 
                 .pro-offer-gift-title {
-                    font-size: 0.87rem;
+                    font-size: 0.81rem;
                 }
 
                 .pro-offer-gift-caption {

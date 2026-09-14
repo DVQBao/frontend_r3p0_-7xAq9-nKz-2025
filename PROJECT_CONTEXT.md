@@ -142,6 +142,59 @@ The main Admin user API exposes `activeCoupon` for concise voucher badges on bot
 and mobile, while `pendingCoupon` remains separate for fulfillment logic. The PC user
 table keeps voucher value in its own column; never append coupon details to email text.
 
+## Manual Pro Payment Order Contract (2026-09-13)
+
+The public Pro checkout now creates a server-side `PaymentOrder` before showing a
+usable transfer QR. The VietQR amount is server-calculated and its transfer content is
+the unique `TB...` order code, never an email prefix. This first version intentionally
+supports only a 30-day Pro upgrade; credits and official package payments retain their
+previous verification flow.
+
+Clicking `Tôi đã chuyển khoản` closes the transfer modal and opens a dedicated status
+modal in its loading state. The action only moves the order from `awaiting_payment` to
+`awaiting_verification`; it must never update `User.plan`, credits, coupon state, or
+other entitlements. The dedicated modal owns manual status checks and polling. When
+the order completes it transforms in place into the PRO welcome screen with the new
+credits and entitlement expiry, without asking for a page reload. The customer page
+restores an active/recently-completed order after reload. Coupon controls are locked as
+soon as the server returns the order so a previously shown QR can never be silently
+repriced. While an order is still `awaiting_payment`, the customer may return to the
+coupon prompt; this atomically cancels the old order and invalidates its QR before a
+new order with the selected coupon amount can be created.
+
+The admin panel has a manual payment queue with search and status filters. On every
+admin page entry/reload, an action modal is shown when verification, support, or
+interrupted-processing orders exist; it links directly to the combined action-required
+queue. Mobile admin also keeps a persistent action card above the quick actions and
+refreshes its count in the background without reopening the entry modal. Support can
+look up an exact `TB...` order code to see the owning account name/email even when the
+customer never clicked `Tôi đã chuyển khoản`; an `awaiting_payment` order may then be
+confirmed only after manually matching both the bank transfer content and amount.
+`verificationSource` records whether the order entered fulfillment through the customer
+claim or an admin/support confirmation. Only the explicit `Xác nhận & nâng Pro` action
+grants entitlement. Confirmation
+atomically claims the order as `processing`, checks that its coupon/amount snapshot is
+still valid, records the order code in the internal `User.paymentFulfillmentKeys`
+idempotency ledger, updates Pro/credits using the existing one-month upgrade policy,
+and then marks the order `completed`. Repeated confirmation must not grant a second
+upgrade. An already-active Pro account is moved to `needs_support` instead of being
+modified, because renewal is outside this first version. If a process is interrupted,
+the idempotency ledger lets admin finish the order without granting Pro twice; an old
+`processing` order with no saved entitlement is returned to manual verification.
+
+Relevant files:
+
+- `NetflixBackend/models/PaymentOrder.js`
+- `NetflixBackend/routes/payments.js`
+- `NetflixBackend/routes/admin-payments.js`
+- `NetflixBackend/utils/paymentOrderUtils.js`
+- `NetflixFrontend/payment-orders.js`
+- `NetflixFrontend/promotions.js`
+- `NetflixFrontend/index.html`
+- `NetflixFrontend/x7Kv9mPq3nRt2025/index.html`
+- `NetflixBackend/tests/paymentOrders.test.js`
+- `NetflixFrontend/tests/payment-orders-ui.test.js`
+
 ## Canonical canPlay Contract (2026-08-08)
 
 This section supersedes every older `/browse`, PACS `CAN_PLAYBACK`, movie-ID, or
@@ -331,6 +384,8 @@ When starting a new session, read this file first. Then, depending on the task:
 /api/admin/ctv            -> routes/admin-ctv.js
 /api/admin/canplay        -> routes/admin-canplay.js
 /api/admin/showcase       -> routes/admin-showcase.js
+/api/payments             -> routes/payments.js
+/api/admin/payments       -> routes/admin-payments.js
 ```
 
 `/api/health` is the health check. The root route returns a small JSON service

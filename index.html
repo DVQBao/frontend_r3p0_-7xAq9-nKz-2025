@@ -7701,6 +7701,42 @@
         .coupon-price-line { display: flex; justify-content: space-between; gap: 12px; }
         .coupon-price-line strong { color: #4ade80; }
 
+        .payment-coupon-return {
+            width: fit-content;
+            margin: 12px auto 0;
+            padding: 7px 12px;
+            color: #93c5fd;
+            border: 1px solid rgba(96, 165, 250, 0.28);
+            border-radius: 9px;
+            background: rgba(59, 130, 246, 0.07);
+            font: inherit;
+            font-size: 0.78rem;
+            font-weight: 700;
+            line-height: 1.25;
+            text-align: center;
+            cursor: pointer;
+        }
+
+        .payment-coupon-return:hover {
+            color: #dbeafe;
+            border-color: rgba(96, 165, 250, 0.48);
+            background: rgba(59, 130, 246, 0.13);
+        }
+
+        .payment-coupon-return:disabled {
+            opacity: 0.58;
+            cursor: wait;
+        }
+
+        .payment-coupon-return.is-applied,
+        .payment-coupon-return.is-applied:disabled {
+            color: #86efac;
+            border-color: rgba(74, 222, 128, 0.3);
+            background: rgba(34, 197, 94, 0.09);
+            opacity: 1;
+            cursor: default;
+        }
+
         @media (max-width: 768px) {
             .coupon-entry-card { padding: 12px; }
             .coupon-entry-row { grid-template-columns: minmax(0, 1fr) minmax(82px, auto); }
@@ -10858,32 +10894,100 @@ Nếu cần thêm lượt đổi tài khoản, vui lòng liên hệ Support qua 
                         </div>
 
                         <div class="payment-alert-card" style="margin-top: 12px;">
-                            <p style="margin: 0; font-size: 0.9rem; line-height: 1.6; color: #fbbf24;">
+                            <p id="paymentImportantNote" style="margin: 0; font-size: 0.9rem; line-height: 1.6; color: #fbbf24;">
                                 <strong>Lưu ý quan trọng:</strong><br>
                                 1. Vui lòng giữ nguyên nội dung chuyển khoản như hệ thống hiển thị để credits được cộng chính xác.<br>
                                 2. Khi mua credits thành công, tổng số credits trong tài khoản của bạn sẽ được gia hạn sử dụng thêm 30 ngày.
                             </p>
                         </div>
 
-                        <div class="payment-info-card" style="margin-top: 12px;">
+                        <div class="payment-info-card" id="legacyPaymentVerificationInfo" style="margin-top: 12px;">
                             <p style="margin: 0; font-size: 0.9rem; line-height: 1.6; color: #e5e7eb;">
                                 <strong style="color: #60a5fa;">Xác minh thanh toán:</strong><br>
                                 Sau khi chuyển khoản, vui lòng bấm nút <strong>"Gửi xác minh"</strong> bên dưới để được
                                 chuyển đến trang hỗ trợ và gửi ảnh chụp màn hình giao dịch.
                             </p>
                         </div>
+
+                        <button class="payment-coupon-return" id="proPaymentCouponBackButton" type="button"
+                            onclick="handleProPaymentCouponBack()" style="display:none;">
+                            Chưa chuyển khoản? Nhập mã ưu đãi
+                        </button>
+
                     </div>
 
                     <div class="payment-modal-actions" style="display: flex; gap: 10px; margin-top: 20px;">
                         <button class="btn btn-secondary" onclick="backToPackageSelection()" style="flex: 1;">
                             Hủy
                         </button>
-                        <button class="btn" onclick="sendVerification()"
+                        <button class="btn" id="legacyPaymentVerificationButton" onclick="sendVerification()"
                             style="flex: 1; background: linear-gradient(135deg, #60a5fa, #3b82f6);">
                             Gửi xác minh
                         </button>
+                        <button class="btn" id="proPaymentClaimButton" type="button" onclick="handleProPaymentClaim()"
+                            style="display:none;flex:1;background:linear-gradient(135deg,#60a5fa,#3b82f6);">
+                            Tôi đã chuyển khoản
+                        </button>
                     </div>
                 </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Pro payment status is intentionally separate from the transfer modal. -->
+    <div class="modal pro-payment-status-modal" id="proPaymentStatusModal" style="z-index:10006;" role="dialog" aria-modal="true" aria-labelledby="proPaymentStatusTitle">
+        <div class="modal-content premium-modal-shell premium-modal-shell--compact pro-payment-status-shell">
+            <div class="pro-payment-status-header">
+                <div class="pro-payment-status-brand">
+                    <span class="pro-payment-status-brand-mark" aria-hidden="true">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M6 10.5h12l-1.5 8h-9L6 10.5Z"></path><path d="M8 10.5a4 4 0 0 1 8 0M9.5 15h5"></path></svg>
+                    </span>
+                    <span><strong>TIỆM BÁNH NETFLIX</strong><small>Thanh toán nâng cấp</small></span>
+                </div>
+                <button type="button" class="pro-payment-status-close" onclick="closeProPaymentStatusModal()" aria-label="Đóng">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="m6 6 12 12M18 6 6 18"/></svg>
+                </button>
+            </div>
+
+            <div class="pro-payment-status-body">
+                <div class="pro-payment-status-hero">
+                    <div class="pro-payment-status-visual" aria-hidden="true">
+                        <div class="pro-payment-status-spinner"></div>
+                        <div class="pro-payment-status-success-icon">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m7.5 12.5 3 3 6-7"/><circle cx="12" cy="12" r="9"/></svg>
+                        </div>
+                    </div>
+                    <div class="pro-payment-status-copy">
+                        <div id="proPaymentStatusKicker" class="pro-payment-status-kicker">Xác minh thanh toán</div>
+                        <h2 id="proPaymentStatusTitle">Đang kiểm tra giao dịch</h2>
+                        <p id="proPaymentStatusMessage" class="pro-payment-status-message">Hệ thống đang gửi yêu cầu xác minh của bạn.</p>
+                    </div>
+                </div>
+
+                <div class="pro-payment-details-grid">
+                    <div class="pro-payment-order-summary">
+                        <div><span>Mã đơn hàng</span><strong id="proPaymentStatusOrderCode">—</strong></div>
+                        <div><span>Số tiền</span><strong id="proPaymentStatusAmount">—</strong></div>
+                        <div><span>Trạng thái</span><strong id="proPaymentStatusStage">Đang kiểm tra</strong></div>
+                    </div>
+
+                    <div id="proPaymentWelcomeBenefits" class="pro-payment-welcome-benefits" style="display:none;">
+                        <div><span>Thời lượng</span><strong>30 ngày</strong></div>
+                        <div><span>Số dư tài khoản</span><strong id="proPaymentWelcomeCredits">40 credits</strong></div>
+                        <div><span>Hiệu lực đến</span><strong id="proPaymentWelcomeExpiry">—</strong></div>
+                    </div>
+                </div>
+
+                <div id="proPaymentStatusTiming" class="pro-payment-status-timing">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"></circle><path d="M12 7v5l3 2"></path></svg>
+                    <span>Thời gian xử lý thông thường từ 5–30 phút. Ngoài giờ làm việc có thể lâu hơn.</span>
+                </div>
+                <a id="proPaymentStatusSupport" class="pro-payment-status-support" href="https://www.facebook.com/tiembanh4k/" target="_blank" rel="noopener noreferrer">Cần hỗ trợ? Liên hệ Tiệm Bánh</a>
+            </div>
+
+            <div class="pro-payment-status-actions pro-payment-status-footer">
+                <button type="button" class="btn btn-secondary" id="proPaymentStatusCloseButton" onclick="closeProPaymentStatusModal()">Kiểm tra sau</button>
+                <button type="button" class="btn pro-payment-status-primary" id="proPaymentStatusActionButton" onclick="handleProPaymentStatusAction()">Kiểm tra trạng thái</button>
             </div>
         </div>
     </div>
@@ -11097,7 +11201,854 @@ Nếu cần thêm lượt đổi tài khoản, vui lòng liên hệ Support qua 
             height: 0;
         }
 
+        .pro-payment-status-modal {
+            padding: 20px;
+            background: rgba(2, 6, 23, 0.82);
+            backdrop-filter: blur(16px);
+        }
+
+        .pro-payment-status-shell {
+            position: relative;
+            width: min(100%, 520px);
+            padding: 34px 32px 28px;
+            overflow: hidden;
+            text-align: center;
+            border: 1px solid rgba(96, 165, 250, 0.24);
+            background:
+                radial-gradient(circle at 50% -10%, rgba(59, 130, 246, 0.22), transparent 42%),
+                linear-gradient(160deg, rgba(12, 18, 32, 0.99), rgba(3, 7, 18, 0.99));
+            box-shadow: 0 32px 90px rgba(0, 0, 0, 0.65);
+        }
+
+        .pro-payment-status-shell::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            pointer-events: none;
+            opacity: 0;
+            background:
+                radial-gradient(circle at 18% 16%, rgba(250, 204, 21, 0.18) 0 2px, transparent 3px),
+                radial-gradient(circle at 82% 21%, rgba(96, 165, 250, 0.2) 0 3px, transparent 4px),
+                radial-gradient(circle at 13% 72%, rgba(52, 211, 153, 0.2) 0 2px, transparent 3px),
+                radial-gradient(circle at 88% 76%, rgba(244, 114, 182, 0.18) 0 2px, transparent 3px);
+            transition: opacity .35s ease;
+        }
+
+        #proPaymentStatusModal.state-success .pro-payment-status-shell::before {
+            opacity: 1;
+            animation: proPaymentSparkle 2.8s ease-in-out infinite;
+        }
+
+        .pro-payment-status-close {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            z-index: 2;
+            display: grid;
+            width: 36px;
+            height: 36px;
+            place-items: center;
+            color: #94a3b8;
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 12px;
+            cursor: pointer;
+        }
+
+        .pro-payment-status-close svg {
+            width: 18px;
+            height: 18px;
+        }
+
+        .pro-payment-status-visual {
+            position: relative;
+            display: grid;
+            width: 96px;
+            height: 96px;
+            margin: 2px auto 18px;
+            place-items: center;
+        }
+
+        .pro-payment-status-orbit,
+        .pro-payment-status-orbit span {
+            position: absolute;
+            inset: 0;
+            border-radius: 999px;
+        }
+
+        .pro-payment-status-orbit {
+            border: 1px solid rgba(96, 165, 250, 0.15);
+            animation: proPaymentPulse 2s ease-in-out infinite;
+        }
+
+        .pro-payment-status-orbit span:nth-child(1) {
+            inset: 9px;
+            border: 1px solid rgba(96, 165, 250, 0.2);
+        }
+
+        .pro-payment-status-orbit span:nth-child(2) {
+            inset: 20px;
+            background: rgba(59, 130, 246, 0.1);
+        }
+
+        .pro-payment-status-orbit span:nth-child(3) {
+            inset: auto;
+            width: 8px;
+            height: 8px;
+            top: 4px;
+            left: 44px;
+            background: #60a5fa;
+            box-shadow: 0 0 20px rgba(96, 165, 250, 0.85);
+            animation: proPaymentOrbit 2.2s linear infinite;
+            transform-origin: 4px 44px;
+        }
+
+        .pro-payment-status-spinner {
+            width: 38px;
+            height: 38px;
+            border: 3px solid rgba(148, 163, 184, 0.18);
+            border-top-color: #60a5fa;
+            border-radius: 999px;
+            animation: proPaymentSpin .85s linear infinite;
+        }
+
+        .pro-payment-status-success-icon {
+            display: none;
+            width: 62px;
+            height: 62px;
+            color: #052e16;
+            background: linear-gradient(145deg, #fde68a, #4ade80);
+            border-radius: 22px;
+            place-items: center;
+            box-shadow: 0 16px 44px rgba(74, 222, 128, 0.28);
+            transform: rotate(-4deg);
+        }
+
+        .pro-payment-status-success-icon svg {
+            width: 36px;
+            height: 36px;
+        }
+
+        #proPaymentStatusModal.state-success .pro-payment-status-spinner {
+            display: none;
+        }
+
+        #proPaymentStatusModal.state-success .pro-payment-status-success-icon {
+            display: grid;
+            animation: proPaymentCelebrate .55s cubic-bezier(.2,.8,.2,1) both;
+        }
+
+        #proPaymentStatusModal.state-attention .pro-payment-status-spinner {
+            border-top-color: #fbbf24;
+        }
+
+        #proPaymentStatusModal.state-error .pro-payment-status-spinner {
+            border-top-color: #f87171;
+            animation: none;
+        }
+
+        .pro-payment-status-kicker {
+            margin-bottom: 8px;
+            color: #60a5fa;
+            font-size: .72rem;
+            font-weight: 900;
+            letter-spacing: .16em;
+            text-transform: uppercase;
+        }
+
+        .pro-payment-status-shell h2 {
+            margin: 0;
+            color: #f8fafc;
+            font-size: clamp(1.45rem, 4vw, 2rem);
+            line-height: 1.2;
+        }
+
+        #proPaymentStatusModal.state-success .pro-payment-status-kicker {
+            color: #facc15;
+        }
+
+        #proPaymentStatusModal.state-success .pro-payment-status-shell h2 {
+            background: linear-gradient(90deg, #fde68a, #86efac, #93c5fd);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        .pro-payment-status-message {
+            max-width: 430px;
+            margin: 12px auto 20px;
+            color: #cbd5e1;
+            font-size: .95rem;
+            line-height: 1.65;
+        }
+
+        .pro-payment-order-summary {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            margin-bottom: 16px;
+            padding: 15px 8px;
+            border: 1px solid rgba(148, 163, 184, 0.14);
+            border-radius: 16px;
+            background: rgba(15, 23, 42, 0.68);
+        }
+
+        .pro-payment-order-summary > div {
+            min-width: 0;
+            padding: 0 10px;
+            border-right: 1px solid rgba(148, 163, 184, 0.12);
+        }
+
+        .pro-payment-order-summary > div:last-child {
+            border-right: 0;
+        }
+
+        .pro-payment-order-summary span,
+        .pro-payment-order-summary strong {
+            display: block;
+        }
+
+        .pro-payment-order-summary span {
+            margin-bottom: 5px;
+            color: #64748b;
+            font-size: .68rem;
+            font-weight: 750;
+            text-transform: uppercase;
+        }
+
+        .pro-payment-order-summary strong {
+            overflow: hidden;
+            color: #e2e8f0;
+            font-size: .82rem;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        #proPaymentStatusOrderCode {
+            color: #fbbf24;
+            letter-spacing: .06em;
+        }
+
+        .pro-payment-welcome-benefits {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 9px;
+            margin: 0 0 16px;
+        }
+
+        .pro-payment-welcome-benefits > div {
+            padding: 13px 8px;
+            border: 1px solid rgba(74, 222, 128, 0.16);
+            border-radius: 14px;
+            background: rgba(20, 83, 45, 0.13);
+        }
+
+        .pro-payment-welcome-benefits strong,
+        .pro-payment-welcome-benefits span {
+            display: block;
+        }
+
+        .pro-payment-welcome-benefits strong {
+            color: #86efac;
+            font-size: .86rem;
+        }
+
+        .pro-payment-welcome-benefits span {
+            margin-top: 4px;
+            color: #94a3b8;
+            font-size: .66rem;
+            line-height: 1.35;
+        }
+
+        .pro-payment-status-timing {
+            margin: 0 0 10px;
+            color: #94a3b8;
+            font-size: .78rem;
+            line-height: 1.5;
+        }
+
+        .pro-payment-status-support {
+            display: inline-block;
+            margin-bottom: 20px;
+            color: #93c5fd;
+            font-size: .8rem;
+            font-weight: 750;
+            text-decoration: none;
+        }
+
+        .pro-payment-status-actions {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 10px;
+        }
+
+        .pro-payment-status-actions .btn {
+            width: 100%;
+            min-width: 0;
+            min-height: 46px;
+            border-radius: 13px;
+        }
+
+        .pro-payment-status-primary {
+            color: #06111f;
+            background: linear-gradient(135deg, #93c5fd, #60a5fa);
+            border: 0;
+            font-weight: 850;
+        }
+
+        #proPaymentStatusModal.state-success .pro-payment-status-primary {
+            background: linear-gradient(135deg, #fde68a, #4ade80);
+        }
+
+        @keyframes proPaymentSpin { to { transform: rotate(360deg); } }
+        @keyframes proPaymentOrbit { to { transform: rotate(360deg); } }
+        @keyframes proPaymentPulse { 50% { transform: scale(1.05); opacity: .72; } }
+        @keyframes proPaymentSparkle { 50% { transform: scale(1.02); opacity: .65; } }
+        @keyframes proPaymentCelebrate { from { transform: scale(.7) rotate(-12deg); opacity: 0; } to { transform: scale(1) rotate(-4deg); opacity: 1; } }
+
+        /* Refined payment status layout: compact, product-like, and type-safe. */
+        .pro-payment-status-modal,
+        .pro-payment-status-modal button,
+        .pro-payment-status-modal a {
+            font-family: var(--desktop-home-font-family);
+        }
+
+        .pro-payment-status-shell {
+            width: min(100%, 560px);
+            max-height: calc(100vh - 40px);
+            padding: 0;
+            overflow: auto;
+            text-align: left;
+            border-color: rgba(148, 163, 184, 0.16);
+            border-radius: 24px;
+            background: #0b0f17;
+            box-shadow: 0 30px 90px rgba(0, 0, 0, 0.66), inset 0 1px 0 rgba(255, 255, 255, 0.04);
+        }
+
+        .pro-payment-status-shell::before {
+            display: none;
+        }
+
+        .pro-payment-status-header {
+            display: flex;
+            min-height: 72px;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+            padding: 14px 20px;
+            border-bottom: 1px solid rgba(148, 163, 184, 0.1);
+            background: rgba(15, 23, 42, 0.64);
+        }
+
+        .pro-payment-status-brand {
+            display: flex;
+            min-width: 0;
+            align-items: center;
+            gap: 11px;
+        }
+
+        .pro-payment-status-brand-mark {
+            display: grid;
+            width: 40px;
+            height: 40px;
+            flex: 0 0 40px;
+            place-items: center;
+            color: #f8fafc;
+            border: 1px solid rgba(239, 68, 68, 0.3);
+            border-radius: 12px;
+            background: linear-gradient(145deg, rgba(229, 9, 20, 0.92), rgba(127, 29, 29, 0.88));
+            box-shadow: 0 8px 24px rgba(127, 29, 29, 0.28);
+        }
+
+        .pro-payment-status-brand-mark svg {
+            width: 23px;
+            height: 23px;
+        }
+
+        .pro-payment-status-brand > span:last-child {
+            display: grid;
+            gap: 2px;
+        }
+
+        .pro-payment-status-brand strong {
+            color: #f8fafc;
+            font-size: .76rem;
+            font-weight: 900;
+            letter-spacing: .1em;
+        }
+
+        .pro-payment-status-brand small {
+            color: #71717a;
+            font-size: .68rem;
+            font-weight: 650;
+        }
+
+        .pro-payment-status-close {
+            position: static;
+            width: 36px;
+            height: 36px;
+            flex: 0 0 36px;
+            border-radius: 10px;
+        }
+
+        .pro-payment-status-body {
+            padding: 24px 24px 20px;
+        }
+
+        .pro-payment-status-hero {
+            display: grid;
+            grid-template-columns: 72px minmax(0, 1fr);
+            align-items: center;
+            gap: 18px;
+            margin-bottom: 22px;
+        }
+
+        .pro-payment-status-visual {
+            width: 72px;
+            height: 72px;
+            margin: 0;
+            border: 1px solid rgba(96, 165, 250, 0.18);
+            border-radius: 20px;
+            background: linear-gradient(145deg, rgba(30, 64, 175, 0.2), rgba(15, 23, 42, 0.86));
+            box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.04);
+        }
+
+        .pro-payment-status-spinner {
+            width: 30px;
+            height: 30px;
+            border-width: 2.5px;
+        }
+
+        .pro-payment-status-success-icon {
+            width: 50px;
+            height: 50px;
+            color: #052e16;
+            border-radius: 16px;
+            box-shadow: 0 12px 30px rgba(74, 222, 128, 0.2);
+            transform: none;
+        }
+
+        .pro-payment-status-success-icon svg {
+            width: 31px;
+            height: 31px;
+        }
+
+        #proPaymentStatusModal.state-success .pro-payment-status-success-icon {
+            animation: proPaymentCelebrateRefined .45s cubic-bezier(.2,.8,.2,1) both;
+        }
+
+        #proPaymentStatusModal.state-success .pro-payment-status-visual {
+            border-color: rgba(74, 222, 128, 0.2);
+            background: linear-gradient(145deg, rgba(20, 83, 45, 0.22), rgba(15, 23, 42, 0.86));
+        }
+
+        .pro-payment-status-copy {
+            min-width: 0;
+        }
+
+        .pro-payment-status-kicker {
+            width: fit-content;
+            margin: 0 0 7px;
+            padding: 4px 8px;
+            color: #93c5fd;
+            border: 1px solid rgba(96, 165, 250, 0.18);
+            border-radius: 999px;
+            background: rgba(59, 130, 246, 0.08);
+            font-size: .64rem;
+            font-weight: 850;
+            letter-spacing: .08em;
+        }
+
+        .pro-payment-status-shell h2 {
+            margin: 0;
+            color: #f8fafc;
+            font-size: 1.42rem;
+            font-weight: 850;
+            letter-spacing: -.02em;
+            line-height: 1.22;
+        }
+
+        #proPaymentStatusModal.state-success .pro-payment-status-shell h2 {
+            background: none;
+            color: #f8fafc;
+        }
+
+        .pro-payment-status-message {
+            max-width: none;
+            margin: 7px 0 0;
+            color: #a1a1aa;
+            font-size: .86rem;
+            line-height: 1.55;
+            text-align: justify;
+            text-justify: inter-word;
+        }
+
+        .pro-payment-details-grid {
+            margin: 0 0 14px;
+            overflow: hidden;
+            border: 1px solid rgba(148, 163, 184, 0.12);
+            border-radius: 14px;
+            background: rgba(15, 23, 42, 0.54);
+        }
+
+        .pro-payment-order-summary {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            border: 0;
+            border-radius: 0;
+            background: transparent;
+        }
+
+        .pro-payment-order-summary > div {
+            padding: 13px 14px;
+        }
+
+        .pro-payment-order-summary span {
+            margin-bottom: 6px;
+            color: #64748b;
+            font-size: .61rem;
+            font-weight: 800;
+            letter-spacing: .05em;
+        }
+
+        .pro-payment-order-summary strong {
+            color: #e2e8f0;
+            font-size: .77rem;
+            font-weight: 750;
+        }
+
+        .pro-payment-welcome-benefits {
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 0;
+            margin: 0;
+            border-top: 1px solid rgba(148, 163, 184, 0.1);
+        }
+
+        .pro-payment-welcome-benefits > div {
+            min-width: 0;
+            padding: 13px 14px;
+            border: 0;
+            border-right: 1px solid rgba(148, 163, 184, 0.1);
+            border-radius: 0;
+            background: rgba(113, 63, 18, 0.07);
+        }
+
+        .pro-payment-welcome-benefits > div:last-child {
+            border-right: 0;
+        }
+
+        .pro-payment-welcome-benefits span {
+            margin: 0 0 5px;
+            color: #71717a;
+            font-size: .61rem;
+            font-weight: 750;
+            text-transform: uppercase;
+        }
+
+        .pro-payment-welcome-benefits strong {
+            color: #fde68a;
+            font-size: .8rem;
+            font-weight: 850;
+        }
+
+        .pro-payment-status-timing {
+            display: flex;
+            align-items: flex-start;
+            gap: 9px;
+            margin: 0 0 10px;
+            padding: 10px 11px;
+            color: #94a3b8;
+            border: 1px solid rgba(148, 163, 184, 0.1);
+            border-radius: 11px;
+            background: rgba(15, 23, 42, 0.42);
+            font-size: .74rem;
+            line-height: 1.45;
+        }
+
+        .pro-payment-status-timing svg {
+            width: 16px;
+            height: 16px;
+            flex: 0 0 16px;
+            color: #60a5fa;
+        }
+
+        .pro-payment-status-support {
+            margin: 0;
+            color: #93c5fd;
+            font-size: .74rem;
+            font-weight: 700;
+        }
+
+        .pro-payment-status-footer {
+            margin: 0;
+            padding: 16px 20px;
+            border-top: 1px solid rgba(148, 163, 184, 0.1);
+            background: rgba(15, 23, 42, 0.42);
+        }
+
+        .pro-payment-status-actions .btn {
+            width: 100%;
+            min-width: 0;
+            min-height: 44px;
+            border-radius: 11px;
+            font-family: inherit;
+            font-size: .82rem;
+            font-weight: 800;
+        }
+
+        #proPaymentStatusModal .pro-payment-status-actions .btn-secondary {
+            color: #cbd5e1;
+            border: 1px solid rgba(148, 163, 184, 0.2);
+            background: rgba(30, 41, 59, 0.72);
+            box-shadow: none;
+        }
+
+        #proPaymentStatusModal .pro-payment-status-actions .btn-secondary:hover:not(:disabled) {
+            color: #f8fafc;
+            border-color: rgba(148, 163, 184, 0.34);
+            background: rgba(51, 65, 85, 0.88);
+        }
+
+        #proPaymentStatusModal .pro-payment-status-primary {
+            color: #ffffff;
+            border: 1px solid rgba(147, 197, 253, 0.42);
+            background: linear-gradient(135deg, #60a5fa, #2563eb);
+            box-shadow: 0 10px 26px rgba(37, 99, 235, 0.3);
+        }
+
+        #proPaymentStatusModal .pro-payment-status-primary:hover:not(:disabled) {
+            border-color: rgba(191, 219, 254, 0.68);
+            background: linear-gradient(135deg, #7dd3fc, #3b82f6);
+            box-shadow: 0 12px 30px rgba(37, 99, 235, 0.38);
+        }
+
+        #proPaymentStatusModal.state-success .pro-payment-status-primary {
+            color: #111827;
+            background: linear-gradient(135deg, #fde68a, #fbbf24);
+            box-shadow: 0 10px 24px rgba(251, 191, 36, 0.16);
+        }
+
+        @media (min-width: 769px) {
+            #proPaymentStatusModal .pro-payment-status-actions .btn {
+                height: 44px;
+                min-height: 44px;
+                max-height: 44px;
+                padding: 0 14px;
+                line-height: 1.2;
+                white-space: nowrap;
+            }
+
+            #proPaymentStatusModal.state-loading .pro-payment-status-primary:disabled {
+                color: #ffffff;
+                border: 1px solid rgba(196, 181, 253, 0.52);
+                background: linear-gradient(135deg, #a78bfa, #7c3aed);
+                box-shadow: 0 10px 24px rgba(124, 58, 237, 0.24);
+                opacity: 1 !important;
+                cursor: wait !important;
+            }
+
+            #proPaymentStatusModal.state-activating .pro-payment-status-primary:disabled {
+                color: #422006;
+                border: 1px solid rgba(251, 191, 36, 0.5);
+                background: linear-gradient(135deg, #fde68a, #f59e0b);
+                box-shadow: 0 10px 24px rgba(245, 158, 11, 0.18);
+                opacity: 1 !important;
+                cursor: wait !important;
+            }
+        }
+
+        @keyframes proPaymentCelebrateRefined {
+            from { transform: scale(.82); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
+        }
+
         @media (max-width: 768px) {
+            .pro-payment-status-modal {
+                padding: 14px;
+                overflow-y: auto;
+                font-family: var(--mobile-font-family);
+            }
+
+            .pro-payment-status-shell {
+                width: min(100%, 342px);
+                max-height: calc(100dvh - 28px);
+                padding: 0;
+                border-radius: 16px;
+            }
+
+            .pro-payment-status-header {
+                min-height: 52px;
+                padding: 8px 11px;
+            }
+
+            .pro-payment-status-brand-mark {
+                width: 30px;
+                height: 30px;
+                flex-basis: 30px;
+                border-radius: 9px;
+            }
+
+            .pro-payment-status-brand-mark svg {
+                width: 18px;
+                height: 18px;
+            }
+
+            .pro-payment-status-brand strong {
+                font-size: .61rem;
+            }
+
+            .pro-payment-status-brand small {
+                font-size: .54rem;
+            }
+
+            .pro-payment-status-close {
+                width: 30px;
+                height: 30px;
+                flex-basis: 30px;
+                border-radius: 8px;
+            }
+
+            .pro-payment-status-body {
+                padding: 13px 12px 12px;
+            }
+
+            .pro-payment-status-hero {
+                grid-template-columns: 44px minmax(0, 1fr);
+                gap: 10px;
+                margin-bottom: 12px;
+            }
+
+            .pro-payment-status-visual {
+                width: 44px;
+                height: 44px;
+                border-radius: 13px;
+            }
+
+            .pro-payment-status-spinner {
+                width: 20px;
+                height: 20px;
+                border-width: 2px;
+            }
+
+            .pro-payment-status-success-icon {
+                width: 34px;
+                height: 34px;
+                border-radius: 11px;
+            }
+
+            .pro-payment-status-success-icon svg {
+                width: 21px;
+                height: 21px;
+            }
+
+            .pro-payment-status-kicker {
+                margin-bottom: 4px;
+                padding: 2px 5px;
+                font-size: .48rem;
+            }
+
+            .pro-payment-status-shell h2 {
+                font-size: .91rem;
+                line-height: 1.18;
+            }
+
+            .pro-payment-status-message {
+                margin-top: 4px;
+                font-size: .65rem;
+                line-height: 1.42;
+            }
+
+            .pro-payment-order-summary {
+                display: grid;
+                grid-template-columns: repeat(3, minmax(0, 1fr));
+            }
+
+            .pro-payment-order-summary > div {
+                display: block;
+                padding: 8px 7px;
+                border-right: 1px solid rgba(148, 163, 184, 0.08);
+                border-bottom: 0;
+            }
+
+            .pro-payment-order-summary > div:last-child {
+                border-right: 0;
+                border-bottom: 0;
+            }
+
+            .pro-payment-order-summary span,
+            .pro-payment-order-summary strong {
+                display: block;
+                margin: 0;
+            }
+
+            .pro-payment-order-summary span {
+                margin-bottom: 4px;
+                font-size: .46rem;
+            }
+
+            .pro-payment-order-summary strong {
+                max-width: none;
+                overflow: visible;
+                font-size: .61rem;
+                text-align: left;
+                text-overflow: clip;
+            }
+
+            .pro-payment-welcome-benefits {
+                grid-template-columns: repeat(3, minmax(0, 1fr));
+                gap: 0;
+            }
+
+            .pro-payment-welcome-benefits > div {
+                padding: 8px 7px;
+                border-right: 1px solid rgba(148, 163, 184, 0.08);
+            }
+
+            .pro-payment-welcome-benefits > div:last-child {
+                grid-column: auto;
+                border-right: 0;
+            }
+
+            .pro-payment-welcome-benefits span {
+                margin-bottom: 4px;
+                font-size: .46rem;
+                line-height: 1.25;
+            }
+
+            .pro-payment-welcome-benefits strong {
+                font-size: .61rem;
+            }
+
+            .pro-payment-status-timing {
+                padding: 8px 9px;
+                font-size: .61rem;
+            }
+
+            .pro-payment-status-support {
+                font-size: .62rem;
+            }
+
+            .pro-payment-status-actions {
+                flex-direction: row;
+            }
+
+            .pro-payment-status-footer {
+                padding: 10px 12px 12px;
+            }
+
+            .pro-payment-status-actions .btn {
+                min-width: 0;
+                flex: 1 1 0;
+                min-height: 37px;
+                padding: 7px 6px;
+                border-radius: 9px;
+                font-size: .68rem;
+                line-height: 1.25;
+                white-space: normal;
+            }
+
             #paymentModal {
                 padding: 0 !important;
                 background: #050505 !important;
@@ -11271,6 +12222,13 @@ Nếu cần thêm lượt đổi tài khoản, vui lòng liên hệ Support qua 
             #paymentModal .payment-alert-card,
             #paymentModal .payment-info-card {
                 margin-top: 7px !important;
+            }
+
+            #paymentModal .payment-coupon-return {
+                min-height: 34px;
+                margin: 7px auto 0;
+                padding: 6px 12px;
+                font-size: 0.68rem;
             }
 
             #paymentModal .payment-modal-actions {
@@ -13835,6 +14793,7 @@ Nếu cần thêm lượt đổi tài khoản, vui lòng liên hệ Support qua 
     <script src="config.js"></script>
     <script src="auth.js"></script>
     <script src="promotions.js"></script>
+    <script src="payment-orders.js"></script>
     <script>
         (function openPendingPostLoginProUpgrade() {
             const intentKey = 'tiembanh_open_pro_upgrade_after_login';
