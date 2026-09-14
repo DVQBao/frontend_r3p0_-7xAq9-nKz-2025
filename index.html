@@ -10870,8 +10870,20 @@ Nếu cần thêm lượt đổi tài khoản, vui lòng liên hệ Support qua 
                                     <span style="color: #ffc107; font-weight: 800;">1039015381</span></p>
                                 <p style="margin: 5px 0;"><strong style="color: #60a5fa;">Chủ tài khoản:</strong> Đặng
                                     Văn Quốc Bảo</p>
-                                <p style="margin: 5px 0;"><strong style="color: #60a5fa;">Số tiền:</strong> <span
-                                        id="paymentAmount" style="color: #4ade80; font-weight: 700;"></span></p>
+                                <p class="payment-amount-row" style="margin: 5px 0;">
+                                    <strong style="color: #60a5fa;">Số tiền:</strong>
+                                    <span id="paymentAmount" style="color: #4ade80; font-weight: 700;"></span>
+                                    <button class="payment-coupon-return payment-coupon-return--desktop"
+                                        id="proPaymentCouponBackButtonDesktop" type="button"
+                                        onclick="handleProPaymentCouponBack()" style="display:none;">
+                                        Nhập mã ưu đãi
+                                    </button>
+                                    <button class="payment-coupon-return payment-coupon-return--mobile"
+                                        id="proPaymentCouponBackButton" type="button"
+                                        onclick="handleProPaymentCouponBack()" style="display:none;">
+                                        Nhập mã ưu đãi
+                                    </button>
+                                </p>
                                 <p style="margin: 5px 0;"><strong style="color: #60a5fa;">Nội dung chuyển khoản:</strong>
                                     <span id="paymentContent" style="color: #4ade80; font-weight: 600;"></span>
                                 </p>
@@ -10908,11 +10920,6 @@ Nếu cần thêm lượt đổi tài khoản, vui lòng liên hệ Support qua 
                                 chuyển đến trang hỗ trợ và gửi ảnh chụp màn hình giao dịch.
                             </p>
                         </div>
-
-                        <button class="payment-coupon-return" id="proPaymentCouponBackButton" type="button"
-                            onclick="handleProPaymentCouponBack()" style="display:none;">
-                            Chưa chuyển khoản? Nhập mã ưu đãi
-                        </button>
 
                     </div>
 
@@ -10977,6 +10984,14 @@ Nếu cần thêm lượt đổi tài khoản, vui lòng liên hệ Support qua 
                         <div><span>Hiệu lực đến</span><strong id="proPaymentWelcomeExpiry">—</strong></div>
                     </div>
                 </div>
+
+                <p id="proPaymentWelcomeCanva" class="pro-payment-welcome-canva" style="display:none;">
+                    <span class="pro-payment-welcome-canva-line">Theo chương trình ưu đãi của Tiệm Bánh Netflix, bạn còn được nhận
+                        <strong>miễn phí 01 slot Canva Pro</strong> để trải nghiệm.</span>
+                    <span class="pro-payment-welcome-canva-line">Vui lòng
+                        <a href="https://www.facebook.com/tiembanh4k/" target="_blank" rel="noopener noreferrer">Liên hệ Support</a>
+                        để cung cấp thông tin.</span>
+                </p>
 
                 <div id="proPaymentStatusTiming" class="pro-payment-status-timing">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"></circle><path d="M12 7v5l3 2"></path></svg>
@@ -11753,6 +11768,38 @@ Nếu cần thêm lượt đổi tài khoản, vui lòng liên hệ Support qua 
             font-weight: 850;
         }
 
+        .pro-payment-welcome-canva {
+            margin: -2px 0 14px;
+            color: #cbd5e1;
+            font-size: .76rem;
+            line-height: 1.55;
+            text-align: justify;
+            text-align-last: left;
+        }
+
+        .pro-payment-welcome-canva strong {
+            color: #fde68a;
+            font-weight: 800;
+        }
+
+        .pro-payment-welcome-canva-line {
+            display: block;
+            margin: 0;
+            line-height: inherit;
+        }
+
+        .pro-payment-welcome-canva a {
+            color: #60a5fa !important;
+            font-weight: 750;
+            text-decoration: underline !important;
+            text-decoration-thickness: 1px;
+            text-underline-offset: 3px;
+        }
+
+        .pro-payment-welcome-canva a:hover {
+            color: #93c5fd !important;
+        }
+
         .pro-payment-status-timing {
             display: flex;
             align-items: flex-start;
@@ -12021,6 +12068,12 @@ Nếu cần thêm lượt đổi tài khoản, vui lòng liên hệ Support qua 
                 font-size: .61rem;
             }
 
+            .pro-payment-welcome-canva {
+                margin: -1px 0 10px;
+                font-size: .62rem;
+                line-height: 1.6;
+            }
+
             .pro-payment-status-timing {
                 padding: 8px 9px;
                 font-size: .61rem;
@@ -12241,6 +12294,381 @@ Nếu cần thêm lượt đổi tài khoản, vui lòng liên hệ Support qua 
                 padding: 8px !important;
                 border-radius: 8px !important;
                 font-size: 0.72rem !important;
+            }
+        }
+
+        /* Transfer checkout controls: scoped to avoid global button overrides. */
+        #paymentModal #paymentImportantNote {
+            text-align: justify !important;
+            text-align-last: left;
+        }
+
+        #paymentModal #proPaymentCouponBackButton {
+            box-sizing: border-box;
+            width: 100%;
+            min-height: 40px;
+            margin: 12px 0 0;
+            padding: 10px 14px;
+            border: 1px dashed rgba(96, 165, 250, .38) !important;
+            border-radius: 10px;
+            background: rgba(59, 130, 246, .08) !important;
+            color: #93c5fd !important;
+            font-family: inherit;
+            font-size: .78rem;
+            line-height: 1.4;
+            text-align: center;
+            white-space: normal;
+            box-shadow: none !important;
+        }
+
+        #paymentModal #proPaymentCouponBackButton.is-applied {
+            border-style: solid !important;
+            border-color: rgba(74, 222, 128, .3) !important;
+            background: rgba(34, 197, 94, .09) !important;
+            color: #86efac !important;
+        }
+
+        @media (min-width: 769px) {
+            #paymentModal .payment-amount-row {
+                display: flex;
+                align-items: center;
+                gap: 16px;
+                white-space: nowrap;
+            }
+
+            #paymentModal #proPaymentCouponBackButton {
+                display: none !important;
+            }
+
+            #paymentModal #proPaymentCouponBackButtonDesktop {
+                align-items: center;
+                justify-content: center;
+                gap: 8px;
+                width: fit-content;
+                min-height: 0;
+                margin: 0;
+                padding: 2px 0 3px;
+                border: 0 !important;
+                border-bottom: 1px solid currentColor !important;
+                border-radius: 0;
+                background: transparent !important;
+                color: #fbbf24 !important;
+                font-family: inherit;
+                font-size: .95rem;
+                font-weight: 750;
+                line-height: 1.3;
+                white-space: nowrap;
+                box-shadow: none !important;
+            }
+
+            #paymentModal #proPaymentCouponBackButtonDesktop::before {
+                content: '';
+                width: 17px;
+                height: 17px;
+                flex: 0 0 17px;
+                background: currentColor;
+                -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M20 12 12 20l-8-8V4h8l8 8Z'/%3E%3Ccircle cx='9' cy='9' r='1'/%3E%3C/svg%3E") center / contain no-repeat;
+                mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M20 12 12 20l-8-8V4h8l8 8Z'/%3E%3Ccircle cx='9' cy='9' r='1'/%3E%3C/svg%3E") center / contain no-repeat;
+            }
+
+            #paymentModal #proPaymentCouponBackButtonDesktop:hover:not(:disabled) {
+                color: #fde68a !important;
+                background: transparent !important;
+                transform: none !important;
+            }
+
+            #paymentModal #proPaymentCouponBackButtonDesktop.is-applied {
+                border-color: currentColor !important;
+                background: transparent !important;
+                color: #86efac !important;
+            }
+        }
+
+        #paymentModal .payment-modal-actions {
+            display: flex !important;
+            flex-direction: row !important;
+            gap: 10px !important;
+            margin-top: 12px !important;
+        }
+
+        #paymentModal .payment-modal-actions .btn {
+            box-sizing: border-box;
+            flex: 1 1 0 !important;
+            width: 0;
+            min-width: 0;
+            min-height: 44px !important;
+            padding: 10px 12px !important;
+            border: 1px solid transparent !important;
+            border-radius: 10px !important;
+            font-family: inherit;
+            font-size: .82rem !important;
+            line-height: 1.3;
+            text-align: center !important;
+            transform: none !important;
+        }
+
+        #paymentModal .payment-modal-actions .btn-secondary {
+            color: #cbd5e1 !important;
+            border-color: rgba(148, 163, 184, .24) !important;
+            background: #172033 !important;
+            box-shadow: none !important;
+        }
+
+        #paymentModal #proPaymentClaimButton,
+        #paymentModal #legacyPaymentVerificationButton {
+            flex: 1.6 1 0 !important;
+            color: #fff !important;
+            border-color: rgba(147, 197, 253, .4) !important;
+            background: linear-gradient(135deg, #3b82f6, #2563eb) !important;
+            box-shadow: 0 5px 16px rgba(37, 99, 235, .2) !important;
+        }
+
+        @media (max-width: 768px) {
+            #paymentModal #proPaymentCouponBackButtonDesktop {
+                display: none !important;
+            }
+
+            #paymentModal {
+                padding: 0 !important;
+                background: #090c12 !important;
+                font-family: var(--mobile-font-family);
+            }
+
+            #paymentModal .modal-content {
+                width: min(100%, 420px) !important;
+                margin: 0 auto !important;
+                padding: 0 18px 18px !important;
+                overflow: visible !important;
+                border: 0 !important;
+                border-radius: 0 !important;
+                background: #090c12 !important;
+                box-shadow: none !important;
+            }
+
+            #paymentModal h2 {
+                min-height: 58px;
+                justify-content: center !important;
+                margin: 0 -18px 18px !important;
+                padding: 0 18px;
+                color: #f8fafc;
+                border-bottom: 1px solid rgba(255, 255, 255, .1);
+                background: transparent;
+                font-size: 1rem !important;
+                font-weight: 700;
+                letter-spacing: -.01em;
+            }
+
+            #paymentModal h2 > span:first-child {
+                display: none !important;
+            }
+
+            #paymentModal .payment-modal-grid {
+                gap: 22px;
+            }
+
+            #paymentModal .payment-modal-qr {
+                padding: 0 !important;
+                border: 0 !important;
+                border-radius: 0 !important;
+                background: transparent !important;
+                box-shadow: none !important;
+            }
+
+            #paymentModal .payment-section-title {
+                width: 100%;
+                justify-content: center;
+                gap: 0;
+                color: #9ca3af;
+                font-size: .64rem;
+                font-weight: 700;
+                letter-spacing: .08em;
+                text-transform: uppercase;
+            }
+
+            #paymentModal .payment-section-icon {
+                display: none !important;
+            }
+
+            #paymentModal #paymentQrImage {
+                width: 190px !important;
+                max-width: 62vw !important;
+                margin: 12px auto 10px !important;
+                border: 0 !important;
+                border-radius: 8px !important;
+                background: #fff !important;
+                box-shadow: none !important;
+            }
+
+            #paymentModal .payment-modal-qr > p {
+                max-width: 290px;
+                margin: 0 auto !important;
+                padding: 0 !important;
+                color: #a1a1aa !important;
+                font-size: .64rem !important;
+                line-height: 1.45 !important;
+            }
+
+            #paymentModal .payment-modal-qr > p a {
+                color: #d4d4d8 !important;
+                text-underline-offset: 3px;
+            }
+
+            #paymentModal .payment-modal-info {
+                padding-top: 18px;
+                border-top: 1px solid rgba(255, 255, 255, .1);
+            }
+
+            #paymentModal .payment-modal-info > div {
+                display: flex;
+                flex-direction: column;
+            }
+
+            #paymentModal .payment-modal-info .payment-section-title {
+                order: 1;
+                justify-content: flex-start;
+                margin: 0 0 8px !important;
+                padding: 0;
+            }
+
+            #paymentModal .payment-card {
+                order: 2;
+                margin: 0 !important;
+                padding: 0 !important;
+                overflow: visible;
+                border: 0 !important;
+                border-radius: 0 !important;
+                background: transparent !important;
+                box-shadow: none !important;
+            }
+
+            #paymentModal .payment-card > div {
+                display: grid;
+                line-height: 1.35 !important;
+            }
+
+            #paymentModal .payment-card p {
+                display: grid;
+                grid-template-columns: minmax(105px, 42%) minmax(0, 1fr);
+                align-items: baseline;
+                gap: 9px;
+                margin: 0 !important;
+                padding: 8px 0;
+                border-bottom: 1px solid rgba(255, 255, 255, .08);
+                color: #e5e7eb !important;
+                font-size: .7rem !important;
+                line-height: 1.35 !important;
+            }
+
+            #paymentModal .payment-card p:last-child {
+                border-bottom: 0;
+            }
+
+            #paymentModal .payment-card p > strong:first-child {
+                color: #71717a !important;
+                font-size: .6rem;
+                font-weight: 700;
+                letter-spacing: .04em;
+                text-transform: uppercase;
+            }
+
+            #paymentModal .payment-card p > span {
+                min-width: 0;
+                overflow-wrap: anywhere;
+            }
+
+            #paymentModal .payment-alert-card,
+            #paymentModal .payment-info-card {
+                margin-top: 16px !important;
+                padding: 14px 0 0 !important;
+                border: 0 !important;
+                border-top: 1px solid rgba(255, 255, 255, .08) !important;
+                border-radius: 0 !important;
+                background: transparent !important;
+                box-shadow: none !important;
+            }
+
+            #paymentModal #paymentCouponCard {
+                order: 3;
+            }
+
+            #paymentModal .payment-alert-card {
+                order: 5;
+            }
+
+            #paymentModal .payment-info-card {
+                order: 6;
+            }
+
+            #paymentModal #paymentImportantNote {
+                color: #aaa39a !important;
+                font-size: .65rem !important;
+                line-height: 1.55 !important;
+            }
+
+            #paymentModal #paymentImportantNote > strong:first-child {
+                display: inline-block;
+                margin-bottom: 4px;
+                color: #d6b96c;
+                font-size: .62rem;
+                letter-spacing: .06em;
+                text-transform: uppercase;
+            }
+
+            #paymentModal #proPaymentCouponBackButton {
+                grid-column: 2;
+                justify-self: start;
+                width: fit-content;
+                height: auto !important;
+                min-height: 0 !important;
+                margin: 1px 0 3px !important;
+                padding: 0 !important;
+                border: 0 !important;
+                border-radius: 0;
+                background: transparent !important;
+                color: #d9b95d !important;
+                appearance: none;
+                font-size: .66rem;
+                font-weight: 600;
+                line-height: 1.2 !important;
+                text-decoration: underline;
+                text-decoration-thickness: 1px;
+                text-underline-offset: 3px;
+                box-shadow: none !important;
+            }
+
+            #paymentModal #proPaymentCouponBackButton.is-applied {
+                grid-column: 1 / -1;
+                border: 0 !important;
+                background: transparent !important;
+                color: #86efac !important;
+            }
+
+            #paymentModal .payment-modal-actions {
+                gap: 10px !important;
+                margin-top: 18px !important;
+                padding-top: 14px;
+                border-top: 1px solid rgba(255, 255, 255, .1);
+            }
+
+            #paymentModal .payment-modal-actions .btn {
+                min-height: 44px !important;
+                padding: 9px 8px !important;
+                border-radius: 8px !important;
+                font-size: .72rem !important;
+                font-weight: 700;
+            }
+
+            #paymentModal .payment-modal-actions .btn-secondary {
+                color: #d4d4d8 !important;
+                border-color: rgba(255, 255, 255, .14) !important;
+                background: transparent !important;
+            }
+
+            #paymentModal #proPaymentClaimButton,
+            #paymentModal #legacyPaymentVerificationButton {
+                border-color: #3971e6 !important;
+                background: #3971e6 !important;
+                box-shadow: none !important;
             }
         }
 

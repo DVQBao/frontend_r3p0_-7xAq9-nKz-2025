@@ -6,6 +6,7 @@
     const COMPLETED_RESTORE_MS = 60 * 60 * 1000;
     const POLL_INTERVAL_MS = 7000;
     const STATUS_CLASSES = ['state-loading', 'state-waiting', 'state-attention', 'state-activating', 'state-success', 'state-error'];
+    const COUPON_RETURN_BUTTON_IDS = ['proPaymentCouponBackButton', 'proPaymentCouponBackButtonDesktop'];
     const LEGACY_PAYMENT_NOTE = '<strong>Lưu ý quan trọng:</strong><br>1. Vui lòng giữ nguyên nội dung chuyển khoản như hệ thống hiển thị để credits được cộng chính xác.<br>2. Khi mua credits thành công, tổng số credits trong tài khoản của bạn sẽ được gia hạn sử dụng thêm 30 ngày.';
     const PRO_PAYMENT_NOTE = '<strong>Lưu ý quan trọng:</strong><br>1. Chuyển đúng số tiền và giữ nguyên mã đơn hàng trong nội dung chuyển khoản.<br>2. Sau khi chuyển khoản, bấm “Tôi đã chuyển khoản” để gửi yêu cầu xác minh.';
 
@@ -35,6 +36,16 @@
     function setVisible(id, visible, display = '') {
         const target = element(id);
         if (target) target.style.display = visible ? display : 'none';
+    }
+
+    function couponReturnButtons() {
+        return COUPON_RETURN_BUTTON_IDS.map(element).filter(Boolean);
+    }
+
+    function setCouponReturnVisible(visible) {
+        couponReturnButtons().forEach(button => {
+            button.style.display = visible ? 'inline-flex' : 'none';
+        });
     }
 
     function formatVnd(value) {
@@ -73,7 +84,7 @@
         setVisible('legacyPaymentVerificationInfo', !enabled, 'block');
         setVisible('legacyPaymentVerificationButton', !enabled, 'block');
         setVisible('proPaymentClaimButton', enabled, 'block');
-        setVisible('proPaymentCouponBackButton', false);
+        setCouponReturnVisible(false);
         const note = element('paymentImportantNote');
         if (note) note.innerHTML = enabled ? PRO_PAYMENT_NOTE : LEGACY_PAYMENT_NOTE;
 
@@ -109,19 +120,23 @@
     }
 
     function renderCouponReturnState(order) {
-        const button = element('proPaymentCouponBackButton');
-        if (!button) return;
+        const buttons = couponReturnButtons();
+        if (!buttons.length) return;
 
         const discountAmountVnd = Math.max(
             0,
             Number(order?.originalAmountVnd || 0) - Number(order?.finalAmountVnd || 0)
         );
         const hasAppliedCoupon = discountAmountVnd > 0;
-        button.classList.toggle('is-applied', hasAppliedCoupon);
-        button.disabled = hasAppliedCoupon;
-        button.textContent = hasAppliedCoupon
-            ? `Đã áp dụng mã ưu đãi, giảm ${formatVnd(discountAmountVnd)} thành công! Thanh toán nào!`
-            : 'Chưa chuyển khoản? Nhập mã ưu đãi';
+        buttons.forEach(button => {
+            button.classList.toggle('is-applied', hasAppliedCoupon);
+            button.disabled = hasAppliedCoupon;
+            button.textContent = hasAppliedCoupon
+                ? (button.id === 'proPaymentCouponBackButtonDesktop'
+                    ? `Đã giảm ${formatVnd(discountAmountVnd)}`
+                    : `Đã áp dụng mã ưu đãi, giảm ${formatVnd(discountAmountVnd)} thành công! Thanh toán nào!`)
+                : 'Nhập mã ưu đãi';
+        });
     }
 
     function setStatusState(state) {
@@ -166,6 +181,7 @@
         setText('proPaymentStatusMessage', message);
         populateStatusSummary(currentOrder, stage || 'Đang kiểm tra');
         setVisible('proPaymentWelcomeBenefits', false);
+        setVisible('proPaymentWelcomeCanva', false);
         setVisible('proPaymentStatusTiming', state !== 'error', 'flex');
         setVisible('proPaymentStatusSupport', showSupport, 'inline-block');
         setText('proPaymentStatusCloseButton', state === 'error' ? 'Đóng' : 'Kiểm tra sau');
@@ -176,6 +192,7 @@
         const expiry = order.entitlementAfter?.proExpiresAt;
         const credits = Number(order.entitlementAfter?.credits || 40);
         setVisible('proPaymentWelcomeBenefits', false);
+        setVisible('proPaymentWelcomeCanva', false);
         setVisible('proPaymentStatusTiming', true, 'flex');
         setVisible('proPaymentStatusSupport', true, 'inline-block');
         setText('proPaymentStatusCloseButton', 'Kiểm tra sau');
@@ -223,6 +240,7 @@
                 setText('proPaymentWelcomeCredits', `${credits.toLocaleString('vi-VN')} credits`);
                 setText('proPaymentWelcomeExpiry', formatDate(expiry));
                 setVisible('proPaymentWelcomeBenefits', true, 'grid');
+                setVisible('proPaymentWelcomeCanva', true, 'block');
                 setVisible('proPaymentStatusTiming', false);
                 setVisible('proPaymentStatusSupport', false);
                 setText('proPaymentStatusCloseButton', 'Đóng');
@@ -261,14 +279,14 @@
             setPaymentDetailsReady(true);
             const couponCard = element('paymentCouponCard');
             if (couponCard) couponCard.style.display = 'none';
-            setVisible('proPaymentCouponBackButton', true, 'block');
+            setCouponReturnVisible(true);
             renderCouponReturnState(order);
             setPaymentButton('Tôi đã chuyển khoản', false);
             stopPolling();
             return;
         }
 
-        setVisible('proPaymentCouponBackButton', false);
+        setCouponReturnVisible(false);
 
         renderStatusOrder(order);
         if (paymentModalIsOpen() || statusModalIsOpen()) openStatusModal();
@@ -453,16 +471,16 @@
         if (!currentOrder?.orderCode || currentOrder.status !== 'awaiting_payment') return;
 
         const orderCode = currentOrder.orderCode;
-        const button = element('proPaymentCouponBackButton');
-        if (button?.disabled) return;
+        const buttons = couponReturnButtons();
+        if (buttons.some(button => button.disabled)) return;
         if (typeof window.reopenProCouponPrompt !== 'function') {
             setText('paymentContent', 'Không thể mở lại phần nhập mã ưu đãi. Vui lòng đóng và mở lại mục nâng cấp Pro.');
             return;
         }
-        if (button) {
+        buttons.forEach(button => {
             button.disabled = true;
             button.textContent = 'Đang quay lại...';
-        }
+        });
         setPaymentButton('Vui lòng đợi...', true);
 
         try {
@@ -483,17 +501,17 @@
             requestVersion += 1;
             currentOrder = null;
             saveOrderCode(null);
-            setVisible('proPaymentCouponBackButton', false);
+            setCouponReturnVisible(false);
             element('paymentModal')?.classList.remove('active');
             window.reopenProCouponPrompt();
         } catch (error) {
             setText('paymentContent', error.message);
             setPaymentButton('Tôi đã chuyển khoản', false);
-            if (button) {
+            buttons.forEach(button => {
                 button.classList.remove('is-applied');
                 button.disabled = false;
-                button.textContent = 'Chưa chuyển khoản? Nhập mã ưu đãi';
-            }
+                button.textContent = 'Nhập mã ưu đãi';
+            });
         }
     };
 
