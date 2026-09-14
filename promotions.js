@@ -143,6 +143,13 @@
         updatePaymentQr(finalAmount);
         renderCouponControls('payment', application ? state.activeCoupon : null, productType, originalAmountVnd);
         if (!application) clearCouponUi('payment', '');
+        window.dispatchEvent(new CustomEvent('tiembanh:payment-ready', {
+            detail: {
+                productType,
+                originalAmountVnd,
+                finalAmountVnd: finalAmount
+            }
+        }));
     }
 
     function renderCreditsTotal(originalAmountVnd) {
@@ -461,11 +468,6 @@
             context.hasCoupon = status.hasCoupon;
             context.hasAppliedCoupon = status.hasAppliedCoupon;
             context.discountAmountVnd = Number(status.discountAmountVnd || 0);
-            if (!status.hasCoupon) {
-                state.proPromptContext = null;
-                openPaymentScreen(plan, source, originalAmountVnd);
-                return;
-            }
             if (status.hasAppliedCoupon) {
                 const restoredCoupon = await loadPendingCoupon('pro', originalAmountVnd);
                 if (state.proPromptContext !== context) return;
@@ -476,11 +478,17 @@
                     notice.textContent = 'Mã ưu đãi đã được áp dụng. Bạn có thể tiếp tục tới màn hình thanh toán.';
                 }
                 if (continueButton) continueButton.textContent = 'Thanh toán với ưu đãi';
-            } else {
+            } else if (status.hasCoupon) {
                 if (notice) {
                     renderCouponGiftNotice(notice, context.discountAmountVnd);
                 }
                 if (continueButton) continueButton.textContent = 'Tiếp tục thanh toán';
+            } else {
+                if (notice) {
+                    notice.style.display = '';
+                    notice.textContent = 'Nếu bạn có mã ưu đãi, hãy nhập và áp dụng trước khi tạo mã QR thanh toán.';
+                }
+                setMessage('proPrompt', 'Không có mã? Bạn có thể tiếp tục thanh toán với giá hiện tại.');
             }
             if (continueButton) continueButton.disabled = false;
             modal.classList.add('active');
@@ -503,6 +511,13 @@
         document.getElementById('proCouponPromptModal')?.classList.remove('active');
         document.body.style.overflow = '';
         state.proPromptContext = null;
+    };
+
+    window.reopenProCouponPrompt = function () {
+        const payment = state.payment;
+        if (!payment || payment.productType !== 'pro') return false;
+        showProCouponPrompt(payment.plan, payment.source, payment.originalAmountVnd);
+        return true;
     };
 
     window.continueProPaymentWithoutCoupon = function () {
@@ -566,6 +581,9 @@
             ? 'credits'
             : (source === 'pro' || source === 'pro-from-plan' ? 'pro' : null);
         if (!productType || typeof originalOpenPaymentModal !== 'function') {
+            window.dispatchEvent(new CustomEvent('tiembanh:payment-ready', {
+                detail: { productType: null }
+            }));
             return originalOpenPaymentModal?.(plan, amount, source);
         }
 
