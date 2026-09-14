@@ -486,9 +486,9 @@
             } else {
                 if (notice) {
                     notice.style.display = '';
-                    notice.textContent = 'Nếu bạn có mã ưu đãi, hãy nhập và áp dụng trước khi tạo mã QR thanh toán.';
+                    notice.style.whiteSpace = 'pre-line';
+                    notice.textContent = 'Nhập mã ưu đãi để được giảm giá khi thanh toán.\nNếu không có, hãy tiếp tục thanh toán như bình thường!';
                 }
-                setMessage('proPrompt', 'Không có mã? Bạn có thể tiếp tục thanh toán với giá hiện tại.');
             }
             if (continueButton) continueButton.disabled = false;
             modal.classList.add('active');
